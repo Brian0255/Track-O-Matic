@@ -368,12 +368,17 @@
             <!--GB/other stuff display-->
             <Grid Grid.Row="2" Background="{StaticResource RegionBG}" Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3.5*"/>
+                    <ColumnDefinition Width="4*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width=".1*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width=".1*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width=".1*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width=".1*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width=".1*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width=".2*"/>
                 </Grid.ColumnDefinitions>
@@ -387,11 +392,11 @@
                 <local:ToggleableItem Grid.Column="6" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
                 <local:ToggleableItem Grid.Column="7" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>-->
                 <local:CollectibleItem x:Name="Pearls" ImageSource="Images\dk64\pearl.png" Opacity="0.25" Text="0" Grid.Column="1"/>
-                <local:CollectibleItem x:Name="BattleCrowns" ImageSource="Images\dk64\crown.png" Opacity="0.25" Text="0" Grid.Column="2"/>
-                <local:CollectibleItem x:Name="BananaMedals" ImageSource="Images\dk64\bananamedal.png" Opacity="0.25" Text="0" Grid.Column="3"/>
-                <local:CollectibleItem x:Name="RainbowCoins" ImageSource="Images\dk64\rainbowcoin.png" Opacity="0.25" Text="0" Grid.Column="4"/>
-                <local:CollectibleItem x:Name="Fairies" ImageSource="Images\dk64\fairy.png" Opacity="0.25" Text="0" Grid.Column="5"/>
-                <local:CollectibleItem x:Name="GBs" ImageSource="Images\dk64\GB.png" Opacity="0.25" Text="0" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="BattleCrowns" ImageSource="Images\dk64\crown.png" Opacity="0.25" Text="0" Grid.Column="3"/>
+                <local:CollectibleItem x:Name="BananaMedals" ImageSource="Images\dk64\bananamedal.png" Opacity="0.25" Text="0" Grid.Column="5"/>
+                <local:CollectibleItem x:Name="RainbowCoins" ImageSource="Images\dk64\rainbowcoin.png" Opacity="0.25" Text="0" Grid.Column="7"/>
+                <local:CollectibleItem x:Name="Fairies" ImageSource="Images\dk64\fairy.png" Opacity="0.25" Text="0" Grid.Column="9"/>
+                <local:CollectibleItem x:Name="GBs" ImageSource="Images\dk64\GB.png" Opacity="0.25" Text="0" Grid.Column="11"/>
             </Grid>
             <!-- Items -->
             <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="0" >
@@ -509,10 +514,10 @@
 
                 <!--Blueprints-->
                 <local:CollectibleItem x:Name="DonkeyBPs" ImageSource="Images\dk64\dk_bp.png" Opacity="0.25" Text="0" Grid.Row="0" Grid.Column="6"/>
-                <local:CollectibleItem ImageSource="Images\dk64\diddy_bp.png" Opacity="0.25" Text="0" Grid.Row="1" Grid.Column="6"/>
-                <local:CollectibleItem ImageSource="Images\dk64\lanky_bp.png" Opacity="0.25" Text="0" Grid.Row="2" Grid.Column="6"/>
-                <local:CollectibleItem ImageSource="Images\dk64\tiny_bp.png" Opacity="0.25" Text="0" Grid.Row="3" Grid.Column="6"/>
-                <local:CollectibleItem ImageSource="Images\dk64\chunky_bp.png" Opacity="0.25" Text="0" Grid.Row="4" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="DiddyBPs" ImageSource="Images\dk64\diddy_bp.png" Opacity="0.25" Text="0" Grid.Row="1" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="LankyBPs" ImageSource="Images\dk64\lanky_bp.png" Opacity="0.25" Text="0" Grid.Row="2" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="TinyBPs" ImageSource="Images\dk64\tiny_bp.png" Opacity="0.25" Text="0" Grid.Row="3" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="ChunkyBPs" ImageSource="Images\dk64\chunky_bp.png" Opacity="0.25" Text="0" Grid.Row="4" Grid.Column="6"/>
                 
                 <!-- Keys-->
                 <local:Item x:Name="key_1"  ItemImage="{DynamicResource key1}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_1}"/>

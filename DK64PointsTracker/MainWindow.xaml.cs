@@ -84,18 +84,19 @@ namespace DK64PointsTracker
             Collectibles = new()
             {
                 {ItemType.GOLDEN_BANANA, GBs },
-                {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
-                /*
-                {ItemType.DIDDY_BLUEPRINT, DiddyBPs },
-                {ItemType.LANKY_BLUEPRINT, LankyBPs },
-                {ItemType.TINY_BLUEPRINT, TinyBPs },
-                {ItemType.CHUNKY_BLUEPRINT, ChunkyBPs },
+
+                //{ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
+                //{ItemType.DIDDY_BLUEPRINT, DiddyBPs },
+                //{ItemType.LANKY_BLUEPRINT, LankyBPs },
+               // {ItemType.TINY_BLUEPRINT, TinyBPs },
+               // {ItemType.CHUNKY_BLUEPRINT, ChunkyBPs },
 
                 {ItemType.PEARL, Pearls },
                 {ItemType.BATTLE_CROWN, BattleCrowns },
                 {ItemType.BANANA_MEDAL, BananaMedals },
-                {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
-                {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },*/
+                {ItemType.RAINBOW_COIN, RainbowCoins },
+                {ItemType.FAIRY, Fairies },
+
             };
             Items = ItemGrid;
             Regions[RegionName.JUNGLE_JAPES].SetAsLobby1();
