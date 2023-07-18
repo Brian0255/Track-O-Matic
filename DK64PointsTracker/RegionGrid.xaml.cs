@@ -60,11 +60,11 @@ namespace DK64PointsTracker
 
             Rows = gridnum;
 
-            // default 1, add .5 for every row
-            double length = 1 + ((Children.Count - 1) / 5) / 2;
+            //disgusting but it works
+            double height = 1 + ((Children.Count - 1) / 5) / 2;
             var outerGrid = ((Parent as Grid).Parent as Grid);
             int row = (int)Parent.GetValue(Grid.RowProperty);
-            outerGrid.RowDefinitions[row].Height = new GridLength(length, GridUnitType.Star);
+            outerGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
             Region.UpdateRequiredChecksTotal();
             /*
             if (MainWindow.data.mode == Mode.AltHints || MainWindow.data.mode == Mode.OpenKHAltHints)
