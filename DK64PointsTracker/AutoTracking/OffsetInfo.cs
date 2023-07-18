@@ -204,6 +204,17 @@ namespace DK64PointsTracker
             new OffsetInfoEntry(ItemName.CHUNKY_CASTLE_MEDAL, 0x7ECEF0,8,128),
             new OffsetInfoEntry(ItemName.CHUNKY_HELM_MEDAL, 0x7ECEF1,8,2),
 
+            new OffsetInfoEntry(ItemName.JAPES_BATTLE_CROWN, 0x7ECEF4,8,2),
+            new OffsetInfoEntry(ItemName.AZTEC_BATTLE_CROWN, 0x7ECEF4,8,4),
+            new OffsetInfoEntry(ItemName.FACTORY_BATTLE_CROWN, 0x7ECEF4,8,8),
+            new OffsetInfoEntry(ItemName.GALLEON_BATTLE_CROWN, 0x7ECEF4,8,16),
+            new OffsetInfoEntry(ItemName.FOREST_BATTLE_CROWN, 0x7ECEF4,8,32),
+            new OffsetInfoEntry(ItemName.CAVES_BATTLE_CROWN, 0x7ECEF5,8,1),
+            new OffsetInfoEntry(ItemName.CASTLE_BATTLE_CROWN, 0x7ECEF5,8,2),
+            new OffsetInfoEntry(ItemName.ISLES_BATTLE_CROWN_1, 0x7ECEF4,8,128),
+            new OffsetInfoEntry(ItemName.ISLES_BATTLE_CROWN_2, 0x7ECEF4,8,64),
+            new OffsetInfoEntry(ItemName.HELM_BATTLE_CROWN, 0x7ECEF5,8,4),
+
 
             new OffsetInfoEntry(ItemName.JAPES_FAIRY_1, 0x7ECEF1,8,32),
             new OffsetInfoEntry(ItemName.JAPES_FAIRY_2, 0x7ECEF1,8,64),
