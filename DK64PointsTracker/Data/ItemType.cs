@@ -11,11 +11,21 @@
         BARREL_MOVE,
         PAD_MOVE,
         GOLDEN_BANANA,
+
         DONKEY_BLUEPRINT,
+        DIDDY_BLUEPRINT,
+        LANKY_BLUEPRINT,
+        TINY_BLUEPRINT,
+        CHUNKY_BLUEPRINT,
+
+        RAINBOW_COIN,
+        BATTLE_CROWN,
         FAIRY,
         BANANA_MEDAL,
-        KEY,
         PEARL,
+
+        KEY,
+
         KONG
     }
 }
