@@ -30,7 +30,16 @@ namespace DK64PointsTracker
         private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
         {
             {ItemType.GOLDEN_BANANA, 0 },
-            {ItemType.DONKEY_BLUEPRINT, 0 }
+            {ItemType.DONKEY_BLUEPRINT, 0 },
+            {ItemType.DIDDY_BLUEPRINT, 0 },
+            {ItemType.LANKY_BLUEPRINT, 0 },
+            {ItemType.TINY_BLUEPRINT, 0 },
+            {ItemType.CHUNKY_BLUEPRINT, 0 },
+            {ItemType.PEARL, 0 },
+            {ItemType.BANANA_MEDAL, 0 },
+            {ItemType.FAIRY, 0 },
+            {ItemType.RAINBOW_COIN, 0 },
+            {ItemType.BATTLE_CROWN, 0 }
         };
 
         public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback)
