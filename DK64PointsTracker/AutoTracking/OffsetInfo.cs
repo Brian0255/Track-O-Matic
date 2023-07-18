@@ -203,6 +203,39 @@ namespace DK64PointsTracker
             new OffsetInfoEntry(ItemName.CHUNKY_CAVES_MEDAL, 0x7ECEF0,8,4),
             new OffsetInfoEntry(ItemName.CHUNKY_CASTLE_MEDAL, 0x7ECEF0,8,128),
             new OffsetInfoEntry(ItemName.CHUNKY_HELM_MEDAL, 0x7ECEF1,8,2),
+
+
+            new OffsetInfoEntry(ItemName.JAPES_FAIRY_1, 0x7ECEF1,8,32),
+            new OffsetInfoEntry(ItemName.JAPES_FAIRY_2, 0x7ECEF1,8,64),
+
+            new OffsetInfoEntry(ItemName.AZTEC_FAIRY_1, 0x7ECEF3,8,1),
+            new OffsetInfoEntry(ItemName.AZTEC_FAIRY_2, 0x7ECEF3,8,2),
+
+            new OffsetInfoEntry(ItemName.FACTORY_FAIRY_1, 0x7ECEF1,8,128),
+            new OffsetInfoEntry(ItemName.FACTORY_FAIRY_2, 0x7ECEF3,8,4),
+
+            new OffsetInfoEntry(ItemName.GALLEON_FAIRY_1, 0x7ECEF2,8,1),
+            new OffsetInfoEntry(ItemName.GALLEON_FAIRY_2, 0x7ECEF3,8,8),
+
+            new OffsetInfoEntry(ItemName.FOREST_FAIRY_1, 0x7ECEF2,8,8),
+            new OffsetInfoEntry(ItemName.FOREST_FAIRY_2, 0x7ECEF2,8,16),
+
+            new OffsetInfoEntry(ItemName.CAVES_FAIRY_1, 0x7ECEF2,8,32),
+            new OffsetInfoEntry(ItemName.CAVES_FAIRY_2, 0x7ECEF4,8,1),
+
+            new OffsetInfoEntry(ItemName.CASTLE_FAIRY_1, 0x7ECEF3,8,16),
+            new OffsetInfoEntry(ItemName.CASTLE_FAIRY_2, 0x7ECEF3,8,32),
+
+            new OffsetInfoEntry(ItemName.HELM_FAIRY_1, 0x7ECEF2,8,64),
+            new OffsetInfoEntry(ItemName.HELM_FAIRY_2, 0x7ECEF2,8,128),
+
+            new OffsetInfoEntry(ItemName.ISLES_FAIRY_1, 0x7ECEF2,8,2),
+            new OffsetInfoEntry(ItemName.ISLES_FAIRY_2, 0x7ECEF2,8,4),
+            new OffsetInfoEntry(ItemName.ISLES_FAIRY_3, 0x7ECEF3,8,64),
+            new OffsetInfoEntry(ItemName.ISLES_FAIRY_4, 0x7ECEF3,8,128),
+
+
+
             /*
             new OffsetInfoEntry(ItemName.PEARL_1, 0x7ECEBF,8,4),
             new OffsetInfoEntry(ItemName.PEARL_2, 0x7ECEBF,8,8),
