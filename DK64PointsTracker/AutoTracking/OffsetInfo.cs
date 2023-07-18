@@ -239,6 +239,23 @@ namespace DK64PointsTracker
             new OffsetInfoEntry(ItemName.PEARL_3, 0x7ECEBF,8,16),
             new OffsetInfoEntry(ItemName.PEARL_4, 0x7ECEBF,8,32),
             new OffsetInfoEntry(ItemName.PEARL_5, 0x7ECEBF,8,64),
+
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_1, 0x7ECEFB,8,64),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_2, 0x7ECEFB,8,128),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_3, 0x7ECEFC,8,1),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_4, 0x7ECEFC,8,2),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_5, 0x7ECEFC,8,4),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_6, 0x7ECEFC,8,8),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_7, 0x7ECEFC,8,16),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_8, 0x7ECEFC,8,32),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_9, 0x7ECEFC,8,64),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_10, 0x7ECEFC,8,128),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_11, 0x7ECEFD,8,1),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_12, 0x7ECEFD,8,2),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_13, 0x7ECEFD,8,4),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_14, 0x7ECEFD,8,8),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_15, 0x7ECEFD,8,16),
+            new OffsetInfoEntry(ItemName.RAINBOW_COIN_16, 0x7ECEFD,8,32),
         };
     }
 
