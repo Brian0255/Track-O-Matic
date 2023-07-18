@@ -234,14 +234,11 @@ namespace DK64PointsTracker
             new OffsetInfoEntry(ItemName.ISLES_FAIRY_3, 0x7ECEF3,8,64),
             new OffsetInfoEntry(ItemName.ISLES_FAIRY_4, 0x7ECEF3,8,128),
 
-
-
-            /*
             new OffsetInfoEntry(ItemName.PEARL_1, 0x7ECEBF,8,4),
             new OffsetInfoEntry(ItemName.PEARL_2, 0x7ECEBF,8,8),
             new OffsetInfoEntry(ItemName.PEARL_3, 0x7ECEBF,8,16),
             new OffsetInfoEntry(ItemName.PEARL_4, 0x7ECEBF,8,32),
-            new OffsetInfoEntry(ItemName.PEARL_5, 0x7ECEBF,8,64),*/
+            new OffsetInfoEntry(ItemName.PEARL_5, 0x7ECEBF,8,64),
         };
     }
 
