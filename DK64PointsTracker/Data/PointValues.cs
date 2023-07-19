@@ -21,8 +21,6 @@ namespace DK64PointsTracker
 
             {ItemType.KONG, 13},
             {ItemType.KEY, 0 },
-
-            {ItemType.PEARL, 5 }
         };
 
         public static readonly Dictionary<ItemName, int> SpecificValues = new()
