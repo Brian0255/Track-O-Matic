@@ -104,7 +104,7 @@ namespace DK64PointsTracker
         {
             // move item to region
             Panel itemGrid = item.Parent as Panel;
-            itemGrid.Children.Remove(item);
+            if(itemGrid != null) itemGrid.Children.Remove(item);
             Handle_RegionGrid(item, true);
 
             // update collection count
