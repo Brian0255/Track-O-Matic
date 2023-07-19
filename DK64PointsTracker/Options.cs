@@ -531,10 +531,6 @@ namespace DK64PointsTracker
                 {
                     Reset();
                     ParseSpoiler(files[0]);
-                    foreach(var entry in Regions)
-                    {
-                        entry.Value.SetSpoilerAsLoaded();
-                    }
                 }
             }
         }
@@ -871,6 +867,7 @@ namespace DK64PointsTracker
             SpoilerLoaded = true;
             Autotracker.SetSpoilerLoaded();
             Autotracker.SetStartingItems(startingItems);
+            foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
         }
 
         private void Reset()
@@ -888,6 +885,10 @@ namespace DK64PointsTracker
             {
                 item.CanLeftClick = true;
             }
+            foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
+            HelmKong1.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
+            HelmKong2.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
+            HelmKong3.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
             Autotracker.Reset();
 
         }
