@@ -148,6 +148,11 @@ namespace DK64PointsTracker
             {
                 if (itemControl is Item item && itemToProcess == (ItemName)item.Tag && ItemNameToRegion.ContainsKey(itemToProcess))
                 {
+                    if(item.Parent != ItemGrid)
+                    {
+                        var parent = (RegionGrid)item.Parent;
+                        parent.Handle_RegionGrid(item, false);
+                    }
                     var itemName = (ItemName)item.Tag;
                     item.Opacity = 1.0;
                     var region = ItemNameToRegion[itemName];
