@@ -121,10 +121,7 @@ namespace DK64PointsTracker
 
         private void ResetCollectibleAmounts()
         {
-            foreach (var key in CollectibleItemAmounts.Keys.ToList())
-            {
-                CollectibleItemAmounts[key] = 0;
-            }
+            foreach (var key in CollectibleItemAmounts.Keys.ToList()) CollectibleItemAmounts[key] = 0;
         }
 
         private void Autotrack(object state)
@@ -148,7 +145,7 @@ namespace DK64PointsTracker
                     var toAdd = output;
                     //collectibles not gbs are flags, add 1 to their total instead of the bitmask
                     if (checkInfo.ItemType != ItemType.GOLDEN_BANANA) toAdd = 1;
-                    CollectibleItemAmounts[checkInfo.ItemType] = CollectibleItemAmounts[checkInfo.ItemType] + 1;
+                    CollectibleItemAmounts[checkInfo.ItemType] = CollectibleItemAmounts[checkInfo.ItemType] + toAdd;
                 }
                 else
                 {
