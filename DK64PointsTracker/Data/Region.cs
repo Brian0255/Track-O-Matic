@@ -21,7 +21,7 @@ namespace DK64PointsTracker
         private int requiredChecks = 0;
         public Grid MainUIGrid { get; }
         public Button RegionButton { get; }
-        public RegionGrid ChecksContainer { get; }
+        public RegionGrid RegionGrid { get; }
         public TextBlock PointsLabel { get; }
         public TextBlock TopLabel { get; }
         public int TotalPoints { get; private set; }
@@ -36,11 +36,11 @@ namespace DK64PointsTracker
             TotalPoints = 0;
             MainUIGrid = mainUIGrid;
             RegionButton = regionButton;
-            ChecksContainer = checksContainer;
+            RegionGrid = checksContainer;
             PointsLabel = pointsLabel;
             TopLabel = topLabel;
             CurrentChecks = new();
-            ChecksContainer.Region = this;
+            RegionGrid.Region = this;
             KeyLock = keyLock;
             Locked = (keyLock != ItemName.NONE);
             UpdateUIFromShuffledRegion();
@@ -63,7 +63,7 @@ namespace DK64PointsTracker
         {
             if (!SpoilerLoaded) return;
             int total = 0;
-            foreach (var control in ChecksContainer.Children)
+            foreach (var control in RegionGrid.Children)
             {
                 if(control is Item item)
                 {
@@ -87,9 +87,9 @@ namespace DK64PointsTracker
             if (TopLabel != null) TopLabel.Text = "?";
 
             //put them into a list first to avoid the "cant remove while enumerating" 
-            var elements = new List<Item>(ChecksContainer.Children.Count);
+            var elements = new List<Item>(RegionGrid.Children.Count);
 
-            foreach(var control in ChecksContainer.Children)
+            foreach(var control in RegionGrid.Children)
             {
                 elements.Add(control as Item);
             }
