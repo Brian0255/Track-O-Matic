@@ -10,10 +10,12 @@ namespace DK64PointsTracker
 {
     public delegate void ProcessNewItem(ItemName itemName, RegionName regionName);
     public delegate void UpdateCollectible(ItemType collectibleType, int newTotal);
+    public delegate void SetRegionLighting(RegionName region, bool lightUp);
     public class Autotracker
     {
         public ProcessNewItem ProcessNewItem { get; set; }
         public UpdateCollectible UpdateCollectible { get; set; }
+        public SetRegionLighting SetRegionLighting { get; set; }
         public Process EmulatorProcess { get; private set; }
         public List<AutotrackedCheck> Checks;
         public Dictionary<ItemName, bool> TrackedAlready;
@@ -42,7 +44,7 @@ namespace DK64PointsTracker
             {ItemType.BATTLE_CROWN, 0 }
         };
 
-        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback)
+        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback)
         {
             CurrentRegion = RegionName.UNKNOWN;
             Checks = new();
@@ -52,6 +54,7 @@ namespace DK64PointsTracker
             timer = new System.Threading.Timer(Autotrack, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
             ProcessNewItem = processItemCallback;
             UpdateCollectible = updateCollectibleCallback;
+            SetRegionLighting = setRegionLightingCallback;
         }
 
         private void InitializeChecks()
@@ -70,6 +73,9 @@ namespace DK64PointsTracker
             spoilerLoaded = false;
             attached = false;
             InitializeChecks();
+            Application.Current.Dispatcher.Invoke(() => {
+                SetRegionLighting?.Invoke(CurrentRegion, false);
+            });
         }
 
         public void ResetChecks()
@@ -115,7 +121,17 @@ namespace DK64PointsTracker
             int area = ReadMemory(offset, 32);
             if (MapToRegion.MAP.ContainsKey(area))
             {
-                CurrentRegion = MapToRegion.MAP[area];
+                RegionName newRegion = MapToRegion.MAP[area];
+                if(newRegion != CurrentRegion)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        SetRegionLighting?.Invoke(newRegion, true);
+                    });
+                    Application.Current.Dispatcher.Invoke(() => {
+                        SetRegionLighting?.Invoke(CurrentRegion, false);
+                    });
+                    CurrentRegion = newRegion;
+                }
             }
         }
 
