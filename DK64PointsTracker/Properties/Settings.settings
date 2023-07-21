@@ -8,12 +8,6 @@
     <Setting Name="WindowY" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Width" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">570</Value>
-    </Setting>
-    <Setting Name="Height" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">880</Value>
-    </Setting>
     <Setting Name="TopMost" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>

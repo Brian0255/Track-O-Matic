@@ -119,6 +119,7 @@
     <Compile Include="RegionGrid.xaml.cs">
       <DependentUpon>RegionGrid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WatermarkTextBox.cs" />
     <Page Include="ProgressiveItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -175,6 +176,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Fonts\thing.ttf" />
+    <Resource Include="Fonts\GillSansUltraBold.ttf" />
+    <Resource Include="Fonts\DKC2.TTF" />
     <None Include="Images\bw\aztec_img.webp" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -227,8 +231,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Fonts\Jumpman.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\dk64\checkmark.png" />
   </ItemGroup>
   <ItemGroup>
@@ -940,6 +942,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\unknown_kong.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\x.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>

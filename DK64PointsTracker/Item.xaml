@@ -19,6 +19,7 @@
         <Grid>
             <ContentPresenter x:Name ="ImageItem" Content="{Binding ItemImage}"/>
             <ContentPresenter x:Name="Checkmark" Content="{StaticResource checkmark}" Visibility="Hidden"/>
+            <ContentPresenter x:Name="X" Content="{StaticResource x}" Visibility="Hidden"/>
         </Grid>
     </ContentControl.Content>
 

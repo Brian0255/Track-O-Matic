@@ -7,6 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <FontFamily x:Key="DK64Font">pack://application:,,,/Fonts/#Jumpman</FontFamily>
+            <FontFamily x:Key="DKCFont">pack://application:,,,/Fonts/#Gill Sans Ultra Bold Condensed</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>

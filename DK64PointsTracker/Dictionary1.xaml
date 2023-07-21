@@ -12,7 +12,9 @@
     <SolidColorBrush x:Key="BaseBG" Color="#282a2e"/>
     <SolidColorBrush x:Key="RegionImageBG" Color="#303136"/>
     <SolidColorBrush x:Key="RegionBG" Color="#3a3c42"/>
-    
+    <SolidColorBrush x:Key="RegionBGLitUp" Color="#404552"/>
+    <SolidColorBrush x:Key="UnfocusedText" Color="#8d9096"/>
+
     <!--
     <SolidColorBrush x:Key="BaseBG" Color="#202020"/>
     <SolidColorBrush x:Key="RegionImageBG" Color="#303030"/>
@@ -23,6 +25,7 @@
 
     <Image x:Key="locked_region" Source="Images\dk64\locked_region.png" x:Shared="false" />
     <Image x:Key="checkmark" Source="Images\dk64\checkmark.png" x:Shared="false" />
+    <Image x:Key="x" Source="Images\dk64\x.png" x:Shared="false" />
 
     <Image x:Key="unknown_kong" Source="Images\dk64\unknown_kong.png" x:Shared="false" />
 
