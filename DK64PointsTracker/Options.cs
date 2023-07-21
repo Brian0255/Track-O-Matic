@@ -734,7 +734,7 @@ namespace DK64PointsTracker
                 {
                     var itemName = (ItemName)item.Tag;
                     var region = startingItems[itemName];
-                    Regions[region].ChecksContainer.Add_Item(item);
+                    Regions[region].RegionGrid.Add_Item(item);
                     item.CanLeftClick = false;
                     if (ImportantCheckList.ITEMS[itemName].ItemType == ItemType.KEY)
                     {
@@ -889,6 +889,13 @@ namespace DK64PointsTracker
             HelmKong1.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
             HelmKong2.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
             HelmKong3.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
+            DonkeyBPs.Text = 0;
+            DiddyBPs.Text = 0;
+            LankyBPs.Text = 0;
+            TinyBPs.Text = 0;
+            ChunkyBPs.Text = 0;
+            Notes.Text = "";
+            Notes.Reset();
             Autotracker.Reset();
 
         }
