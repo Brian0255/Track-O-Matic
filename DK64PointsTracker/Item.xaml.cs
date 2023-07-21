@@ -138,8 +138,14 @@ namespace DK64PointsTracker
         {
             if (e.RightButton == MouseButtonState.Pressed)
             {
+                X.Visibility = Visibility.Hidden;
                 Checkmark.Visibility = (Checkmark.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
                 if (region != null) region.UpdateRequiredChecksTotal();
+            }
+            if(e.MiddleButton == MouseButtonState.Pressed)
+            {
+                Checkmark.Visibility = Visibility.Hidden;
+                X.Visibility = (X.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
             }
             if (e.LeftButton == MouseButtonState.Pressed && CanLeftClick)
             {
