@@ -83,7 +83,6 @@ namespace DK64PointsTracker
             };
             Collectibles = new()
             {
-                {ItemType.GOLDEN_BANANA, GBs },
 
                 //{ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
                 //{ItemType.DIDDY_BLUEPRINT, DiddyBPs },
@@ -96,6 +95,7 @@ namespace DK64PointsTracker
                 {ItemType.BANANA_MEDAL, BananaMedals },
                 {ItemType.RAINBOW_COIN, RainbowCoins },
                 {ItemType.FAIRY, Fairies },
+                {ItemType.GOLDEN_BANANA, GBs },
 
             };
             Items = ItemGrid;
@@ -109,7 +109,17 @@ namespace DK64PointsTracker
                     DraggableItems.Add(item);
                 }
             }
-            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible);
+            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting);
+        }
+
+        public void SetRegionLighting(RegionName regionName, bool lightUp)
+        {
+            string resource = (lightUp) ? "RegionBGLitUp" : "RegionBG";
+            if (!Regions.ContainsKey(regionName)) return;
+            if (ShuffledLevelOrder.ContainsKey(regionName)) regionName = ShuffledLevelOrder[regionName];
+            var region = Regions[regionName];
+            region.MainUIGrid.SetResourceReference(Panel.BackgroundProperty, resource);
+            region.RegionGrid.SetResourceReference(Panel.BackgroundProperty, resource);
         }
 
         public void ResetCollectibles()
@@ -166,7 +176,7 @@ namespace DK64PointsTracker
                         region = regionName;
                         itemControl.CanLeftClick = true;
                     }
-                    Regions[region].ChecksContainer.Add_Item(item);
+                    Regions[region].RegionGrid.Add_Item(item);
                 }
             }
             if (check.ItemType == ItemType.KEY)
@@ -204,8 +214,8 @@ namespace DK64PointsTracker
             Top = Properties.Settings.Default.WindowY;
             Left = Properties.Settings.Default.WindowX;
 
-            Width = Properties.Settings.Default.Width;
-            Height = Properties.Settings.Default.Height;
+            Width = 570;
+            Height = 1020;
         }
 
         /// 
@@ -215,61 +225,7 @@ namespace DK64PointsTracker
             
         {
             
-            Button button = sender as Button;
 
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                Console.WriteLine(button.Tag);
-                /*
-                if (selected != null)
-                {
-                    data.RegionsData[selected.Name].selectedBar.Source = new BitmapImage(new Uri("Images\\VerticalBarWhite.png", UriKind.Relative));
-                }
-
-                selected = button;
-                data.RegionsData[button.Name].selectedBar.Source = new BitmapImage(new Uri("Images\\VerticalBar.png", UriKind.Relative));
-                */
-            }
-            else if (e.ChangedButton == MouseButton.Middle)
-            {
-                /*
-                if (data.RegionsData.ContainsKey(button.Name) && data.RegionsData[button.Name].hint != null && data.mode == Mode.None)
-                {
-                    data.RegionsData[button.Name].hint.Text = "?";
-                }
-                */
-            }
-        }
-
-        private void OnMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-        /*
-            Button button = sender as Button;
-
-            if (data.RegionsData.ContainsKey(button.Name) && data.RegionsData[button.Name].hint != null)
-            {
-                HandleReportValue(data.RegionsData[button.Name].hint, e.Delta);
-            }
-        */
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-        /*
-            if (e.Key == Key.PageDown && selected != null)
-            {
-                if (data.RegionsData.ContainsKey(selected.Name) && data.RegionsData[selected.Name].hint != null)
-                {
-                    HandleReportValue(data.RegionsData[selected.Name].hint, -1);
-                }
-            }
-            if (e.Key == Key.PageUp && selected != null)
-            {
-                if (data.RegionsData.ContainsKey(selected.Name) && data.RegionsData[selected.Name].hint != null)
-                {
-                    HandleReportValue(data.RegionsData[selected.Name].hint, 1);
-                }
-        */
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -286,8 +242,6 @@ namespace DK64PointsTracker
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Properties.Settings.Default.Width = RestoreBounds.Width;
-            Properties.Settings.Default.Height = RestoreBounds.Height;
         }
 
         /// 
@@ -320,53 +274,6 @@ namespace DK64PointsTracker
             
         }
 
-        public void IncrementCollected(int value)
-        {
-            /*
-            collected += value;
-
-            Collected.Text = collected.ToString();
-            //broadcast.Collected.Source = data.Numbers[collected + 1];
-            */
-
-        }
-
-        public void DecrementCollected(int value)
-        {
-            /*
-            collected -= value;
-            if (collected < 0)
-                collected = 0;
-
-            Collected.Text = collected.ToString();
-            //broadcast.Collected.Source = data.Numbers[collected + 1];
-            */
-        }
-
-        public void IncrementTotal()
-        {
-            /*
-            ++total;
-            if (total > 51)
-                total = 51;
-
-            Collected.Text = collected.ToString();
-            //broadcast.CheckTotal.Source = data.Numbers[total + 1];
-            */
-        }
-
-        public void DecrementTotal()
-        {
-            /*
-            --total;
-            if (total < 0)
-                total = 0;
-
-            Collected.Text = collected.ToString();
-            //broadcast.CheckTotal.Source = data.Numbers[total + 1];
-            */
-        }
-
         public void SetHintText(string text)
         {
             //HintText.Content = text;
@@ -375,7 +282,7 @@ namespace DK64PointsTracker
         private void ResetSize(object sender, RoutedEventArgs e)
         {
             Width = 570;
-            Height = 880;
+            Height = 1020;
         }
 
         private void ItemGridSwap(object sender, RoutedEventArgs e)
@@ -411,5 +318,11 @@ namespace DK64PointsTracker
             get { return Properties.Settings.Default.Autotracking; }
             set { Properties.Settings.Default.Autotracking = value; }
         }
+
+        private void rootGrid_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
+        }
+
     }
 }
