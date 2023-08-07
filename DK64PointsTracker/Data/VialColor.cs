@@ -2,6 +2,9 @@
 {
     public enum VialColor
     {
+        KONG,
+        KEY,
+
         CLEAR,
 
         YELLOW,
@@ -9,9 +12,6 @@
         BLUE,
         PURPLE,
         GREEN,
-
-        KEY,
-        KONG,
 
         NONE
     }

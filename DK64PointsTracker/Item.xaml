@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DK64PointsTracker"
              mc:Ignorable="d" Background="Transparent" PreviewGiveFeedback="Item_PreviewGiveFeedback" MouseMove="Item_MouseMove"
-             MouseDown="Item_MouseDown">
+             MouseDown="Item_MouseDown"
+             MouseWheel="Item_MouseWheel">
 
     <ContentControl.Resources>
         <ResourceDictionary>
@@ -18,8 +19,7 @@
     <ContentControl.Content>
         <Grid>
             <ContentPresenter x:Name ="ImageItem" Content="{Binding ItemImage}"/>
-            <ContentPresenter x:Name="Checkmark" Content="{StaticResource checkmark}" Visibility="Hidden"/>
-            <ContentPresenter x:Name="X" Content="{StaticResource x}" Visibility="Hidden"/>
+            <ContentPresenter x:Name="Star" Content="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left"/>
         </Grid>
     </ContentControl.Content>
 

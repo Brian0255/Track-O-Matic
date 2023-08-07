@@ -6,33 +6,32 @@ using System.Windows.Media;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace DK64PointsTracker
 {
-    /// <summary>
-    /// Interaction logic for Draggable.xaml
-    /// </summary>
     public partial class Item : ContentControl, INotifyPropertyChanged
     {
         public static readonly DependencyProperty ItemImageProperty =
         DependencyProperty.Register("ItemImage", typeof(Image), typeof(Item));
 
-        private Region region;
+        public Region Region { get; set; }
+        public bool Interactable { get; set; } = true;
 
         public bool CanLeftClick { get; set; } = true;
+
+        MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         public Image ItemImage
         {
             get { return (Image)GetValue(ItemImageProperty); }
             set { SetValue(ItemImageProperty, value); }
         }
-        public bool Checked { get; }
         private bool pressed = false;
 
         public Item()
         {
             InitializeComponent();
-            Checked = false;
             DataContext = this;
         }
 
@@ -44,12 +43,12 @@ namespace DK64PointsTracker
 
         public void SetRegion(Region newRegion)
         {
-            region = newRegion;
+            Region = newRegion;
         }
 
         public void ClearRegion()
         {
-            region = null;
+            Region = null;
         }
 
         //Adorner subclass specific to this control
@@ -62,7 +61,7 @@ namespace DK64PointsTracker
             {
                 renderRect = new Rect(adornedElement.DesiredSize);
                 Opacity = opacity;
-                this.IsHitTestVisible = false;
+                IsHitTestVisible = false;
                 if (adornedElement.Content is StackPanel)
                 {
                     var blah = (StackPanel)adornedElement.Content;
@@ -73,7 +72,7 @@ namespace DK64PointsTracker
                 }
                 else
                 {
-                    imageSource = ((adornedElement).ItemImage as Image).Source;
+                    imageSource = ((adornedElement).ItemImage).Source;
                 }
                 CenterOffset = new Point(-renderRect.Width / 2, -renderRect.Height / 2);
             }
@@ -81,6 +80,14 @@ namespace DK64PointsTracker
             {
                 drawingContext.DrawImage(imageSource, renderRect);
             }
+        }
+
+        private void PerformSave()
+        {
+            if (Tag == null) return;
+            var itemName = (ItemName)Tag;
+            var regionName = (Region == null) ? RegionName.UNKNOWN : Region.RegionName;
+            mainWindow.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, false, ItemImage.Opacity));
         }
 
         //Struct to use in the GetCursorPos function
@@ -114,7 +121,7 @@ namespace DK64PointsTracker
 
         public void Item_MouseMove(object sender, MouseEventArgs e)
         {
-            if (pressed)
+            if (pressed && Interactable)
             {
                 var opacity = (e.RightButton == MouseButtonState.Pressed) ? 0.375 : 1.0;
                 Opacity = 1.0;
@@ -125,58 +132,71 @@ namespace DK64PointsTracker
                 DragDrop.DoDragDrop(this, this, DragDropEffects.Copy);
                 pressed = false;
                 ItemImage.Opacity = (Parent == parent) ? 1.0 : opacity;
+                PerformSave();
                 adLayer.Remove(myAdornment);
             }
         }
 
+        private void ToggleStar()
+        {
+            Star.Visibility = (Star.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+            if (Region != null) Region.UpdateRequiredChecksTotal();
+            PerformSave();
+        }
+
         public void Item_MouseDown(object sender, MouseEventArgs e)
         {
-            pressed = true;
+            CheckMiddleClick(sender, e);
+            pressed = (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed && Interactable);
+        }
+
+        private void CheckMiddleClick(object sender, MouseEventArgs e)
+        {
+            if (e.MiddleButton == MouseButtonState.Pressed)
+            {
+                ToggleStar();
+            }
+        }
+
+        private void Item_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta != 0) ToggleStar();
         }
 
         public void Item_Return(object sender, MouseEventArgs e)
         {
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                X.Visibility = Visibility.Hidden;
-                Checkmark.Visibility = (Checkmark.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
-                if (region != null) region.UpdateRequiredChecksTotal();
-            }
-            if(e.MiddleButton == MouseButtonState.Pressed)
-            {
-                Checkmark.Visibility = Visibility.Hidden;
-                X.Visibility = (X.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
-            }
+            CheckMiddleClick(sender, e);
             if (e.LeftButton == MouseButtonState.Pressed && CanLeftClick)
             {
                 HandleItemReturn();
+                PerformSave();
             }
         }
 
         public void HandleItemReturn()
         {
-            Checkmark.Visibility = Visibility.Hidden;
+            if(!Interactable) return;
             ImageItem.Opacity = 1.0;
             var itemGrid = MainWindow.Items;
-            RegionGrid parent = this.Parent as RegionGrid;
-
-            ((RegionGrid)Parent).Handle_RegionGrid(this, false);
+            if (Parent != null)
+            {
+                RegionGrid parent = Parent as RegionGrid;
+                ((RegionGrid)Parent).Handle_RegionGrid(this, false);
+            }
             itemGrid.Children.Add(this);
-
-            //((MainWindow)Application.Current.MainWindow).DecrementCollected(MainWindow.itemValues[this.Tag.ToString()]);
-
+            var itemName = (ItemName)Tag;
             MouseDown -= Item_Return;
-
+            MouseDown += Item_MouseDown;
             MouseMove -= Item_MouseMove;
             MouseMove += Item_MouseMove;
         }
 
         private void Item_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
+            if (!Interactable) return;
             GetCursorPos(ref pointRef);
-            Point relPos = this.PointFromScreen(pointRef.GetPoint(myAdornment.CenterOffset));
+            Point relPos = PointFromScreen(pointRef.GetPoint(myAdornment.CenterOffset));
             myAdornment.Arrange(new Rect(relPos, myAdornment.DesiredSize));
-
             Mouse.SetCursor(Cursors.None);
             e.Handled = true;
         }

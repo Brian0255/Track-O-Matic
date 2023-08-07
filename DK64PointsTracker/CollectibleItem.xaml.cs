@@ -66,6 +66,7 @@ namespace DK64PointsTracker
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (Properties.Settings.Default.Autotracking) return;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Text++;
@@ -74,6 +75,7 @@ namespace DK64PointsTracker
 
         private void Image_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (Properties.Settings.Default.Autotracking) return;
             if (e.RightButton == MouseButtonState.Pressed)
                 Text = Math.Max(Text - 1, 0);
         }

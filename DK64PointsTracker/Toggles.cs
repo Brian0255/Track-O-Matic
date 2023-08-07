@@ -27,6 +27,8 @@ namespace DK64PointsTracker
                 {
                     item.IsEnabled = true;
                 }
+                TurnOffAutotrackingField();
+                foreach (var entry in Regions) SetRegionLighting(entry.Key, false);
             }
             else
             {

@@ -25,6 +25,7 @@ namespace DK64PointsTracker
 
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
+            (MainWindow as MainWindow).Save();
         }
     }
 }
