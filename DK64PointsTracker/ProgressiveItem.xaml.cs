@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -24,6 +26,17 @@ namespace DK64PointsTracker
         {
             InitializeComponent();
             DataContext = this;
+            ImageSources = new List<BitmapImage>();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            SetInitialSource();
+        }
+
+        private void SetInitialSource()
+        {
             if (ImageSources != null && ImageSources.Count > 0)
             {
                 SetSource(currentIndex);
@@ -32,14 +45,18 @@ namespace DK64PointsTracker
 
         public void Reset()
         {
-            image.Source = ImageSources[0];
-            image.Opacity = 0.5;
+            currentIndex = 0;
+            SetSource(currentIndex);
         }
 
         private void SetSource(int newIndex)
         {
             image.Source = ImageSources[newIndex];
-            image.Opacity = (newIndex == 0) ? 1.00 : 1.00;
+        }
+
+        public void SetImage(BitmapImage newImage)
+        {
+            image.Source = newImage;
         }
 
         private void ImageButton_LeftPress(object sender, RoutedEventArgs e)
@@ -64,6 +81,20 @@ namespace DK64PointsTracker
 
                 SetSource(currentIndex);
             }
+        }
+
+        private void ImageButton_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                ImageButton_LeftPress(sender, e);
+            }
+            else if (e.Delta < 0)
+            {
+                ImageButton_RightPress(sender, e);
+            }
+
+            e.Handled = true;
         }
     }
 }
