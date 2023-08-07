@@ -48,7 +48,6 @@ namespace DK64PointsTracker
         public Dictionary<RegionName, Region> Regions { get; private set;  }
         public Dictionary<ItemType,CollectibleItem> Collectibles { get; private set; }
         public List<string> EndgameHints { get; private set; }
-        public Dictionary<RegionName, RegionName> ShuffledLevelOrder { get; private set; }
         public Dictionary<ItemName, RegionName> ItemNameToRegion { get; } = new();
         private List<Item> DraggableItems = new();
         public int collected;
@@ -68,27 +67,27 @@ namespace DK64PointsTracker
             Regions = new()
             {
                 { RegionName.DK_ISLES, new Region(RegionName.DK_ISLES, DKIslesRegion, DKIslesPicture, DKIslesRegionGrid, DKIslesPoints, DKIslesTopLabel) },
-                 { RegionName.START, new Region(RegionName.START, StartRegion, StartPicture, StartRegionGrid, StartPoints, StartTopLabel) },
+                { RegionName.START, new Region(RegionName.START, StartRegion, StartPicture, StartRegionGrid) },
 
-                  { RegionName.JUNGLE_JAPES, new Region(RegionName.LOCKED_REGION, Level1, Level1Picture, Level1RegionGrid, Level1Points, Level1TopLabel) },
-                  { RegionName.ANGRY_AZTEC, new Region(RegionName.LOCKED_REGION, Level2, Level2Picture, Level2RegionGrid, Level2Points,Level2TopLabel, ItemName.KEY_1) },
-                  { RegionName.FRANTIC_FACTORY, new Region(RegionName.LOCKED_REGION, Level3, Level3Picture, Level3RegionGrid, Level3Points,Level3TopLabel, ItemName.KEY_2) },
-                  { RegionName.GLOOMY_GALLEON, new Region(RegionName.LOCKED_REGION, Level4, Level4Picture, Level4RegionGrid, Level4Points,Level4TopLabel, ItemName.KEY_2) },
-                  { RegionName.FUNGI_FOREST, new Region(RegionName.LOCKED_REGION, Level5, Level5Picture, Level5RegionGrid, Level5Points, Level5TopLabel,ItemName.KEY_4) },
-                  { RegionName.CRYSTAL_CAVES, new Region(RegionName.LOCKED_REGION, Level6, Level6Picture, Level6RegionGrid, Level6Points,Level6TopLabel, ItemName.KEY_5) },
-                  { RegionName.CREEPY_CASTLE, new Region(RegionName.LOCKED_REGION, Level7, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, ItemName.KEY_5) },
+                { RegionName.JUNGLE_JAPES, new Region(RegionName.LOCKED_REGION, Level1, Level1Picture, Level1RegionGrid, Level1Points, Level1TopLabel) },
+                { RegionName.ANGRY_AZTEC, new Region(RegionName.LOCKED_REGION, Level2, Level2Picture, Level2RegionGrid, Level2Points,Level2TopLabel, ItemName.KEY_1) },
+                { RegionName.FRANTIC_FACTORY, new Region(RegionName.LOCKED_REGION, Level3, Level3Picture, Level3RegionGrid, Level3Points,Level3TopLabel, ItemName.KEY_2) },
+                { RegionName.GLOOMY_GALLEON, new Region(RegionName.LOCKED_REGION, Level4, Level4Picture, Level4RegionGrid, Level4Points,Level4TopLabel, ItemName.KEY_2) },
+                { RegionName.FUNGI_FOREST, new Region(RegionName.LOCKED_REGION, Level5, Level5Picture, Level5RegionGrid, Level5Points, Level5TopLabel,ItemName.KEY_4) },
+                { RegionName.CRYSTAL_CAVES, new Region(RegionName.LOCKED_REGION, Level6, Level6Picture, Level6RegionGrid, Level6Points,Level6TopLabel, ItemName.KEY_5) },
+                { RegionName.CREEPY_CASTLE, new Region(RegionName.LOCKED_REGION, Level7, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, ItemName.KEY_5) },
 
-                  { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel) },
+                { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel) },
 
             };
             Collectibles = new()
             {
 
-                //{ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
-                //{ItemType.DIDDY_BLUEPRINT, DiddyBPs },
-                //{ItemType.LANKY_BLUEPRINT, LankyBPs },
-               // {ItemType.TINY_BLUEPRINT, TinyBPs },
-               // {ItemType.CHUNKY_BLUEPRINT, ChunkyBPs },
+                {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
+                {ItemType.DIDDY_BLUEPRINT, DiddyBPs },
+                {ItemType.LANKY_BLUEPRINT, LankyBPs },
+                {ItemType.TINY_BLUEPRINT, TinyBPs },
+                {ItemType.CHUNKY_BLUEPRINT, ChunkyBPs },
 
                 {ItemType.PEARL, Pearls },
                 {ItemType.BATTLE_CROWN, BattleCrowns },
@@ -99,7 +98,7 @@ namespace DK64PointsTracker
 
             };
             Items = ItemGrid;
-            Regions[RegionName.JUNGLE_JAPES].SetAsLobby1();
+           Regions[RegionName.JUNGLE_JAPES].SetAsLobby1();
 
             //have a separate list of the movable tracker items so it's easy to find them even if they are moved out of the grid
             foreach (var control in Items.Children)
@@ -116,7 +115,6 @@ namespace DK64PointsTracker
         {
             string resource = (lightUp) ? "RegionBGLitUp" : "RegionBG";
             if (!Regions.ContainsKey(regionName)) return;
-            if (ShuffledLevelOrder.ContainsKey(regionName)) regionName = ShuffledLevelOrder[regionName];
             var region = Regions[regionName];
             region.MainUIGrid.SetResourceReference(Panel.BackgroundProperty, resource);
             region.RegionGrid.SetResourceReference(Panel.BackgroundProperty, resource);
@@ -147,16 +145,17 @@ namespace DK64PointsTracker
             }
         }
 
-        public void ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName)
+        private bool LookingForSlam(ItemName item)
         {
-            if (ShuffledLevelOrder.ContainsKey(regionName))
-            {
-                regionName = ShuffledLevelOrder[regionName];
-            }
+            return (item == ItemName.PROGRESSIVE_SLAM_1 || item == ItemName.PROGRESSIVE_SLAM_2);
+        }
+
+        public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName)
+        {
             var check = ImportantCheckList.ITEMS[itemToProcess];
             foreach (var itemControl in DraggableItems)
             {
-                if (itemControl is Item item && itemToProcess == (ItemName)item.Tag && ItemNameToRegion.ContainsKey(itemToProcess))
+                if (itemControl is Item item && itemToProcess == (ItemName)item.Tag)
                 {
                     if(item.Parent != ItemGrid)
                     {
@@ -165,51 +164,20 @@ namespace DK64PointsTracker
                     }
                     var itemName = (ItemName)item.Tag;
                     item.Opacity = 1.0;
-                    var region = ItemNameToRegion[itemName];
                     itemControl.CanLeftClick = false;
-
-                    //slam locations via spoiler log are ambiguous, use the region tracking of the autotracker
-                    //because this is not completely reliable, let the user move progressive slams
-                    if (itemName == ItemName.PROGRESSIVE_SLAM_1 || itemName == ItemName.PROGRESSIVE_SLAM_2)
-                    {
-                        if (regionName == RegionName.UNKNOWN) regionName = RegionName.START;
-                        region = regionName;
-                        itemControl.CanLeftClick = true;
-                    }
-                    Regions[region].RegionGrid.Add_Item(item);
+                    Regions[regionName].RegionGrid.Add_Item(item, false);
+                    //should mean that there was no matching vial, item couldn't be placed as a result
+                    if (item.Parent == ItemGrid) return false;
+                    return true;
                 }
             }
-            if (check.ItemType == ItemType.KEY)
-            {
-                foreach (var entry in Regions)
-                {
-                    entry.Value.ProcessKey(check.ItemName, true);
-                }
-            }
+            return false;
         }
 
         private void InitOptions()
         {
-            /*
-            FryingPanOption.IsChecked = Properties.Settings.Default.FryingPan;
-            //HandleItemToggle(PromiseCharmOption.IsChecked, PromiseCharm, true);
-
-            BowserCastleOption.IsChecked = Properties.Settings.Default.BowserCastle;
-            for (int i = 0; i < data.Reports.Count; ++i)
-            {
-                HandleItemToggle(BowserCastleOption.IsChecked, data.Reports[i], true);
-            }
-
-            BlueHouseOption.IsChecked = Properties.Settings.Default.BlueHouse;
-            //HandleItemToggle(AbilitiesOption.IsChecked, OnceMore, true);
-            //HandleItemToggle(AbilitiesOption.IsChecked, SecondChance, true);
-            */
-
             TopMostOption.IsChecked = Properties.Settings.Default.TopMost;
             TopMostToggle(null, null);
-
-            //BroadcastStartupOption.IsChecked = Properties.Settings.Default.BroadcastStartup;
-            //BroadcastStartupToggle(null, null);
 
             Top = Properties.Settings.Default.WindowY;
             Left = Properties.Settings.Default.WindowX;
@@ -217,10 +185,6 @@ namespace DK64PointsTracker
             Width = 570;
             Height = 1020;
         }
-
-        /// 
-        /// Input Handling
-        /// 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
             
         {
@@ -230,7 +194,6 @@ namespace DK64PointsTracker
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            Save("pape-tracker-autosave.txt");
             Properties.Settings.Default.Save();
         }
 
