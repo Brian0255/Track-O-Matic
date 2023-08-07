@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -20,16 +19,16 @@ namespace DK64PointsTracker
         private bool isLobby1 = false;
         private int requiredChecks = 0;
         public Grid MainUIGrid { get; }
-        public Button RegionButton { get; }
+        public Image RegionButton { get; }
         public RegionGrid RegionGrid { get; }
-        public TextBlock PointsLabel { get; }
+        public TextBlock BottomLabel { get; }
         public TextBlock TopLabel { get; }
         public int TotalPoints { get; private set; }
         public bool SpoilerLoaded { get; private set; }
         public int CurrentPoints { get; private set; }
         public int BLockerAmount { get; private set; }
 
-        public Region(RegionName regionName, Grid mainUIGrid, Button regionButton, RegionGrid checksContainer, TextBlock pointsLabel, TextBlock topLabel = null, ItemName keyLock = ItemName.NONE)
+        public Region(RegionName regionName, Grid mainUIGrid, Image regionButton, RegionGrid checksContainer, TextBlock bottomLabel = null, TextBlock topLabel = null, ItemName keyLock = ItemName.NONE)
         {
             RegionName = regionName;
             BLockerAmount = 0;
@@ -37,19 +36,21 @@ namespace DK64PointsTracker
             MainUIGrid = mainUIGrid;
             RegionButton = regionButton;
             RegionGrid = checksContainer;
-            PointsLabel = pointsLabel;
+            BottomLabel = bottomLabel;
             TopLabel = topLabel;
             CurrentChecks = new();
             RegionGrid.Region = this;
             KeyLock = keyLock;
             Locked = (keyLock != ItemName.NONE);
-            UpdateUIFromShuffledRegion();
-            TopLabel.SetResourceReference(TextBlock.ForegroundProperty, "RequiredChecksColor");
+            if (BottomLabel == null) return;
+            BottomLabel.SetResourceReference(TextBlock.ForegroundProperty, "RequiredChecksColor");
+            if (TopLabel != null) TopLabel.Foreground = Brushes.White;
         }
 
         //Should only be called when the spoiler log is being read, to initialize the point total
         public void AddCheck(ImportantCheck check)
         {
+            if (check == null) return;
             CurrentChecks[check] = true;
             UpdatePoints();
         }
@@ -71,20 +72,17 @@ namespace DK64PointsTracker
                 }
             }
             var toDisplay = Math.Max(requiredChecks - total, 0);
-            TopLabel.Text = toDisplay.ToString();
+            if(BottomLabel != null) BottomLabel.Text = toDisplay.ToString();
         }
 
         public void Reset()
         {
             TotalPoints = 0;
             requiredChecks = 0;
-            BLockerAmount = 0;
             CurrentChecks = new();
             SpoilerLoaded = false;
-            Locked = (KeyLock != ItemName.NONE || isLobby1);
             UpdatePoints();
-            UpdateUIFromShuffledRegion();
-            if (TopLabel != null) TopLabel.Text = "?";
+            if (BottomLabel != null) BottomLabel.Text = "?";
 
             //put them into a list first to avoid the "cant remove while enumerating" 
             var elements = new List<Item>(RegionGrid.Children.Count);
@@ -95,12 +93,16 @@ namespace DK64PointsTracker
             }
             foreach(var item in elements)
             {
+                if (item.Tag == null) continue;
                 item.HandleItemReturn();
             }
+            RegionGrid.ResetVials();
+            if (TopLabel != null) TopLabel.Visibility = Visibility.Visible;
         }
 
         public void RemoveCheck(ImportantCheck check)
         {
+            if (check == null) return;
             CurrentChecks.Remove(check);
             UpdatePoints();
         }
@@ -114,9 +116,10 @@ namespace DK64PointsTracker
                 CurrentPoints += check.PointValue;
             }
             var remaining = Math.Max(0,TotalPoints - CurrentPoints);
-            PointsLabel.Text = (SpoilerLoaded) ? remaining.ToString() : "?";
+            if(TopLabel == null) return;
+            TopLabel.Text = (SpoilerLoaded) ? remaining.ToString() : "?";
             var resource = (CurrentPoints >= TotalPoints && SpoilerLoaded) ? "RegionComplete" : "RegionInProgress";
-            PointsLabel.SetResourceReference(TextBlock.ForegroundProperty, resource);
+            TopLabel.SetResourceReference(TextBlock.ForegroundProperty, resource);
         }
 
         public void SetShuffledRegion(RegionName newRegionName)
@@ -124,56 +127,23 @@ namespace DK64PointsTracker
             RegionName = newRegionName;
         }
 
-        public void IncreaseInitialPointTotal(int toAdd)
+        public void SetInitialPoints(int newValue)
         {
-            TotalPoints += toAdd;
+            TotalPoints = newValue;
         }
 
-        public void DecreaseInitialPointTotal(int toAdd)
+        public void SetRequiredCheckTotal(int newValue)
         {
-            TotalPoints -= toAdd;
-        }
-
-        public void IncreaseRequiredCheckTotal()
-        {
-            requiredChecks++;
-        }
-
-        public void DecreaseRequiredCheckTotal()
-        {
-            requiredChecks--;
+            requiredChecks = newValue;
         }
 
         public void SetSpoilerAsLoaded()
         {
             SpoilerLoaded = true;
-            if (isLobby1) Locked = false;
             UpdatePoints();
-            UpdateUIFromShuffledRegion();
-            if (TopLabel != null) TopLabel.Text = requiredChecks.ToString();
-        }
-
-        private void UpdateUIFromShuffledRegion()
-        {
-            var resourceNameToUse = (Locked) ? "locked_region": RegionName.ToString().ToLower();
-            RegionButton.ClearValue(Button.ContentProperty);
-            RegionButton.SetResourceReference(Button.ContentProperty, resourceNameToUse);
-        }
-
-        public void ProcessKey(ItemName key, bool addingKey)
-        {
-            if(KeyLock == key)
-            {
-                Locked = !addingKey;
-            }
-            if (!SpoilerLoaded) return;
-            UpdateUIFromShuffledRegion();
-            UpdatePoints();
-        }
-
-        public void SetBLockerAmount(int newAmount)
-        {
-            BLockerAmount = newAmount;
+            if (BottomLabel != null) BottomLabel.Text = requiredChecks.ToString();
+            if (TopLabel == null) return;
+            TopLabel.Visibility = (TotalPoints == -1) ? Visibility.Hidden : Visibility.Visible;
         }
     }
 }
