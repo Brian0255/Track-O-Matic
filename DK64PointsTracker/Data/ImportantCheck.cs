@@ -4,7 +4,7 @@
     {
         public ItemName ItemName { get; }
         public ItemType ItemType { get; }
-        public int PointValue { get; }
+        public int PointValue { get; private set; }
         public VialColor VialColor { get; }
         public ImportantCheck(ItemName itemName, ItemType itemType, VialColor vialColor = VialColor.YELLOW)
         {
@@ -12,17 +12,20 @@
             ItemType = itemType;
             PointValue = 0;
             VialColor = vialColor;
-            if (PointValues.SpecificValues.ContainsKey(itemName))
+        }
+
+        public void InitPointValue()
+        {
+            if (PointValues.SpecificValues.ContainsKey(ItemName))
             {
-                PointValue = PointValues.SpecificValues[itemName];
+                PointValue = PointValues.SpecificValues[ItemName];
                 return;
             }
-            if (PointValues.GroupedValues.ContainsKey(itemType))
+            if (PointValues.GroupedValues.ContainsKey(ItemType))
             {
-                PointValue = PointValues.GroupedValues[itemType];
+                PointValue = PointValues.GroupedValues[ItemType];
                 return;
             }
         }
     }
-
 }
