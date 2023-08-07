@@ -12,9 +12,16 @@ namespace DK64PointsTracker
     public class Region
     {
         public bool complete;
+        public SpoilerSettings SpoilerSettings { get; set; }
         public RegionName RegionName;
         public Dictionary<ImportantCheck, bool> CurrentChecks { get; private set; }
         public ItemName KeyLock;
+
+        private Dictionary<string, TextBlock> SpoilerSettingToLabel = new()
+        {
+            {"RequiredChecks", null },
+            {"PointsLabel", null },
+        };
         private bool Locked;
         private bool isLobby1 = false;
         private int requiredChecks = 0;
@@ -27,6 +34,22 @@ namespace DK64PointsTracker
         public bool SpoilerLoaded { get; private set; }
         public int CurrentPoints { get; private set; }
         public int BLockerAmount { get; private set; }
+
+        private void ResetLabels()
+        {
+            if (BottomLabel != null)
+            {
+                BottomLabel.SetResourceReference(TextBlock.ForegroundProperty, "RequiredChecksColor");
+                BottomLabel.Text = "?";
+                BottomLabel.Visibility = Visibility.Visible;
+            }
+            if (TopLabel != null)
+            {
+                TopLabel.Foreground = Brushes.White;
+                TopLabel.Text = "?";
+                TopLabel.Visibility = Visibility.Visible;
+            }
+        }
 
         public Region(RegionName regionName, Grid mainUIGrid, Image regionButton, RegionGrid checksContainer, TextBlock bottomLabel = null, TextBlock topLabel = null, ItemName keyLock = ItemName.NONE)
         {
@@ -42,9 +65,7 @@ namespace DK64PointsTracker
             RegionGrid.Region = this;
             KeyLock = keyLock;
             Locked = (keyLock != ItemName.NONE);
-            if (BottomLabel == null) return;
-            BottomLabel.SetResourceReference(TextBlock.ForegroundProperty, "RequiredChecksColor");
-            if (TopLabel != null) TopLabel.Foreground = Brushes.White;
+            ResetLabels();
         }
 
         //Should only be called when the spoiler log is being read, to initialize the point total
@@ -68,11 +89,12 @@ namespace DK64PointsTracker
             {
                 if(control is Item item)
                 {
-                    total += (item.Checkmark.Visibility == Visibility.Visible) ? 1 : 0;
+                    total += (item.Star.Visibility == Visibility.Visible) ? 1 : 0;
                 }
             }
             var toDisplay = Math.Max(requiredChecks - total, 0);
-            if(BottomLabel != null) BottomLabel.Text = toDisplay.ToString();
+            var label = SpoilerSettingToLabel["RequiredChecks"];
+            if(label != null) label.Text = toDisplay.ToString();
         }
 
         public void Reset()
@@ -81,9 +103,6 @@ namespace DK64PointsTracker
             requiredChecks = 0;
             CurrentChecks = new();
             SpoilerLoaded = false;
-            UpdatePoints();
-            if (BottomLabel != null) BottomLabel.Text = "?";
-
             //put them into a list first to avoid the "cant remove while enumerating" 
             var elements = new List<Item>(RegionGrid.Children.Count);
 
@@ -97,7 +116,7 @@ namespace DK64PointsTracker
                 item.HandleItemReturn();
             }
             RegionGrid.ResetVials();
-            if (TopLabel != null) TopLabel.Visibility = Visibility.Visible;
+            ResetLabels();
         }
 
         public void RemoveCheck(ImportantCheck check)
@@ -109,6 +128,7 @@ namespace DK64PointsTracker
 
         public void UpdatePoints()
         {
+            if (SpoilerSettings == null || !SpoilerSettings.PointsEnabled) return;
             CurrentPoints = 0;
             foreach(var entry in CurrentChecks)
             {
@@ -116,10 +136,11 @@ namespace DK64PointsTracker
                 CurrentPoints += check.PointValue;
             }
             var remaining = Math.Max(0,TotalPoints - CurrentPoints);
-            if(TopLabel == null) return;
-            TopLabel.Text = (SpoilerLoaded) ? remaining.ToString() : "?";
+            var pointsLabel = SpoilerSettingToLabel["PointsLabel"];
+            if(pointsLabel == null) return;
+            pointsLabel.Text = (SpoilerLoaded) ? remaining.ToString() : "?";
             var resource = (CurrentPoints >= TotalPoints && SpoilerLoaded) ? "RegionComplete" : "RegionInProgress";
-            TopLabel.SetResourceReference(TextBlock.ForegroundProperty, resource);
+            pointsLabel.SetResourceReference(TextBlock.ForegroundProperty, resource);
         }
 
         public void SetShuffledRegion(RegionName newRegionName)
@@ -137,13 +158,33 @@ namespace DK64PointsTracker
             requiredChecks = newValue;
         }
 
+        private void ConfigureLabelsFromSettings()
+        {
+            if (SpoilerSettings == null) return;
+            if (SpoilerSettings.PointsEnabled)
+            {
+                SpoilerSettingToLabel["PointsLabel"] = BottomLabel;
+                TopLabel.SetResourceReference(TextBlock.ForegroundProperty, "RequiredChecksColor");
+                BottomLabel.Foreground = Brushes.White;
+                SpoilerSettingToLabel["RequiredChecks"] = TopLabel;
+            }
+            else if (SpoilerSettings.VialsEnabled)
+            {
+                TopLabel.Visibility = Visibility.Hidden;
+                BottomLabel.SetResourceReference(TextBlock.ForegroundProperty, "RequiredChecksColor");
+                SpoilerSettingToLabel["RequiredChecks"] = BottomLabel;
+            }
+            int columnSpan = (SpoilerSettings.PointsEnabled || SpoilerSettings.WOTHEnabled) ? 2 : 4;
+            Grid.SetColumnSpan(RegionButton, columnSpan);
+            SpoilerSettingToLabel["RequiredChecks"].Visibility = (SpoilerSettings.WOTHEnabled) ? Visibility.Visible : Visibility.Hidden;
+        }
+
         public void SetSpoilerAsLoaded()
         {
             SpoilerLoaded = true;
+            ConfigureLabelsFromSettings();
             UpdatePoints();
-            if (BottomLabel != null) BottomLabel.Text = requiredChecks.ToString();
-            if (TopLabel == null) return;
-            TopLabel.Visibility = (TotalPoints == -1) ? Visibility.Hidden : Visibility.Visible;
+            UpdateRequiredChecksTotal();
         }
     }
 }
