@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -22,22 +23,159 @@ namespace DK64PointsTracker
     public partial class RegionGrid : UniformGrid
     {
         public Region Region;
+        public Dictionary<VialColor, List<Item>> Vials;
+        public List<Item> VialItems = new();
+
+        public void InitializeVials()
+        {
+            Vials = new()
+            {
+                { VialColor.CLEAR, new List<Item>() },
+
+                { VialColor.YELLOW, new List<Item>() },
+                { VialColor.RED, new List<Item>() },
+                { VialColor.BLUE, new List<Item>() },
+                { VialColor.PURPLE, new List<Item>() },
+                { VialColor.GREEN, new List<Item>() },
+
+                { VialColor.KEY, new List<Item>() },
+                { VialColor.KONG, new List<Item>() }
+            };
+        }
+
+        //public List<Image> Vials;
         public RegionGrid()
         {
             InitializeComponent();
+            InitializeVials();
         }
 
-        public void Handle_RegionGrid(Item button, bool add)
+        private void AdjustSpacing()
+        {
+            int gridremainder = 0;
+            if (Children.Count % 5 != 0)
+                gridremainder = 1;
+
+            int gridnum = Math.Max((Children.Count / 5) + gridremainder, 1);
+
+            Rows = gridnum;
+
+            double height = 1 + ((Children.Count - 1) / 5) / 2;
+            var outerGrid = ((Parent as Grid).Parent as Grid);
+            int row = (int)Parent.GetValue(Grid.RowProperty);
+            outerGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
+        }
+
+        public void AddInitialVial(VialColor color)
+        {
+            var imageName = (color.ToString() + "_vial.png").ToLower();
+            Item vialImage = new()
+            {
+              ItemImage = new()
+              {
+                  Source = new BitmapImage(new Uri("Images/dk64/" + imageName, UriKind.Relative))
+              }
+            };
+            vialImage.SetRegion(Region);
+            vialImage.Interactable = false;
+            vialImage.MouseDown -= vialImage.Item_MouseDown;
+            vialImage.MouseDown += vialImage.Item_Return;
+            Vials[color].Add(vialImage);
+            VialItems.Add(vialImage);
+            Children.Add(vialImage);
+            AdjustSpacing();
+        }
+
+        public void ResetVials()
+        {
+            foreach(var vialItem in VialItems)
+            {
+                if (vialItem.Parent != null) Children.Remove(vialItem);
+            }
+            VialItems = new();
+            Vials = new();
+            InitializeVials();
+        }
+
+        private bool ValidInsertionPoint(int index, Item vial, bool userPlacing)
+        {
+            if (vial.Parent != null) return true;
+            if(index < 0 || index > Children.Count - 1) return false;
+            if (Children[index] is Item item)
+            {
+                //niche case where 
+                //1. autotracker wants to place a clear vial move (e.g. a slam)
+                //2. user already placed another clear vial move there (e.g. diving)
+                //3. as a result, we need to remove the user placed move first
+                if (!userPlacing && item.CanLeftClick && item.Tag != null)
+                {
+                    item.HandleItemReturn();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void AddWithVialCheck(Item button, bool userPlacing)
+        {
+            var item = (ItemName)button.Tag;
+            if (VialItems.Count() == 0)
+            {
+                Children.Add(button);
+                return;
+            }
+            var itemInfo = ImportantCheckList.ITEMS[item];
+            if (itemInfo.VialColor != VialColor.NONE && Vials.ContainsKey(itemInfo.VialColor))
+            {
+                var vials = Vials[itemInfo.VialColor];
+                foreach(var vial in vials)
+                {
+                    int index = VialItems.IndexOf(vial);
+                    if (!ValidInsertionPoint(index, vial, userPlacing)) continue;
+                    button.Checkmark.Visibility = vial.Checkmark.Visibility;
+                    button.X.Visibility = vial.X.Visibility;
+                    Children.RemoveAt(index);
+                    Children.Insert(index, button);
+                    return;
+                }
+            }
+        }
+
+        private void RemoveWithVialCheck(Item button)
+        {
+            if (button.Tag == null) return;
+            if(VialItems.Count() == 0)
+            {
+                Children.Remove(button);
+                return;
+            }
+            var item = (ItemName)button.Tag;
+            var itemInfo = ImportantCheckList.ITEMS[item];
+            if (itemInfo.VialColor != VialColor.NONE && Vials.ContainsKey(itemInfo.VialColor))
+            {
+                int index = Children.IndexOf(button);
+                var vial = VialItems[index];
+                Children.RemoveAt(index);
+                Children.Insert(index, vial);
+                return;
+            }
+        }
+
+        public void Handle_RegionGrid(Item button, bool add, bool userPlacing = true)
         {
             MainWindow window = ((MainWindow)Application.Current.MainWindow);
-            ItemName item = (ItemName)button.Tag;
-            var check = ImportantCheckList.ITEMS[item];
+            ImportantCheck check = null;
+            if(button.Tag != null)
+            {
+                var item = (ItemName)button.Tag;
+                check = ImportantCheckList.ITEMS[item];
+            }
             if (add)
             {
                 try
                 {
-                    Children.Add(button);
                     button.SetRegion(Region);
+                    AddWithVialCheck(button, userPlacing);
                 }
                 catch (Exception)
                 {
@@ -47,39 +185,12 @@ namespace DK64PointsTracker
             }
             else
             {
+                RemoveWithVialCheck(button);
                 button.ClearRegion();
                 Region.RemoveCheck(check);
-                Children.Remove(button);
             }
-
-            int gridremainder = 0;
-            if (Children.Count % 5 != 0)
-                gridremainder = 1;
-
-            int gridnum = Math.Max((Children.Count / 5) + gridremainder, 1);
-
-            Rows = gridnum;
-
-            //disgusting but it works
-            double height = 1 + ((Children.Count - 1) / 5) / 2;
-            var outerGrid = ((Parent as Grid).Parent as Grid);
-            int row = (int)Parent.GetValue(Grid.RowProperty);
-            outerGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
+            AdjustSpacing();
             Region.UpdateRequiredChecksTotal();
-            /*
-            if (MainWindow.data.mode == Mode.AltHints || MainWindow.data.mode == Mode.OpenKHAltHints)
-            {
-                RegionComplete();
-
-                string regionName = Name.Substring(0, Name.Length - 4);
-                if (MainWindow.data.RegionsData[regionName].hint != null)
-                {
-                    TextBlock hint = MainWindow.data.RegionsData[regionName].hint;
-                    int value = Int32.Parse(hint.Text);
-                    ((MainWindow)App.Current.MainWindow).SetReportValue(hint, Children.Count + 1);
-                }
-            }
-            */
         }
 
         private void Item_Drop(Object sender, DragEventArgs e)
@@ -89,7 +200,7 @@ namespace DK64PointsTracker
             {
 
                 Item item = e.Data.GetData(typeof(Item)) as Item;
-                if(item.Parent is Grid) Add_Item(item, window);
+                if(item.Parent is Grid) Add_Item(item);
             }
             else if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -100,114 +211,19 @@ namespace DK64PointsTracker
             }
         }
 
-        public void Add_Item(Item item, MainWindow window=null)
+        public void Add_Item(Item item, bool userPlacing = true)
         {
             // move item to region
             Panel itemGrid = item.Parent as Panel;
             if(itemGrid != null) itemGrid.Children.Remove(item);
-            Handle_RegionGrid(item, true);
-
-            // update collection count
-            //window.IncrementCollected(itemValue);
-            
-            // update mouse actions
-            //item.MouseDoubleClick -= item.Item_Click;
-            item.MouseMove -= item.Item_MouseMove;
-            item.MouseDown -= item.Item_Return;
-            item.MouseDown += item.Item_Return;
-           
-
-            //item.DragDropEventFire(item.Name, Name.Remove(Name.Length - 4, 4), true);
-        }
-
-        public bool Handle_Report()
-        {
-            /*
-            bool isreport = false;
-
-            // item is a report
-            if (data.hintsLoaded && (int)item.GetValue(Grid.RowProperty) == 0)
+            Handle_RegionGrid(item, true, userPlacing);
+            if (item.Parent == null) item.HandleItemReturn();
+            else
             {
-                int index = (int)item.GetValue(Grid.ColumnProperty);
-
-                // out of report attempts
-                if (data.reportAttempts[index] == 0)
-                    return false;
-
-                // check for correct report location
-                if (data.reportLocations[index] == Name.Substring(0, Name.Length - 4))
-                {
-                    // hint text and resetting fail icons
-                    window.SetHintText(Codes.GetHintTextName(data.reportInformation[index].Item1) + " has " + data.reportInformation[index].Item2 + " important checks");
-                    data.ReportAttemptVisual[index].SetResourceReference(ContentControl.ContentProperty, "Fail0");
-                    data.reportAttempts[index] = 3;
-                    isreport = true;
-                    item.DragDropEventFire(data.reportInformation[index].Item1, data.reportInformation[index].Item2);
-
-                    // set region report hints to as hinted then checks if the report location was hinted to set if its a hinted hint
-                    data.RegionsData[data.reportInformation[index].Item1].hinted = true;
-                    if (data.RegionsData[data.reportLocations[index]].hinted == true)
-                    {
-                        data.RegionsData[data.reportInformation[index].Item1].hintedHint = true;
-                    }
-
-                    // loop through hinted region for reports to set their info as hinted hints
-                    for (int i = 0; i < data.RegionsData[data.reportInformation[index].Item1].RegionGrid.Children.Count; ++i)
-                    {
-                        Item gridItem = data.RegionsData[data.reportInformation[index].Item1].RegionGrid.Children[i] as Item;
-                        if (gridItem.Name.Contains("Report"))
-                        {
-                            int reportIndex = int.Parse(gridItem.Name.Substring(6)) - 1;
-                            data.RegionsData[data.reportInformation[reportIndex].Item1].hintedHint = true;
-                            window.SetReportValue(data.RegionsData[data.reportInformation[reportIndex].Item1].hint, data.reportInformation[reportIndex].Item2 + 1);
-                        }
-                    }
-
-                    // auto update region important check number
-                    window.SetReportValue(data.RegionsData[data.reportInformation[index].Item1].hint, data.reportInformation[index].Item2 + 1);
-                }
-                else
-                {
-                    // update fail icons when location is report location is wrong
-                    AddFailIcon(index);
-                    return false;
-                }
+                item.MouseMove -= item.Item_MouseMove;
+                item.MouseDown -= item.Item_Return;
+                item.MouseDown += item.Item_Return;
             }
-
-            if (isreport)
-            {
-                item.MouseEnter -= item.Report_Hover;
-                item.MouseEnter += item.Report_Hover;
-            }
-            */
-            return true;
-        }
-
-        public void RegionComplete()
-        {
-            /*
-            string regionName = Name.Substring(0, Name.Length - 4);
-            if (regionName == "FlowerFields" || MainWindow.data.RegionsData[regionName].complete == true)
-                return;
-
-            List<string> items = new List<string>();
-            items.AddRange(MainWindow.data.RegionsData[Name.Substring(0, Name.Length - 4)].checkCount);
-
-            foreach (var child in Children)
-            {
-                Item item = child as Item;
-                char[] numbers = { '1', '2', '3', '4', '5' };
-                if (items.Contains(item.Name.TrimEnd(numbers)))
-                {
-                    items.Remove(item.Name.TrimEnd(numbers));
-                }
-            }
-
-            if (items.Count == 0)
-            {
-                MainWindow.data.RegionsData[Name.Substring(0, Name.Length - 4)].complete = true;
-            }
-            */
         }
     }
 }
