@@ -13,7 +13,6 @@
         CREEPY_CASTLE,
         HIDEOUT_HELM,
         SHOPS,
-        LOCKED_REGION,
         UNKNOWN
     }
 }
