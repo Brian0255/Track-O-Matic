@@ -97,6 +97,23 @@ namespace DK64PointsTracker
         ItemName.DONKEY, ItemName.DIDDY, ItemName.LANKY, ItemName.TINY, ItemName.CHUNKY
     };
 
+    public static readonly Dictionary<string, ItemType> POINT_NAME_TO_GROUP = new()
+    {
+        {"kongs", ItemType.KONG },
+        {"keys", ItemType.KEY },
+        {"guns", ItemType.GUN },
+        {"instruments",ItemType.INSTRUMENT },
+        {"active_moves", ItemType.PHYSICAL_MOVE },
+        {"pad_moves", ItemType.PAD_MOVE },
+        {"barrel_moves", ItemType.BARREL_MOVE },
+        {"training_moves", ItemType.TRAINING_MOVE },
+        {"important_shared_moves",ItemType.SHARED_MOVE },
+    };
+
+    public static readonly Dictionary<string, ItemName> POINT_NAME_TO_SPECIFIC_VALUE = new()
+    {
+        {"bean", ItemName.BEAN }
+    };
 
     }
 
