@@ -6,6 +6,8 @@
         <ContentPresenter Content="{TemplateBinding Content}"/>
     </ControlTemplate>
 
+    <Thickness x:Key="RegionPictureMargin" >0,20,0,0</Thickness>
+
     <SolidColorBrush x:Key="GBColor" Color="#FFFF00"/>
     <SolidColorBrush x:Key="RequiredChecksColor" Color="#2cc956"/>
 
@@ -14,11 +16,6 @@
     <SolidColorBrush x:Key="RegionBG" Color="#3a3c42"/>
     <SolidColorBrush x:Key="RegionBGLitUp" Color="#404552"/>
     <SolidColorBrush x:Key="UnfocusedText" Color="#8d9096"/>
-
-    <!--
-    <SolidColorBrush x:Key="BaseBG" Color="#202020"/>
-    <SolidColorBrush x:Key="RegionImageBG" Color="#303030"/>
-    <SolidColorBrush x:Key="RegionBG" Color="#3a3a3a"/>-->
 
     <SolidColorBrush x:Key="RegionComplete" Color="#1c8ae3"/>
     <SolidColorBrush x:Key="RegionInProgress" Color="#ffffff"/>
@@ -97,6 +94,13 @@
 
     <Image x:Key="bean" Source="Images\dk64\bean.png"  x:Shared="false"/>
     <Image x:Key="pearl" Source="Images\dk64\pearl.png"  x:Shared="false"/>
+
+    <Image x:Key="potion_dk" Source="Images\dk64\potion_dk.png" x:Shared="false"/>
+    <Image x:Key="potion_diddy" Source="Images\dk64\potion_diddy.png" x:Shared="false"/>
+    <Image x:Key="potion_lanky" Source="Images\dk64\potion_lanky.png" x:Shared="false"/>
+    <Image x:Key="potion_tiny" Source="Images\dk64\potion_tiny.png" x:Shared="false"/>
+    <Image x:Key="potion_chunky" Source="Images\dk64\potion_chunky.png" x:Shared="false"/>
+    <Image x:Key="potion_shared" Source="Images\dk64\potion_shared.png" x:Shared="false"/>
 
     <!--Black&White (not used currently)-->
     <Image x:Key="donkey_bw" Source="Images\bw\donkey.png"  x:Shared="false"/>
