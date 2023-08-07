@@ -104,11 +104,7 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name ="StartPicture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" Grid.RowSpan="2" Grid.ColumnSpan="2" FocusVisualStyle="{x:Null}">
-                                    <DynamicResource ResourceKey="start"/>
-                                </Button>
-                                <TextBlock x:Name="StartTopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="StartPoints" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center" Grid.RowSpan="2"/>
+                                <Image x:Name="StartPicture" Source="images\dk64\start.png" Grid.RowSpan="2" Grid.ColumnSpan="4" Margin="10" />
                             </Grid>
                             <local:RegionGrid  x:Name="StartRegionGrid" Margin="5,0,5,0" Grid.Column="1" Tag="{x:Static local:RegionName.START}"/>
                         </Grid>
@@ -131,11 +127,11 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Content="{DynamicResource jungle_japes}" Name="Level1Picture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" FocusVisualStyle="{x:Null}" Grid.RowSpan="2" Grid.ColumnSpan="2">
 
-                                </Button>
-                                <TextBlock x:Name="Level1TopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="Level1Points" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
+                                <Image x:Name="Level1Picture" Source="Images\dk64\jungle_japes.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
+                                <local:LevelOrderNumber x:Name="Level1Order" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
+                                <TextBlock x:Name="Level1TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Level1Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                             </Grid>
                             <local:RegionGrid Margin="5,0,5,0"  x:Name="Level1RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.JUNGLE_JAPES}"/>
                         </Grid>
@@ -158,11 +154,10 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name="Level2Picture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" Grid.RowSpan="2" Grid.ColumnSpan="2" FocusVisualStyle="{x:Null}">
-                                    <DynamicResource ResourceKey="angry_aztec"/>
-                                </Button>
-                                <TextBlock x:Name="Level2TopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="Level2Points" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
+                                <Image x:Name="Level2Picture" Source="Images\dk64\angry_aztec.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
+                                <local:LevelOrderNumber x:Name="Level2Order" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
+                                <TextBlock x:Name="Level2TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Level2Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                             </Grid>
                             <local:RegionGrid Margin="5,0,5,0"  x:Name="Level2RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.ANGRY_AZTEC}"/>
                         </Grid>
@@ -185,11 +180,10 @@
                                     <ColumnDefinition Width="3.872"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name="Level3Picture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" FocusVisualStyle="{x:Null}" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                                    <DynamicResource ResourceKey="frantic_factory"/>
-                                </Button>
-                                <TextBlock x:Name="Level3TopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="Level3Points" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
+                                <Image x:Name="Level3Picture" Source="Images\dk64\frantic_factory.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
+                                <local:LevelOrderNumber x:Name="Level3Order" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
+                                <TextBlock x:Name="Level3TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Level3Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                             </Grid>
                             <local:RegionGrid Margin="5,0,5,0"  x:Name="Level3RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.FRANTIC_FACTORY}"/>
                         </Grid>
@@ -212,11 +206,10 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name="Level4Picture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" FocusVisualStyle="{x:Null}" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                                    <DynamicResource ResourceKey="gloomy_galleon"/>
-                                </Button>
-                                <TextBlock x:Name="Level4TopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="Level4Points" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
+                                <Image x:Name="Level4Picture" Source="Images\dk64\gloomy_galleon.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
+                                <local:LevelOrderNumber x:Name="Level4Order" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
+                                <TextBlock x:Name="Level4TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Level4Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                             </Grid>
                             <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="5,0,5,0" x:Name="Level4RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.GLOOMY_GALLEON}"/>
                         </Grid>
@@ -248,11 +241,9 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name ="DKIslesPicture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" FocusVisualStyle="{x:Null}" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                                    <DynamicResource ResourceKey="dk_isles"/>
-                                </Button>
-                                <TextBlock x:Name="DKIslesTopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock Name="DKIslesPoints" FontSize="32" Foreground="White" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?"/>
+                                <Image x:Name="DKIslesPicture" Source="images\dk64\dk_isles.png" Grid.RowSpan="2" Grid.ColumnSpan="4" Margin="10" />
+                                <TextBlock x:Name="DKIslesTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock Name="DKIslesPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?"/>
                             </Grid>
                             <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="5,0,5,0"  x:Name="DKIslesRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.DK_ISLES}"/>
                         </Grid>
@@ -275,11 +266,10 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name="Level5Picture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" FocusVisualStyle="{x:Null}" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                                    <DynamicResource ResourceKey="fungi_forest"/>
-                                </Button>
-                                <TextBlock x:Name="Level5TopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="Level5Points" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
+                                <Image x:Name="Level5Picture" Source="Images\dk64\fungi_forest.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
+                                <local:LevelOrderNumber x:Name="Level5Order" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
+                                <TextBlock x:Name="Level5TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Level5Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                             </Grid>
                             <local:RegionGrid Margin="5,0,5,0" x:Name="Level5RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.FUNGI_FOREST}"/>
                         </Grid>
@@ -303,11 +293,10 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name="Level6Picture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" Grid.RowSpan="2" Grid.ColumnSpan="2" FocusVisualStyle="{x:Null}">
-                                    <DynamicResource ResourceKey="crystal_caves"/>
-                                </Button>
-                                <TextBlock x:Name="Level6TopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="Level6Points" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
+                                <Image x:Name="Level6Picture" Source="Images\dk64\crystal_caves.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
+                                <local:LevelOrderNumber x:Name="Level6Order" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
+                                <TextBlock x:Name="Level6TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Level6Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                             </Grid>
                             <local:RegionGrid Margin="5,0,5,0"  x:Name="Level6RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.CRYSTAL_CAVES}"/>
                         </Grid>
@@ -331,11 +320,10 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name="Level7Picture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" Grid.RowSpan="2" Grid.ColumnSpan="2" FocusVisualStyle="{x:Null}">
-                                    <DynamicResource ResourceKey="creepy_castle"/>
-                                </Button>
-                                <TextBlock x:Name="Level7TopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="Level7Points" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
+                                <Image x:Name="Level7Picture" Source="Images\dk64\creepy_castle.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
+                                <local:LevelOrderNumber x:Name="Level7Order" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
+                                <TextBlock x:Name="Level7TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Level7Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                             </Grid>
                             <local:RegionGrid  Margin="5,0,5,0" x:Name="Level7RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.CREEPY_CASTLE}"/>
                         </Grid>
@@ -359,11 +347,9 @@
                                     <ColumnDefinition Width=".3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Name="HideoutHelmPicture" Background="Transparent" PreviewMouseDown="OnMouseDown"  Template="{StaticResource DefaultButton}" Grid.RowSpan="2" Grid.ColumnSpan="2" FocusVisualStyle="{x:Null}">
-                                    <DynamicResource ResourceKey="hideout_helm"/>
-                                </Button>
-                                <TextBlock x:Name="HideoutHelmTopLabel" FontSize="32" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="HideoutHelmPoints" FontSize="32" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
+                                <Image x:Name="HideoutHelmPicture" Source="images\dk64\hideout_helm.png" Grid.RowSpan="2" Grid.ColumnSpan="4" Margin="10" />
+                                <TextBlock x:Name="HideoutHelmTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="HideoutHelmPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                             </Grid>
                             <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="5,0,5,0"  x:Name="HideoutHelmRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.HIDEOUT_HELM}"/>
                         </Grid>
@@ -601,38 +587,10 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".6*"/>
                     </Grid.ColumnDefinitions>
-                <TextBlock Name="KRoolLabel" Grid.Column="1" FontSize="28" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="K. ROOL" />
-                    <local:ProgressiveItem x:Name="KRoolKong1" Grid.Column="3">
-                        <local:ProgressiveItem.ImageSources>
-                            <BitmapImage UriSource="Images\dk64\unknown_kong.png"/>
-                            <BitmapImage UriSource="Images\dk64\donkey.png"/>
-                            <BitmapImage UriSource="Images\dk64\diddy.png"/>
-                            <BitmapImage UriSource="Images\dk64\lanky.png"/>
-                            <BitmapImage UriSource="Images\dk64\tiny.png"/>
-                            <BitmapImage UriSource="Images\dk64\chunky.png"/>
-                        </local:ProgressiveItem.ImageSources>
-                    </local:ProgressiveItem>
-                    <local:ProgressiveItem x:Name="KRoolKong2" Grid.Column="4">
-                        <local:ProgressiveItem.ImageSources>
-                            <BitmapImage UriSource="Images\dk64\unknown_kong.png"/>
-                            <BitmapImage UriSource="Images\dk64\donkey.png"/>
-                            <BitmapImage UriSource="Images\dk64\diddy.png"/>
-                            <BitmapImage UriSource="Images\dk64\lanky.png"/>
-                            <BitmapImage UriSource="Images\dk64\tiny.png"/>
-                            <BitmapImage UriSource="Images\dk64\chunky.png"/>
-                        </local:ProgressiveItem.ImageSources>
-                    </local:ProgressiveItem>
-
-                    <local:ProgressiveItem x:Name="KRoolKong3" Grid.Column="5">
-                        <local:ProgressiveItem.ImageSources>
-                            <BitmapImage UriSource="Images\dk64\unknown_kong.png"/>
-                            <BitmapImage UriSource="Images\dk64\donkey.png"/>
-                            <BitmapImage UriSource="Images\dk64\diddy.png"/>
-                            <BitmapImage UriSource="Images\dk64\lanky.png"/>
-                            <BitmapImage UriSource="Images\dk64\tiny.png"/>
-                            <BitmapImage UriSource="Images\dk64\chunky.png"/>
-                        </local:ProgressiveItem.ImageSources>
-                    </local:ProgressiveItem>
+                    <TextBlock Name="KRoolLabel" Grid.Column="1" FontSize="28" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="K. ROOL" />
+                    <Image  Name="KRoolKong1"  Opacity="1" Grid.Column="3" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
+                    <Image  Name="KRoolKong2" Opacity="1"  Grid.Column="4" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
+                    <Image  Name="KRoolKong3"  Opacity="1" Grid.Column="5" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
                     <!--<Image  Name="KRoolKong1" Grid.Column="3" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
                     <Image  Name="KRoolKong2" Grid.Column="4" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
                     <Image  Name="KRoolKong3" Grid.Column="5" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>-->
