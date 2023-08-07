@@ -91,6 +91,10 @@
     <Compile Include="AutoTracking\Memory.cs" />
     <Compile Include="AutoTracking\AutotrackedCheck.cs" />
     <Compile Include="AutoTracking\Records.cs" />
+    <Compile Include="Data\VialColor.cs" />
+    <Compile Include="LevelOrderNumber.xaml.cs">
+      <DependentUpon>LevelOrderNumber.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProgressiveItem.xaml.cs">
       <DependentUpon>ProgressiveItem.xaml</DependentUpon>
     </Compile>
@@ -109,17 +113,19 @@
     <Compile Include="CollectibleItem.xaml.cs">
       <DependentUpon>CollectibleItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Log.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="SpoilerParsing.cs" />
     <Compile Include="Item.xaml.cs">
       <DependentUpon>Item.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
     <Compile Include="Toggles.cs" />
     <Compile Include="RegionGrid.xaml.cs">
       <DependentUpon>RegionGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="WatermarkTextBox.cs" />
+    <Page Include="LevelOrderNumber.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ProgressiveItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -144,7 +150,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Codes.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -176,9 +181,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="Fonts\thing.ttf" />
-    <Resource Include="Fonts\GillSansUltraBold.ttf" />
-    <Resource Include="Fonts\DKC2.TTF" />
     <None Include="Images\bw\aztec_img.webp" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -585,22 +587,22 @@
     <Resource Include="Images\dk64\pearl.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\potion_chunky.png" />
+    <Resource Include="Images\dk64\green_vial.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\potion_diddy.png" />
+    <Resource Include="Images\dk64\red_vial.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\potion_dk.png" />
+    <Resource Include="Images\dk64\yellow_vial.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\potion_lanky.png" />
+    <Resource Include="Images\dk64\blue_vial.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\potion_shared.png" />
+    <Resource Include="Images\dk64\clear_vial.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\potion_tiny.png" />
+    <Resource Include="Images\dk64\purple_vial.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\question_w.png" />
@@ -945,6 +947,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\key_vial.png" />
+    <Resource Include="Images\dk64\kong_vial.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
