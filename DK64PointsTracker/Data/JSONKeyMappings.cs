@@ -65,28 +65,9 @@ namespace DK64PointsTracker
 
     };
 
-        public static readonly Dictionary<string, RegionName> SPECIAL_EXCEPTIONS_ITEM_MAP = new()
+    public static readonly Dictionary<string, RegionName> REGION_MAP = new()
     {
-      {"Diddy Kong's Cage", RegionName.JUNGLE_JAPES},
-      {"Tiny Kong's Cage", RegionName.ANGRY_AZTEC},
-      {"Lanky Kong's Cage", RegionName.ANGRY_AZTEC},
-      {"Chunky Kong's Cage", RegionName.FRANTIC_FACTORY},
-
-      {"The Banana Fairy's Gift", RegionName.DK_ISLES},
-      {"Returning the Banana Fairies", RegionName.DK_ISLES},
-      {"Jetpac", RegionName.DK_ISLES},
-
-      {"DK Arcade Round 2", RegionName.FRANTIC_FACTORY },
-
-      {"Treasure Chest Far Left Clam", RegionName.GLOOMY_GALLEON},
-      {"Treasure Chest Center Clam", RegionName.GLOOMY_GALLEON},
-      {"Treasure Chest Far Right Clam", RegionName.GLOOMY_GALLEON},
-      {"Treasure Chest Close Right Clam",RegionName.GLOOMY_GALLEON},
-      {"Treasure Chest Close Left Clam", RegionName.GLOOMY_GALLEON}
-    };
-
-        public static readonly Dictionary<string, RegionName> REGION_MAP = new()
-    {
+      {"Training", RegionName.DK_ISLES },
       {"DK Isles", RegionName.DK_ISLES},
       {"Jungle Japes", RegionName.JUNGLE_JAPES},
       {"Angry Aztec", RegionName.ANGRY_AZTEC},
@@ -96,43 +77,26 @@ namespace DK64PointsTracker
       {"Crystal Caves", RegionName.CRYSTAL_CAVES},
       {"Creepy Castle", RegionName.CREEPY_CASTLE},
       {"Hideout Helm", RegionName.HIDEOUT_HELM},
+      {"The End of Helm", RegionName.HIDEOUT_HELM }
     };
 
-        public static readonly Dictionary<string, RegionName> SHUFFLED_LEVELS_TO_REGION = new()
+    public static readonly Dictionary<string, VialColor> VIAL_MAP = new()
     {
-      {"JungleJapes", RegionName.JUNGLE_JAPES},
-      {"AngryAztec", RegionName.ANGRY_AZTEC},
-      {"FranticFactory", RegionName.FRANTIC_FACTORY},
-      {"GloomyGalleon", RegionName.GLOOMY_GALLEON},
-      {"FungiForest", RegionName.FUNGI_FOREST},
-      {"CrystalCaves", RegionName.CRYSTAL_CAVES},
-      {"CreepyCastle", RegionName.CREEPY_CASTLE},
+        {"Clear Vial", VialColor.CLEAR },
+        {"Yellow Vial", VialColor.YELLOW },
+        {"Red Vial", VialColor.RED },
+        {"Blue Vial", VialColor.BLUE },
+        {"Purple Vial", VialColor.PURPLE },
+        {"Green Vial", VialColor.GREEN },
+        {"Key", VialColor.KEY },
+        {"Kong", VialColor.KONG }
     };
 
-        public static readonly Dictionary<RegionName, string> REGION_TO_SHUFFLED_LEVEL = new()
+    public static readonly List<ItemName> KONGS = new()
     {
-      {RegionName.JUNGLE_JAPES, "JungleJapes"},
-      {RegionName.ANGRY_AZTEC,"AngryAztec" },
-      {RegionName.FRANTIC_FACTORY,"FranticFactory"},
-      { RegionName.GLOOMY_GALLEON,"GloomyGalleon"},
-      {RegionName.FUNGI_FOREST, "FungiForest"},
-      {RegionName.CRYSTAL_CAVES, "CrystalCaves" },
-      {RegionName.CREEPY_CASTLE,"CreepyCastle"},
+        ItemName.DONKEY, ItemName.DIDDY, ItemName.LANKY, ItemName.TINY, ItemName.CHUNKY
     };
 
-        public static readonly Dictionary<string, RegionName> REGION_PREFIX_TO_REGION = new()
-    {
-      {"Isles", RegionName.DK_ISLES},
-      {"DK", RegionName.DK_ISLES},
-      {"Japes", RegionName.JUNGLE_JAPES},
-      {"Aztec", RegionName.ANGRY_AZTEC},
-      {"Factory", RegionName.FRANTIC_FACTORY},
-      {"Galleon", RegionName.GLOOMY_GALLEON},
-      {"Forest", RegionName.FUNGI_FOREST},
-      {"Caves", RegionName.CRYSTAL_CAVES},
-      {"Castle", RegionName.CREEPY_CASTLE},
-      {"Helm", RegionName.HIDEOUT_HELM }
-    };
 
     }
 
