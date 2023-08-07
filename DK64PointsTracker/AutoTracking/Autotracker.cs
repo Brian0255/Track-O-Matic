@@ -46,18 +46,6 @@ namespace DK64PointsTracker
             UpdateCollectible = updateCollectibleCallback;
             SetRegionLighting = setRegionLightingCallback;
         }
-
-        private class SavedProgress
-        {
-            public string SpoilerLogName { get; }
-            public Dictionary<ItemName, RegionName> TrackedItemLocations { get; }
-
-            public SavedProgress(string spoilerLogName)
-            {
-                SpoilerLogName = spoilerLogName;
-                TrackedItemLocations = new();
-            }
-        }
         private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
         {
             {ItemType.GOLDEN_BANANA, 0 },
@@ -90,48 +78,6 @@ namespace DK64PointsTracker
             }
         }
 
-        public void SaveProgress()
-        {
-            if (savedProgress == null) return;
-            var JSONString = JsonConvert.SerializeObject(savedProgress);
-            var filePath = "autosave.json";
-            File.WriteAllText(filePath, JSONString);
-        }
-
-        private void ReadSavedProgress()
-        {
-            if (savedProgress == null) return;
-            foreach (var itemEntry in savedProgress.TrackedItemLocations)
-            {
-                var itemName = itemEntry.Key;
-                var region = itemEntry.Value;
-                TrackedAlready[itemName] = true;
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    TrackedAlready[itemName] = (bool)(ProcessNewItem?.Invoke(itemName, region));
-                });
-            }
-            SaveProgress();
-        }
-
-        private void CheckForAutosave()
-        {
-            var filePath = "autosave.json";
-            if (!File.Exists(filePath)) return;
-            try
-            {
-                var jsonString = File.ReadAllText(filePath);
-                SavedProgress savedData = JsonConvert.DeserializeObject<SavedProgress>(jsonString);
-                if(savedData.SpoilerLogName  == savedProgress.SpoilerLogName) savedProgress = savedData;
-                ReadSavedProgress();
-            }
-            catch(Exception)
-            {
-                Console.WriteLine("Error reading autosave file");
-            }
-
-        }
-
         public void Reset()
         {
             spoilerLoaded = false;
@@ -140,12 +86,14 @@ namespace DK64PointsTracker
             Application.Current.Dispatcher.Invoke(() => {
                 SetRegionLighting?.Invoke(CurrentRegion, false);
             });
+            CurrentRegion = RegionName.UNKNOWN;
         }
 
         public void ResetChecks()
         {
             InitializeChecks();
             ExcludeStartingItems();
+            CurrentRegion = RegionName.UNKNOWN;
         }
 
         public void SetStartingItems(Dictionary<ItemName, RegionName> newItems)
@@ -157,8 +105,6 @@ namespace DK64PointsTracker
         public void SetSpoilerLoaded(string fileName)
         {
             spoilerLoaded = true;
-            savedProgress = new SavedProgress(fileName);
-            CheckForAutosave();
         }
 
         private void AttachIfNecessary()
@@ -262,11 +208,11 @@ namespace DK64PointsTracker
                 success = (bool)ProcessNewItem?.Invoke(check.ItemName, CurrentRegion);
             });
             TrackedAlready[check.ItemName] = success;
-            if(success && !savedProgress.TrackedItemLocations.ContainsKey(check.ItemName))
-            {
-                savedProgress.TrackedItemLocations.Add(check.ItemName, CurrentRegion);
-                SaveProgress();
-            }
+        }
+
+        public void ProcessSavedItem(ItemName item)
+        {
+            TrackedAlready[item] = true;
         }
 
         private void UpdateCollectibles()
