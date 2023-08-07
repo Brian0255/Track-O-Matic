@@ -82,48 +82,68 @@ namespace DK64PointsTracker
 
         public static uint Int8AddrFix(uint addr)
         {
-            return (addr % 4) switch
+            switch (addr % 4)
             {
-                0 => addr + 3,
-                1 => addr + 1,
-                2 => addr - 1,
-                3 => addr - 3,
-                _ => addr,
-            };
+                case 0:
+                    return addr + 3;
+                case 1:
+                    return addr + 1;
+                case 2:
+                    return addr - 1;
+                case 3:
+                    return addr - 3;
+                default:
+                    return addr;
+            }
         }
 
 
         public static uint Int16AddrFix(uint addr)
         {
-            return (addr % 4) switch
+            switch (addr % 4)
             {
-                2 or 3 => addr - 2,
-                0 or 1 => addr + 2,
-                _ => addr,
-            };
+                case 2:
+                case 3:
+                    return addr - 2;
+                case 0:
+                case 1:
+                    return addr + 2;
+                default:
+                    return addr;
+            }
         }
 
         public static ulong Int8AddrFix(ulong addr)
         {
-            return (addr % 4) switch
+            switch (addr % 4)
             {
-                0 => addr + 3,
-                1 => addr + 1,
-                2 => addr - 1,
-                3 => addr - 3,
-                _ => addr,
-            };
+                case 0:
+                    return addr + 3;
+                case 1:
+                    return addr + 1;
+                case 2:
+                    return addr - 1;
+                case 3:
+                    return addr - 3;
+                default:
+                    return addr;
+            }
         }
 
 
         public static ulong Int16AddrFix(ulong addr)
         {
-            return (addr % 4) switch
+            switch (addr % 4)
             {
-                2 or 3 => addr - 2,
-                0 or 1 => addr + 2,
-                _ => addr,
-            };
+                case 2:
+                case 3:
+                    return addr - 2;
+                case 0:
+                case 1:
+                    return addr + 2;
+                default:
+                    return addr;
+            }
         }
 
     }

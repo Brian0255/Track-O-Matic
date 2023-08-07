@@ -13,6 +13,18 @@ namespace DK64PointsTracker
 {
     public partial class MainWindow : Window
     {
+
+        public void SaveProgress(object Sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void LoadProgress(object Sender, RoutedEventArgs e)
+        {
+
+        }
+
+
         private void OpenSpoiler(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new();
@@ -101,6 +113,7 @@ namespace DK64PointsTracker
                 this.starting_keys = starting_keys;
             }
         }
+
         private void ReadStartingInfo(string JSONString)
         {
             StartingInfo info = System.Text.Json.JsonSerializer.Deserialize<StartingInfo>(JSONString);
@@ -132,30 +145,9 @@ namespace DK64PointsTracker
                 KRoolImages[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
             }
         }
-
-        private void ReadPointSpread(string JSONString)
-        {
-            var pointPairs = JsonConvert.DeserializeObject <Dictionary<string, int>>(JSONString);
-            foreach(var pair in pointPairs)
-            {
-                var name = pair.Key;
-                var pointValue = pair.Value;
-                if (JSONKeyMappings.POINT_NAME_TO_GROUP.ContainsKey(name))
-                {
-                    var itemType = JSONKeyMappings.POINT_NAME_TO_GROUP[name];
-                    PointValues.GroupedValues[itemType] = pointValue;
-                }
-                else if (JSONKeyMappings.POINT_NAME_TO_SPECIFIC_VALUE.ContainsKey(name))
-                {
-                    var itemName = JSONKeyMappings.POINT_NAME_TO_SPECIFIC_VALUE[name];
-                    PointValues.SpecificValues[itemName] = pointValue;
-                }
-            }
-        }
         public void ParseRegions(dynamic JSONObject)
         {
             var regionInfo = JSONObject["Spoiler Hints Data"].ToObject<Dictionary<string, string>>();
-            SpoilerSettings settings = null;
 
             foreach (var regionEntry in regionInfo)
             {
@@ -165,26 +157,11 @@ namespace DK64PointsTracker
                     ReadStartingInfo(regionEntry.Value);
                     continue;
                 }
-                else if(regionEntry.Key == "point_spread")
-                {
-                    ReadPointSpread(regionEntry.Value);
-                    continue;
-                }
                 if (!JSONKeyMappings.REGION_MAP.ContainsKey(info.level_name)) continue;
-                if(settings == null)
-                {
-                    bool pointsEnabled = info.points != -1;
-                    bool vialsEnabled = !pointsEnabled;
-                    bool WOTHEnabled = info.woth_count != -1;
-                    settings = new SpoilerSettings(pointsEnabled, vialsEnabled, WOTHEnabled);
-                }
                 RegionName regionName = JSONKeyMappings.REGION_MAP[info.level_name];
                 Regions[regionName].SetInitialPoints(info.points);
                 Regions[regionName].SetRequiredCheckTotal(info.woth_count);
-                Regions[regionName].SpoilerSettings = settings;
                 var grid = Regions[regionName].RegionGrid;
-                //hoo boy i love enums
-                info.vial_colors.Sort( (a,b) => JSONKeyMappings.VIAL_MAP[a] - JSONKeyMappings.VIAL_MAP[b]);
                 foreach(var vial in info.vial_colors) grid.AddInitialVial(JSONKeyMappings.VIAL_MAP[vial]);
             }
         }
@@ -196,11 +173,9 @@ namespace DK64PointsTracker
             string json = reader.ReadToEnd();
             dynamic JSONObject = JsonConvert.DeserializeObject(json);
             ParseRegions(JSONObject);
-            foreach (var entry in ImportantCheckList.ITEMS) entry.Value.InitPointValue();
             SpoilerLoaded = true;
             Autotracker.SetSpoilerLoaded(fileName);
             foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
-            InitSavedDataFromSpoiler(fileName);
         }
     }
 }

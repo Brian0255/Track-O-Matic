@@ -21,8 +21,7 @@
     <SolidColorBrush x:Key="RegionInProgress" Color="#ffffff"/>
 
     <Image x:Key="locked_region" Source="Images\dk64\locked_region.png" x:Shared="false" />
-    <Image x:Key="star_simple" Source="Images\dk64\star_simple.png" x:Shared="false" />
-    <Image x:Key="star_complex" Source="Images\dk64\star_complex.png" x:Shared="false" />
+    <Image x:Key="checkmark" Source="Images\dk64\checkmark.png" x:Shared="false" />
     <Image x:Key="x" Source="Images\dk64\x.png" x:Shared="false" />
 
     <Image x:Key="unknown_kong" Source="Images\dk64\unknown_kong.png" x:Shared="false" />

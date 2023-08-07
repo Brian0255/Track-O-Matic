@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:DK64PointsTracker"
         mc:Ignorable="d"
         ResizeMode="CanResize"
-        Closing="MainWindow_Closing"
+        Closing="Window_Closing"
         LocationChanged="Window_LocationChanged"
         MouseDown="rootGrid_LostFocus" 
         SizeChanged="Window_SizeChanged"
@@ -35,6 +35,8 @@
             </Menu.ItemsPanel>
             <MenuItem Header="File" Focusable="False">
                 <MenuItem Header="Open Spoiler Log" Click="OpenSpoiler"/>
+                <MenuItem Header="Save Progress" Click="SaveProgress"/>
+                <MenuItem Header="Load Progress" Click="LoadProgress"/>
                 <MenuItem Header="Reset Size" Click="ResetSize"/>
                 <MenuItem Header="Reset Tracker" Click="OnReset"/>
             </MenuItem>

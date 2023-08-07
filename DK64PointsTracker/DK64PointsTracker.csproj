@@ -91,9 +91,6 @@
     <Compile Include="AutoTracking\Memory.cs" />
     <Compile Include="AutoTracking\AutotrackedCheck.cs" />
     <Compile Include="AutoTracking\Records.cs" />
-    <Compile Include="Data\SpoilerSettings.cs" />
-    <Compile Include="Data\SavedProgress.cs" />
-    <Compile Include="Data\SavedItem.cs" />
     <Compile Include="Data\VialColor.cs" />
     <Compile Include="LevelOrderNumber.xaml.cs">
       <DependentUpon>LevelOrderNumber.xaml</DependentUpon>
@@ -102,7 +99,6 @@
       <DependentUpon>ProgressiveItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\MapToRegion.cs" />
-    <Compile Include="DataSaving.cs" />
     <Compile Include="ToggleableItem.xaml.cs">
       <DependentUpon>ToggleableItem.xaml</DependentUpon>
     </Compile>
@@ -955,10 +951,6 @@
   <ItemGroup>
     <Resource Include="Images\dk64\key_vial.png" />
     <Resource Include="Images\dk64\kong_vial.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\dk64\star_complex.png" />
-    <Resource Include="Images\dk64\star_simple.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
