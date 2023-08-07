@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using Newtonsoft.Json;
+using System.IO;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
 
 namespace DK64PointsTracker
 {
-    public delegate void ProcessNewItem(ItemName itemName, RegionName regionName);
+    public delegate bool ProcessNewItem(ItemName itemName, RegionName regionName);
     public delegate void UpdateCollectible(ItemType collectibleType, int newTotal);
     public delegate void SetRegionLighting(RegionName region, bool lightUp);
     public class Autotracker
@@ -22,13 +24,40 @@ namespace DK64PointsTracker
         public Dictionary<ItemName, RegionName> StartingItems { get; private set; }
         public GameVerificationInfo GameVerificationInfo { get; private set; }
         public RegionName CurrentRegion { get; private set; }
+        private SavedProgress savedProgress;
 
+        private Dictionary<ItemName, RegionName> trackedItemLocations;
         private System.Threading.Timer timer;
         private bool attached = false;
         private uint startAddress;
         private int timeout;
         private bool is64Bit = false;
         private bool spoilerLoaded = false;
+        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback)
+        {
+            CurrentRegion = RegionName.UNKNOWN;
+            Checks = new();
+            StartingItems = new();
+            TrackedAlready = new();
+            InitializeChecks();
+            timer = new System.Threading.Timer(Autotrack, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+            trackedItemLocations = new();
+            ProcessNewItem = processItemCallback;
+            UpdateCollectible = updateCollectibleCallback;
+            SetRegionLighting = setRegionLightingCallback;
+        }
+
+        private class SavedProgress
+        {
+            public string SpoilerLogName { get; }
+            public Dictionary<ItemName, RegionName> TrackedItemLocations { get; }
+
+            public SavedProgress(string spoilerLogName)
+            {
+                SpoilerLogName = spoilerLogName;
+                TrackedItemLocations = new();
+            }
+        }
         private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
         {
             {ItemType.GOLDEN_BANANA, 0 },
@@ -43,20 +72,14 @@ namespace DK64PointsTracker
             {ItemType.RAINBOW_COIN, 0 },
             {ItemType.BATTLE_CROWN, 0 }
         };
-
-        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback)
+        private Dictionary<ItemType, ItemType> TURNED_BLUEPRINT_TO_COLLECTIBLE { get; } = new()
         {
-            CurrentRegion = RegionName.UNKNOWN;
-            Checks = new();
-            StartingItems = new();
-            TrackedAlready = new();
-            InitializeChecks();
-            timer = new System.Threading.Timer(Autotrack, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
-            ProcessNewItem = processItemCallback;
-            UpdateCollectible = updateCollectibleCallback;
-            SetRegionLighting = setRegionLightingCallback;
-        }
-
+            {ItemType.DONKEY_BLUEPRINT_TURNED, ItemType.DONKEY_BLUEPRINT },
+            {ItemType.DIDDY_BLUEPRINT_TURNED, ItemType.DIDDY_BLUEPRINT },
+            {ItemType.LANKY_BLUEPRINT_TURNED, ItemType.LANKY_BLUEPRINT },
+            {ItemType.TINY_BLUEPRINT_TURNED, ItemType.TINY_BLUEPRINT },
+            {ItemType.CHUNKY_BLUEPRINT_TURNED, ItemType.CHUNKY_BLUEPRINT }
+        };
         private void InitializeChecks()
         {
             Checks = new();
@@ -64,6 +87,47 @@ namespace DK64PointsTracker
             {
                 Checks.Add(new AutotrackedCheck(offsetInfo.ItemName, offsetInfo.Offset, offsetInfo.TotalBits, offsetInfo.TargetValue, offsetInfo.Bitmask));
                 TrackedAlready[offsetInfo.ItemName] = false;
+            }
+        }
+
+        public void SaveProgress()
+        {
+            if (savedProgress == null) return;
+            var JSONString = JsonConvert.SerializeObject(savedProgress);
+            var filePath = "autosave.json";
+            File.WriteAllText(filePath, JSONString);
+        }
+
+        private void ReadSavedProgress()
+        {
+            if (savedProgress == null) return;
+            foreach (var itemEntry in savedProgress.TrackedItemLocations)
+            {
+                var itemName = itemEntry.Key;
+                var region = itemEntry.Value;
+                TrackedAlready[itemName] = true;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    TrackedAlready[itemName] = (bool)(ProcessNewItem?.Invoke(itemName, region));
+                });
+            }
+            SaveProgress();
+        }
+
+        private void CheckForAutosave()
+        {
+            var filePath = "autosave.json";
+            if (!File.Exists(filePath)) return;
+            try
+            {
+                var jsonString = File.ReadAllText(filePath);
+                SavedProgress savedData = JsonConvert.DeserializeObject<SavedProgress>(jsonString);
+                if(savedData.SpoilerLogName  == savedProgress.SpoilerLogName) savedProgress = savedData;
+                ReadSavedProgress();
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Error reading autosave file");
             }
 
         }
@@ -90,9 +154,11 @@ namespace DK64PointsTracker
             ExcludeStartingItems();
         }
 
-        public void SetSpoilerLoaded()
+        public void SetSpoilerLoaded(string fileName)
         {
             spoilerLoaded = true;
+            savedProgress = new SavedProgress(fileName);
+            CheckForAutosave();
         }
 
         private void AttachIfNecessary()
@@ -148,33 +214,67 @@ namespace DK64PointsTracker
             if (!attached) return;
             if (!ProcessConnected()) return;
             UpdateCurrentRegion();
+            if (CurrentRegion == RegionName.UNKNOWN) return;
             ResetCollectibleAmounts();
+            ReadMemoryForChecks();
+            UpdateCollectibles();
+        }
+
+        private void ReadMemoryForChecks()
+        {
             foreach (var check in Checks)
             {
                 var output = ReadMemory(check.Offset, check.TotalBits, check.Bitmask);
                 var checkInfo = ImportantCheckList.ITEMS[check.ItemName];
-                var itemType = checkInfo.ItemType;
                 var valid = (output == check.Bitmask) || (checkInfo.ItemType == ItemType.GOLDEN_BANANA);
                 if (!valid) continue;
-                if (CollectibleItemAmounts.ContainsKey(checkInfo.ItemType))
+                var collectible = CollectibleItemAmounts.ContainsKey(checkInfo.ItemType) ||
+                                  TURNED_BLUEPRINT_TO_COLLECTIBLE.ContainsKey(checkInfo.ItemType);
+                if(collectible) ProcessCollectible(output, checkInfo);
+                else ProcessRegularItem(check);
+            }
+        }
+
+        private void ProcessCollectible(int output, ImportantCheck checkInfo)
+        {
+            var toAdd = output;
+            var itemTypeToUse = checkInfo.ItemType;
+            //collectibles not gbs are flags, add 1 to their total instead of the bitmask
+            if (checkInfo.ItemType != ItemType.GOLDEN_BANANA)
+            {
+                toAdd = 1;
+                if (TURNED_BLUEPRINT_TO_COLLECTIBLE.ContainsKey(checkInfo.ItemType))
                 {
-                    var toAdd = output;
-                    //collectibles not gbs are flags, add 1 to their total instead of the bitmask
-                    if (checkInfo.ItemType != ItemType.GOLDEN_BANANA) toAdd = 1;
-                    CollectibleItemAmounts[checkInfo.ItemType] = CollectibleItemAmounts[checkInfo.ItemType] + toAdd;
-                }
-                else
-                {
-                    if (TrackedAlready[check.ItemName] == true) continue;
-                    TrackedAlready[check.ItemName] = true;
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ProcessNewItem?.Invoke(check.ItemName, CurrentRegion);
-                    });
+                    //adjust correctly if the user has turned in any blueprints
+                    itemTypeToUse = TURNED_BLUEPRINT_TO_COLLECTIBLE[itemTypeToUse];
+                    toAdd = -1;
                 }
             }
+            CollectibleItemAmounts[itemTypeToUse] = CollectibleItemAmounts[itemTypeToUse] + toAdd;
+        }
+
+        private void ProcessRegularItem(AutotrackedCheck check)
+        {
+            if (TrackedAlready[check.ItemName]) return;
+            bool success = false;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                success = (bool)ProcessNewItem?.Invoke(check.ItemName, CurrentRegion);
+            });
+            TrackedAlready[check.ItemName] = success;
+            if(success && !savedProgress.TrackedItemLocations.ContainsKey(check.ItemName))
+            {
+                savedProgress.TrackedItemLocations.Add(check.ItemName, CurrentRegion);
+                SaveProgress();
+            }
+        }
+
+        private void UpdateCollectibles()
+        {
             foreach (var entry in CollectibleItemAmounts)
             {
-                Application.Current.Dispatcher.Invoke(() => {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
                     UpdateCollectible?.Invoke(entry.Key, entry.Value);
                 });
             }
@@ -239,11 +339,6 @@ namespace DK64PointsTracker
         public void StopTimer()
         {
             timer.Change(-1, -1);
-        }
-
-        private void StartTimer()
-        {
-            timer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         }
     }
 }
