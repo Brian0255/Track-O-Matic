@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="TrackOMatic.ToggleableItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MouseLeftButtonDown="Image_Click"
+             MouseRightButtonDown="Image_Click">
+    <Grid>
+        <Image Source="{Binding ImageSource}" x:Name="image" Stretch="Uniform" Margin="2"/>
+    </Grid>
+</UserControl>

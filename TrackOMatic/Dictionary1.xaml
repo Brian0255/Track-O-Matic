@@ -1,0 +1,164 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:TrackOMatic">
+
+    <ControlTemplate x:Key="DefaultButton" TargetType="{x:Type ButtonBase}">
+        <ContentPresenter Content="{TemplateBinding Content}"/>
+    </ControlTemplate>
+
+    <Thickness x:Key="RegionPictureMargin" >0,20,0,0</Thickness>
+
+    <SolidColorBrush x:Key="GBColor" Color="#FFFF00"/>
+    <SolidColorBrush x:Key="RequiredChecksColor" Color="#2cc956"/>
+
+    <SolidColorBrush x:Key="BaseBG" Color="#282a2e"/>
+    <SolidColorBrush x:Key="RegionImageBG" Color="#303136"/>
+    <SolidColorBrush x:Key="RegionBG" Color="#3a3c42"/>
+    <SolidColorBrush x:Key="RegionBGLitUp" Color="#404552"/>
+    <SolidColorBrush x:Key="UnfocusedText" Color="#8d9096"/>
+
+    <SolidColorBrush x:Key="RegionComplete" Color="#1c8ae3"/>
+    <SolidColorBrush x:Key="RegionInProgress" Color="#ffffff"/>
+
+    <Image x:Key="locked_region" Source="Images\dk64\locked_region.png" x:Shared="false" />
+    <Image x:Key="star_simple" Source="Images\dk64\star_simple.png" x:Shared="false" />
+    <Image x:Key="star_complex" Source="Images\dk64\star_complex.png" x:Shared="false" />
+    <Image x:Key="x" Source="Images\dk64\x.png" x:Shared="false" />
+
+    <Image x:Key="unknown_kong" Source="Images\dk64\unknown_kong.png" x:Shared="false" />
+
+    <Image x:Key="dk_isles" Source="Images\dk64\dk_isles.png" x:Shared="false" />
+    <Image x:Key="start" Source="Images\dk64\start.png" x:Shared="false" />
+    
+    <Image x:Key="jungle_japes" Source="Images\dk64\jungle_japes.png" x:Shared="false" />
+    <Image x:Key="angry_aztec" Source="Images\dk64\angry_aztec.png" x:Shared="false" />
+    <Image x:Key="frantic_factory" Source="Images\dk64\frantic_factory.png" x:Shared="false" />
+    <Image x:Key="gloomy_galleon" Source="Images\dk64\gloomy_galleon.png" x:Shared="false" />
+    <Image x:Key="fungi_forest" Source="Images\dk64\fungi_forest.png" x:Shared="false" />
+    <Image x:Key="crystal_caves" Source="Images\dk64\crystal_caves.png" x:Shared="false" />
+    <Image x:Key="creepy_castle" Source="Images\dk64\creepy_castle.png" x:Shared="false" />
+    <Image x:Key="hideout_helm" Source="Images\dk64\hideout_helm.png" x:Shared="false" />
+
+    <Image x:Key="donkey" Source="Images\dk64\donkey.png"  x:Shared="false"/>
+    <Image x:Key="diddy" Source="Images\dk64\diddy.png"  x:Shared="false"/>
+    <Image x:Key="lanky" Source="Images\dk64\lanky.png"  x:Shared="false" />
+    <Image x:Key="tiny" Source="Images\dk64\tiny.png"  x:Shared="false" />
+    <Image x:Key="chunky" Source="Images\dk64\chunky.png"  x:Shared="false" />
+
+    <Image x:Key="dk_gun" Source="Images\dk64\dk_gun.png"  x:Shared="false" />
+    <Image x:Key="diddy_gun" Source="Images\dk64\diddy_gun.png"  x:Shared="false"/>
+    <Image x:Key="lanky_gun" Source="Images\dk64\lanky_gun.png"  x:Shared="false" />
+    <Image x:Key="tiny_gun" Source="Images\dk64\tiny_gun.png"  x:Shared="false" />
+    <Image x:Key="chunky_gun" Source="Images\dk64\chunky_gun.png"  x:Shared="false"/>
+
+    <Image x:Key="dk_inst" Source="Images\dk64\dk_inst.png"  x:Shared="false" />
+    <Image x:Key="diddy_inst" Source="Images\dk64\diddy_inst.png"  x:Shared="false" />
+    <Image x:Key="lanky_inst" Source="Images\dk64\lanky_inst.png"  x:Shared="false" />
+    <Image x:Key="tiny_inst" Source="Images\dk64\tiny_inst.png"  x:Shared="false" />
+    <Image x:Key="chunky_inst" Source="Images\dk64\chunky_inst.png"  x:Shared="false" />
+
+    <Image x:Key="dk_move" Source="Images\dk64\dk_move.png"  x:Shared="false" />
+    <Image x:Key="diddy_move" Source="Images\dk64\diddy_move.png"  x:Shared="false" />
+    <Image x:Key="lanky_move" Source="Images\dk64\lanky_move.png"  x:Shared="false" />
+    <Image x:Key="tiny_move" Source="Images\dk64\tiny_move.png"  x:Shared="false" />
+    <Image x:Key="chunky_move" Source="Images\dk64\chunky_move.png"  x:Shared="false" />
+
+    <Image x:Key="dk_barrel" Source="Images\dk64\dkbarrel.png"  x:Shared="false" />
+    <Image x:Key="diddy_barrel" Source="Images\dk64\diddybarrel.png"  x:Shared="false" />
+    <Image x:Key="lanky_barrel" Source="Images\dk64\lankybarrel.png"  x:Shared="false" />
+    <Image x:Key="tiny_barrel" Source="Images\dk64\tinybarrel.png"  x:Shared="false" />
+    <Image x:Key="chunky_barrel" Source="Images\dk64\chunkybarrel.png"  x:Shared="false" />
+
+    <Image x:Key="dk_pad" Source="Images\dk64\dkpad.png"  x:Shared="false" />
+    <Image x:Key="diddy_pad" Source="Images\dk64\diddypad.png"  x:Shared="false" />
+    <Image x:Key="lanky_pad" Source="Images\dk64\lankypad.png"  x:Shared="false" />
+    <Image x:Key="tiny_pad" Source="Images\dk64\tinypad.png"  x:Shared="false" />
+    <Image x:Key="chunky_pad" Source="Images\dk64\chunkypad.png"  x:Shared="false"/>
+
+    <Image x:Key="key1" Source="Images\dk64\k1.png"  x:Shared="false"/>
+    <Image x:Key="key2" Source="Images\dk64\k2.png"  x:Shared="false"/>
+    <Image x:Key="key3" Source="Images\dk64\k3.png"  x:Shared="false"/>
+    <Image x:Key="key4" Source="Images\dk64\k4.png"  x:Shared="false"/>
+    <Image x:Key="key5" Source="Images\dk64\k5.png"  x:Shared="false"/>
+    <Image x:Key="key6" Source="Images\dk64\k6.png"  x:Shared="false"/>
+    <Image x:Key="key7" Source="Images\dk64\k7.png"  x:Shared="false"/>
+    <Image x:Key="key8" Source="Images\dk64\k8.png"  x:Shared="false"/>
+
+    <Image x:Key="progressive_slam" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="sniper_scope" Source="Images\dk64\sniper_scope.png"  x:Shared="false"/>
+    <Image x:Key="homing_ammo" Source="Images\dk64\homing_ammo.png"  x:Shared="false"/>
+
+    <Image x:Key="diving" Source="Images\dk64\diving.png"  x:Shared="false"/>
+    <Image x:Key="orange_throwing" Source="Images\dk64\orange_throwing.png"  x:Shared="false"/>
+    <Image x:Key="barrel_throwing" Source="Images\dk64\barrel_throwing.png"  x:Shared="false"/>
+    <Image x:Key="vine_swinging" Source="Images\dk64\vine_swinging.png"  x:Shared="false"/>
+
+    <Image x:Key="bean" Source="Images\dk64\bean.png"  x:Shared="false"/>
+    <Image x:Key="pearl" Source="Images\dk64\pearl.png"  x:Shared="false"/>
+
+    <Image x:Key="potion_dk" Source="Images\dk64\potion_dk.png" x:Shared="false"/>
+    <Image x:Key="potion_diddy" Source="Images\dk64\potion_diddy.png" x:Shared="false"/>
+    <Image x:Key="potion_lanky" Source="Images\dk64\potion_lanky.png" x:Shared="false"/>
+    <Image x:Key="potion_tiny" Source="Images\dk64\potion_tiny.png" x:Shared="false"/>
+    <Image x:Key="potion_chunky" Source="Images\dk64\potion_chunky.png" x:Shared="false"/>
+    <Image x:Key="potion_shared" Source="Images\dk64\potion_shared.png" x:Shared="false"/>
+
+    <!--Black&White (not used currently)-->
+    <Image x:Key="donkey_bw" Source="Images\bw\donkey.png"  x:Shared="false"/>
+    <Image x:Key="diddy_bw" Source="Images\bw\diddy.png"  x:Shared="false"/>
+    <Image x:Key="lanky_bw" Source="Images\bw\lanky.png"  x:Shared="false" />
+    <Image x:Key="tiny_bw" Source="Images\bw\tiny.png"  x:Shared="false" />
+    <Image x:Key="chunky_bw" Source="Images\bw\chunky.png"  x:Shared="false" />
+
+    <Image x:Key="dk_gun_bw" Source="Images\bw\dk_gun.png"  x:Shared="false" />
+    <Image x:Key="diddy_gun_bw" Source="Images\bw\diddy_gun.png"  x:Shared="false"/>
+    <Image x:Key="lanky_gun_bw" Source="Images\bw\lanky_gun.png"  x:Shared="false" />
+    <Image x:Key="tiny_gun_bw" Source="Images\bw\tiny_gun.png"  x:Shared="false" />
+    <Image x:Key="chunky_gun_bw" Source="Images\bw\chunky_gun.png"  x:Shared="false"/>
+
+    <Image x:Key="dk_inst_bw" Source="Images\bw\dk_inst.png"  x:Shared="false" />
+    <Image x:Key="diddy_inst_bw" Source="Images\bw\diddy_inst.png"  x:Shared="false" />
+    <Image x:Key="lanky_inst_bw" Source="Images\bw\lanky_inst.png"  x:Shared="false" />
+    <Image x:Key="tiny_inst_bw" Source="Images\bw\tiny_inst.png"  x:Shared="false" />
+    <Image x:Key="chunky_inst_bw" Source="Images\bw\chunky_inst.png"  x:Shared="false" />
+
+    <Image x:Key="dk_move_bw" Source="Images\bw\dk_move.png"  x:Shared="false" />
+    <Image x:Key="diddy_move_bw" Source="Images\bw\diddy_move.png"  x:Shared="false" />
+    <Image x:Key="lanky_move_bw" Source="Images\bw\lanky_move.png"  x:Shared="false" />
+    <Image x:Key="tiny_move_bw" Source="Images\bw\tiny_move.png"  x:Shared="false" />
+    <Image x:Key="chunky_move_bw" Source="Images\bw\chunky_move.png"  x:Shared="false" />
+
+    <Image x:Key="dk_barrel_bw" Source="Images\bw\dkbarrel.png"  x:Shared="false" />
+    <Image x:Key="diddy_barrel_bw" Source="Images\bw\diddybarrel.png"  x:Shared="false" />
+    <Image x:Key="lanky_barrel_bw" Source="Images\bw\lankybarrel.png"  x:Shared="false" />
+    <Image x:Key="tiny_barrel_bw" Source="Images\bw\tinybarrel.png"  x:Shared="false" />
+    <Image x:Key="chunky_barrel_bw" Source="Images\bw\chunkybarrel.png"  x:Shared="false" />
+
+    <Image x:Key="dk_pad_bw" Source="Images\bw\dkpad.png"  x:Shared="false" />
+    <Image x:Key="diddy_pad_bw" Source="Images\bw\diddypad.png"  x:Shared="false" />
+    <Image x:Key="lanky_pad_bw" Source="Images\bw\lankypad.png"  x:Shared="false" />
+    <Image x:Key="tiny_pad_bw" Source="Images\bw\tinypad.png"  x:Shared="false" />
+    <Image x:Key="chunky_pad_bw" Source="Images\bw\chunkypad.png"  x:Shared="false"/>
+
+    <Image x:Key="key1_bw" Source="Images\bw\k1.png"  x:Shared="false"/>
+    <Image x:Key="key2_bw" Source="Images\bw\k2.png"  x:Shared="false"/>
+    <Image x:Key="key3_bw" Source="Images\bw\k3.png"  x:Shared="false"/>
+    <Image x:Key="key4_bw" Source="Images\bw\k4.png"  x:Shared="false"/>
+    <Image x:Key="key5_bw" Source="Images\bw\k5.png"  x:Shared="false"/>
+    <Image x:Key="key6_bw" Source="Images\bw\k6.png"  x:Shared="false"/>
+    <Image x:Key="key7_bw" Source="Images\bw\k7.png"  x:Shared="false"/>
+    <Image x:Key="key8_bw" Source="Images\bw\k8.png"  x:Shared="false"/>
+
+    <Image x:Key="progressive_slam_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="sniper_scope_bw" Source="Images\bw\sniper_scope.png"  x:Shared="false"/>
+    <Image x:Key="homing_ammo_bw" Source="Images\bw\homing_ammo.png"  x:Shared="false"/>
+
+    <Image x:Key="diving_bw" Source="Images\bw\diving.png"  x:Shared="false"/>
+    <Image x:Key="orange_throwing_bw" Source="Images\bw\orange_throwing.png"  x:Shared="false"/>
+    <Image x:Key="barrel_throwing_bw" Source="Images\bw\barrel_throwing.png"  x:Shared="false"/>
+    <Image x:Key="vine_swinging_bw" Source="Images\bw\vine_swinging.png"  x:Shared="false"/>
+
+    <Image x:Key="bean_bw" Source="Images\bw\bean.png"  x:Shared="false"/>
+
+
+</ResourceDictionary>

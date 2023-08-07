@@ -1,9 +1,0 @@
-﻿<UserControl x:Class="DK64PointsTracker.LevelOrderNumber"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             MouseLeftButtonDown="LevelOrder_LeftPress" MouseRightButtonDown="LevelOrder_RightPress" MouseWheel="LevelOrder_MouseWheel">
-    <Grid Background="Transparent" Margin="0,-1,0,0">
-        <Grid Background="{StaticResource BaseBG}" Width="26" Height="28" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <TextBlock x:Name="NumberLabel" Margin="7,-3,0,0" Panel.ZIndex="2" FontSize="{StaticResource BigFontSize}" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="White"  FontFamily="{DynamicResource DK64Font}" Text="?"/>
-    </Grid>
-</UserControl>
