@@ -128,12 +128,15 @@ namespace DK64PointsTracker
             if (itemInfo.VialColor != VialColor.NONE && Vials.ContainsKey(itemInfo.VialColor))
             {
                 var vials = Vials[itemInfo.VialColor];
-                foreach(var vial in vials)
+                foreach (var vial in vials)
                 {
                     int index = VialItems.IndexOf(vial);
                     if (!ValidInsertionPoint(index, vial, userPlacing)) continue;
-                    button.Checkmark.Visibility = vial.Checkmark.Visibility;
-                    button.X.Visibility = vial.X.Visibility;
+                    if (button.Star.Visibility == Visibility.Visible || vial.Star.Visibility == Visibility.Visible)
+                    { 
+                        button.Star.Visibility = Visibility.Visible;
+                        vial.Star.Visibility = Visibility.Visible;
+                    }
                     Children.RemoveAt(index);
                     Children.Insert(index, button);
                     return;
@@ -155,6 +158,7 @@ namespace DK64PointsTracker
             {
                 int index = Children.IndexOf(button);
                 var vial = VialItems[index];
+                vial.Star.Visibility = Visibility.Hidden;
                 Children.RemoveAt(index);
                 Children.Insert(index, vial);
                 return;
@@ -163,24 +167,17 @@ namespace DK64PointsTracker
 
         public void Handle_RegionGrid(Item button, bool add, bool userPlacing = true)
         {
-            MainWindow window = ((MainWindow)Application.Current.MainWindow);
             ImportantCheck check = null;
+            ItemName item = ItemName.NONE;
             if(button.Tag != null)
             {
-                var item = (ItemName)button.Tag;
+                item = (ItemName)button.Tag;
                 check = ImportantCheckList.ITEMS[item];
             }
             if (add)
             {
-                try
-                {
-                    button.SetRegion(Region);
-                    AddWithVialCheck(button, userPlacing);
-                }
-                catch (Exception)
-                {
-                    return;
-                }
+                button.SetRegion(Region);
+                AddWithVialCheck(button, userPlacing);
                 Region.AddCheck(check);
             }
             else
@@ -198,7 +195,6 @@ namespace DK64PointsTracker
             MainWindow window = ((MainWindow)Application.Current.MainWindow);
             if (e.Data.GetDataPresent(typeof(Item)))
             {
-
                 Item item = e.Data.GetData(typeof(Item)) as Item;
                 if(item.Parent is Grid) Add_Item(item);
             }
@@ -222,6 +218,7 @@ namespace DK64PointsTracker
             {
                 item.MouseMove -= item.Item_MouseMove;
                 item.MouseDown -= item.Item_Return;
+                item.MouseDown -= item.Item_MouseDown;
                 item.MouseDown += item.Item_Return;
             }
         }
