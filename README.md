@@ -38,7 +38,7 @@
 - For this hint system I would also recommend the Way of the Hoard counts, as it again makes the endgame much less of a blind casino and more of a deduction puzzle.
 
 ## Special Thanks
-- The KH2 community for creating hint systems/trackers that this one is based off of
-- JXJacob for their GSTHD autotracking code that I referenced/used a lot in creating mine
-- Mukomo for their [PapeTracker](https://github.com/mukomo/PapeTracker) which this code was based off of
+- The KH2 community for creating hint systems/trackers that this one is based off of.
+- JXJacob for their [GSTHD](https://github.com/jxjacob/GSTHD) autotracking code that I referenced/used a lot in creating mine.
+- Mukomo for their [PapeTracker](https://github.com/mukomo/PapeTracker) which this code was based off of.
 - [dk64randomizer.com](dk64randomizer.com) and the [Discord](discord.gg/dk64randomizer) especially. Come join it!
