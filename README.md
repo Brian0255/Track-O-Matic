@@ -9,7 +9,7 @@
 5. Run the executable file and the tracker should begin running correctly.
 6. You'll probably want **autotracking** on, which you can find at the top menu. All you have to do is turn it on and that's it!
 7. Open your emulator of choice and load up your seed.
-8. Drag the spoiler log that you downloaded onto the tracker, or just click File -> Open Spoiler Log and select it.
+8. Drag the spoiler log that you downloaded onto the tracker, or just click File -> Open Spoiler Log and select it. **The tracker will not do anything until you give it one.**
 9. That's it! You're all set for that seed. If you want to do another one, make sure to click File -> Reset Tracker and then repeat steps 7 and 8.
 
 ## User Controls
