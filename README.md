@@ -4,7 +4,7 @@
 ## Installation
 1. You'll need some sort of emulator. I heavily recommend using [Project64](https://www.pj64-emu.com/) with this tracker since it will run DK64 Randomizer the best. At the moment, autotracking is only supported for Project 64 as well.
 2. Download the latest release zip from [here.](https://github.com/Brian0255/Track-O-Matic/releases/latest) Extract that to wherever you'd like.
-3. You'll need a randomizer seed from the [Dev site.](dev.dk64randomizer.com/randomizer.html) since this tracker relies exclusively on hint systems that are not on the main website yet.
+3. You'll need a randomizer seed from the [Dev site](dev.dk64randomizer.com/randomizer.html) since this tracker relies exclusively on hint systems that are not on the main website yet.
 4. When you generate a seed, hit that "Save Log" button next to the giant warnings everywhere. You can't miss it!
 5. Run the executable file and the tracker should begin running correctly.
 6. You'll probably want **autotracking** on, which you can find at the top menu. All you have to do is turn it on and that's it!
