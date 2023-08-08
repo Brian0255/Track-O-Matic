@@ -174,9 +174,10 @@ namespace TrackOMatic
                 BottomLabel.SetResourceReference(TextBlock.ForegroundProperty, "RequiredChecksColor");
                 SpoilerSettingToLabel["RequiredChecks"] = BottomLabel;
             }
+            SpoilerSettingToLabel["RequiredChecks"].Visibility = (SpoilerSettings.WOTHEnabled) ? Visibility.Visible : Visibility.Hidden;
+            if (RegionName == RegionName.START || RegionName == RegionName.DK_ISLES || RegionName == RegionName.HIDEOUT_HELM) return;
             int columnSpan = (SpoilerSettings.PointsEnabled || SpoilerSettings.WOTHEnabled) ? 2 : 4;
             Grid.SetColumnSpan(RegionButton, columnSpan);
-            SpoilerSettingToLabel["RequiredChecks"].Visibility = (SpoilerSettings.WOTHEnabled) ? Visibility.Visible : Visibility.Hidden;
         }
 
         public void SetSpoilerAsLoaded()
