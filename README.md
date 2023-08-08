@@ -25,7 +25,7 @@
 ## Supported Hint Systems
 
 ### Points
-- Points are based on KH2's point system.
+- Points is based on KH2's point system.
 - Each world has a point value based on the sum of its important checks.
 - Items have varying point values. For instance, you could make Kongs worth 13 points, keys worth 11 points, stuff like that.
 - Based on what is left and remaining point values, you can math it out and figure out where things are. Ideal for people who like these sorts of number game puzzles.
