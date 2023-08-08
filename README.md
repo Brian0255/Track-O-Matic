@@ -18,7 +18,7 @@
 - Middle clicking an item or scrolling your wheel on it will **star** it. A starred item will subtract 1 from a world's required check total (if you have that on), so this is very useful when you want to note things that you know are logically needed.
 - Right clicking and dragging an item in the bottom will allow you to place a semi visible item. This is useful for if you *think* an item is somewehere but you're not completely sure.
 - Left/Right clicking a world will cycle a world's number forward and backward to help you notate what the level orders are. You can also use your mouse wheel to achieve the same effect.
-- Left/Right clicking collectibles (Pearls, Battle Crowns, Blueprints) will increase/decrease them. **If autotracking is on, these are noted automatically and will not respond to your inputs as a result.**
+- Left/Right clicking collectibles (Pearls, Battle Crowns, Blueprints, etc.) will increase/decrease them. **If autotracking is on, these are noted automatically and will not respond to your inputs as a result.**
 - Clicking in the bottom area will allow you to type in notes of your choosing.
 - With autotracking on, you really don't have to do much (which is the intention). I heavily recommend it!
 
@@ -35,7 +35,7 @@
 - This is a hint system where you are immediately shown what vials are in each level.
 - For instance, Jungle Japes could have 1 Clear Vial, 1 Yellow Vial, and 2 Red Vials.
 - Based on what vials are left, you can quickly pin down where certain moves are, making this very unique.
-- I also recommend the Way of the Hoard counts for this hint system, as it again makes the endgame much less of a blind casino and more of a deduction puzzle.
+- For this hint system I would also recommend the Way of the Hoard counts, as it again makes the endgame much less of a blind casino and more of a deduction puzzle.
 
 ## Special Thanks
 - The KH2 community for creating hint systems/trackers that this one is based off of
