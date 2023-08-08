@@ -12,7 +12,7 @@
         MouseDown="rootGrid_LostFocus" 
         SizeChanged="Window_SizeChanged"
         AllowDrop="True" Drop="DropFile"
-        Title="TrackOMatic" Height="1020" Width="570" Background="{StaticResource RegionBG}"
+        Title="Track-O-Matic" Height="1020" Width="570" Background="{StaticResource RegionBG}"
         MinHeight="575" MinWidth="400">
 
 
