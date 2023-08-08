@@ -119,7 +119,7 @@ namespace TrackOMatic
         private void AddWithVialCheck(Item button, bool userPlacing)
         {
             var item = (ItemName)button.Tag;
-            if (VialItems.Count() == 0)
+            if (VialItems.Count() == 0 || item == ItemName.BEAN)
             {
                 Children.Add(button);
                 return;
@@ -153,6 +153,11 @@ namespace TrackOMatic
                 return;
             }
             var item = (ItemName)button.Tag;
+            if(item == ItemName.BEAN)
+            {
+                Children.Remove(button);
+                return;
+            }
             var itemInfo = ImportantCheckList.ITEMS[item];
             if (itemInfo.VialColor != VialColor.NONE && Vials.ContainsKey(itemInfo.VialColor))
             {
