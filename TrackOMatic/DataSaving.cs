@@ -96,11 +96,16 @@ namespace TrackOMatic
             }
         }
 
-        public void AddSavedItem(SavedItem savedItem)
+        public void AddSavedItem(SavedItem savedItem, bool ignoreAutotrackingField = false)
         {
             if (savedItem == null || savedProgress == null) return;
             var itemName = savedItem.ItemName;
-            if (savedProgress.SavedItems.ContainsKey(itemName)) savedProgress.SavedItems[itemName] = savedItem;
+            if (savedProgress.SavedItems.ContainsKey(itemName))
+            {
+                bool existingAutotrackingValue = savedProgress.SavedItems[itemName].Autotracked;
+                if (ignoreAutotrackingField) savedItem.Autotracked = existingAutotrackingValue;
+                savedProgress.SavedItems[itemName] = savedItem;
+            }
             else savedProgress.SavedItems.Add(itemName, savedItem);
         }
 
