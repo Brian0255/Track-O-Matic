@@ -7,7 +7,8 @@ using System.IO;
 using Microsoft.Win32;
 using System.Linq;
 using Newtonsoft.Json;
-using System.Numerics;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace TrackOMatic
 {
@@ -69,11 +70,10 @@ namespace TrackOMatic
             }
         }
 
-        private void GenerateHitList(dynamic JSONObject)
+        private void GenerateHitList(int randomSeed)
         {
-            int seed = JSONObject["Settings"]["Seed"].ToObject<int>();
             List<string> possibleGoals = Enum.GetValues(typeof(HitListGoal)).Cast<HitListGoal>().Select(e => e.ToString()).ToList();
-            possibleGoals.Shuffle(seed);
+            possibleGoals.Shuffle(randomSeed);
             for(int i = 0; i < 12; ++i)
             {
                 var imagePath = "Images/dk64/" + possibleGoals[i].ToLower() + ".png";
@@ -207,6 +207,7 @@ namespace TrackOMatic
             Reset();
             using StreamReader reader = new(fileName);
             string json = reader.ReadToEnd();
+
             dynamic JSONObject = JsonConvert.DeserializeObject(json);
             ParseRegions(JSONObject);
             foreach (var entry in ImportantCheckList.ITEMS) entry.Value.InitPointValue();
@@ -214,7 +215,16 @@ namespace TrackOMatic
             Autotracker.SetSpoilerLoaded(fileName);
             foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
             InitSavedDataFromSpoiler(fileName);
-            GenerateHitList(JSONObject);
+            if (Properties.Settings.Default.HitList)
+            {
+                int hashSum = 0;
+                using (MD5 md5 = MD5.Create())
+                {
+                    byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(json));
+                    foreach (var b in hashBytes) hashSum += b;
+                }
+                GenerateHitList(hashSum);
+            }
         }
     }
 }
