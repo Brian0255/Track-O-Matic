@@ -1,0 +1,30 @@
+﻿namespace TrackOMatic
+{
+    public enum HitListGoal
+    {
+        MECH_FISH,
+        LANKY_TOP_OF_CASTLE,
+        DONKEY_TREE_SNIPING,
+        DK_ARCADE,
+        FOREST_LOBBY,
+        CAVES_DIRT,
+        POUND_THE_X,
+        SPIDER_BOSS,
+        BEAN_CHECK,
+        RABBIT_RACE,
+        DOGADON_2,
+        MAD_JACK,
+        ARMYDILLO_2,
+        MERMAID_REWARD,
+        JETPAC,
+        MINECARTS,
+        CASTLE_CAR_RACE,
+        BANANA_FAIRIES,
+        FACTORY_TOY_BOSS,
+        CAVES_BEETLE_RACE,
+        AZTEC_BEETLE_RACE,
+        SEAL_RACE,
+        HIDEOUT_HELM,
+        KROOL
+    }
+}
