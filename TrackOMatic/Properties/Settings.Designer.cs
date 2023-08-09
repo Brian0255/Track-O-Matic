@@ -82,5 +82,17 @@ namespace TrackOMatic.Properties {
                 this["LastFolderPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HitList {
+            get {
+                return ((bool)(this["HitList"]));
+            }
+            set {
+                this["HitList"] = value;
+            }
+        }
     }
 }
