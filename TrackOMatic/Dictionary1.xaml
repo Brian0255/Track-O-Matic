@@ -20,6 +20,9 @@
     <SolidColorBrush x:Key="RegionComplete" Color="#1c8ae3"/>
     <SolidColorBrush x:Key="RegionInProgress" Color="#ffffff"/>
 
+    <SolidColorBrush x:Key="HitListDone" Color="#8f4242"/>
+    <SolidColorBrush x:Key="HitListAvailable" Color="#35549c"/>
+
     <Image x:Key="locked_region" Source="Images\dk64\locked_region.png" x:Shared="false" />
     <Image x:Key="star_simple" Source="Images\dk64\star_simple.png" x:Shared="false" />
     <Image x:Key="star_complex" Source="Images\dk64\star_complex.png" x:Shared="false" />
