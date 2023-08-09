@@ -49,7 +49,10 @@ namespace TrackOMatic
         public Dictionary<RegionName, Region> Regions { get; private set;  }
         public Dictionary<ItemType,CollectibleItem> Collectibles { get; private set; }
         public List<string> EndgameHints { get; private set; }
+
         private List<Item> DraggableItems = new();
+        private List<HitListItem> hitListItems;
+
         public int collected;
         public Autotracker Autotracker { get; private set; }
         public bool SpoilerLoaded { get; private set; }
@@ -80,8 +83,8 @@ namespace TrackOMatic
                 { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, ItemName.KEY_5) },
 
                 { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel) },
-
             };
+            hitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10, Goal11, Goal12 };
             Collectibles = new()
             {
 
@@ -176,8 +179,7 @@ namespace TrackOMatic
             Top = Properties.Settings.Default.WindowY;
             Left = Properties.Settings.Default.WindowX;
 
-            Width = 570;
-            Height = 1020;
+            ResetWidthHeight();
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
@@ -196,10 +198,15 @@ namespace TrackOMatic
         {
         }
 
-        private void ResetSize(object sender, RoutedEventArgs e)
+        private void ResetWidthHeight()
         {
             Width = 570;
-            Height = 1020;
+            Height = (Properties.Settings.Default.HitList) ? 1020 : 880;
+        }
+
+        private void ResetSize(object sender, RoutedEventArgs e)
+        {
+            ResetWidthHeight();
         }
 
         public bool TopMostSetting
@@ -233,6 +240,7 @@ namespace TrackOMatic
                 item.CanLeftClick = true;
                 item.Star.Visibility = Visibility.Hidden;
             }
+            foreach (var item in hitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
 
             HelmKong1.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
@@ -243,8 +251,8 @@ namespace TrackOMatic
             KRoolKong2.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
             KRoolKong3.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
 
-            Notes.Text = "";
-            Notes.Reset();
+            //Notes.Text = "";
+           // Notes.Reset();
             Autotracker.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)

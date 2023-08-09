@@ -7,7 +7,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Linq;
 using Newtonsoft.Json;
-
+using System.Numerics;
 
 namespace TrackOMatic
 {
@@ -66,6 +66,19 @@ namespace TrackOMatic
                     Regions[region].RegionGrid.Add_Item(item);
                     item.CanLeftClick = false;
                 }
+            }
+        }
+
+        private void GenerateHitList(dynamic JSONObject)
+        {
+            int seed = JSONObject["Settings"]["Seed"].ToObject<int>();
+            List<string> possibleGoals = Enum.GetValues(typeof(HitListGoal)).Cast<HitListGoal>().Select(e => e.ToString()).ToList();
+            possibleGoals.Shuffle(seed);
+            for(int i = 0; i < 12; ++i)
+            {
+                var imagePath = "Images/dk64/" + possibleGoals[i].ToLower() + ".png";
+                var newImage = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+                hitListItems[i].SetImage(newImage);
             }
         }
 
@@ -201,6 +214,7 @@ namespace TrackOMatic
             Autotracker.SetSpoilerLoaded(fileName);
             foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
             InitSavedDataFromSpoiler(fileName);
+            GenerateHitList(JSONObject);
         }
     }
 }

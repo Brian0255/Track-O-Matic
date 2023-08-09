@@ -18,6 +18,13 @@ namespace TrackOMatic
             Settings.Default.Save();
         }
 
+        private void HitListToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.HitList = HitListOption.IsChecked;
+            ResetWidthHeight();
+            Settings.Default.Save();
+        }
+
         private void AutotrackToggle(object sender, RoutedEventArgs e)
         {
             Settings.Default.Autotracking = AutotrackOption.IsChecked;
