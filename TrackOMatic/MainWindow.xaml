@@ -42,6 +42,7 @@
                 <Separator/>
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True"  IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
+                <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
             </MenuItem>
             <MenuItem Header="v0.1" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
@@ -52,10 +53,56 @@
                 <RowDefinition Height=".007*"/>
                 <RowDefinition Height=".1*"/>
                 <RowDefinition Height=".03*"/>
-                <RowDefinition Height=".5*"/>
+                <RowDefinition Height=".4*"/>
                 <RowDefinition Height=".03*"/>
                 <RowDefinition Height=".11*"/>
-                <RowDefinition Height=".32*"/>
+                <RowDefinition>
+                    <RowDefinition.Style>
+                        <Style TargetType="{x:Type RowDefinition}">
+                            <Setter Property="Height" Value=".03*" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="True">
+                                    <Setter Property="Height" Value=".03*" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="false">
+                                    <Setter Property="Height" Value="0*" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RowDefinition.Style>
+                </RowDefinition>
+                <RowDefinition>
+                    <RowDefinition.Style>
+                        <Style TargetType="{x:Type RowDefinition}">
+                            <Setter Property="Height" Value=".3*" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="True">
+                                    <Setter Property="Height" Value=".3*" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="false">
+                                    <Setter Property="Height" Value="0*" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RowDefinition.Style>
+                </RowDefinition>
+
+                <RowDefinition>
+                    <RowDefinition.Style>
+                        <Style TargetType="{x:Type RowDefinition}">
+                            <Setter Property="Height" Value=".015*" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="True">
+                                    <Setter Property="Height" Value=".015*" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="false">
+                                    <Setter Property="Height" Value="0*" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RowDefinition.Style>
+                </RowDefinition>
+                <!--RowDefinition Height=".32*"/-->
             </Grid.RowDefinitions>
             <Grid Grid.Row="1">
                 <Rectangle Fill="{StaticResource BaseBG}" />
@@ -64,6 +111,9 @@
                 <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6" />
             </Grid>
             <Grid Grid.Row="5">
+                <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6" />
+            </Grid>
+            <Grid Grid.Row="7">
                 <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6" />
             </Grid>
             <Grid Grid.Row="0"  Background="{StaticResource BaseBG}">
@@ -396,7 +446,6 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
-                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -529,30 +578,30 @@
                 <Button Content="{DynamicResource key8}"  Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_8}"/>
                 
                 <!--Shared Items-->
-                <local:Item x:Name="progressive_slam_1"  ItemImage="{DynamicResource progressive_slam}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
-                <local:Item x:Name="progressive_slam_2"  ItemImage="{DynamicResource progressive_slam}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
-                <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+                <local:Item x:Name="progressive_slam_1"  ItemImage="{DynamicResource progressive_slam}" Grid.Row="2" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
+                <local:Item x:Name="progressive_slam_2"  ItemImage="{DynamicResource progressive_slam}" Grid.Row="2" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
+                <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope}" Grid.Row="2" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+                <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
 
-                <Button Content="{DynamicResource progressive_slam}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
-                <Button Content="{DynamicResource progressive_slam}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
-                <Button Content="{DynamicResource sniper_scope}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                <Button Content="{DynamicResource homing_ammo}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+                <Button Content="{DynamicResource progressive_slam}"  Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
+                <Button Content="{DynamicResource progressive_slam}"  Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
+                <Button Content="{DynamicResource sniper_scope}"  Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+                <Button Content="{DynamicResource homing_ammo}"  Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
                 
                 <!--Training Moves-->
-                <local:Item x:Name="diving"  ItemImage="{DynamicResource diving}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
-                <local:Item x:Name="orange_throwing"  ItemImage="{DynamicResource orange_throwing}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-                <local:Item x:Name="barrel_throwing"  ItemImage="{DynamicResource barrel_throwing}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-                <local:Item x:Name="vine_swinging"  ItemImage="{DynamicResource vine_swinging}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                <local:Item x:Name="diving"  ItemImage="{DynamicResource diving}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
+                <local:Item x:Name="orange_throwing"  ItemImage="{DynamicResource orange_throwing}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+                <local:Item x:Name="barrel_throwing"  ItemImage="{DynamicResource barrel_throwing}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+                <local:Item x:Name="vine_swinging"  ItemImage="{DynamicResource vine_swinging}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
 
-                <Button Content="{DynamicResource diving}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIVING}"/>
-                <Button Content="{DynamicResource orange_throwing}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-                <Button Content="{DynamicResource barrel_throwing}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-                <Button Content="{DynamicResource vine_swinging}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                <Button Content="{DynamicResource diving}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIVING}"/>
+                <Button Content="{DynamicResource orange_throwing}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+                <Button Content="{DynamicResource barrel_throwing}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+                <Button Content="{DynamicResource vine_swinging}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
                 
                 <!--Misc-->
-                <local:Item x:Name="bean"  ItemImage="{DynamicResource bean}" Grid.Row="5" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
-                <Button Content="{DynamicResource bean}"  Template="{StaticResource DefaultButton}" Grid.Row="5" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BEAN}"/>
+                <local:Item x:Name="bean"  ItemImage="{DynamicResource bean}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
+                <Button Content="{DynamicResource bean}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BEAN}"/>
             </Grid>
             <!--K.Rool/Helm order-->
             <Grid Grid.Row="6" >
@@ -594,12 +643,71 @@
                     <Image  Name="KRoolKong3" Grid.Column="5" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>-->
             </Grid>
             </Grid>
-            <Grid Grid.Row="8">
+            <!--Grid Grid.Row="9">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid  Grid.Row="1" Margin="6" Background="{StaticResource RegionImageBG}">
                     <local:WatermarkTextBox x:Name="Notes" Text="Enter notes here..." Foreground="{DynamicResource UnfocusedText}" Margin="8,3,0,3" MaxLines="5" AcceptsReturn="True" Watermark="Enter notes here..." Background="{StaticResource RegionImageBG}" BorderThickness="0" FontSize="20" FontFamily="Calibri Light"/>
+                </Grid>
+            </Grid-->
+            <Grid Grid.Row="8" Margin="0,-2,0,-2">
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="false">
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width=".15*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Name="GoalsLabel" Margin="0,0,22,0" Grid.Column="0" FontSize="28" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="GOALS" />
+                <Grid Grid.Column="1" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <local:HitListItem x:Name="Goal1" Grid.Column="0"/>
+                        <local:HitListItem x:Name="Goal2" Grid.Column="1"/>
+                        <local:HitListItem x:Name="Goal3" Grid.Column="2"/>
+                        <local:HitListItem x:Name="Goal4" Grid.Column="3"/>
+                        <local:HitListItem x:Name="Goal5" Grid.Column="4"/>
+                        <local:HitListItem x:Name="Goal6" Grid.Column="5"/>
+                    </Grid>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <local:HitListItem x:Name="Goal7" Grid.Column="0"/>
+                        <local:HitListItem x:Name="Goal8" Grid.Column="1"/>
+                        <local:HitListItem x:Name="Goal9" Grid.Column="2"/>
+                        <local:HitListItem x:Name="Goal10" Grid.Column="3"/>
+                        <local:HitListItem x:Name="Goal11" Grid.Column="4"/>
+                        <local:HitListItem x:Name="Goal12" Grid.Column="5"/>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>
