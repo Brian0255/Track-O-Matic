@@ -130,19 +130,23 @@ namespace TrackOMatic
             }
             ReadStartingItemsIntoUI(startingItems);
             Autotracker.SetStartingItems(startingItems);
-            var helmImages = new List<Image>() { HelmKong1, HelmKong2, HelmKong3 };
-            var KRoolImages = new List<Image>() { KRoolKong1, KRoolKong2, KRoolKong3 };
-            for(int i = 0; i < info.helm_order.Count(); ++i)
+            for(int i = 0; i < helmKongs.Count; ++i)
             {
-                if (i > 2) return;
-                var imageName = JSONKeyMappings.KONGS[info.helm_order[i]].ToString().ToLower();
-                helmImages[i].Source = new BitmapImage(new Uri("Images/dk64/"+imageName+".png", UriKind.Relative));
+                if (i < info.helm_order.Count)
+                {
+                    var imageName = JSONKeyMappings.KONGS[info.helm_order[i]].ToString().ToLower();
+                    helmKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
+                }
+                else helmKongs[i].Source = null;
             }
-            for (int i = 0; i < info.krool_order.Count(); ++i)
+            for (int i = 0; i < kroolKongs.Count; ++i)
             {
-                if (i > 2) return;
-                var imageName = JSONKeyMappings.KONGS[info.krool_order[i]].ToString().ToLower();
-                KRoolImages[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
+                if (i < info.krool_order.Count)
+                {
+                    var imageName = JSONKeyMappings.KONGS[info.krool_order[i]].ToString().ToLower();
+                    kroolKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
+                }
+                else kroolKongs[i].Source = null;
             }
         }
 
@@ -202,6 +206,19 @@ namespace TrackOMatic
             }
         }
 
+        private void ReadLevelOrder(dynamic JSONObject)
+        {
+            var levelOrder = JSONObject["Shuffled Level Order"].ToObject <Dictionary<string, string>>();
+            foreach(var entry in levelOrder)
+            {
+                var originalLevel = entry.Key;
+                var newLevel = entry.Value;
+                var regionName = JSONKeyMappings.SHUFFLED_LEVEL_NAME_TO_REGION[newLevel];
+                var levelOrderNumber = JSONKeyMappings.LEVEL_NAME_TO_LEVEL_ORDER[originalLevel];
+                Regions[regionName].SetLevelOrderNumber(levelOrderNumber);
+            }
+        }
+
         public void ParseSpoiler(string fileName)
         {
             Reset();
@@ -224,6 +241,7 @@ namespace TrackOMatic
                     foreach (var b in hashBytes) hashSum += b;
                 }
                 GenerateHitList(hashSum);
+                ReadLevelOrder(JSONObject);
             }
         }
     }
