@@ -30,20 +30,29 @@ namespace TrackOMatic
             UpdateLabel();
         }
 
+        public void SetNumber(int newNumber)
+        {
+            currentNumber = newNumber;
+            UpdateLabel();
+        }
+
         private void LevelOrder_LeftPress(object sender, RoutedEventArgs e)
         {
+            if (Properties.Settings.Default.HitList) return;
             currentNumber = (currentNumber + 1) % 8;
             UpdateLabel();
         }
 
         private void LevelOrder_RightPress(object sender, RoutedEventArgs e)
         {
+            if (Properties.Settings.Default.HitList) return;
             currentNumber = (currentNumber + 7) % 8;
             UpdateLabel();
         }
 
         private void LevelOrder_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (Properties.Settings.Default.HitList) return;
             if (e.Delta > 0)
             {
                 LevelOrder_LeftPress(sender, e);

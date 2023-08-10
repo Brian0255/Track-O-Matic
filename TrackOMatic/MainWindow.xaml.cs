@@ -48,7 +48,8 @@ namespace TrackOMatic
         public Button SelectedButton { get; }
         public Dictionary<RegionName, Region> Regions { get; private set;  }
         public Dictionary<ItemType,CollectibleItem> Collectibles { get; private set; }
-        public List<string> EndgameHints { get; private set; }
+        public List<System.Windows.Controls.Image> kroolKongs;
+        public List<System.Windows.Controls.Image> helmKongs;
 
         private List<Item> DraggableItems = new();
         private List<HitListItem> hitListItems;
@@ -74,13 +75,13 @@ namespace TrackOMatic
                 { RegionName.DK_ISLES, new Region(RegionName.DK_ISLES, DKIslesRegion, DKIslesPicture, DKIslesRegionGrid, DKIslesPoints, DKIslesTopLabel) },
                 { RegionName.START, new Region(RegionName.START, StartRegion, StartPicture, StartRegionGrid) },
 
-                { RegionName.JUNGLE_JAPES, new Region(RegionName.JUNGLE_JAPES, Level1, Level1Picture, Level1RegionGrid, Level1Points, Level1TopLabel) },
-                { RegionName.ANGRY_AZTEC, new Region(RegionName.ANGRY_AZTEC, Level2, Level2Picture, Level2RegionGrid, Level2Points,Level2TopLabel, ItemName.KEY_1) },
-                { RegionName.FRANTIC_FACTORY, new Region(RegionName.FRANTIC_FACTORY, Level3, Level3Picture, Level3RegionGrid, Level3Points,Level3TopLabel, ItemName.KEY_2) },
-                { RegionName.GLOOMY_GALLEON, new Region(RegionName.GLOOMY_GALLEON, Level4, Level4Picture, Level4RegionGrid, Level4Points,Level4TopLabel, ItemName.KEY_2) },
-                { RegionName.FUNGI_FOREST, new Region(RegionName.FUNGI_FOREST, Level5, Level5Picture, Level5RegionGrid, Level5Points, Level5TopLabel,ItemName.KEY_4) },
-                { RegionName.CRYSTAL_CAVES, new Region(RegionName.CRYSTAL_CAVES, Level6, Level6Picture, Level6RegionGrid, Level6Points,Level6TopLabel, ItemName.KEY_5) },
-                { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, ItemName.KEY_5) },
+                { RegionName.JUNGLE_JAPES, new Region(RegionName.JUNGLE_JAPES, Level1, Level1Picture, Level1RegionGrid, Level1Points, Level1TopLabel, Level1Order) },
+                { RegionName.ANGRY_AZTEC, new Region(RegionName.ANGRY_AZTEC, Level2, Level2Picture, Level2RegionGrid, Level2Points,Level2TopLabel, Level2Order) },
+                { RegionName.FRANTIC_FACTORY, new Region(RegionName.FRANTIC_FACTORY, Level3, Level3Picture, Level3RegionGrid, Level3Points,Level3TopLabel, Level3Order) },
+                { RegionName.GLOOMY_GALLEON, new Region(RegionName.GLOOMY_GALLEON, Level4, Level4Picture, Level4RegionGrid, Level4Points,Level4TopLabel, Level4Order) },
+                { RegionName.FUNGI_FOREST, new Region(RegionName.FUNGI_FOREST, Level5, Level5Picture, Level5RegionGrid, Level5Points, Level5TopLabel, Level5Order) },
+                { RegionName.CRYSTAL_CAVES, new Region(RegionName.CRYSTAL_CAVES, Level6, Level6Picture, Level6RegionGrid, Level6Points,Level6TopLabel, Level6Order) },
+                { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, Level7Order) },
 
                 { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel) },
             };
@@ -103,6 +104,8 @@ namespace TrackOMatic
 
             };
             Items = ItemGrid;
+            kroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3 };
+            helmKongs = new() { HelmKong1, HelmKong2, HelmKong3 };
 
             //have a separate list of the movable tracker items so it's easy to find them even if they are moved out of the grid
             foreach (var control in Items.Children)
@@ -201,7 +204,7 @@ namespace TrackOMatic
         private void ResetWidthHeight()
         {
             Width = 570;
-            Height = (Properties.Settings.Default.HitList) ? 1020 : 880;
+            Height = (Properties.Settings.Default.HitList) ? 980 : 820;
         }
 
         private void ResetSize(object sender, RoutedEventArgs e)

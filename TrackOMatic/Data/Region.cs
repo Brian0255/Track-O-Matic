@@ -15,21 +15,19 @@ namespace TrackOMatic
         public SpoilerSettings SpoilerSettings { get; set; }
         public RegionName RegionName;
         public Dictionary<ImportantCheck, bool> CurrentChecks { get; private set; }
-        public ItemName KeyLock;
 
         private Dictionary<string, TextBlock> SpoilerSettingToLabel = new()
         {
             {"RequiredChecks", null },
             {"PointsLabel", null },
         };
-        private bool Locked;
-        private bool isLobby1 = false;
         private int requiredChecks = 0;
         public Grid MainUIGrid { get; }
         public Image RegionButton { get; }
         public RegionGrid RegionGrid { get; }
         public TextBlock BottomLabel { get; }
         public TextBlock TopLabel { get; }
+        public LevelOrderNumber LevelOrderNumber { get; }
         public int TotalPoints { get; private set; }
         public bool SpoilerLoaded { get; private set; }
         public int CurrentPoints { get; private set; }
@@ -51,7 +49,7 @@ namespace TrackOMatic
             }
         }
 
-        public Region(RegionName regionName, Grid mainUIGrid, Image regionButton, RegionGrid checksContainer, TextBlock bottomLabel = null, TextBlock topLabel = null, ItemName keyLock = ItemName.NONE)
+        public Region(RegionName regionName, Grid mainUIGrid, Image regionButton, RegionGrid checksContainer, TextBlock bottomLabel = null, TextBlock topLabel = null, LevelOrderNumber levelOrderNumber = null)
         {
             RegionName = regionName;
             BLockerAmount = 0;
@@ -61,10 +59,9 @@ namespace TrackOMatic
             RegionGrid = checksContainer;
             BottomLabel = bottomLabel;
             TopLabel = topLabel;
+            LevelOrderNumber = levelOrderNumber;
             CurrentChecks = new();
             RegionGrid.Region = this;
-            KeyLock = keyLock;
-            Locked = (keyLock != ItemName.NONE);
             ResetLabels();
         }
 
@@ -74,11 +71,6 @@ namespace TrackOMatic
             if (check == null) return;
             CurrentChecks[check] = true;
             UpdatePoints();
-        }
-
-        public void SetAsLobby1() 
-        { 
-            isLobby1 = true;
         }
 
         public void UpdateRequiredChecksTotal()
@@ -117,6 +109,7 @@ namespace TrackOMatic
             }
             RegionGrid.ResetVials();
             ResetLabels();
+            if(LevelOrderNumber != null) LevelOrderNumber.Reset();
         }
 
         public void RemoveCheck(ImportantCheck check)
@@ -186,6 +179,11 @@ namespace TrackOMatic
             ConfigureLabelsFromSettings();
             UpdatePoints();
             UpdateRequiredChecksTotal();
+        }
+
+        public void SetLevelOrderNumber(int number)
+        {
+            LevelOrderNumber.SetNumber(number);
         }
     }
 }
