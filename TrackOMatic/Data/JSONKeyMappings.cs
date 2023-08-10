@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 
 namespace TrackOMatic
 {
@@ -113,6 +114,28 @@ namespace TrackOMatic
     public static readonly Dictionary<string, ItemName> POINT_NAME_TO_SPECIFIC_VALUE = new()
     {
         {"bean", ItemName.BEAN }
+    };
+
+    public static readonly Dictionary<string, int> LEVEL_NAME_TO_LEVEL_ORDER = new()
+    {
+        {"JungleJapes", 1 },
+        {"AngryAztec", 2 },
+        {"FranticFactory", 3 },
+        {"GloomyGalleon", 4 },
+        {"FungiForest",5 },
+        {"CrystalCaves", 6 },
+        {"CreepyCastle", 7 }
+    };
+
+    public static readonly Dictionary<string, RegionName> SHUFFLED_LEVEL_NAME_TO_REGION = new()
+    {
+        {"JungleJapes", RegionName.JUNGLE_JAPES },
+        {"AngryAztec", RegionName.ANGRY_AZTEC },
+        {"FranticFactory", RegionName.FRANTIC_FACTORY },
+        {"GloomyGalleon", RegionName.GLOOMY_GALLEON },
+        {"FungiForest", RegionName.FUNGI_FOREST },
+        {"CrystalCaves", RegionName.CRYSTAL_CAVES },
+        {"CreepyCastle", RegionName.CREEPY_CASTLE }
     };
 
     }
