@@ -74,7 +74,7 @@ namespace TrackOMatic
         {
             List<string> possibleGoals = Enum.GetValues(typeof(HitListGoal)).Cast<HitListGoal>().Select(e => e.ToString()).ToList();
             possibleGoals.Shuffle(randomSeed);
-            for(int i = 0; i < 12; ++i)
+            for(int i = 0; i < hitListItems.Count; ++i)
             {
                 var imagePath = "Images/dk64/" + possibleGoals[i].ToLower() + ".png";
                 var newImage = new BitmapImage(new Uri(imagePath, UriKind.Relative));
