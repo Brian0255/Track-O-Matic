@@ -666,9 +666,9 @@
                     </Style>
                 </Grid.Style>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1.05*"/>
                     <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="0.16*"/>
+                    <ColumnDefinition Width="0.4*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Name="GoalsLabel" Margin="0,0,22,0" Grid.Column="0" FontSize="28" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="GOALS" />
                 <Grid Grid.Column="1" >
