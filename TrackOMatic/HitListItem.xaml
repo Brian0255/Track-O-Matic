@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              MouseLeftButtonDown="HitListItem_LeftPress" MouseRightButtonDown="HitListItem_RightPress" MouseWheel="HitListItem_MouseWheel">
     <Border Name="Border" CornerRadius="7" Background="{StaticResource RegionImageBG}" Margin="3">
-        <Border Name="InsideBorder" CornerRadius="4" Background="Transparent" Margin="2">
+        <Border Name="InsideBorder" CornerRadius="5" Background="Transparent" Margin="2">
             <Grid Name="InsideGrid" Margin="0">
                 <Image x:Name="image" Opacity="1" Source="Images\dk64\question_mark.png" >
                 </Image>
