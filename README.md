@@ -1,5 +1,5 @@
 # Track-O-Matic
-![trackerimage (3)](https://github.com/Brian0255/Track-O-Matic/assets/61294586/fb4b9e90-a44a-4dc3-aa8c-9f6487578fd9)
+![trackerimage4](https://github.com/Brian0255/Track-O-Matic/assets/61294586/374e448b-c927-4d41-a67d-2c6c33ddeee3)
 ### This is a tracker in the style of Kingdom Hearts II Randomizer trackers, but for Donkey Kong 64 Randomizer. It has support for alternate hint systems, such as Points, Vials, and HitList that other trackers are not tailored to. 
 
 ## Installation
