@@ -105,32 +105,51 @@ namespace TrackOMatic
             public List<int> helm_order { get; }
             public List<int> starting_kongs { get; }
             public List<string> starting_keys { get; }
+            public List<int> level_order { get; }
 
-            public StartingInfo(List<int> krool_order, List<int> helm_order, List<int> starting_kongs, List<string> starting_keys)
+            public StartingInfo(List<int> krool_order, List<int> helm_order, List<int> starting_kongs, List<string> starting_keys, List<int> level_order)
             {
                 this.krool_order = krool_order;
                 this.helm_order = helm_order;
                 this.starting_kongs = starting_kongs;
                 this.starting_keys = starting_keys;
+                this.level_order = level_order;
             }
         }
+
         private void ReadStartingInfo(string JSONString)
         {
             StartingInfo info = System.Text.Json.JsonSerializer.Deserialize<StartingInfo>(JSONString);
             Dictionary<ItemName, RegionName> startingItems = new();
+            ReadKongsAndKeys(info, startingItems);
+
+            //temporary
+            startingItems.Add(ItemName.FAIRY_CAMERA, RegionName.START);
+            startingItems.Add(ItemName.SHOCKWAVE, RegionName.START);
+
+            ReadStartingItemsIntoUI(startingItems);
+            Autotracker.SetStartingItems(startingItems);
+            ReadHelmAndKRoolOrder(info);
+            ReadLevelOrder(info);
+        }
+
+        private static void ReadKongsAndKeys(StartingInfo info, Dictionary<ItemName, RegionName> startingItems)
+        {
             foreach (var kongIndex in info.starting_kongs)
             {
                 var kongItem = JSONKeyMappings.KONGS[kongIndex];
                 startingItems.Add(kongItem, RegionName.START);
             }
-            foreach(var keyString in info.starting_keys)
+            foreach (var keyString in info.starting_keys)
             {
                 var key = JSONKeyMappings.ITEM_MAP[keyString];
                 startingItems.Add(key, RegionName.START);
             }
-            ReadStartingItemsIntoUI(startingItems);
-            Autotracker.SetStartingItems(startingItems);
-            for(int i = 0; i < helmKongs.Count; ++i)
+        }
+
+        private void ReadHelmAndKRoolOrder(StartingInfo info)
+        {
+            for (int i = 0; i < helmKongs.Count; ++i)
             {
                 if (i < info.helm_order.Count)
                 {
@@ -147,6 +166,17 @@ namespace TrackOMatic
                     kroolKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
                 }
                 else kroolKongs[i].Source = null;
+            }
+        }
+
+        private void ReadLevelOrder(StartingInfo info)
+        {
+            for(int i = 0; i < Region.LOBBY_ORDER.Count; ++i)
+            {
+                var regionName = Region.LOBBY_ORDER[i];
+                int level_order = -1;
+                if (info.level_order != null) level_order = info.level_order[i];
+                Regions[regionName].SetLevelOrderNumber(level_order);
             }
         }
 
@@ -176,7 +206,6 @@ namespace TrackOMatic
 
             foreach (var regionEntry in regionInfo)
             {
-                RegionSpoilerInfo info = System.Text.Json.JsonSerializer.Deserialize<RegionSpoilerInfo>(regionEntry.Value);
                 if(regionEntry.Key == "starting_info")
                 {
                     ReadStartingInfo(regionEntry.Value);
@@ -187,14 +216,9 @@ namespace TrackOMatic
                     ReadPointSpread(regionEntry.Value);
                     continue;
                 }
+                RegionSpoilerInfo info = System.Text.Json.JsonSerializer.Deserialize<RegionSpoilerInfo>(regionEntry.Value);
                 if (!JSONKeyMappings.REGION_MAP.ContainsKey(info.level_name)) continue;
-                if(settings == null)
-                {
-                    bool pointsEnabled = info.points != -1;
-                    bool vialsEnabled = !pointsEnabled;
-                    bool WOTHEnabled = info.woth_count != -1;
-                    settings = new SpoilerSettings(pointsEnabled, vialsEnabled, WOTHEnabled);
-                }
+                settings ??= SetUpSettings(info);
                 RegionName regionName = JSONKeyMappings.REGION_MAP[info.level_name];
                 Regions[regionName].SetInitialPoints(info.points);
                 Regions[regionName].SetRequiredCheckTotal(info.woth_count);
@@ -206,17 +230,23 @@ namespace TrackOMatic
             }
         }
 
-        private void ReadLevelOrder(dynamic JSONObject)
+        private static SpoilerSettings SetUpSettings(RegionSpoilerInfo info)
         {
-            var levelOrder = JSONObject["Shuffled Level Order"].ToObject <Dictionary<string, string>>();
-            foreach(var entry in levelOrder)
-            {
-                var originalLevel = entry.Key;
-                var newLevel = entry.Value;
-                var regionName = JSONKeyMappings.SHUFFLED_LEVEL_NAME_TO_REGION[newLevel];
-                var levelOrderNumber = JSONKeyMappings.LEVEL_NAME_TO_LEVEL_ORDER[originalLevel];
-                Regions[regionName].SetLevelOrderNumber(levelOrderNumber);
-            }
+            SpoilerSettings settings;
+            bool pointsEnabled = info.points != -1;
+            bool vialsEnabled = !pointsEnabled;
+            bool WOTHEnabled = info.woth_count != -1;
+            settings = new SpoilerSettings(pointsEnabled, vialsEnabled, WOTHEnabled);
+            return settings;
+        }
+
+        private int GenerateHitListSeed(string jsonString, string salt)
+        {
+            var toHash = jsonString + salt;
+            using SHA256 sha256 = SHA256.Create();
+            byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(toHash));
+            int seed = BitConverter.ToInt32(hashBytes, 0);
+            return seed;
         }
 
         public void ParseSpoiler(string fileName)
@@ -226,6 +256,11 @@ namespace TrackOMatic
             string json = reader.ReadToEnd();
 
             dynamic JSONObject = JsonConvert.DeserializeObject(json);
+            if (JSONObject["Spoiler Hints Data"] == null)
+            {
+                MessageBox.Show("Missing data detected in spoiler log. Please make sure you have a spoiler hints option selected in the \"Quality of Life\" tab of the web generator.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             ParseRegions(JSONObject);
             foreach (var entry in ImportantCheckList.ITEMS) entry.Value.InitPointValue();
             SpoilerLoaded = true;
@@ -234,14 +269,11 @@ namespace TrackOMatic
             InitSavedDataFromSpoiler(fileName);
             if (Properties.Settings.Default.HitList)
             {
-                int hashSum = 0;
-                using (MD5 md5 = MD5.Create())
-                {
-                    byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(json));
-                    foreach (var b in hashBytes) hashSum += b;
-                }
-                GenerateHitList(hashSum);
-                ReadLevelOrder(JSONObject);
+                //the chef has decreed a touch of salt to nearly eliminate the chances of a repeat hash
+                string salt = JSONObject["Settings"]["Seed"].ToObject<string>();
+                string dataToHash = JsonConvert.SerializeObject(JSONObject["Spoiler Hints Data"]);
+                var seed = GenerateHitListSeed(dataToHash, salt);
+                GenerateHitList(seed);
             }
         }
     }
