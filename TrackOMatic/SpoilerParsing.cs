@@ -173,10 +173,10 @@ namespace TrackOMatic
         {
             for(int i = 0; i < Region.LOBBY_ORDER.Count; ++i)
             {
-                var regionName = Region.LOBBY_ORDER[i];
-                int level_order = -1;
-                if (info.level_order != null) level_order = info.level_order[i];
-                Regions[regionName].SetLevelOrderNumber(level_order);
+                var levelOrderNumber = (info.level_order == null) ? -1 : info.level_order[i];
+                var newLevelOrderNumber = (info.level_order == null) ? -1 : (i + 1);
+                var toChange = (info.level_order == null) ? Region.LOBBY_ORDER[i] : Region.LOBBY_ORDER[levelOrderNumber];
+                Regions[toChange].SetLevelOrderNumber(newLevelOrderNumber);
             }
         }
 
