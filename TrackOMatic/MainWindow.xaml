@@ -44,7 +44,7 @@
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
             </MenuItem>
-            <MenuItem Header="Version 0.1.4" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 1.0.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
 
         <Grid>
