@@ -4,8 +4,13 @@
     {
         SNIPER_SCOPE = 0,
         HOMING_AMMO,
+
         PROGRESSIVE_SLAM_1,
         PROGRESSIVE_SLAM_2,
+        PROGRESSIVE_SLAM_3,
+
+        FAIRY_CAMERA,
+        SHOCKWAVE,
 
         VINE_SWINGING,
         BARREL_THROWING,
