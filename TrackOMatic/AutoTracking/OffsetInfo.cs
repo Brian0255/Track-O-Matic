@@ -7,8 +7,12 @@ namespace TrackOMatic
     {
         public static readonly List<OffsetInfoEntry> OFFSETS = new()
         {
-            new OffsetInfoEntry(ItemName.PROGRESSIVE_SLAM_1, 0x7FC9AF,8,2),
-            new OffsetInfoEntry(ItemName.PROGRESSIVE_SLAM_2, 0x7FC9AF,8,3),
+            new OffsetInfoEntry(ItemName.PROGRESSIVE_SLAM_1, 0x7FC9AF,8,1),
+            new OffsetInfoEntry(ItemName.PROGRESSIVE_SLAM_2, 0x7FC9AF,8,2),
+            new OffsetInfoEntry(ItemName.PROGRESSIVE_SLAM_3, 0x7FC9AF,8,3),
+
+            new OffsetInfoEntry(ItemName.FAIRY_CAMERA, 0x7ECF07, 8, 32),
+            new OffsetInfoEntry(ItemName.SHOCKWAVE, 0x7ECED7,8,2),
 
             new OffsetInfoEntry(ItemName.DONKEY, 0x7ECED8,8,2),
             new OffsetInfoEntry(ItemName.GORILLA_GRAB, 0x7FC950,8,4),
