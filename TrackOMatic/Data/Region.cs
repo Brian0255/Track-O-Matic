@@ -11,6 +11,17 @@ namespace TrackOMatic
 {
     public class Region
     {
+        public static readonly List<RegionName> LOBBY_ORDER = new()
+        {
+            RegionName.JUNGLE_JAPES, 
+            RegionName.ANGRY_AZTEC, 
+            RegionName.FRANTIC_FACTORY, 
+            RegionName.GLOOMY_GALLEON, 
+            RegionName.FUNGI_FOREST, 
+            RegionName.CRYSTAL_CAVES, 
+            RegionName.CREEPY_CASTLE
+        };
+
         public bool complete;
         public SpoilerSettings SpoilerSettings { get; set; }
         public RegionName RegionName;
