@@ -88,6 +88,8 @@
     <Image x:Key="key8" Source="Images\dk64\k8.png"  x:Shared="false"/>
 
     <Image x:Key="progressive_slam" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="fairy_camera" Source="Images\dk64\fairy_camera.png"  x:Shared="false"/>
+    <Image x:Key="shockwave" Source="Images\dk64\shockwave.png"  x:Shared="false"/>
     <Image x:Key="sniper_scope" Source="Images\dk64\sniper_scope.png"  x:Shared="false"/>
     <Image x:Key="homing_ammo" Source="Images\dk64\homing_ammo.png"  x:Shared="false"/>
 
