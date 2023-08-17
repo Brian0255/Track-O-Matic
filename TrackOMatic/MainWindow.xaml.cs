@@ -87,8 +87,7 @@ namespace TrackOMatic
             };
             hitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10};
             Collectibles = new()
-            {
-
+            { 
                 {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
                 {ItemType.DIDDY_BLUEPRINT, DiddyBPs },
                 {ItemType.LANKY_BLUEPRINT, LankyBPs },
@@ -101,7 +100,6 @@ namespace TrackOMatic
                 {ItemType.RAINBOW_COIN, RainbowCoins },
                 {ItemType.FAIRY, Fairies },
                 {ItemType.GOLDEN_BANANA, GBs },
-
             };
             Items = ItemGrid;
             kroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3 };

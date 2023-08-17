@@ -66,6 +66,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -996,6 +997,9 @@
   <ItemGroup>
     <Resource Include="Images\dk64\dogadon_2.png" />
     <Resource Include="Images\dk64\mad_jack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\fairy_camera.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
