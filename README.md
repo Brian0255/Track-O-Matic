@@ -1,5 +1,6 @@
 # Track-O-Matic
-### This is a tracker in the style of Kingdom Hearts II Randomizer trackers, but for Donkey Kong 64 Randomizer. It has support for alternate hint systems, such as Points and Vials that other trackers are not tailored to. 
+![trackerimage4](https://github.com/Brian0255/Track-O-Matic/assets/61294586/374e448b-c927-4d41-a67d-2c6c33ddeee3)
+### This is a tracker in the style of Kingdom Hearts II Randomizer trackers, but for Donkey Kong 64 Randomizer. It has support for alternate hint systems, such as Points, Vials, and HitList that other trackers are not tailored to. 
 
 ## Installation
 1. You'll need some sort of emulator. I heavily recommend using [Project64](https://www.pj64-emu.com/) with this tracker since it will run DK64 Randomizer the best. At the moment, autotracking is only supported for Project 64 as well.
