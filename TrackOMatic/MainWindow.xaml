@@ -601,7 +601,7 @@
                 
                 <!--Sniper/Homing/Camera/Shockwave-->
                 <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
+                <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
                 <local:Item x:Name="fairy_camera"  ItemImage="{DynamicResource fairy_camera}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
                 <local:Item x:Name="shockwave"  ItemImage="{DynamicResource shockwave}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
 
