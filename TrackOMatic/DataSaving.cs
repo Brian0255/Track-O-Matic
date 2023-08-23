@@ -45,8 +45,12 @@ namespace TrackOMatic
         {
             if (savedProgress == null) return;
             var JSONString = JsonConvert.SerializeObject(savedProgress);
+            var tempPath = "autosave_temp.json";
             var filePath = "autosave.json";
-            File.WriteAllText(filePath, JSONString);
+            File.WriteAllText(tempPath, JSONString);
+            if (File.Exists(filePath)) File.Delete(filePath);
+            File.Move(tempPath, filePath);
+            File.Delete(tempPath);
         }
 
         private void OnTimerSave(object sender, ElapsedEventArgs e)

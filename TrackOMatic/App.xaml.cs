@@ -21,11 +21,11 @@ namespace TrackOMatic
 
         private void App_Exit(object sender, ExitEventArgs e)
         {
+            (MainWindow as MainWindow).Save();
         }
 
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            (MainWindow as MainWindow).Save();
         }
     }
 }
