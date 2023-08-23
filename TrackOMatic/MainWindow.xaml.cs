@@ -166,6 +166,7 @@ namespace TrackOMatic
                     //should mean that there was no matching vial, item couldn't be placed as a result
                     if (item.Parent == ItemGrid) return false;
                     AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.ItemImage.Opacity));
+                    Save();
                     return true;
                 }
             }
