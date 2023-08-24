@@ -98,6 +98,9 @@
     <Compile Include="Data\SavedItem.cs" />
     <Compile Include="Data\HitListGoal.cs" />
     <Compile Include="Data\VialColor.cs" />
+    <Compile Include="ItemBackground.xaml.cs">
+      <DependentUpon>ItemBackground.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LevelOrderNumber.xaml.cs">
       <DependentUpon>LevelOrderNumber.xaml</DependentUpon>
     </Compile>
@@ -132,6 +135,10 @@
       <DependentUpon>RegionGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="WatermarkTextBox.cs" />
+    <Page Include="ItemBackground.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="LevelOrderNumber.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1000,6 +1007,50 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\fairy_camera.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\armydillo_2.png" />
+    <Resource Include="Images\bw\aztec_beetle_race.png" />
+    <Resource Include="Images\bw\banana_fairies.png" />
+    <Resource Include="Images\bw\bean_check.png" />
+    <Resource Include="Images\bw\blue_vial.png" />
+    <Resource Include="Images\bw\boss_triad.png" />
+    <Resource Include="Images\bw\castle_car_race.png" />
+    <Resource Include="Images\bw\caves_beetle_race.png" />
+    <Resource Include="Images\bw\caves_dirt.png" />
+    <Resource Include="Images\bw\checkmark.png" />
+    <Resource Include="Images\bw\checkmark2.png" />
+    <Resource Include="Images\bw\clear_vial.png" />
+    <Resource Include="Images\bw\dk_arcade.png" />
+    <Resource Include="Images\bw\dogadon_2.png" />
+    <Resource Include="Images\bw\donkey_tree_sniping.png" />
+    <Resource Include="Images\bw\factory_toy_boss.png" />
+    <Resource Include="Images\bw\fairy_camera.png" />
+    <Resource Include="Images\bw\forest_lobby.png" />
+    <Resource Include="Images\bw\green_vial.png" />
+    <Resource Include="Images\bw\jetpac.png" />
+    <Resource Include="Images\bw\key_vial.png" />
+    <Resource Include="Images\bw\kong_vial.png" />
+    <Resource Include="Images\bw\lanky_top_of_castle.png" />
+    <Resource Include="Images\bw\mad_jack.png" />
+    <Resource Include="Images\bw\mech_fish.png" />
+    <Resource Include="Images\bw\mermaid_reward.png" />
+    <Resource Include="Images\bw\minecarts.png" />
+    <Resource Include="Images\bw\pound_the_x.png" />
+    <Resource Include="Images\bw\purple_vial.png" />
+    <Resource Include="Images\bw\question_mark.png" />
+    <Resource Include="Images\bw\rabbit_race.png" />
+    <Resource Include="Images\bw\red_vial.png" />
+    <Resource Include="Images\bw\seal_race.png" />
+    <Resource Include="Images\bw\spider_boss.png" />
+    <Resource Include="Images\bw\star_complex.png" />
+    <Resource Include="Images\bw\star_simple.png" />
+    <Resource Include="Images\bw\troffnscoff.png" />
+    <Resource Include="Images\bw\troffnscoff2.png" />
+    <Resource Include="Images\bw\troffnscoff_done.png" />
+    <Resource Include="Images\bw\unknown_kong.png" />
+    <Resource Include="Images\bw\x.png" />
+    <Resource Include="Images\bw\yellow_vial.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>

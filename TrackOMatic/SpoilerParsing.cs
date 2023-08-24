@@ -9,6 +9,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
 using System.Security.Cryptography;
+using System.Windows.Media;
 
 namespace TrackOMatic
 {
@@ -66,6 +67,7 @@ namespace TrackOMatic
                     var region = startingItems[itemName];
                     Regions[region].RegionGrid.Add_Item(item);
                     item.CanLeftClick = false;
+                    item.ItemImage = (Image)FindResource(itemName.ToString().ToLower());
                 }
             }
         }
