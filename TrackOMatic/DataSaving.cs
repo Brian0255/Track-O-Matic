@@ -86,7 +86,7 @@ namespace TrackOMatic
                 var savedItem = savedItemEntry.Value;
                 var region = savedItem.Region;
                 Item matchingItem = FindMatchingItem(savedItem.ItemName);
-                matchingItem.Star.Visibility = savedItem.Starred;
+                matchingItem.SetStarVisibility(savedItem.Starred);
                 if (savedItem.Autotracked)
                 {
                     Autotracker.ProcessSavedItem(savedItem.ItemName);
@@ -95,7 +95,7 @@ namespace TrackOMatic
                 {
                     Regions[region].RegionGrid.Add_Item(matchingItem, !savedItem.Autotracked);
                 }
-                matchingItem.ItemImage.Opacity = savedItem.Opacity;
+                matchingItem.Image.Opacity = savedItem.Opacity;
                 matchingItem.CanLeftClick = !savedItem.Autotracked;
             }
         }
