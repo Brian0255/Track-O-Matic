@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
+using System.Windows.Media.Imaging;
 
 namespace TrackOMatic
 {
@@ -41,6 +42,11 @@ namespace TrackOMatic
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public void SetStarVisibility(Visibility newVisibility)
+        {
+            Star.Visibility = newVisibility;
+        }
+
         public void SetRegion(Region newRegion)
         {
             Region = newRegion;
@@ -49,6 +55,12 @@ namespace TrackOMatic
         public void ClearRegion()
         {
             Region = null;
+        }
+
+        public void SetBackgroundImageVisibility(Visibility newVisibility)
+        {
+            var mainWindow = (MainWindow) Application.Current.MainWindow;
+            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].Visibility = newVisibility;
         }
 
         //Adorner subclass specific to this control
@@ -60,6 +72,7 @@ namespace TrackOMatic
             public ItemAdorner(Item adornedElement, double opacity = 1.0) : base(adornedElement)
             {
                 renderRect = new Rect(adornedElement.DesiredSize);
+                adornedElement.ChangeOpacity(opacity);
                 Opacity = opacity;
                 IsHitTestVisible = false;
                 if (adornedElement.Content is StackPanel)
@@ -119,27 +132,67 @@ namespace TrackOMatic
         private ItemAdorner myAdornment;
         private PInPoint pointRef = new PInPoint();
 
+        private void ResetImage()
+        {
+            ItemName itemName = (ItemName)Tag;
+                var resourceName = itemName.ToString().ToLower();
+                ItemImage = (Image)FindResource(resourceName);
+        }
+
+        public void ChangeOpacity(double newOpacity)
+        {
+            ItemImage.Opacity = newOpacity;
+            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].ChangeOpacity(newOpacity);
+        }
+
+        public void Brighten()
+        {
+            ItemName itemName = (ItemName)Tag;
+            var resourceName = itemName.ToString().ToLower();
+            ItemImage = (Image)FindResource(resourceName);
+        }
+
+        public void Darken()
+        {
+            ItemName itemName = (ItemName)Tag;
+            var resourceName = itemName.ToString().ToLower() + "_bw";
+            ItemImage = (Image)FindResource(resourceName);
+        }
+
         public void Item_MouseMove(object sender, MouseEventArgs e)
         {
             if (pressed && Interactable)
             {
+                ItemName itemName = (ItemName)Tag;
+                var resourceName = itemName.ToString().ToLower();
+                ItemImage = (Image)FindResource(resourceName);
                 var opacity = (e.RightButton == MouseButtonState.Pressed) ? 0.375 : 1.0;
                 Opacity = 1.0;
                 var adLayer = AdornerLayer.GetAdornerLayer(this);
                 myAdornment = new ItemAdorner(this, opacity);
                 adLayer.Add(myAdornment);
                 var parent = Parent;
+
                 DragDrop.DoDragDrop(this, this, DragDropEffects.Copy);
+
                 pressed = false;
-                ItemImage.Opacity = (Parent == parent) ? 1.0 : opacity;
+
+                if (Parent == parent) Darken();
+                else Brighten();
+
+                if (Parent == parent) ChangeOpacity(1.0);
+                else ChangeOpacity(opacity);
+
                 PerformSave(false);
                 adLayer.Remove(myAdornment);
             }
         }
 
-        private void ToggleStar()
+        public void ToggleStar()
         {
-            Star.Visibility = (Star.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+            var newVisibility = (Star.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+            SetStarVisibility(newVisibility);
+            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
             if (Region != null) Region.UpdateRequiredChecksTotal();
             PerformSave(true);
         }
@@ -158,7 +211,7 @@ namespace TrackOMatic
             }
         }
 
-        private void Item_MouseWheel(object sender, MouseWheelEventArgs e)
+        public void Item_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta != 0) ToggleStar();
         }
@@ -176,7 +229,7 @@ namespace TrackOMatic
         public void HandleItemReturn()
         {
             if(!Interactable) return;
-            ImageItem.Opacity = 1.0;
+            //Image.Opacity = 1.0;
             var itemGrid = MainWindow.Items;
             if (Parent != null)
             {
@@ -185,6 +238,9 @@ namespace TrackOMatic
             }
             itemGrid.Children.Add(this);
             var itemName = (ItemName)Tag;
+            var BWResourceName = itemName.ToString().ToLower() + "_bw";
+            ItemImage = (Image)FindResource(BWResourceName);
+            SetBackgroundImageVisibility(Visibility.Hidden);
             MouseDown -= Item_Return;
             MouseDown += Item_MouseDown;
             MouseMove -= Item_MouseMove;
