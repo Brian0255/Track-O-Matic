@@ -431,12 +431,12 @@
                 <local:ToggleableItem Grid.Column="5" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
                 <local:ToggleableItem Grid.Column="6" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
                 <local:ToggleableItem Grid.Column="7" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>-->
-                <local:CollectibleItem x:Name="Pearls" ImageSource="Images\dk64\pearl.png" Opacity="0.25" Text="0" Grid.Column="1"/>
-                <local:CollectibleItem x:Name="BattleCrowns" ImageSource="Images\dk64\crown.png" Opacity="0.25" Text="0" Grid.Column="3"/>
-                <local:CollectibleItem x:Name="BananaMedals" ImageSource="Images\dk64\bananamedal.png" Opacity="0.25" Text="0" Grid.Column="5"/>
-                <local:CollectibleItem x:Name="RainbowCoins" ImageSource="Images\dk64\rainbowcoin.png" Opacity="0.25" Text="0" Grid.Column="7"/>
-                <local:CollectibleItem x:Name="Fairies" ImageSource="Images\dk64\fairy.png" Opacity="0.25" Text="0" Grid.Column="9"/>
-                <local:CollectibleItem x:Name="GBs" ImageSource="Images\dk64\GB.png" Opacity="0.25" Text="0" Grid.Column="11"/>
+                <local:CollectibleItem x:Name="Pearls" ImageSource="Images\bw\pearl.png" Text="0" Grid.Column="1"/>
+                <local:CollectibleItem x:Name="BattleCrowns" ImageSource="Images\bw\crown.png" Text="0" Grid.Column="3"/>
+                <local:CollectibleItem x:Name="BananaMedals" ImageSource="Images\bw\bananamedal.png" Text="0" Grid.Column="5"/>
+                <local:CollectibleItem x:Name="RainbowCoins" ImageSource="Images\bw\rainbowcoin.png" Text="0" Grid.Column="7"/>
+                <local:CollectibleItem x:Name="Fairies" ImageSource="Images\bw\fairy.png" Text="0" Grid.Column="9"/>
+                <local:CollectibleItem x:Name="GBs" ImageSource="Images\bw\GB.png" Text="0" Grid.Column="11"/>
             </Grid>
             <!-- Items -->
             <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="0" >
@@ -463,152 +463,139 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Kong 1 -->
-                <local:Item x:Name="dk" ItemImage="{DynamicResource donkey}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY}"/>
-                <local:Item x:Name="dk_gun"  ItemImage="{DynamicResource dk_gun}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
-                <local:Item x:Name="dk_inst"  ItemImage="{DynamicResource dk_inst}" Grid.Row="0" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
-                <local:Item x:Name="dk_move"   ItemImage="{DynamicResource dk_move}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
-                <local:Item x:Name="dk_barrel"  ItemImage="{DynamicResource dk_barrel}" Grid.Row="0" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
-                <local:Item x:Name="dk_pad"  ItemImage="{DynamicResource dk_pad}" Grid.Row="0" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
+                <local:Item x:Name="dk" ItemImage="{DynamicResource donkey_bw}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY}"/>
+                <local:Item x:Name="dk_gun"  ItemImage="{DynamicResource coconut_gun_bw}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
+                <local:Item x:Name="dk_inst"  ItemImage="{DynamicResource bongo_blast_bw}" Grid.Row="0" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
+                <local:Item x:Name="dk_move"   ItemImage="{DynamicResource gorilla_grab_bw}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
+                <local:Item x:Name="dk_barrel"  ItemImage="{DynamicResource strong_kong_bw}" Grid.Row="0" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
+                <local:Item x:Name="dk_pad"  ItemImage="{DynamicResource baboon_blast_bw}" Grid.Row="0" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
 
-                <Button Content="{DynamicResource donkey}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="0" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DONKEY}"/>
-                <Button  Content="{DynamicResource dk_gun}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="1" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
-                <Button  Content="{DynamicResource dk_inst}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="2" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
-                <Button Content="{DynamicResource dk_move}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="3" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
-                <Button Content="{DynamicResource dk_barrel}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="4" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
-                <Button  Content="{DynamicResource dk_pad}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="5" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource donkey}"  Grid.Row="0" Grid.Column="0" Panel.ZIndex="-1" Visibility="Collapsed" Tag="{x:Static local:ItemName.DONKEY}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource coconut_gun}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource bongo_blast}"  Grid.Row="0" Grid.Column="2" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource gorilla_grab}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource strong_kong}"  Grid.Row="0" Grid.Column="4" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource baboon_blast}"  Grid.Row="0" Grid.Column="5" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
 
 
                 <!-- Kong 2 -->
-                <local:Item x:Name="diddy"  ItemImage="{DynamicResource diddy}"   Grid.Row="1" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIDDY}"/>
-                <local:Item x:Name="diddy_gun"  ItemImage="{DynamicResource diddy_gun}" Grid.Row="1" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
-                <local:Item x:Name="diddy_inst"  ItemImage="{DynamicResource diddy_inst}" Grid.Row="1" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
-                <local:Item x:Name="diddy_move"   ItemImage="{DynamicResource diddy_move}" Grid.Row="1" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
-                <local:Item x:Name="diddy_barrel"  ItemImage="{DynamicResource diddy_barrel}" Grid.Row="1" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
-                <local:Item x:Name="diddy_pad"  ItemImage="{DynamicResource diddy_pad}" Grid.Row="1" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
+                <local:Item x:Name="diddy"  ItemImage="{DynamicResource diddy_bw}"   Grid.Row="1" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIDDY}"/>
+                <local:Item x:Name="diddy_gun"  ItemImage="{DynamicResource peanut_popguns_bw}" Grid.Row="1" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
+                <local:Item x:Name="diddy_inst"  ItemImage="{DynamicResource guitar_gazump_bw}" Grid.Row="1" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
+                <local:Item x:Name="diddy_move"   ItemImage="{DynamicResource chimpy_charge_bw}" Grid.Row="1" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
+                <local:Item x:Name="diddy_barrel"  ItemImage="{DynamicResource rocketbarrel_boost_bw}" Grid.Row="1" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
+                <local:Item x:Name="diddy_pad"  ItemImage="{DynamicResource simian_spring_bw}" Grid.Row="1" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
 
-                <Button  Content="{DynamicResource diddy}" Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="0" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIDDY}"/>
-                <Button   Content="{DynamicResource diddy_gun}" Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="1" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
-                <Button   Content="{DynamicResource diddy_inst}" Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="2" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
-                <Button   Content="{DynamicResource diddy_move}" Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="3" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
-                <Button   Content="{DynamicResource diddy_barrel}" Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="4" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
-                <Button   Content="{DynamicResource diddy_pad}" Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="5" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource diddy}"    Grid.Row="1" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIDDY}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource peanut_popguns}"    Grid.Row="1" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource guitar_gazump}"    Grid.Row="1" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource chimpy_charge}"    Grid.Row="1" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource rocketbarrel_boost}"    Grid.Row="1" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource simian_spring}"    Grid.Row="1" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
                 
                 <!-- Kong 3 -->
-                <local:Item x:Name="lanky"  ItemImage="{DynamicResource lanky}"   Grid.Row="2" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.LANKY}"/>
-                <local:Item x:Name="lanky_gun"  ItemImage="{DynamicResource lanky_gun}" Grid.Row="2" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
-                <local:Item x:Name="lanky_inst"  ItemImage="{DynamicResource lanky_inst}" Grid.Row="2" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
-                <local:Item x:Name="lanky_move"   ItemImage="{DynamicResource lanky_move}" Grid.Row="2" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
-                <local:Item x:Name="lanky_barrel"  ItemImage="{DynamicResource lanky_barrel}" Grid.Row="2" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
-                <local:Item x:Name="lanky_pad"  ItemImage="{DynamicResource lanky_pad}" Grid.Row="2" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
+                <local:Item x:Name="lanky"  ItemImage="{DynamicResource lanky_bw}"   Grid.Row="2" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.LANKY}"/>
+                <local:Item x:Name="lanky_gun"  ItemImage="{DynamicResource grape_shooter_bw}" Grid.Row="2" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
+                <local:Item x:Name="lanky_inst"  ItemImage="{DynamicResource trombone_tremor_bw}" Grid.Row="2" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
+                <local:Item x:Name="lanky_move"   ItemImage="{DynamicResource orangstand_bw}" Grid.Row="2" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
+                <local:Item x:Name="lanky_barrel"  ItemImage="{DynamicResource orangstand_sprint_bw}" Grid.Row="2" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
+                <local:Item x:Name="lanky_pad"  ItemImage="{DynamicResource baboon_balloon_bw}" Grid.Row="2" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
 
-                <Button  Content="{DynamicResource lanky}" Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="0" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.LANKY}"/>
-                <Button   Content="{DynamicResource lanky_gun}" Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="1" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
-                <Button   Content="{DynamicResource lanky_inst}" Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="2" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
-                <Button   Content="{DynamicResource lanky_move}" Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="3" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
-                <Button   Content="{DynamicResource lanky_barrel}" Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="4" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
-                <Button   Content="{DynamicResource lanky_pad}" Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="5" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource lanky}"    Grid.Row="2" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.LANKY}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource grape_shooter}"    Grid.Row="2" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource trombone_tremor}"    Grid.Row="2" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource orangstand}"    Grid.Row="2" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource orangstand_sprint}"    Grid.Row="2" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource baboon_balloon}"    Grid.Row="2" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
 
                 <!-- Kong 4 -->
-                <local:Item x:Name="tiny"  ItemImage="{DynamicResource tiny}"   Grid.Row="3" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TINY}"/>
-                <local:Item x:Name="tiny_gun"  ItemImage="{DynamicResource tiny_gun}" Grid.Row="3" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
-                <local:Item x:Name="tiny_inst"  ItemImage="{DynamicResource tiny_inst}" Grid.Row="3" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
-                <local:Item x:Name="tiny_move"   ItemImage="{DynamicResource tiny_move}" Grid.Row="3" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
-                <local:Item x:Name="tiny_barrel"  ItemImage="{DynamicResource tiny_barrel}" Grid.Row="3" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
-                <local:Item x:Name="tiny_pad"  ItemImage="{DynamicResource tiny_pad}" Grid.Row="3" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
+                <local:Item x:Name="tiny"  ItemImage="{DynamicResource tiny_bw}"   Grid.Row="3" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TINY}"/>
+                <local:Item x:Name="tiny_gun"  ItemImage="{DynamicResource feather_bow_bw}" Grid.Row="3" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
+                <local:Item x:Name="tiny_inst"  ItemImage="{DynamicResource saxophone_slam_bw}" Grid.Row="3" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
+                <local:Item x:Name="tiny_move"   ItemImage="{DynamicResource ponytail_twirl_bw}" Grid.Row="3" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
+                <local:Item x:Name="tiny_barrel"  ItemImage="{DynamicResource mini_monkey_bw}" Grid.Row="3" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
+                <local:Item x:Name="tiny_pad"  ItemImage="{DynamicResource monkeyport_bw}" Grid.Row="3" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
 
-                <Button  Content="{DynamicResource tiny}" Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="0" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TINY}"/>
-                <Button   Content="{DynamicResource tiny_gun}" Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="1" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
-                <Button   Content="{DynamicResource tiny_inst}" Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="2" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
-                <Button   Content="{DynamicResource tiny_move}" Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="3" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
-                <Button   Content="{DynamicResource tiny_barrel}" Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="4" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
-                <Button   Content="{DynamicResource tiny_pad}" Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="5" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource tiny}"    Grid.Row="3" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TINY}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource feather_bow}"    Grid.Row="3" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource saxophone_slam}"    Grid.Row="3" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource ponytail_twirl}"    Grid.Row="3" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource mini_monkey}"    Grid.Row="3" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource monkeyport}"    Grid.Row="3" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
 
                 <!-- Kong 5 -->
-                <local:Item x:Name="chunky"  ItemImage="{DynamicResource chunky}"   Grid.Row="4" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHUNKY}"/>
-                <local:Item x:Name="chunky_gun"  ItemImage="{DynamicResource chunky_gun}" Grid.Row="4" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
-                <local:Item x:Name="chunky_inst"  ItemImage="{DynamicResource chunky_inst}" Grid.Row="4" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
-                <local:Item x:Name="chunky_move"   ItemImage="{DynamicResource chunky_move}" Grid.Row="4" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
-                <local:Item x:Name="chunky_barrel"  ItemImage="{DynamicResource chunky_barrel}" Grid.Row="4" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
-                <local:Item x:Name="chunky_pad"  ItemImage="{DynamicResource chunky_pad}" Grid.Row="4" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
+                <local:Item x:Name="chunky"  ItemImage="{DynamicResource chunky_bw}"   Grid.Row="4" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHUNKY}"/>
+                <local:Item x:Name="chunky_gun"  ItemImage="{DynamicResource pineapple_launcher_bw}" Grid.Row="4" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
+                <local:Item x:Name="chunky_inst"  ItemImage="{DynamicResource triangle_trample_bw}" Grid.Row="4" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
+                <local:Item x:Name="chunky_move"   ItemImage="{DynamicResource primate_punch_bw}" Grid.Row="4" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
+                <local:Item x:Name="chunky_barrel"  ItemImage="{DynamicResource hunky_chunky_bw}" Grid.Row="4" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
+                <local:Item x:Name="chunky_pad"  ItemImage="{DynamicResource gorilla_gone_bw}" Grid.Row="4" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
 
-                <Button  Content="{DynamicResource chunky}" Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="0" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CHUNKY}"/>
-                <Button   Content="{DynamicResource chunky_gun}" Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="1" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
-                <Button   Content="{DynamicResource chunky_inst}" Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="2" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
-                <Button   Content="{DynamicResource chunky_move}" Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="3" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
-                <Button   Content="{DynamicResource chunky_barrel}" Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="4" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
-                <Button   Content="{DynamicResource chunky_pad}" Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="5" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
-                
-                <!--Pearls (Hints)
-                <local:Item x:Name="pearl_1"  ItemImage="{DynamicResource pearl}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEARL_1}"/>
-                <local:Item x:Name="pearl_2"  ItemImage="{DynamicResource pearl}" Grid.Row="5" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEARL_2}"/>
-                <local:Item x:Name="pearl_3"  ItemImage="{DynamicResource pearl}" Grid.Row="5" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEARL_3}"/>
-                <local:Item x:Name="pearl_4"  ItemImage="{DynamicResource pearl}" Grid.Row="5" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEARL_4}"/>
-                <local:Item x:Name="pearl_5"  ItemImage="{DynamicResource pearl}" Grid.Row="5" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEARL_5}"/>
-                
-                <Button  Content="{DynamicResource pearl}" Template="{StaticResource DefaultButton}" Grid.Row="5" Grid.Column="0" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEARL_1}"/>
-                <Button  Content="{DynamicResource pearl}" Template="{StaticResource DefaultButton}" Grid.Row="5" Grid.Column="1" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEARL_2}"/>
-                <Button  Content="{DynamicResource pearl}" Template="{StaticResource DefaultButton}" Grid.Row="5" Grid.Column="2" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEARL_3}"/>
-                <Button  Content="{DynamicResource pearl}" Template="{StaticResource DefaultButton}" Grid.Row="5" Grid.Column="3" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEARL_4}"/>
-                <Button  Content="{DynamicResource pearl}" Template="{StaticResource DefaultButton}" Grid.Row="5" Grid.Column="4" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEARL_5}"/>-->
+                <local:ItemBackground BackgroundItemImage="{DynamicResource chunky}"    Grid.Row="4" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CHUNKY}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource pineapple_launcher}"    Grid.Row="4" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource triangle_trample}"    Grid.Row="4" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource primate_punch}"    Grid.Row="4" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource hunky_chunky}"    Grid.Row="4" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource gorilla_gone}"    Grid.Row="4" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
 
                 <!--Blueprints-->
-                <local:CollectibleItem x:Name="DonkeyBPs" ImageSource="Images\dk64\dk_bp.png" Opacity="0.25" Text="0" Grid.Row="0" Grid.Column="6"/>
-                <local:CollectibleItem x:Name="DiddyBPs" ImageSource="Images\dk64\diddy_bp.png" Opacity="0.25" Text="0" Grid.Row="1" Grid.Column="6"/>
-                <local:CollectibleItem x:Name="LankyBPs" ImageSource="Images\dk64\lanky_bp.png" Opacity="0.25" Text="0" Grid.Row="2" Grid.Column="6"/>
-                <local:CollectibleItem x:Name="TinyBPs" ImageSource="Images\dk64\tiny_bp.png" Opacity="0.25" Text="0" Grid.Row="3" Grid.Column="6"/>
-                <local:CollectibleItem x:Name="ChunkyBPs" ImageSource="Images\dk64\chunky_bp.png" Opacity="0.25" Text="0" Grid.Row="4" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="DonkeyBPs" ImageSource="Images\bw\dk_bp.png" Text="0" Grid.Row="0" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="DiddyBPs" ImageSource="Images\bw\diddy_bp.png" Text="0" Grid.Row="1" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="LankyBPs" ImageSource="Images\bw\lanky_bp.png" Text="0" Grid.Row="2" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="TinyBPs" ImageSource="Images\bw\tiny_bp.png" Text="0" Grid.Row="3" Grid.Column="6"/>
+                <local:CollectibleItem x:Name="ChunkyBPs" ImageSource="Images\bw\chunky_bp.png" Text="0" Grid.Row="4" Grid.Column="6"/>
                 
                 <!-- Keys-->
-                <local:Item x:Name="key_1"  ItemImage="{DynamicResource key1}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_1}"/>
-                <local:Item x:Name="key_2"  ItemImage="{DynamicResource key2}" Grid.Row="0" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_2}"/>
-                <local:Item x:Name="key_3"  ItemImage="{DynamicResource key3}" Grid.Row="0" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_3}"/>
-                <local:Item x:Name="key_4"  ItemImage="{DynamicResource key4}" Grid.Row="0" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_4}"/>
-                <local:Item x:Name="key_5"  ItemImage="{DynamicResource key5}" Grid.Row="1" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_5}"/>
-                <local:Item x:Name="key_6"  ItemImage="{DynamicResource key6}" Grid.Row="1" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_6}"/>
-                <local:Item x:Name="key_7"  ItemImage="{DynamicResource key7}" Grid.Row="1" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_7}"/>
-                <local:Item x:Name="key_8"  ItemImage="{DynamicResource key8}" Grid.Row="1" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_8}"/>
+                <local:Item x:Name="key_1"  ItemImage="{DynamicResource key_1_bw}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_1}"/>
+                <local:Item x:Name="key_2"  ItemImage="{DynamicResource key_2_bw}" Grid.Row="0" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_2}"/>
+                <local:Item x:Name="key_3"  ItemImage="{DynamicResource key_3_bw}" Grid.Row="0" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_3}"/>
+                <local:Item x:Name="key_4"  ItemImage="{DynamicResource key_4_bw}" Grid.Row="0" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_4}"/>
+                <local:Item x:Name="key_5"  ItemImage="{DynamicResource key_5_bw}" Grid.Row="1" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_5}"/>
+                <local:Item x:Name="key_6"  ItemImage="{DynamicResource key_6_bw}" Grid.Row="1" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_6}"/>
+                <local:Item x:Name="key_7"  ItemImage="{DynamicResource key_7_bw}" Grid.Row="1" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_7}"/>
+                <local:Item x:Name="key_8"  ItemImage="{DynamicResource key_8_bw}" Grid.Row="1" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_8}"/>
 
-                <Button Content="{DynamicResource key1}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_1}"/>
-                <Button Content="{DynamicResource key2}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_2}"/>
-                <Button Content="{DynamicResource key3}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_3}"/>
-                <Button Content="{DynamicResource key4}"  Template="{StaticResource DefaultButton}" Grid.Row="0" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_4}"/>
-                <Button Content="{DynamicResource key5}"  Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_5}"/>
-                <Button Content="{DynamicResource key6}"  Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_6}"/>
-                <Button Content="{DynamicResource key7}"  Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_7}"/>
-                <Button Content="{DynamicResource key8}"  Template="{StaticResource DefaultButton}" Grid.Row="1" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_8}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource key_1}"     Grid.Row="0" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_1}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource key_2}"     Grid.Row="0" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_2}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource key_3}"     Grid.Row="0" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_3}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource key_4}"     Grid.Row="0" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_4}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource key_5}"     Grid.Row="1" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_5}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource key_6}"     Grid.Row="1" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_6}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource key_7}"     Grid.Row="1" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_7}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource key_8}"     Grid.Row="1" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_8}"/>
                 
                 <!--Slams/Bean-->
-                <local:Item x:Name="progressive_slam_1"  ItemImage="{DynamicResource progressive_slam}" Grid.Row="2" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
-                <local:Item x:Name="progressive_slam_2"  ItemImage="{DynamicResource progressive_slam}" Grid.Row="2" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
-                <local:Item x:Name="progressive_slam_3"  ItemImage="{DynamicResource progressive_slam}" Grid.Row="2" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
-                <local:Item x:Name="bean"  ItemImage="{DynamicResource bean}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
+                <local:Item x:Name="progressive_slam_1"  ItemImage="{DynamicResource progressive_slam_1_bw}" Grid.Row="2" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
+                <local:Item x:Name="progressive_slam_2"  ItemImage="{DynamicResource progressive_slam_2_bw}"  Grid.Row="2" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
+                <local:Item x:Name="progressive_slam_3"  ItemImage="{DynamicResource progressive_slam_3_bw}" Grid.Row="2" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
+                <local:Item x:Name="bean"  ItemImage="{DynamicResource bean_bw}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
 
-                <Button Content="{DynamicResource progressive_slam}"  Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
-                <Button Content="{DynamicResource progressive_slam}"  Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
-                <Button Content="{DynamicResource progressive_slam}"  Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
-                <Button Content="{DynamicResource bean}"  Template="{StaticResource DefaultButton}" Grid.Row="2" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BEAN}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_1}"     Grid.Row="2" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_2}"     Grid.Row="2" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_3}"     Grid.Row="2" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource bean}"     Grid.Row="2" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BEAN}"/>
                 
                 <!--Training Moves-->
-                <local:Item x:Name="diving"  ItemImage="{DynamicResource diving}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
-                <local:Item x:Name="orange_throwing"  ItemImage="{DynamicResource orange_throwing}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-                <local:Item x:Name="barrel_throwing"  ItemImage="{DynamicResource barrel_throwing}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-                <local:Item x:Name="vine_swinging"  ItemImage="{DynamicResource vine_swinging}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                <local:Item x:Name="diving"  ItemImage="{DynamicResource diving_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
+                <local:Item x:Name="orange_throwing"  ItemImage="{DynamicResource orange_throwing_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+                <local:Item x:Name="barrel_throwing"  ItemImage="{DynamicResource barrel_throwing_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+                <local:Item x:Name="vine_swinging"  ItemImage="{DynamicResource vine_swinging_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
 
-                <Button Content="{DynamicResource diving}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIVING}"/>
-                <Button Content="{DynamicResource orange_throwing}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-                <Button Content="{DynamicResource barrel_throwing}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-                <Button Content="{DynamicResource vine_swinging}"  Template="{StaticResource DefaultButton}" Grid.Row="3" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource diving}"     Grid.Row="3" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIVING}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource orange_throwing}"     Grid.Row="3" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource barrel_throwing}"     Grid.Row="3" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource vine_swinging}"     Grid.Row="3" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
                 
                 <!--Sniper/Homing/Camera/Shockwave-->
-                <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
-                <local:Item x:Name="fairy_camera"  ItemImage="{DynamicResource fairy_camera}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
-                <local:Item x:Name="shockwave"  ItemImage="{DynamicResource shockwave}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+                <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+                <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+                <local:Item x:Name="fairy_camera"  ItemImage="{DynamicResource fairy_camera_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
+                <local:Item x:Name="shockwave"  ItemImage="{DynamicResource shockwave_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
 
-                <Button Content="{DynamicResource sniper_scope}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="8" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                <Button Content="{DynamicResource homing_ammo}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="9" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
-                <Button Content="{DynamicResource fairy_camera}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="10" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
-                <Button Content="{DynamicResource shockwave}"  Template="{StaticResource DefaultButton}" Grid.Row="4" Grid.Column="11" Opacity="0.25" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource sniper_scope}"     Grid.Row="4" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource homing_ammo}"     Grid.Row="4" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource fairy_camera}"     Grid.Row="4" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
+                <local:ItemBackground BackgroundItemImage="{DynamicResource shockwave}"     Grid.Row="4" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
             </Grid>
             <!--K.Rool/Helm order-->
             <Grid Grid.Row="6" >
