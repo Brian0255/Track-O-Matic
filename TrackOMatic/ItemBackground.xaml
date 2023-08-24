@@ -1,0 +1,37 @@
+﻿<ContentControl x:Class="TrackOMatic.ItemBackground"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrackOMatic"
+             xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+             xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+             mc:Ignorable="d" Background="Transparent"
+             MouseDown="ItemBackground_MouseDown"
+             MouseWheel="ItemBackground_MouseWheel">
+
+    <ContentControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Dictionary1.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentControl.Resources>
+    
+    <ContentControl.Content>
+        <Grid>
+            <Border BorderThickness="0" 
+                    UseLayoutRounding="True"
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                    SnapsToDevicePixels="True"
+                    RenderOptions.ClearTypeHint="Enabled">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+                </Border.Effect>
+                <ContentPresenter x:Name="Image" Content="{Binding BackgroundItemImage}"/>
+            </Border>
+            <ContentPresenter x:Name="Star" Content="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left"/>
+        </Grid>
+    </ContentControl.Content>
+
+</ContentControl>
