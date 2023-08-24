@@ -87,6 +87,8 @@ namespace TrackOMatic
                 var region = savedItem.Region;
                 Item matchingItem = FindMatchingItem(savedItem.ItemName);
                 matchingItem.SetStarVisibility(savedItem.Starred);
+                if (ITEM_TO_BACKGROUND_IMAGE.ContainsKey(matchingItem))
+                    ITEM_TO_BACKGROUND_IMAGE[matchingItem].SetStarVisibility(savedItem.Starred);
                 if (savedItem.Autotracked)
                 {
                     Autotracker.ProcessSavedItem(savedItem.ItemName);
