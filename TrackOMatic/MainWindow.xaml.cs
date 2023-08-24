@@ -48,6 +48,8 @@ namespace TrackOMatic
         public Button SelectedButton { get; }
         public Dictionary<RegionName, Region> Regions { get; private set;  }
         public Dictionary<ItemType,CollectibleItem> Collectibles { get; private set; }
+        public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
+        public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
         public List<System.Windows.Controls.Image> kroolKongs;
         public List<System.Windows.Controls.Image> helmKongs;
 
@@ -66,6 +68,19 @@ namespace TrackOMatic
             InitializeComponent();
             InitOptions();
             InitData();
+        }
+
+        private ItemBackground FindMatchingBackgroundImage(Item item)
+        {
+            foreach (var control in Items.Children)
+            {
+                if (control is ItemBackground button)
+                {
+                    if ((ItemName)button.Tag == (ItemName)item.Tag) return button;
+                }
+            }
+
+            return null;
         }
 
         private void InitData()
@@ -111,6 +126,12 @@ namespace TrackOMatic
                 if (control is Item item)
                 {
                     DraggableItems.Add(item);
+                    var matchingButton = FindMatchingBackgroundImage(item);
+                    if (matchingButton != null)
+                    {
+                        ITEM_TO_BACKGROUND_IMAGE[item] = matchingButton;
+                        BACKGROUND_IMAGE_TO_ITEM[matchingButton] = item;
+                    }
                 }
             }
             Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting);
@@ -161,6 +182,7 @@ namespace TrackOMatic
                         parent.Handle_RegionGrid(item, false);
                     }
                     item.Opacity = 1.0;
+                    item.ItemImage.Source = new BitmapImage(new Uri("images/dk64/" + item.ToString().ToLower() + ".png", UriKind.Relative));
                     itemControl.CanLeftClick = false;
                     Regions[regionName].RegionGrid.Add_Item(item, false);
                     //should mean that there was no matching vial, item couldn't be placed as a result
@@ -240,7 +262,7 @@ namespace TrackOMatic
             foreach (var item in DraggableItems.Cast<Item>())
             {
                 item.CanLeftClick = true;
-                item.Star.Visibility = Visibility.Hidden;
+                item.SetStarVisibility(Visibility.Hidden);
             }
             foreach (var item in hitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
