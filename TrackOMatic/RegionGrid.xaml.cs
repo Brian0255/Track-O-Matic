@@ -133,8 +133,8 @@ namespace TrackOMatic
                     int index = VialItems.IndexOf(vial);
                     if (!ValidInsertionPoint(index, vial, userPlacing)) continue;
                     if (button.Star.Visibility == Visibility.Visible || vial.Star.Visibility == Visibility.Visible)
-                    { 
-                        button.Star.Visibility = Visibility.Visible;
+                    {
+                        button.SetStarVisibility(Visibility.Visible);
                         vial.Star.Visibility = Visibility.Visible;
                     }
                     Children.RemoveAt(index);
@@ -179,6 +179,8 @@ namespace TrackOMatic
                 button.SetRegion(Region);
                 AddWithVialCheck(button, userPlacing);
                 Region.AddCheck(check);
+                button.Brighten();
+                button.SetBackgroundImageVisibility(Visibility.Visible);
             }
             else
             {
