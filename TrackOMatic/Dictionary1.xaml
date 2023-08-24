@@ -48,46 +48,48 @@
     <Image x:Key="tiny" Source="Images\dk64\tiny.png"  x:Shared="false" />
     <Image x:Key="chunky" Source="Images\dk64\chunky.png"  x:Shared="false" />
 
-    <Image x:Key="dk_gun" Source="Images\dk64\dk_gun.png"  x:Shared="false" />
-    <Image x:Key="diddy_gun" Source="Images\dk64\diddy_gun.png"  x:Shared="false"/>
-    <Image x:Key="lanky_gun" Source="Images\dk64\lanky_gun.png"  x:Shared="false" />
-    <Image x:Key="tiny_gun" Source="Images\dk64\tiny_gun.png"  x:Shared="false" />
-    <Image x:Key="chunky_gun" Source="Images\dk64\chunky_gun.png"  x:Shared="false"/>
+    <Image x:Key="coconut_gun" Source="Images\dk64\dk_gun.png"  x:Shared="false" />
+    <Image x:Key="peanut_popguns" Source="Images\dk64\diddy_gun.png"  x:Shared="false"/>
+    <Image x:Key="grape_shooter" Source="Images\dk64\lanky_gun.png"  x:Shared="false" />
+    <Image x:Key="feather_bow" Source="Images\dk64\tiny_gun.png"  x:Shared="false" />
+    <Image x:Key="pineapple_launcher" Source="Images\dk64\chunky_gun.png"  x:Shared="false"/>
 
-    <Image x:Key="dk_inst" Source="Images\dk64\dk_inst.png"  x:Shared="false" />
-    <Image x:Key="diddy_inst" Source="Images\dk64\diddy_inst.png"  x:Shared="false" />
-    <Image x:Key="lanky_inst" Source="Images\dk64\lanky_inst.png"  x:Shared="false" />
-    <Image x:Key="tiny_inst" Source="Images\dk64\tiny_inst.png"  x:Shared="false" />
-    <Image x:Key="chunky_inst" Source="Images\dk64\chunky_inst.png"  x:Shared="false" />
+    <Image x:Key="bongo_blast" Source="Images\dk64\dk_inst.png"  x:Shared="false" />
+    <Image x:Key="guitar_gazump" Source="Images\dk64\diddy_inst.png"  x:Shared="false" />
+    <Image x:Key="trombone_tremor" Source="Images\dk64\lanky_inst.png"  x:Shared="false" />
+    <Image x:Key="saxophone_slam" Source="Images\dk64\tiny_inst.png"  x:Shared="false" />
+    <Image x:Key="triangle_trample" Source="Images\dk64\chunky_inst.png"  x:Shared="false" />
 
-    <Image x:Key="dk_move" Source="Images\dk64\dk_move.png"  x:Shared="false" />
-    <Image x:Key="diddy_move" Source="Images\dk64\diddy_move.png"  x:Shared="false" />
-    <Image x:Key="lanky_move" Source="Images\dk64\lanky_move.png"  x:Shared="false" />
-    <Image x:Key="tiny_move" Source="Images\dk64\tiny_move.png"  x:Shared="false" />
-    <Image x:Key="chunky_move" Source="Images\dk64\chunky_move.png"  x:Shared="false" />
+    <Image x:Key="gorilla_grab" Source="Images\dk64\dk_move.png"  x:Shared="false" />
+    <Image x:Key="chimpy_charge" Source="Images\dk64\diddy_move.png"  x:Shared="false" />
+    <Image x:Key="orangstand" Source="Images\dk64\lanky_move.png"  x:Shared="false" />
+    <Image x:Key="ponytail_twirl" Source="Images\dk64\tiny_move.png"  x:Shared="false" />
+    <Image x:Key="primate_punch" Source="Images\dk64\chunky_move.png"  x:Shared="false" />
 
-    <Image x:Key="dk_barrel" Source="Images\dk64\dkbarrel.png"  x:Shared="false" />
-    <Image x:Key="diddy_barrel" Source="Images\dk64\diddybarrel.png"  x:Shared="false" />
-    <Image x:Key="lanky_barrel" Source="Images\dk64\lankybarrel.png"  x:Shared="false" />
-    <Image x:Key="tiny_barrel" Source="Images\dk64\tinybarrel.png"  x:Shared="false" />
-    <Image x:Key="chunky_barrel" Source="Images\dk64\chunkybarrel.png"  x:Shared="false" />
+    <Image x:Key="strong_kong" Source="Images\dk64\dkbarrel.png"  x:Shared="false" />
+    <Image x:Key="rocketbarrel_boost" Source="Images\dk64\diddybarrel.png"  x:Shared="false" />
+    <Image x:Key="orangstand_sprint" Source="Images\dk64\lankybarrel.png"  x:Shared="false" />
+    <Image x:Key="mini_monkey" Source="Images\dk64\tinybarrel.png"  x:Shared="false" />
+    <Image x:Key="hunky_chunky" Source="Images\dk64\chunkybarrel.png"  x:Shared="false" />
 
-    <Image x:Key="dk_pad" Source="Images\dk64\dkpad.png"  x:Shared="false" />
-    <Image x:Key="diddy_pad" Source="Images\dk64\diddypad.png"  x:Shared="false" />
-    <Image x:Key="lanky_pad" Source="Images\dk64\lankypad.png"  x:Shared="false" />
-    <Image x:Key="tiny_pad" Source="Images\dk64\tinypad.png"  x:Shared="false" />
-    <Image x:Key="chunky_pad" Source="Images\dk64\chunkypad.png"  x:Shared="false"/>
+    <Image x:Key="baboon_blast" Source="Images\dk64\dkpad.png"  x:Shared="false" />
+    <Image x:Key="simian_spring" Source="Images\dk64\diddypad.png"  x:Shared="false" />
+    <Image x:Key="baboon_balloon" Source="Images\dk64\lankypad.png"  x:Shared="false" />
+    <Image x:Key="monkeyport" Source="Images\dk64\tinypad.png"  x:Shared="false" />
+    <Image x:Key="gorilla_gone" Source="Images\dk64\chunkypad.png"  x:Shared="false"/>
 
-    <Image x:Key="key1" Source="Images\dk64\k1.png"  x:Shared="false"/>
-    <Image x:Key="key2" Source="Images\dk64\k2.png"  x:Shared="false"/>
-    <Image x:Key="key3" Source="Images\dk64\k3.png"  x:Shared="false"/>
-    <Image x:Key="key4" Source="Images\dk64\k4.png"  x:Shared="false"/>
-    <Image x:Key="key5" Source="Images\dk64\k5.png"  x:Shared="false"/>
-    <Image x:Key="key6" Source="Images\dk64\k6.png"  x:Shared="false"/>
-    <Image x:Key="key7" Source="Images\dk64\k7.png"  x:Shared="false"/>
-    <Image x:Key="key8" Source="Images\dk64\k8.png"  x:Shared="false"/>
+    <Image x:Key="key_1" Source="Images\dk64\k1.png"  x:Shared="false"/>
+    <Image x:Key="key_2" Source="Images\dk64\k2.png"  x:Shared="false"/>
+    <Image x:Key="key_3" Source="Images\dk64\k3.png"  x:Shared="false"/>
+    <Image x:Key="key_4" Source="Images\dk64\k4.png"  x:Shared="false"/>
+    <Image x:Key="key_5" Source="Images\dk64\k5.png"  x:Shared="false"/>
+    <Image x:Key="key_6" Source="Images\dk64\k6.png"  x:Shared="false"/>
+    <Image x:Key="key_7" Source="Images\dk64\k7.png"  x:Shared="false"/>
+    <Image x:Key="key_8" Source="Images\dk64\k8.png"  x:Shared="false"/>
 
-    <Image x:Key="progressive_slam" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="progressive_slam_1" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="progressive_slam_2" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="progressive_slam_3" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
     <Image x:Key="fairy_camera" Source="Images\dk64\fairy_camera.png"  x:Shared="false"/>
     <Image x:Key="shockwave" Source="Images\dk64\shockwave.png"  x:Shared="false"/>
     <Image x:Key="sniper_scope" Source="Images\dk64\sniper_scope.png"  x:Shared="false"/>
@@ -115,46 +117,50 @@
     <Image x:Key="tiny_bw" Source="Images\bw\tiny.png"  x:Shared="false" />
     <Image x:Key="chunky_bw" Source="Images\bw\chunky.png"  x:Shared="false" />
 
-    <Image x:Key="dk_gun_bw" Source="Images\bw\dk_gun.png"  x:Shared="false" />
-    <Image x:Key="diddy_gun_bw" Source="Images\bw\diddy_gun.png"  x:Shared="false"/>
-    <Image x:Key="lanky_gun_bw" Source="Images\bw\lanky_gun.png"  x:Shared="false" />
-    <Image x:Key="tiny_gun_bw" Source="Images\bw\tiny_gun.png"  x:Shared="false" />
-    <Image x:Key="chunky_gun_bw" Source="Images\bw\chunky_gun.png"  x:Shared="false"/>
+    <Image x:Key="coconut_gun_bw" Source="Images\bw\dk_gun.png"  x:Shared="false" />
+    <Image x:Key="peanut_popguns_bw" Source="Images\bw\diddy_gun.png"  x:Shared="false"/>
+    <Image x:Key="grape_shooter_bw" Source="Images\bw\lanky_gun.png"  x:Shared="false" />
+    <Image x:Key="feather_bow_bw" Source="Images\bw\tiny_gun.png"  x:Shared="false" />
+    <Image x:Key="pineapple_launcher_bw" Source="Images\bw\chunky_gun.png"  x:Shared="false"/>
 
-    <Image x:Key="dk_inst_bw" Source="Images\bw\dk_inst.png"  x:Shared="false" />
-    <Image x:Key="diddy_inst_bw" Source="Images\bw\diddy_inst.png"  x:Shared="false" />
-    <Image x:Key="lanky_inst_bw" Source="Images\bw\lanky_inst.png"  x:Shared="false" />
-    <Image x:Key="tiny_inst_bw" Source="Images\bw\tiny_inst.png"  x:Shared="false" />
-    <Image x:Key="chunky_inst_bw" Source="Images\bw\chunky_inst.png"  x:Shared="false" />
+    <Image x:Key="bongo_blast_bw" Source="Images\bw\dk_inst.png"  x:Shared="false" />
+    <Image x:Key="guitar_gazump_bw" Source="Images\bw\diddy_inst.png"  x:Shared="false" />
+    <Image x:Key="trombone_tremor_bw" Source="Images\bw\lanky_inst.png"  x:Shared="false" />
+    <Image x:Key="saxophone_slam_bw" Source="Images\bw\tiny_inst.png"  x:Shared="false" />
+    <Image x:Key="triangle_trample_bw" Source="Images\bw\chunky_inst.png"  x:Shared="false" />
 
-    <Image x:Key="dk_move_bw" Source="Images\bw\dk_move.png"  x:Shared="false" />
-    <Image x:Key="diddy_move_bw" Source="Images\bw\diddy_move.png"  x:Shared="false" />
-    <Image x:Key="lanky_move_bw" Source="Images\bw\lanky_move.png"  x:Shared="false" />
-    <Image x:Key="tiny_move_bw" Source="Images\bw\tiny_move.png"  x:Shared="false" />
-    <Image x:Key="chunky_move_bw" Source="Images\bw\chunky_move.png"  x:Shared="false" />
+    <Image x:Key="gorilla_grab_bw" Source="Images\bw\dk_move.png"  x:Shared="false" />
+    <Image x:Key="chimpy_charge_bw" Source="Images\bw\diddy_move.png"  x:Shared="false" />
+    <Image x:Key="orangstand_bw" Source="Images\bw\lanky_move.png"  x:Shared="false" />
+    <Image x:Key="ponytail_twirl_bw" Source="Images\bw\tiny_move.png"  x:Shared="false" />
+    <Image x:Key="primate_punch_bw" Source="Images\bw\chunky_move.png"  x:Shared="false" />
 
-    <Image x:Key="dk_barrel_bw" Source="Images\bw\dkbarrel.png"  x:Shared="false" />
-    <Image x:Key="diddy_barrel_bw" Source="Images\bw\diddybarrel.png"  x:Shared="false" />
-    <Image x:Key="lanky_barrel_bw" Source="Images\bw\lankybarrel.png"  x:Shared="false" />
-    <Image x:Key="tiny_barrel_bw" Source="Images\bw\tinybarrel.png"  x:Shared="false" />
-    <Image x:Key="chunky_barrel_bw" Source="Images\bw\chunkybarrel.png"  x:Shared="false" />
+    <Image x:Key="strong_kong_bw" Source="Images\bw\dkbarrel.png"  x:Shared="false" />
+    <Image x:Key="rocketbarrel_boost_bw" Source="Images\bw\diddybarrel.png"  x:Shared="false" />
+    <Image x:Key="orangstand_sprint_bw" Source="Images\bw\lankybarrel.png"  x:Shared="false" />
+    <Image x:Key="mini_monkey_bw" Source="Images\bw\tinybarrel.png"  x:Shared="false" />
+    <Image x:Key="hunky_chunky_bw" Source="Images\bw\chunkybarrel.png"  x:Shared="false" />
 
-    <Image x:Key="dk_pad_bw" Source="Images\bw\dkpad.png"  x:Shared="false" />
-    <Image x:Key="diddy_pad_bw" Source="Images\bw\diddypad.png"  x:Shared="false" />
-    <Image x:Key="lanky_pad_bw" Source="Images\bw\lankypad.png"  x:Shared="false" />
-    <Image x:Key="tiny_pad_bw" Source="Images\bw\tinypad.png"  x:Shared="false" />
-    <Image x:Key="chunky_pad_bw" Source="Images\bw\chunkypad.png"  x:Shared="false"/>
+    <Image x:Key="baboon_blast_bw" Source="Images\bw\dkpad.png"  x:Shared="false" />
+    <Image x:Key="simian_spring_bw" Source="Images\bw\diddypad.png"  x:Shared="false" />
+    <Image x:Key="baboon_balloon_bw" Source="Images\bw\lankypad.png"  x:Shared="false" />
+    <Image x:Key="monkeyport_bw" Source="Images\bw\tinypad.png"  x:Shared="false" />
+    <Image x:Key="gorilla_gone_bw" Source="Images\bw\chunkypad.png"  x:Shared="false"/>
 
-    <Image x:Key="key1_bw" Source="Images\bw\k1.png"  x:Shared="false"/>
-    <Image x:Key="key2_bw" Source="Images\bw\k2.png"  x:Shared="false"/>
-    <Image x:Key="key3_bw" Source="Images\bw\k3.png"  x:Shared="false"/>
-    <Image x:Key="key4_bw" Source="Images\bw\k4.png"  x:Shared="false"/>
-    <Image x:Key="key5_bw" Source="Images\bw\k5.png"  x:Shared="false"/>
-    <Image x:Key="key6_bw" Source="Images\bw\k6.png"  x:Shared="false"/>
-    <Image x:Key="key7_bw" Source="Images\bw\k7.png"  x:Shared="false"/>
-    <Image x:Key="key8_bw" Source="Images\bw\k8.png"  x:Shared="false"/>
+    <Image x:Key="key_1_bw" Source="Images\bw\k1.png"  x:Shared="false"/>
+    <Image x:Key="key_2_bw" Source="Images\bw\k2.png"  x:Shared="false"/>
+    <Image x:Key="key_3_bw" Source="Images\bw\k3.png"  x:Shared="false"/>
+    <Image x:Key="key_4_bw" Source="Images\bw\k4.png"  x:Shared="false"/>
+    <Image x:Key="key_5_bw" Source="Images\bw\k5.png"  x:Shared="false"/>
+    <Image x:Key="key_6_bw" Source="Images\bw\k6.png"  x:Shared="false"/>
+    <Image x:Key="key_7_bw" Source="Images\bw\k7.png"  x:Shared="false"/>
+    <Image x:Key="key_8_bw" Source="Images\bw\k8.png"  x:Shared="false"/>
 
-    <Image x:Key="progressive_slam_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="progressive_slam_1_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="progressive_slam_2_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="progressive_slam_3_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
+    <Image x:Key="fairy_camera_bw" Source="Images\bw\film.png"  x:Shared="false"/>
+    <Image x:Key="shockwave_bw" Source="Images\bw\shockwave.png"  x:Shared="false"/>
     <Image x:Key="sniper_scope_bw" Source="Images\bw\sniper_scope.png"  x:Shared="false"/>
     <Image x:Key="homing_ammo_bw" Source="Images\bw\homing_ammo.png"  x:Shared="false"/>
 
