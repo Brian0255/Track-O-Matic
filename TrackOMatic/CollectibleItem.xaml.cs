@@ -18,10 +18,31 @@ namespace TrackOMatic
         public static readonly DependencyProperty TextProperty =
       DependencyProperty.Register("Text", typeof(int), typeof(CollectibleItem), new PropertyMetadata(null));
 
+        private string baseSourcePath = "";
+        private string BWSourcePath = "";
+
         public string ImageSource
         {
             get { return (string)GetValue(ImageSourceProperty); }
             set { SetValue(ImageSourceProperty, value); }
+        }
+
+        private void Darken()
+        {
+            ImageSource = BWSourcePath;
+        }
+
+        private void LightUp()
+        {
+            ImageSource = baseSourcePath;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            BWSourcePath = ImageSource;
+            //hacky, but remove the .png, add '_bw', readd the .png
+            baseSourcePath = BWSourcePath.Replace("bw", "dk64");
         }
 
         public int Text
@@ -36,7 +57,7 @@ namespace TrackOMatic
                     if(value == 0)
                     {
                         NumberGrid.Opacity = 0;
-                        Opacity = 0.25;
+                        Darken();
                         count.Visibility = Visibility.Hidden;
                     }
                     else
@@ -44,7 +65,7 @@ namespace TrackOMatic
                         int columnWidth = (text >= 10) ? 25 : 17;
                         NumberGridColumn.Width = new GridLength(columnWidth);
                         NumberGrid.Opacity = 1.0;
-                        Opacity = 1.0;
+                        LightUp();
                         count.Visibility = Visibility.Visible;
                     }
                 }

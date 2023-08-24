@@ -17,6 +17,14 @@
                 <TextBlock x:Name="count" Padding="1,0,0,2" Text="{Binding Text}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"  Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" Visibility="Hidden"/>
             </Grid>
         </Grid>
-        <Image Source="{Binding ImageSource}" x:Name="image" Panel.ZIndex="0" Stretch="Uniform" Margin="2" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <Image Source="{Binding ImageSource}" x:Name="image" Panel.ZIndex="0" Stretch="Uniform" Margin="2" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                    UseLayoutRounding="True"
+                    SnapsToDevicePixels="True"
+                    RenderOptions.ClearTypeHint="Enabled">
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+                </Image.Effect>
+            </Image>
+
     </Grid>
 </UserControl>
