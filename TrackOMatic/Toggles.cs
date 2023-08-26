@@ -34,7 +34,7 @@ namespace TrackOMatic
                 {
                     item.IsEnabled = true;
                 }
-                TurnOffAutotrackingField();
+                DataSaver.TurnOffAutotrackingField();
                 foreach (var entry in Regions) SetRegionLighting(entry.Key, false);
             }
             else

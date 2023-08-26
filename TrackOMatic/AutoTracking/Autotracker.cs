@@ -10,7 +10,7 @@ using System.Windows.Media.Animation;
 
 namespace TrackOMatic
 {
-    public delegate bool ProcessNewItem(ItemName itemName, RegionName regionName);
+    public delegate bool ProcessNewItem(ItemName itemName, RegionName regionName, bool hint = false);
     public delegate void UpdateCollectible(ItemType collectibleType, int newTotal);
     public delegate void SetRegionLighting(RegionName region, bool lightUp);
     public class Autotracker

@@ -165,7 +165,7 @@ namespace TrackOMatic
             }
         }
 
-        public void Handle_RegionGrid(Item button, bool add, bool userPlacing = true)
+        public void Handle_RegionGrid(Item button, bool add, bool userPlacing = true, bool brighten = true)
         {
             ImportantCheck check = null;
             ItemName item = ItemName.NONE;
@@ -179,7 +179,8 @@ namespace TrackOMatic
                 button.SetRegion(Region);
                 AddWithVialCheck(button, userPlacing);
                 Region.AddCheck(check);
-                button.Brighten();
+                if (brighten) button.Brighten();
+                else button.Darken();
                 button.SetBackgroundImageVisibility(Visibility.Visible);
             }
             else
@@ -200,21 +201,14 @@ namespace TrackOMatic
                 Item item = e.Data.GetData(typeof(Item)) as Item;
                 if(item.Parent is Grid) Add_Item(item);
             }
-            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-                if (System.IO.Path.GetExtension(files[0]).ToUpper() == ".JSON")
-                    window.ParseSpoiler(files[0]);
-            }
         }
 
-        public void Add_Item(Item item, bool userPlacing = true)
+        public void Add_Item(Item item, bool userPlacing = true, bool brighten = true)
         {
             // move item to region
             Panel itemGrid = item.Parent as Panel;
             if(itemGrid != null) itemGrid.Children.Remove(item);
-            Handle_RegionGrid(item, true, userPlacing);
+            Handle_RegionGrid(item, true, userPlacing, brighten);
             if (item.Parent == null) item.HandleItemReturn();
             else
             {

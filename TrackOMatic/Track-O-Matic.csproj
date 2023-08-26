@@ -92,6 +92,7 @@
     <Compile Include="AutoTracking\Memory.cs" />
     <Compile Include="AutoTracking\AutotrackedCheck.cs" />
     <Compile Include="AutoTracking\Records.cs" />
+    <Compile Include="HitListHintManager.cs" />
     <Compile Include="Data\Extensions.cs" />
     <Compile Include="Data\SpoilerSettings.cs" />
     <Compile Include="Data\SavedProgress.cs" />
@@ -111,7 +112,7 @@
       <DependentUpon>ProgressiveItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\MapToRegion.cs" />
-    <Compile Include="DataSaving.cs" />
+    <Compile Include="DataSaver.cs" />
     <Compile Include="ToggleableItem.xaml.cs">
       <DependentUpon>ToggleableItem.xaml</DependentUpon>
     </Compile>
@@ -126,7 +127,7 @@
     <Compile Include="CollectibleItem.xaml.cs">
       <DependentUpon>CollectibleItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SpoilerParsing.cs" />
+    <Compile Include="SpoilerParser.cs" />
     <Compile Include="Item.xaml.cs">
       <DependentUpon>Item.xaml</DependentUpon>
     </Compile>
