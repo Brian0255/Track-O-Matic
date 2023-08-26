@@ -100,7 +100,7 @@ namespace TrackOMatic
             if (Tag == null) return;
             var itemName = (ItemName)Tag;
             var regionName = (Region == null) ? RegionName.UNKNOWN : Region.RegionName;
-            mainWindow.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, false, ItemImage.Opacity), ignoreAutotrackField);
+            mainWindow.DataSaver.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, false, ItemImage.Opacity), ignoreAutotrackField);
         }
 
         //Struct to use in the GetCursorPos function
@@ -149,14 +149,18 @@ namespace TrackOMatic
         {
             ItemName itemName = (ItemName)Tag;
             var resourceName = itemName.ToString().ToLower();
-            ItemImage = (Image)FindResource(resourceName);
+            var image = (Image)FindResource(resourceName);
+            ItemImage.Source = image.Source;
+            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = image.Source;
         }
 
         public void Darken()
         {
             ItemName itemName = (ItemName)Tag;
             var resourceName = itemName.ToString().ToLower() + "_bw";
-            ItemImage = (Image)FindResource(resourceName);
+            var image = (Image)FindResource(resourceName);
+            ItemImage.Source = image.Source;
+            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = image.Source;
         }
 
         public void Item_MouseMove(object sender, MouseEventArgs e)
@@ -192,7 +196,10 @@ namespace TrackOMatic
         {
             var newVisibility = (Star.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
             SetStarVisibility(newVisibility);
-            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
+            if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
+            {
+                mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
+            }
             if (Region != null) Region.UpdateRequiredChecksTotal();
             PerformSave(true);
         }
