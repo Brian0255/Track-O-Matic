@@ -2,20 +2,14 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using System.IO;
 using Microsoft.Win32;
-using System.Drawing;
-using System.Windows.Documents;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Media.Animation;
 using System.Timers;
+using TrackOMatic.Properties;
 
 namespace ClassLibrary
 {
@@ -50,16 +44,20 @@ namespace TrackOMatic
         public Dictionary<ItemType,CollectibleItem> Collectibles { get; private set; }
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
-        public List<System.Windows.Controls.Image> kroolKongs;
-        public List<System.Windows.Controls.Image> helmKongs;
+        public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
+        public List<System.Windows.Controls.Image> KroolKongs { get; private set; }
+        public List<System.Windows.Controls.Image> HelmKongs { get; private set; }
 
-        private List<Item> DraggableItems = new();
-        private List<HitListItem> hitListItems;
+        public List<Item> DraggableItems { get; private set; } = new();
+        public List<HitListItem> HitListItems { get; private set; }
 
         public int collected;
         public Autotracker Autotracker { get; private set; }
         public bool SpoilerLoaded { get; private set; }
         public static Grid Items { get; private set; }
+        public SpoilerParser SpoilerParser { get; private set; }
+        public DataSaver DataSaver { get; private set; }
+        public HitListHintManager HitListHintManager { get; private set; }
 
         private Timer SaveTimer;
 
@@ -68,6 +66,9 @@ namespace TrackOMatic
             InitializeComponent();
             InitOptions();
             InitData();
+            SpoilerParser = new(this);
+            DataSaver = new(this);
+            HitListHintManager = new(this);
         }
 
         private ItemBackground FindMatchingBackgroundImage(Item item)
@@ -100,7 +101,7 @@ namespace TrackOMatic
 
                 { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel) },
             };
-            hitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10};
+            HitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10};
             Collectibles = new()
             { 
                 {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
@@ -117,8 +118,8 @@ namespace TrackOMatic
                 {ItemType.GOLDEN_BANANA, GBs },
             };
             Items = ItemGrid;
-            kroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3 };
-            helmKongs = new() { HelmKong1, HelmKong2, HelmKong3 };
+            KroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3 };
+            HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3 };
 
             //have a separate list of the movable tracker items so it's easy to find them even if they are moved out of the grid
             foreach (var control in Items.Children)
@@ -159,7 +160,12 @@ namespace TrackOMatic
         }
         private void MainWindow_Closing()
         {
-            Save();
+            DataSaver.Save();
+        }
+
+        private void OnTimerSave(object sender, ElapsedEventArgs e)
+        {
+            DataSaver.Save();
         }
 
         public void UpdateCollectible(ItemType collectibleType, int newTotal)
@@ -170,25 +176,27 @@ namespace TrackOMatic
             }
         }
 
-        public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName)
+        public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false)
         {
             foreach (var itemControl in DraggableItems)
             {
                 if (itemControl is Item item && itemToProcess == (ItemName)item.Tag)
                 {
-                    if(item.Parent != ItemGrid)
+                    bool shouldBrighten = true;
+                    if (hint && item.Parent != Regions[regionName].RegionGrid) shouldBrighten = false;
+                    if (item.Parent != ItemGrid)
                     {
                         var parent = (RegionGrid)item.Parent;
                         parent.Handle_RegionGrid(item, false);
                     }
                     item.Opacity = 1.0;
-                    item.ItemImage.Source = new BitmapImage(new Uri("images/dk64/" + item.ToString().ToLower() + ".png", UriKind.Relative));
                     itemControl.CanLeftClick = false;
-                    Regions[regionName].RegionGrid.Add_Item(item, false);
+                    Regions[regionName].RegionGrid.Add_Item(item, false, shouldBrighten);
                     //should mean that there was no matching vial, item couldn't be placed as a result
                     if (item.Parent == ItemGrid) return false;
-                    AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.ItemImage.Opacity));
-                    Save();
+                    //if (hint) item.ChangeOpacity(0.5);
+                    DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, shouldBrighten, item.ItemImage.Opacity, !shouldBrighten));
+                    DataSaver.Save();
                     return true;
                 }
             }
@@ -209,7 +217,7 @@ namespace TrackOMatic
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             Properties.Settings.Default.Save();
-            Save();
+            DataSaver.Save();
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -250,10 +258,74 @@ namespace TrackOMatic
             Keyboard.ClearFocus();
         }
 
-        private void Reset()
+        private void ParseSpoiler(string fileName)
+        {
+            SpoilerLoaded = SpoilerParser.ParseSpoiler(fileName);
+            if (!SpoilerLoaded) return;
+            Autotracker.SetStartingItems(SpoilerParser.StartingItems);
+            Autotracker.SetSpoilerLoaded(fileName);
+            foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
+            DataSaver.InitSavedDataFromSpoiler(fileName);
+            HitListHintManager.InitializeFromSpoiler(SpoilerParser.StartingItems, SpoilerParser.TrainingItems);
+        }
+
+        private void DropFile(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (Path.GetExtension(files[0]).ToUpper().Equals(".JSON"))
+                {
+                    Reset();
+                    ParseSpoiler(files[0]);
+                }
+            }
+        }
+
+        private void OpenSpoiler(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new();
+            openFileDialog.Filter = "JSON files (*.json)|*.json";
+
+            string lastFolderPath = Properties.Settings.Default.LastFolderPath;
+
+            if (!string.IsNullOrEmpty(lastFolderPath))
+            {
+                openFileDialog.InitialDirectory = lastFolderPath;
+            }
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string selectedFilePath = openFileDialog.FileName;
+                string folderPath = Path.GetDirectoryName(selectedFilePath);
+
+                Properties.Settings.Default.LastFolderPath = folderPath;
+                Properties.Settings.Default.Save();
+
+                ParseSpoiler(selectedFilePath);
+            }
+        }
+
+        public void OnCollectibleTextChanged()
+        {
+            if (ITEM_NAME_TO_REGION.Count == 0) return;
+            var itemToHint = HitListHintManager.OnGBUpdate(GBs.Text);
+            if (itemToHint == ItemName.NONE) return;
+            var image = (Image)FindResource(itemToHint.ToString().ToLower());
+            ItemHintIcon.Source = image.Source;
+            ItemHintIcon.UpdateLayout();
+            var regionName = ITEM_NAME_TO_REGION[itemToHint];
+            ItemHintText.Text = JSONKeyMappings.REGION_NAME_TO_SHORTENED[regionName];
+            //not really an autotracked item but it's easier to just call this function with an extra parameter
+            if(Settings.Default.Autotracking) ProcessNewAutotrackedItem(itemToHint, regionName, true);
+
+        }
+
+        public void Reset()
         {
             TotalGBs = 0;
             SpoilerLoaded = false;
+            ITEM_NAME_TO_REGION.Clear();
             foreach (var entry in Regions)
             {
                 var region = entry.Value;
@@ -264,7 +336,7 @@ namespace TrackOMatic
                 item.CanLeftClick = true;
                 item.SetStarVisibility(Visibility.Hidden);
             }
-            foreach (var item in hitListItems) item.Reset();
+            foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
 
             HelmKong1.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
@@ -275,8 +347,8 @@ namespace TrackOMatic
             KRoolKong2.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
             KRoolKong3.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
 
-            //Notes.Text = "";
-           // Notes.Reset();
+            ItemHintIcon.Source = null;
+            ItemHintText.Text = "";
             Autotracker.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)
