@@ -10,77 +10,141 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Security.Cryptography;
 using System.Windows.Media;
+using System.Text.RegularExpressions;
 
 namespace TrackOMatic
 {
-    public partial class MainWindow : Window
+    public class SpoilerParser
     {
-        private void OpenSpoiler(object sender, RoutedEventArgs e)
+        private int slamCount = 0;
+        public int RNGSeed = 0;
+        public MainWindow MainWindow { get; }
+        public Dictionary<ItemName, RegionName> StartingItems { get; private set; } = new();
+        public Dictionary<ItemName, RegionName> TrainingItems { get; private set; } = new();
+        public SpoilerParser(MainWindow mainWindow)
         {
-            OpenFileDialog openFileDialog = new();
-            openFileDialog.Filter = "JSON files (*.json)|*.json";
+            MainWindow = mainWindow;
+        }
 
-            string lastFolderPath = Properties.Settings.Default.LastFolderPath;
-
-            if (!string.IsNullOrEmpty(lastFolderPath))
+        private string CheckForSlam(string itemString)
+        {
+            if (itemString != "Progressive Slam") return itemString;
+            slamCount++;
+            itemString += " " + slamCount;
+            return itemString;
+        }
+        private bool ValidItemAndRegionString(string regionString, string itemString)
+        {
+            if (!JSONKeyMappings.ITEM_MAP.ContainsKey(itemString)) return false;
+            if (!JSONKeyMappings.REGION_MAP.ContainsKey(regionString)) return false;
+            return true;
+        }
+        private void CheckForTrainingItem(string itemString, ItemName itemName)
+        {
+            if(itemString.Contains("Training Barrel") || itemString.Contains("Pre-Given Move"))
             {
-                openFileDialog.InitialDirectory = lastFolderPath;
+                TrainingItems[itemName] = RegionName.DK_ISLES;
             }
-
-            if (openFileDialog.ShowDialog() == true)
+        }
+        private void ReadSpecialItemRegion(Dictionary<string, string> region)
+        {
+            foreach(var entry in region)
             {
-                string selectedFilePath = openFileDialog.FileName;
-                string folderPath = Path.GetDirectoryName(selectedFilePath);
-
-                Properties.Settings.Default.LastFolderPath = folderPath;
-                Properties.Settings.Default.Save();
-
-                ParseSpoiler(selectedFilePath);
+                var itemLocation = entry.Key;
+                var itemString = entry.Value;
+                itemString = CheckForSlam(itemString);
+                if (!ValidItemAndRegionString(itemLocation, itemString)) continue;
+                var regionName = JSONKeyMappings.REGION_MAP[itemLocation];
+                var itemName = JSONKeyMappings.ITEM_MAP[itemString];
+                MainWindow.ITEM_NAME_TO_REGION[itemName] = regionName;
             }
         }
 
-        private void DropFile(object sender, DragEventArgs e)
+        private void ReadShops(Dictionary<string, string> shopRegion)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            foreach(var entry in shopRegion)
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (Path.GetExtension(files[0]).ToUpper().Equals(".JSON"))
+                var fullShopName = entry.Key;
+                var itemString = entry.Value;
+                itemString = CheckForSlam(itemString);
+                var pricePattern = @"^(.*)\s+\(";
+                Match match = Regex.Match(itemString, pricePattern);
+                if (!match.Success) continue;
+                var itemWithoutPrice = match.Groups[1].Value;
+                var shortenedShopName = fullShopName.Split(' ')[0];
+                if (!JSONKeyMappings.ITEM_MAP.ContainsKey(itemWithoutPrice)) continue;
+                var itemName = JSONKeyMappings.ITEM_MAP[itemWithoutPrice];
+                MainWindow.ITEM_NAME_TO_REGION[itemName] = JSONKeyMappings.SHORTENED_SHOP_TO_REGION[shortenedShopName];
+            }
+        }
+
+        private void ReadStandardRegion(string regionString, Dictionary<string, string> itemList)
+        {
+            foreach(var entry in itemList)
+            {
+                var itemString = entry.Value;
+                itemString = CheckForSlam(itemString);
+                if (!ValidItemAndRegionString(regionString, itemString)) continue;
+                var regionName = JSONKeyMappings.REGION_MAP[regionString];
+                var itemName = JSONKeyMappings.ITEM_MAP[itemString];
+                CheckForTrainingItem(itemString, itemName);
+                MainWindow.ITEM_NAME_TO_REGION[itemName] = regionName;
+            }
+        }
+
+        private void ReadItems(dynamic JSONObject)
+        {
+            if (JSONObject["Items"] == null) return;
+            var items = JSONObject["Items"].ToObject<Dictionary<string, Dictionary<string, string>>>();
+            foreach(var entry in items)
+            {
+                var itemArea = entry.Key;
+                var itemList = entry.Value;
+                switch (itemArea)
                 {
-                    Reset();
-                    ParseSpoiler(files[0]);
+                    case "Shops": 
+                        ReadShops(itemList);
+                        break;
+                    case "Special":
+                    case "Kongs":
+                        ReadSpecialItemRegion(itemList);
+                        break;
+                    default:
+                        ReadStandardRegion(itemArea, itemList);
+                        break;
                 }
             }
         }
 
-        private void ReadStartingItemsIntoUI(Dictionary<ItemName, RegionName> startingItems)
+        private void ReadStartingItemsIntoUI()
         {
-            var childElements = new List<UIElement>(Items.Children.Count);
-            foreach (UIElement child in Items.Children)
+            var childElements = new List<UIElement>(MainWindow.Items.Children.Count);
+            foreach (UIElement child in MainWindow.Items.Children)
             {
                 childElements.Add(child);
             }
             foreach (var itemControl in childElements)
             {
-                if (itemControl is Item item && startingItems.ContainsKey((ItemName)item.Tag))
+                if (itemControl is Item item && StartingItems.ContainsKey((ItemName)item.Tag))
                 {
                     var itemName = (ItemName)item.Tag;
-                    var region = startingItems[itemName];
-                    Regions[region].RegionGrid.Add_Item(item);
+                    var region = StartingItems[itemName];
+                    MainWindow.Regions[region].RegionGrid.Add_Item(item);
                     item.CanLeftClick = false;
-                    item.ItemImage = (Image)FindResource(itemName.ToString().ToLower());
+                    item.ItemImage = (Image)MainWindow.FindResource(itemName.ToString().ToLower());
                 }
             }
         }
 
-        private void GenerateHitList(int randomSeed)
+        private void GenerateHitList()
         {
             List<string> possibleGoals = Enum.GetValues(typeof(HitListGoal)).Cast<HitListGoal>().Select(e => e.ToString()).ToList();
-            possibleGoals.Shuffle(randomSeed);
-            for(int i = 0; i < hitListItems.Count; ++i)
+            possibleGoals.Shuffle(RNGSeed);
+            for(int i = 0; i < MainWindow.HitListItems.Count; ++i)
             {
                 var imagePath = "Images/dk64/" + possibleGoals[i].ToLower() + ".png";
                 var newImage = new BitmapImage(new Uri(imagePath, UriKind.Relative));
-                hitListItems[i].SetImage(newImage);
+                MainWindow.HitListItems[i].SetImage(newImage);
             }
         }
 
@@ -122,52 +186,50 @@ namespace TrackOMatic
         private void ReadStartingInfo(string JSONString)
         {
             StartingInfo info = System.Text.Json.JsonSerializer.Deserialize<StartingInfo>(JSONString);
-            Dictionary<ItemName, RegionName> startingItems = new();
-            ReadKongsAndKeys(info, startingItems);
+            ReadKongsAndKeys(info);
 
             //temporary
-            startingItems.Add(ItemName.FAIRY_CAMERA, RegionName.START);
-            startingItems.Add(ItemName.SHOCKWAVE, RegionName.START);
+            StartingItems.Add(ItemName.FAIRY_CAMERA, RegionName.START);
+            StartingItems.Add(ItemName.SHOCKWAVE, RegionName.START);
 
-            ReadStartingItemsIntoUI(startingItems);
-            Autotracker.SetStartingItems(startingItems);
+            ReadStartingItemsIntoUI();
             ReadHelmAndKRoolOrder(info);
             ReadLevelOrder(info);
         }
 
-        private static void ReadKongsAndKeys(StartingInfo info, Dictionary<ItemName, RegionName> startingItems)
+        private void ReadKongsAndKeys(StartingInfo info)
         {
             foreach (var kongIndex in info.starting_kongs)
             {
                 var kongItem = JSONKeyMappings.KONGS[kongIndex];
-                startingItems.Add(kongItem, RegionName.START);
+                StartingItems.Add(kongItem, RegionName.START);
             }
             foreach (var keyString in info.starting_keys)
             {
                 var key = JSONKeyMappings.ITEM_MAP[keyString];
-                startingItems.Add(key, RegionName.START);
+                StartingItems.Add(key, RegionName.START);
             }
         }
 
         private void ReadHelmAndKRoolOrder(StartingInfo info)
         {
-            for (int i = 0; i < helmKongs.Count; ++i)
+            for (int i = 0; i < MainWindow.HelmKongs.Count; ++i)
             {
                 if (i < info.helm_order.Count)
                 {
                     var imageName = JSONKeyMappings.KONGS[info.helm_order[i]].ToString().ToLower();
-                    helmKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
+                    MainWindow.HelmKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
                 }
-                else helmKongs[i].Source = null;
+                else MainWindow.HelmKongs[i].Source = null;
             }
-            for (int i = 0; i < kroolKongs.Count; ++i)
+            for (int i = 0; i < MainWindow.KroolKongs.Count; ++i)
             {
                 if (i < info.krool_order.Count)
                 {
                     var imageName = JSONKeyMappings.KONGS[info.krool_order[i]].ToString().ToLower();
-                    kroolKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
+                    MainWindow.KroolKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
                 }
-                else kroolKongs[i].Source = null;
+                else MainWindow.KroolKongs[i].Source = null;
             }
         }
 
@@ -178,7 +240,7 @@ namespace TrackOMatic
                 var levelOrderNumber = (info.level_order == null) ? -1 : info.level_order[i];
                 var newLevelOrderNumber = (info.level_order == null) ? -1 : (i + 1);
                 var toChange = (info.level_order == null) ? Region.LOBBY_ORDER[i] : Region.LOBBY_ORDER[levelOrderNumber];
-                Regions[toChange].SetLevelOrderNumber(newLevelOrderNumber);
+                MainWindow.Regions[toChange].SetLevelOrderNumber(newLevelOrderNumber);
             }
         }
 
@@ -222,17 +284,17 @@ namespace TrackOMatic
                 if (!JSONKeyMappings.REGION_MAP.ContainsKey(info.level_name)) continue;
                 settings ??= SetUpSettings(info);
                 RegionName regionName = JSONKeyMappings.REGION_MAP[info.level_name];
-                Regions[regionName].SetInitialPoints(info.points);
-                Regions[regionName].SetRequiredCheckTotal(info.woth_count);
-                Regions[regionName].SpoilerSettings = settings;
-                var grid = Regions[regionName].RegionGrid;
+                MainWindow.Regions[regionName].SetInitialPoints(info.points);
+                MainWindow.Regions[regionName].SetRequiredCheckTotal(info.woth_count);
+                MainWindow.Regions[regionName].SpoilerSettings = settings;
+                var grid = MainWindow.Regions[regionName].RegionGrid;
                 //hoo boy i love enums
                 info.vial_colors.Sort( (a,b) => JSONKeyMappings.VIAL_MAP[a] - JSONKeyMappings.VIAL_MAP[b]);
                 foreach(var vial in info.vial_colors) grid.AddInitialVial(JSONKeyMappings.VIAL_MAP[vial]);
             }
         }
 
-        private static SpoilerSettings SetUpSettings(RegionSpoilerInfo info)
+        private SpoilerSettings SetUpSettings(RegionSpoilerInfo info)
         {
             SpoilerSettings settings;
             bool pointsEnabled = info.points != -1;
@@ -242,18 +304,19 @@ namespace TrackOMatic
             return settings;
         }
 
-        private int GenerateHitListSeed(string jsonString, string salt)
+        private void GenerateHitListSeed(string jsonString, string salt)
         {
             var toHash = jsonString + salt;
             using SHA256 sha256 = SHA256.Create();
             byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(toHash));
-            int seed = BitConverter.ToInt32(hashBytes, 0);
-            return seed;
+            RNGSeed = BitConverter.ToInt32(hashBytes, 0);
         }
 
-        public void ParseSpoiler(string fileName)
+        public bool ParseSpoiler(string fileName)
         {
-            Reset();
+            StartingItems = new();
+            TrainingItems = new();
+            slamCount = 0;
             using StreamReader reader = new(fileName);
             string json = reader.ReadToEnd();
 
@@ -261,22 +324,20 @@ namespace TrackOMatic
             if (JSONObject["Spoiler Hints Data"] == null)
             {
                 MessageBox.Show("Missing data detected in spoiler log. Please make sure you have a spoiler hints option selected in the \"Quality of Life\" tab of the web generator.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                return false;
             }
             ParseRegions(JSONObject);
+            ReadItems(JSONObject);
             foreach (var entry in ImportantCheckList.ITEMS) entry.Value.InitPointValue();
-            SpoilerLoaded = true;
-            Autotracker.SetSpoilerLoaded(fileName);
-            foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
-            InitSavedDataFromSpoiler(fileName);
             if (Properties.Settings.Default.HitList)
             {
                 //the chef has decreed a touch of salt to nearly eliminate the chances of a repeat hash
                 string salt = JSONObject["Settings"]["Seed"].ToObject<string>();
                 string dataToHash = JsonConvert.SerializeObject(JSONObject["Spoiler Hints Data"]);
-                var seed = GenerateHitListSeed(dataToHash, salt);
-                GenerateHitList(seed);
+                GenerateHitListSeed(dataToHash, salt);
+                GenerateHitList();
             }
+            return true;
         }
     }
 }
