@@ -11,9 +11,15 @@ using System.Timers;
 
 namespace TrackOMatic
 {
-    public partial class MainWindow : Window
+    public class DataSaver
     {
         private SavedProgress savedProgress;
+        public MainWindow MainWindow { get; }
+
+        public DataSaver(MainWindow mainWindow)
+        {
+            MainWindow = mainWindow;
+        }
 
         public void LoadProgress(object Sender, RoutedEventArgs e)
         {
@@ -53,14 +59,9 @@ namespace TrackOMatic
             File.Delete(tempPath);
         }
 
-        private void OnTimerSave(object sender, ElapsedEventArgs e)
-        {
-            Save();
-        }
-
         private Item FindMatchingItem(ItemName toFind)
         {
-            foreach(var item in DraggableItems)
+            foreach(var item in MainWindow.DraggableItems)
             {
                 var itemName = (ItemName)item.Tag;
                 if (itemName == toFind) return item;
@@ -85,20 +86,22 @@ namespace TrackOMatic
             {
                 var savedItem = savedItemEntry.Value;
                 var region = savedItem.Region;
+                bool autoPlace = (savedItem.Autotracked || savedItem.Hinted);
                 Item matchingItem = FindMatchingItem(savedItem.ItemName);
                 matchingItem.SetStarVisibility(savedItem.Starred);
-                if (ITEM_TO_BACKGROUND_IMAGE.ContainsKey(matchingItem))
-                    ITEM_TO_BACKGROUND_IMAGE[matchingItem].SetStarVisibility(savedItem.Starred);
-                if (savedItem.Autotracked)
+                if (MainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(matchingItem))
+                    MainWindow.ITEM_TO_BACKGROUND_IMAGE[matchingItem].SetStarVisibility(savedItem.Starred);
+                if (savedItem.Autotracked) MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
+                if (savedItem.Region != RegionName.UNKNOWN && !savedItem.Hinted)
                 {
-                    Autotracker.ProcessSavedItem(savedItem.ItemName);
+                    MainWindow.Regions[region].RegionGrid.Add_Item(matchingItem, !savedItem.Autotracked, !savedItem.Hinted);
                 }
-                if (savedItem.Region != RegionName.UNKNOWN)
+                if (savedItem.Hinted)
                 {
-                    Regions[region].RegionGrid.Add_Item(matchingItem, !savedItem.Autotracked);
+                    matchingItem.Darken();
                 }
                 matchingItem.Image.Opacity = savedItem.Opacity;
-                matchingItem.CanLeftClick = !savedItem.Autotracked;
+                matchingItem.CanLeftClick = !autoPlace;
             }
         }
 
