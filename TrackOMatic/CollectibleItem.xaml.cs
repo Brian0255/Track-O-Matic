@@ -68,6 +68,8 @@ namespace TrackOMatic
                         LightUp();
                         count.Visibility = Visibility.Visible;
                     }
+                    MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                    mainWindow.OnCollectibleTextChanged();
                 }
             }
         }
