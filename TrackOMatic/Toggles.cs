@@ -33,6 +33,7 @@ namespace TrackOMatic
                 foreach (var item in DraggableItems.Cast<Item>())
                 {
                     item.IsEnabled = true;
+                    item.CanLeftClick = true;
                 }
                 DataSaver.TurnOffAutotrackingField();
                 foreach (var entry in Regions) SetRegionLighting(entry.Key, false);
