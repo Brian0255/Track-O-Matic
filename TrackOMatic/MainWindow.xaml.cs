@@ -189,7 +189,7 @@ namespace TrackOMatic
                         var parent = (RegionGrid)item.Parent;
                         parent.Handle_RegionGrid(item, false);
                     }
-                    item.Opacity = 1.0;
+                    item.ChangeOpacity(1.0);
                     itemControl.CanLeftClick = false;
                     Regions[regionName].RegionGrid.Add_Item(item, false, shouldBrighten);
                     //should mean that there was no matching vial, item couldn't be placed as a result
