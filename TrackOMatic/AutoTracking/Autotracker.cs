@@ -220,6 +220,11 @@ namespace TrackOMatic
             TrackedAlready[item] = true;
         }
 
+        public bool ItemWasTracked(ItemName item)
+        {
+            return TrackedAlready[item];
+        }
+
         private void UpdateCollectibles()
         {
             foreach (var entry in CollectibleItemAmounts)
