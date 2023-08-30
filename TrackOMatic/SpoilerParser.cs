@@ -82,12 +82,13 @@ namespace TrackOMatic
         {
             foreach(var entry in itemList)
             {
+                var itemLocation = entry.Key;
                 var itemString = entry.Value;
                 itemString = CheckForSlam(itemString);
                 if (!ValidItemAndRegionString(regionString, itemString)) continue;
                 var regionName = JSONKeyMappings.REGION_MAP[regionString];
                 var itemName = JSONKeyMappings.ITEM_MAP[itemString];
-                CheckForTrainingItem(itemString, itemName);
+                CheckForTrainingItem(itemLocation, itemName);
                 MainWindow.ITEM_NAME_TO_REGION[itemName] = regionName;
             }
         }
