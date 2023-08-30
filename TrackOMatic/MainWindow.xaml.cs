@@ -183,7 +183,7 @@ namespace TrackOMatic
                 if (itemControl is Item item && itemToProcess == (ItemName)item.Tag)
                 {
                     bool shouldBrighten = true;
-                    if (hint && item.Parent != Regions[regionName].RegionGrid) shouldBrighten = false;
+                    if (hint && !Autotracker.ItemWasTracked(itemToProcess)) shouldBrighten = false;
                     if (item.Parent != ItemGrid)
                     {
                         var parent = (RegionGrid)item.Parent;
@@ -194,7 +194,6 @@ namespace TrackOMatic
                     Regions[regionName].RegionGrid.Add_Item(item, false, shouldBrighten);
                     //should mean that there was no matching vial, item couldn't be placed as a result
                     if (item.Parent == ItemGrid) return false;
-                    //if (hint) item.ChangeOpacity(0.5);
                     DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, shouldBrighten, item.ItemImage.Opacity, !shouldBrighten));
                     DataSaver.Save();
                     return true;
