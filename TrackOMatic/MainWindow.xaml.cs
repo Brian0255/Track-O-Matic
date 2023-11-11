@@ -190,7 +190,10 @@ namespace TrackOMatic
                         parent.Handle_RegionGrid(item, false);
                     }
                     item.ChangeOpacity(1.0);
-                    itemControl.CanLeftClick = false;
+                    var isSlam = itemToProcess.ToString().Contains("PROGRESSIVE_SLAM");
+                    //unlikely scenario can happen where a slam gets misplaced because of previous user input
+                    //as a result, always let slams be returnable to the bottom section
+                    itemControl.CanLeftClick = isSlam;
                     Regions[regionName].RegionGrid.Add_Item(item, false, shouldBrighten);
                     //should mean that there was no matching vial, item couldn't be placed as a result
                     if (item.Parent == ItemGrid) return false;
@@ -307,6 +310,7 @@ namespace TrackOMatic
 
         public void OnCollectibleTextChanged()
         {
+            /*
             if (ITEM_NAME_TO_REGION.Count == 0) return;
             var itemToHint = HitListHintManager.OnGBUpdate(GBs.Text);
             if (itemToHint == ItemName.NONE) return;
@@ -317,7 +321,7 @@ namespace TrackOMatic
             ItemHintText.Text = JSONKeyMappings.REGION_NAME_TO_SHORTENED[regionName];
             //not really an autotracked item but it's easier to just call this function with an extra parameter
             if(Settings.Default.Autotracking) ProcessNewAutotrackedItem(itemToHint, regionName, true);
-
+            */
         }
 
         public void Reset()
