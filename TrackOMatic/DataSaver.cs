@@ -89,8 +89,7 @@ namespace TrackOMatic
                 bool autoPlace = (savedItem.Autotracked || savedItem.Hinted);
                 Item matchingItem = FindMatchingItem(savedItem.ItemName);
                 matchingItem.SetStarVisibility(savedItem.Starred);
-                if (MainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(matchingItem))
-                    MainWindow.ITEM_TO_BACKGROUND_IMAGE[matchingItem].SetStarVisibility(savedItem.Starred);
+                matchingItem.ChangeOpacity(savedItem.Opacity);
                 if (savedItem.Autotracked) MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
                 if (savedItem.Region != RegionName.UNKNOWN && !savedItem.Hinted)
                 {
