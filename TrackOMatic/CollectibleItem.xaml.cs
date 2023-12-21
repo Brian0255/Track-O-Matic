@@ -79,8 +79,6 @@ namespace TrackOMatic
             Text = newAmount;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public CollectibleItem()
         {
             InitializeComponent();
@@ -102,6 +100,8 @@ namespace TrackOMatic
             if (e.RightButton == MouseButtonState.Pressed)
                 Text = Math.Max(Text - 1, 0);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {

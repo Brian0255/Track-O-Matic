@@ -23,7 +23,6 @@ namespace TrackOMatic
             get { return (Image)GetValue(BackgroundItemImageProperty); }
             set { SetValue(BackgroundItemImageProperty, value); }
         }
-        private bool pressed = false;
 
         public ItemBackground()
         {

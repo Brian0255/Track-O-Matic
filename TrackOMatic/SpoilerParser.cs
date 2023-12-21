@@ -328,7 +328,7 @@ namespace TrackOMatic
                 return false;
             }
             ParseRegions(JSONObject);
-            ReadItems(JSONObject);
+            //ReadItems(JSONObject);
             foreach (var entry in ImportantCheckList.ITEMS) entry.Value.InitPointValue();
             if (Properties.Settings.Default.HitList)
             {
