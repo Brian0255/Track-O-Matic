@@ -1,0 +1,27 @@
+﻿<ContentControl x:Class="TrackOMatic.SelectableHintItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrackOMatic"
+             mc:Ignorable="d" Background="Transparent"
+             MouseDown="SelectableHintItem_MouseDown"
+             MouseWheel="SelectableHintItem_MouseWheel"
+                Loaded="HintItem_OnLoaded">
+
+    <ContentControl.Content>
+        <Grid>
+            <Border BorderThickness="0" 
+                    UseLayoutRounding="True"
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                    SnapsToDevicePixels="True"
+                    RenderOptions.ClearTypeHint="Enabled">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+                </Border.Effect>
+                <ContentPresenter x:Name="Image" Content="{Binding HintItemImage}"/>
+            </Border>
+        </Grid>
+    </ContentControl.Content>
+
+</ContentControl>
