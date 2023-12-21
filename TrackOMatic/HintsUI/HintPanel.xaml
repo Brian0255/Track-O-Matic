@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="TrackOMatic.HintPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrackOMatic"
+             mc:Ignorable="d" 
+              Background="Transparent" 
+             d:DesignHeight="800" d:DesignWidth="200">
+    <Grid Background="Transparent">
+        <Border CornerRadius="3" BorderThickness=".5" BorderBrush="Black" Background="{StaticResource VeryDark}">
+            <Grid Background="Transparent" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="38"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="10,0,0,0" FontSize="24" Foreground="White" Grid.Row="0"  FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center"/>
+                <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="HintList" Margin="2,1,5,1">
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type local:HintInfo}">
+                                    <Setter Property="Margin" Value="0,5,0,0"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock Panel.ZIndex="-1" MouseDown="OnAddHint" Cursor="Hand" Margin="10,5,0,0" Padding="0,5,0,0" Text="+ Add new hint" Foreground="White" FontFamily="Roboto" FontSize="16" Height="30" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </Border>
+        <Border CornerRadius="2" BorderThickness="2">
+            <Border.BorderBrush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="{Binding LineColor}" Offset="0"/>
+                    <GradientStop Color="{Binding LineColor}" Offset="0.01"/>
+                    <GradientStop Color="Transparent" Offset="0.01"/>
+                    <GradientStop Color="Transparent" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+        </Border>
+    </Grid>
+</UserControl>
