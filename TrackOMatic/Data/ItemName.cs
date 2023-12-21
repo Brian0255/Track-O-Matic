@@ -2,7 +2,59 @@
 {
     public enum ItemName
     {
-        SNIPER_SCOPE = 0,
+        DONKEY_KROOL,
+        DIDDY_KROOL,
+        LANKY_KROOL,
+        TINY_KROOL,
+        CHUNKY_KROOL,
+
+        DONKEY,
+        DIDDY,
+        LANKY,
+        TINY,
+        CHUNKY,
+        KRUSHA,
+
+        KEY_1,
+        KEY_2,
+        KEY_3,
+        KEY_4,
+        KEY_5,
+        KEY_6,
+        KEY_7,
+        KEY_8,
+
+        COCONUT_GUN,
+        BONGO_BLAST,
+        GORILLA_GRAB,
+        STRONG_KONG,
+        BABOON_BLAST,
+
+        PEANUT_POPGUNS,
+        GUITAR_GAZUMP,
+        CHIMPY_CHARGE,
+        ROCKETBARREL_BOOST,
+        SIMIAN_SPRING,
+
+        GRAPE_SHOOTER,
+        TROMBONE_TREMOR,
+        ORANGSTAND,
+        ORANGSTAND_SPRINT,
+        BABOON_BALLOON,
+
+        FEATHER_BOW,
+        SAXOPHONE_SLAM,
+        PONYTAIL_TWIRL,
+        MINI_MONKEY,
+        MONKEYPORT,
+
+        PINEAPPLE_LAUNCHER,
+        TRIANGLE_TRAMPLE,
+        PRIMATE_PUNCH,
+        HUNKY_CHUNKY,
+        GORILLA_GONE,
+
+        SNIPER_SCOPE,
         HOMING_AMMO,
 
         PROGRESSIVE_SLAM_1,
@@ -16,52 +68,6 @@
         BARREL_THROWING,
         DIVING,
         ORANGE_THROWING,
-
-        COCONUT_GUN,
-        PEANUT_POPGUNS,
-        GRAPE_SHOOTER,
-        FEATHER_BOW,
-        PINEAPPLE_LAUNCHER,
-
-        BONGO_BLAST,
-        GUITAR_GAZUMP,
-        TROMBONE_TREMOR,
-        SAXOPHONE_SLAM,
-        TRIANGLE_TRAMPLE,
-
-        GORILLA_GRAB,
-        CHIMPY_CHARGE,
-        ORANGSTAND,
-        PONYTAIL_TWIRL,
-        PRIMATE_PUNCH,
-
-        STRONG_KONG,
-        ROCKETBARREL_BOOST,
-        ORANGSTAND_SPRINT,
-        MINI_MONKEY,
-        HUNKY_CHUNKY,
-
-        BABOON_BLAST,
-        SIMIAN_SPRING,
-        BABOON_BALLOON,
-        MONKEYPORT,
-        GORILLA_GONE,
-
-        KEY_1,
-        KEY_2,
-        KEY_3,
-        KEY_4,
-        KEY_5,
-        KEY_6,
-        KEY_7,
-        KEY_8,
-
-        DONKEY,
-        DIDDY,
-        LANKY,
-        TINY,
-        CHUNKY,
-        KRUSHA,
 
         BEAN,
 
