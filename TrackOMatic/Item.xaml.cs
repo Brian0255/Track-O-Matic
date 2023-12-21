@@ -13,13 +13,16 @@ namespace TrackOMatic
 {
     public partial class Item : ContentControl, INotifyPropertyChanged
     {
-        public static readonly DependencyProperty ItemImageProperty =
-        DependencyProperty.Register("ItemImage", typeof(Image), typeof(Item));
-
         public Region Region { get; set; }
-        public bool Interactable { get; set; } = true;
+        public bool Interactible { get; set; } = true;
 
         public bool CanLeftClick { get; set; } = true;
+        public bool AutoPlaced { get; set; } = false;
+        private ItemName ItemName { get; set; }
+        private ItemBrightnessChanger ItemBrightnessChanger { get; set; }
+
+        public static readonly DependencyProperty ItemImageProperty =
+        DependencyProperty.Register("ItemImage", typeof(Image), typeof(Item));
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
@@ -28,12 +31,19 @@ namespace TrackOMatic
             get { return (Image)GetValue(ItemImageProperty); }
             set { SetValue(ItemImageProperty, value); }
         }
+
         private bool pressed = false;
 
         public Item()
         {
-            InitializeComponent();
             DataContext = this;
+            InitializeComponent();
+        }
+
+        private void Item_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ItemName = (ItemName)Tag;
+            ItemBrightnessChanger = new ItemBrightnessChanger(ItemImage, ItemName);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -45,6 +55,9 @@ namespace TrackOMatic
         public void SetStarVisibility(Visibility newVisibility)
         {
             Star.Visibility = newVisibility;
+            MainWindow MainWindow = (MainWindow)Application.Current.MainWindow;
+            if (MainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
+                MainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
         }
 
         public void SetRegion(Region newRegion)
@@ -59,7 +72,7 @@ namespace TrackOMatic
 
         public void SetBackgroundImageVisibility(Visibility newVisibility)
         {
-            var mainWindow = (MainWindow) Application.Current.MainWindow;
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].Visibility = newVisibility;
         }
 
@@ -135,8 +148,8 @@ namespace TrackOMatic
         private void ResetImage()
         {
             ItemName itemName = (ItemName)Tag;
-                var resourceName = itemName.ToString().ToLower();
-                ItemImage = (Image)FindResource(resourceName);
+            var resourceName = itemName.ToString().ToLower();
+            ItemImage = (Image)FindResource(resourceName);
         }
 
         public void ChangeOpacity(double newOpacity)
@@ -147,25 +160,19 @@ namespace TrackOMatic
 
         public void Brighten()
         {
-            ItemName itemName = (ItemName)Tag;
-            var resourceName = itemName.ToString().ToLower();
-            var image = (Image)FindResource(resourceName);
-            ItemImage.Source = image.Source;
-            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = image.Source;
+            ItemBrightnessChanger.Brighten();
+            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
         }
 
         public void Darken()
         {
-            ItemName itemName = (ItemName)Tag;
-            var resourceName = itemName.ToString().ToLower() + "_bw";
-            var image = (Image)FindResource(resourceName);
-            ItemImage.Source = image.Source;
-            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = image.Source;
+            ItemBrightnessChanger.Darken();
+            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
         }
 
         public void Item_MouseMove(object sender, MouseEventArgs e)
         {
-            if (pressed && Interactable)
+            if (pressed && Interactible)
             {
                 ItemName itemName = (ItemName)Tag;
                 var resourceName = itemName.ToString().ToLower();
@@ -207,7 +214,7 @@ namespace TrackOMatic
         public void Item_MouseDown(object sender, MouseEventArgs e)
         {
             CheckMiddleClick(sender, e);
-            pressed = (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed && Interactable);
+            pressed = (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed && Interactible);
         }
 
         private void CheckMiddleClick(object sender, MouseEventArgs e)
@@ -235,8 +242,8 @@ namespace TrackOMatic
 
         public void HandleItemReturn()
         {
-            if(!Interactable) return;
-            //Image.Opacity = 1.0;
+            if (!Interactible) return;
+            Image.Opacity = 1.0;
             var itemGrid = MainWindow.Items;
             if (Parent != null)
             {
@@ -256,7 +263,7 @@ namespace TrackOMatic
 
         private void Item_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
-            if (!Interactable) return;
+            if (!Interactible) return;
             GetCursorPos(ref pointRef);
             Point relPos = PointFromScreen(pointRef.GetPoint(myAdornment.CenterOffset));
             myAdornment.Arrange(new Rect(relPos, myAdornment.DesiredSize));
