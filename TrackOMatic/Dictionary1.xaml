@@ -11,6 +11,7 @@
     <SolidColorBrush x:Key="GBColor" Color="#FFFF00"/>
     <SolidColorBrush x:Key="RequiredChecksColor" Color="#2cc956"/>
 
+    <SolidColorBrush x:Key="VeryDark" Color="#202224"/>
     <SolidColorBrush x:Key="BaseBG" Color="#282a2e"/>
     <SolidColorBrush x:Key="RegionImageBG" Color="#303136"/>
     <SolidColorBrush x:Key="RegionBG" Color="#3a3c42"/>
@@ -22,6 +23,9 @@
 
     <SolidColorBrush x:Key="HitListDone" Color="#8f4242"/>
     <SolidColorBrush x:Key="HitListAvailable" Color="#35549c"/>
+
+    <!-- question mark for unknown item-->
+    <Image x:Key="none" Source="Images\dk64\none.png" x:Shared="false" />
 
     <Image x:Key="locked_region" Source="Images\dk64\locked_region.png" x:Shared="false" />
     <Image x:Key="star_simple" Source="Images\dk64\star_simple.png" x:Shared="false" />
@@ -41,6 +45,12 @@
     <Image x:Key="crystal_caves" Source="Images\dk64\crystal_caves.png" x:Shared="false" />
     <Image x:Key="creepy_castle" Source="Images\dk64\creepy_castle.png" x:Shared="false" />
     <Image x:Key="hideout_helm" Source="Images\dk64\hideout_helm.png" x:Shared="false" />
+
+    <Image x:Key="donkey_krool" Source="Images\dk64\krool-donkey.png"  x:Shared="false"/>
+    <Image x:Key="diddy_krool" Source="Images\dk64\krool-diddy.png"  x:Shared="false"/>
+    <Image x:Key="lanky_krool" Source="Images\dk64\krool-lanky.png"  x:Shared="false" />
+    <Image x:Key="tiny_krool" Source="Images\dk64\krool-tiny.png"  x:Shared="false" />
+    <Image x:Key="chunky_krool" Source="Images\dk64\krool-chunky.png"  x:Shared="false" />
 
     <Image x:Key="donkey" Source="Images\dk64\donkey.png"  x:Shared="false"/>
     <Image x:Key="diddy" Source="Images\dk64\diddy.png"  x:Shared="false"/>
@@ -110,7 +120,13 @@
     <Image x:Key="potion_chunky" Source="Images\dk64\potion_chunky.png" x:Shared="false"/>
     <Image x:Key="potion_shared" Source="Images\dk64\potion_shared.png" x:Shared="false"/>
 
-    <!--Black&White (not used currently)-->
+    <!--Black&White-->
+    <Image x:Key="donkey_krool_bw" Source="Images\bw\krool-donkey.png"  x:Shared="false"/>
+    <Image x:Key="diddy_krool_bw" Source="Images\bw\krool-diddy.png"  x:Shared="false"/>
+    <Image x:Key="lanky_krool_bw" Source="Images\bw\krool-lanky.png"  x:Shared="false" />
+    <Image x:Key="tiny_krool_bw" Source="Images\bw\krool-tiny.png"  x:Shared="false" />
+    <Image x:Key="chunky_krool_bw" Source="Images\bw\krool-chunky.png"  x:Shared="false" />
+    
     <Image x:Key="donkey_bw" Source="Images\bw\donkey.png"  x:Shared="false"/>
     <Image x:Key="diddy_bw" Source="Images\bw\diddy.png"  x:Shared="false"/>
     <Image x:Key="lanky_bw" Source="Images\bw\lanky.png"  x:Shared="false" />
