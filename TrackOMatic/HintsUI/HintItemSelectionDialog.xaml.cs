@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace TrackOMatic
+{
+    /// <summary>
+    /// Interaction logic for HintItemSelectionDialog.xaml
+    /// </summary>
+    public partial class HintItemSelectionDialog : Window
+    {
+        public List<ItemName> SelectedItems { get; private set; } = new();
+        public HintItemSelectionDialog(List<ItemName> itemsToTurnOn)
+        {
+            InitializeComponent();
+            DataContext = this;
+            foreach (var child in ItemGrid.Children)
+            {
+                if (child is SelectableHintItem hintItem)
+                {
+                    ItemName itemName = (ItemName)hintItem.Tag;
+                    if (itemsToTurnOn.Contains(itemName))
+                    {
+                        hintItem.TurnOn();
+                    }
+                    else
+                    {
+                        hintItem.Reset();
+                    }
+                }
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            SelectedItems = new();
+            foreach(var child in ItemGrid.Children)
+            {
+                if(child is SelectableHintItem hintItem && hintItem.On)
+                {
+                    SelectedItems.Add((ItemName)hintItem.Tag);
+                }
+            }
+        }
+    }
+}
