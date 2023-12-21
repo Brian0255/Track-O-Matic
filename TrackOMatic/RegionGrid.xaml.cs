@@ -77,7 +77,7 @@ namespace TrackOMatic
               }
             };
             vialImage.SetRegion(Region);
-            vialImage.Interactable = false;
+            vialImage.Interactible = false;
             vialImage.MouseDown -= vialImage.Item_MouseDown;
             vialImage.MouseDown += vialImage.Item_Return;
             Vials[color].Add(vialImage);
@@ -107,7 +107,7 @@ namespace TrackOMatic
                 //1. autotracker wants to place a clear vial move (e.g. a slam)
                 //2. user already placed another clear vial move there (e.g. diving)
                 //3. as a result, we need to remove the user placed move first
-                if (!userPlacing && item.CanLeftClick && item.Tag != null)
+                if (!userPlacing && !item.AutoPlaced && item.Tag != null)
                 {
                     item.HandleItemReturn();
                     return true;
@@ -168,7 +168,7 @@ namespace TrackOMatic
         public void Handle_RegionGrid(Item button, bool add, bool userPlacing = true, bool brighten = true)
         {
             ImportantCheck check = null;
-            ItemName item = ItemName.NONE;
+            ItemName item;
             if(button.Tag != null)
             {
                 item = (ItemName)button.Tag;
@@ -217,6 +217,7 @@ namespace TrackOMatic
                 item.MouseDown -= item.Item_MouseDown;
                 item.MouseDown += item.Item_Return;
             }
+            item.AutoPlaced = !userPlacing;
         }
     }
 }
