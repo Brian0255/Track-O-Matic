@@ -173,7 +173,7 @@ namespace TrackOMatic
                 var checkInfo = ImportantCheckList.ITEMS[check.ItemName];
                 var bitMask = check.Bitmask;
                 var isSlam = check.ItemName.ToString().Contains("PROGRESSIVE_SLAM");
-                if (isSlam) bitMask = 3;
+                if (isSlam) bitMask = 0xF;
                 //slams are weird, we instead will use the slam's bitmask as a direct value to check
                 var output = ReadMemory(check.Offset, check.TotalBits, bitMask);
                 var valid = (output == check.Bitmask) || (checkInfo.ItemType == ItemType.GOLDEN_BANANA);
