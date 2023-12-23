@@ -321,6 +321,12 @@
         RAINBOW_COIN_15,
         RAINBOW_COIN_16,
 
+        POTION_SHARED,
+        POTION_DK,
+        POTION_DIDDY,
+        POTION_TINY,
+        POTION_LANKY,
+        POTION_CHUNKY,
 
         NONE
     }
