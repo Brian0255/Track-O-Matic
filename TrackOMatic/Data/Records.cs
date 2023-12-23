@@ -7,5 +7,5 @@ namespace TrackOMatic
     public record GameVerificationInfo(uint TargetAddress, int TotalBits, uint TargetValue);
     public record AttachedProcessInfo(Process Process, uint StartAddress);
     public record OffsetInfoEntry(ItemName ItemName, uint Offset, int TotalBits, int Bitmask = -1, int TargetValue = 0);
-    public record HintTypeSettings(Visibility PathItemsVisible, Visibility FoundItemVisible, HintSuggestion HintSuggestion);
+    public record HintTypeSettings(Visibility PathItemsVisible, Visibility FoundItemVisible, HintSuggestion HintSuggestion, bool PromptForFoundItem=false, Visibility PotionCountVisibility = Visibility.Collapsed);
 }
