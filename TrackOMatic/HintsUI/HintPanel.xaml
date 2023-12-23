@@ -23,18 +23,18 @@
                                     <Setter Property="Margin" Value="0,5,0,0"/>
                                 </Style>
                             </StackPanel.Resources>
-                            <TextBlock Panel.ZIndex="-1" MouseDown="OnAddHint" Cursor="Hand" Margin="10,5,0,0" Padding="0,5,0,0" Text="+ Add new hint" Foreground="White" FontFamily="Roboto" FontSize="16" Height="30" />
+                            <TextBlock Panel.ZIndex="-1" MouseDown="OnAddHint" Cursor="Hand" Margin="10,5,0,0" Padding="0,5,0,0" Text="+ Add new hint" Foreground="White" FontFamily="Helvetica" FontSize="16" Height="30" />
                         </StackPanel>
                     </ScrollViewer>
                 </Border>
             </Grid>
         </Border>
-        <Border CornerRadius="2" BorderThickness="2">
+        <Border CornerRadius="2" BorderThickness="3">
             <Border.BorderBrush>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
                     <GradientStop Color="{Binding LineColor}" Offset="0"/>
-                    <GradientStop Color="{Binding LineColor}" Offset="0.01"/>
-                    <GradientStop Color="Transparent" Offset="0.01"/>
+                    <GradientStop Color="{Binding LineColor}" Offset="0.007"/>
+                    <GradientStop Color="Transparent" Offset="0.008"/>
                     <GradientStop Color="Transparent" Offset="1"/>
                 </LinearGradientBrush>
             </Border.BorderBrush>
