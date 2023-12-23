@@ -42,16 +42,30 @@ namespace TrackOMatic
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void ProcessItems()
         {
             SelectedItems = new();
-            foreach(var child in ItemGrid.Children)
+            foreach (var child in ItemGrid.Children)
             {
-                if(child is SelectableHintItem hintItem && hintItem.On)
+                if (child is SelectableHintItem hintItem && hintItem.On)
                 {
                     SelectedItems.Add((ItemName)hintItem.Tag);
                 }
             }
+        }
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.LeftButton == MouseButtonState.Pressed)
+            {
+                ProcessItems();
+                Close();
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            ProcessItems();
         }
     }
 }
