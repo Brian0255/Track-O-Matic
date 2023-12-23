@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TrackOMatic
 {
@@ -32,20 +24,22 @@ namespace TrackOMatic
             get { return (HorizontalAlignment)GetValue(CustomHorizontalAlignmentProperty); }
             set { SetValue(CustomHorizontalAlignmentProperty, value); }
         }
+
+        public double[] SelectionDialogPosition { get; set; } = { 0, 0 };
         public HintItemList()
         {
             InitializeComponent();
             DataContext = this;
             ProcessSelectedItems(new());
+
         }
 
         public void OpenItemSelectionDialog()
         {
             var dialog = new HintItemSelectionDialog(sortedItemList);
 
-            var position = ItemPanel.PointToScreen(new Point(0, 0));
-            dialog.Left = position.X - 10;
-            dialog.Top = position.Y;
+            dialog.Left = SelectionDialogPosition[0];
+            dialog.Top = SelectionDialogPosition[1];
 
             dialog.ShowDialog();
             ProcessSelectedItems(dialog.SelectedItems);
@@ -60,8 +54,9 @@ namespace TrackOMatic
         {
             var resourceName = itemName.ToString().ToLower();
             var image = ((Image)FindResource(resourceName));
-            image.MouseDown += Image_MouseDown;
-            ItemPanel.Children.Add(image);
+            var newItem = new PathOrFoundItem(image);
+            newItem.MouseDown += Image_MouseDown;
+            ItemPanel.Children.Add(newItem);
         }
 
         public void ProcessSelectedItems(List<ItemName> itemSet)
