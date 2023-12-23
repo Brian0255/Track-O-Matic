@@ -13,7 +13,7 @@ namespace TrackOMatic
 {
     public class ItemBrightnessChanger 
     {
-        private Image ItemImage;
+        public Image ItemImage { get; }
         private ItemName ItemName;
         public ItemBrightnessChanger(Image itemImage, ItemName itemName)
         {
