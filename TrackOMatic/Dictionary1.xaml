@@ -113,14 +113,21 @@
     <Image x:Key="bean" Source="Images\dk64\bean.png"  x:Shared="false"/>
     <Image x:Key="pearl" Source="Images\dk64\pearl.png"  x:Shared="false"/>
 
-    <Image x:Key="potion_dk" Source="Images\dk64\potion_dk.png" x:Shared="false"/>
-    <Image x:Key="potion_diddy" Source="Images\dk64\potion_diddy.png" x:Shared="false"/>
-    <Image x:Key="potion_lanky" Source="Images\dk64\potion_lanky.png" x:Shared="false"/>
-    <Image x:Key="potion_tiny" Source="Images\dk64\potion_tiny.png" x:Shared="false"/>
-    <Image x:Key="potion_chunky" Source="Images\dk64\potion_chunky.png" x:Shared="false"/>
-    <Image x:Key="potion_shared" Source="Images\dk64\potion_shared.png" x:Shared="false"/>
+    <Image x:Key="potion_dk" Source="Images\dk64\yellow_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_diddy" Source="Images\dk64\red_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_lanky" Source="Images\dk64\blue_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_tiny" Source="Images\dk64\purple_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_chunky" Source="Images\dk64\green_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_shared" Source="Images\dk64\clear_vial.png" x:Shared="false"/>
 
     <!--Black&White-->
+    <Image x:Key="potion_dk_bw" Source="Images\bw\yellow_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_diddy_bw" Source="Images\bw\red_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_lanky_bw" Source="Images\bw\blue_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_tiny_bw" Source="Images\bw\purple_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_chunky_bw" Source="Images\bw\green_vial.png" x:Shared="false"/>
+    <Image x:Key="potion_shared_bw" Source="Images\bw\clear_vial.png" x:Shared="false"/>
+    
     <Image x:Key="donkey_krool_bw" Source="Images\bw\krool-donkey.png"  x:Shared="false"/>
     <Image x:Key="diddy_krool_bw" Source="Images\bw\krool-diddy.png"  x:Shared="false"/>
     <Image x:Key="lanky_krool_bw" Source="Images\bw\krool-lanky.png"  x:Shared="false" />
