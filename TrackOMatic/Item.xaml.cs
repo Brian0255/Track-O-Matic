@@ -29,7 +29,10 @@ namespace TrackOMatic
         public Image ItemImage
         {
             get { return (Image)GetValue(ItemImageProperty); }
-            set { SetValue(ItemImageProperty, value); }
+            set { 
+                SetValue(ItemImageProperty, value);
+                mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
+            }
         }
 
         private bool pressed = false;
@@ -161,13 +164,13 @@ namespace TrackOMatic
         public void Brighten()
         {
             ItemBrightnessChanger.Brighten();
-            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
+            ItemImage = ItemBrightnessChanger.ItemImage;
         }
 
         public void Darken()
         {
             ItemBrightnessChanger.Darken();
-            mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
+            ItemImage = ItemBrightnessChanger.ItemImage;
         }
 
         public void Item_MouseMove(object sender, MouseEventArgs e)
