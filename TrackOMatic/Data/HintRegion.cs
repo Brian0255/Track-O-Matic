@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System;
 using System.Globalization;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace TrackOMatic
 {
@@ -79,10 +81,9 @@ namespace TrackOMatic
         JETPAC
     }
 
-    public static class HintRegionData
+    public static class HintData
     {
-        //for hint regions that are a bit weird to automatically format nicely
-        public static readonly Dictionary<HintRegion, string> HINT_REGION_TO_STRING = new()
+        public static Dictionary<HintRegion, string> HINT_REGION_TO_STRING = new()
         {
             {HintRegion.JAPES_TO_FOREST_LOBBIES, "Japes-Forest Lobbies" },
             {HintRegion.CAVES_TO_HELM_LOBBIES, "Caves-Helm Lobbies"},
@@ -92,15 +93,17 @@ namespace TrackOMatic
             {HintRegion.TROFF_N_SCOFF, "Troff N' Scoff" }
         };
         private static List<string> sortedRegions;
+        private static Dictionary<string, Dictionary<string, string>> userShortcuts;
+        private static List<string> sortedMoves;
         public static List<string> SortedRegions
         {
             get
             {
-                if(sortedRegions == null)
+                if (sortedRegions == null)
                 {
                     sortedRegions = new();
                     var regions = (HintRegion[])Enum.GetValues(typeof(HintRegion));
-                    foreach(var hintRegion in regions)
+                    foreach (var hintRegion in regions)
                     {
                         var hintRegionString = hintRegion.ToString();
                         if (HINT_REGION_TO_STRING.ContainsKey(hintRegion))
@@ -109,14 +112,68 @@ namespace TrackOMatic
                             continue;
                         }
                         var textinfo = new CultureInfo("en-US", false).TextInfo;
+                        hintRegionString = hintRegionString.Replace("_AND_", "_&_");
                         hintRegionString = hintRegionString.Replace("_", " ");
-                        hintRegionString = hintRegionString.Replace("AND", "&");
                         hintRegionString = textinfo.ToTitleCase(hintRegionString.ToLower());
+                        HINT_REGION_TO_STRING[hintRegion] = hintRegionString;
                         sortedRegions.Add(hintRegionString);
                     }
                     sortedRegions.Sort();
                 }
                 return sortedRegions;
+            }
+        }
+
+        public static List<string> SortedMoves
+        {
+            get
+            {
+                if (sortedMoves == null)
+                {
+                    sortedMoves = new();
+                    var acceptedItemTypes = new List<ItemType>
+                    {
+                        ItemType.SHARED_MOVE,
+                        ItemType.TRAINING_MOVE,
+                        ItemType.GUN,
+                        ItemType.INSTRUMENT,
+                        ItemType.PHYSICAL_MOVE,
+                        ItemType.BARREL_MOVE,
+                        ItemType.PAD_MOVE
+                    };
+                    foreach (var entry in ImportantCheckList.ITEMS)
+                    {
+                        var info = entry.Value;
+                        if (acceptedItemTypes.Contains(info.ItemType))
+                        {
+                            var moveString = info.ItemName.ToString();
+                            var textinfo = new CultureInfo("en-US", false).TextInfo;
+                            if (moveString.Contains("PROGRESSIVE_SLAM")) moveString = "PROGRESSIVE_SLAM";
+                            moveString = moveString.Replace("_", " ");
+                            moveString = textinfo.ToTitleCase(moveString.ToLower());
+                            if (!sortedMoves.Contains(moveString))
+                            {
+                                sortedMoves.Add(moveString);
+                            }
+                        }
+                    }
+                    sortedMoves.Sort();
+                }
+                return sortedMoves;
+            }
+        }
+
+        public static Dictionary<string, Dictionary<string, string>> UserShortcuts
+        {
+            get
+            {
+                if (userShortcuts == null)
+                {
+                    using StreamReader reader = new("shortcuts.json");
+                    string json = reader.ReadToEnd();
+                    userShortcuts = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
+                }
+                return userShortcuts;
             }
         }
     }
