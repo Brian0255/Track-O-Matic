@@ -6,11 +6,13 @@ namespace TrackOMatic
     {
         public string SpoilerLogName { get; }
         public Dictionary<ItemName, SavedItem> SavedItems { get; }
+        public List<SavedHint> SavedHints { get; }
 
         public SavedProgress(string spoilerLogName)
         {
             SpoilerLogName = spoilerLogName;
             SavedItems = new();
+            SavedHints = new();
         }
     }
 }
