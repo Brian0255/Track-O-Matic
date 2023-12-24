@@ -94,5 +94,17 @@ namespace TrackOMatic.Properties {
                 this["HitList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HintDisplay {
+            get {
+                return ((bool)(this["HintDisplay"]));
+            }
+            set {
+                this["HintDisplay"] = value;
+            }
+        }
     }
 }
