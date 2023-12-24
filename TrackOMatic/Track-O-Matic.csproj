@@ -91,7 +91,24 @@
     <Compile Include="AutoTracking\EmulatorName.cs" />
     <Compile Include="AutoTracking\Memory.cs" />
     <Compile Include="AutoTracking\AutotrackedCheck.cs" />
-    <Compile Include="AutoTracking\Records.cs" />
+    <Compile Include="Data\HintRegion.cs" />
+    <Compile Include="Data\HintTypeSettingsList.cs" />
+    <Compile Include="Data\Records.cs" />
+    <Compile Include="Data\HintSuggestion.cs" />
+    <Compile Include="Data\HintType.cs" />
+    <Compile Include="Data\SavedHint.cs" />
+    <Compile Include="HintsUI\HintInfo.xaml.cs">
+      <DependentUpon>HintInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HintsUI\HintItemList.xaml.cs">
+      <DependentUpon>HintItemList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HintsUI\HintItemSelectionDialog.xaml.cs">
+      <DependentUpon>HintItemSelectionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HintsUI\PathOrFoundItem.xaml.cs">
+      <DependentUpon>PathOrFoundItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HitListHintManager.cs" />
     <Compile Include="Data\Extensions.cs" />
     <Compile Include="Data\SpoilerSettings.cs" />
@@ -99,6 +116,11 @@
     <Compile Include="Data\SavedItem.cs" />
     <Compile Include="Data\HitListGoal.cs" />
     <Compile Include="Data\VialColor.cs" />
+    <Compile Include="HintsUI\SelectableHintItem.xaml.cs">
+      <DependentUpon>SelectableHintItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ItemBrightnessChanger.cs" />
+    <Compile Include="Item.xaml.cs" />
     <Compile Include="ItemBackground.xaml.cs">
       <DependentUpon>ItemBackground.xaml</DependentUpon>
     </Compile>
@@ -128,14 +150,38 @@
       <DependentUpon>CollectibleItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpoilerParser.cs" />
-    <Compile Include="Item.xaml.cs">
-      <DependentUpon>Item.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Toggles.cs" />
     <Compile Include="RegionGrid.xaml.cs">
       <DependentUpon>RegionGrid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HintsUI\HintPanel.xaml.cs">
+      <DependentUpon>HintPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WatermarkTextBox.cs" />
+    <Page Include="HintsUI\HintInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HintsUI\HintItemList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HintsUI\HintItemSelectionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HintsUI\PathOrFoundItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Item.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="HintsUI\SelectableHintItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ItemBackground.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -176,11 +222,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Item.xaml">
+    <Page Include="RegionGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RegionGrid.xaml">
+    <Page Include="HintsUI\HintPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -227,11 +273,18 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <PackageReference Include="AutoCompleteTextBox">
+      <Version>1.7.2</Version>
+    </PackageReference>
     <PackageReference Include="Costura.Fody">
       <Version>5.1.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="DotNetKit.Wpf.AutoCompleteComboBox">
+      <Version>1.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.1" />
     <PackageReference Include="Fody">
       <Version>6.1.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -248,6 +301,9 @@
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="WPFTextBoxAutoComplete">
+      <Version>1.0.5</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -554,9 +610,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\krool-diddy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\dk64\krool-dk.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\krool-lanky.png" />
@@ -916,7 +969,6 @@
     <Resource Include="Images\bw\k8.png" />
     <Resource Include="Images\bw\krool-chunky.png" />
     <Resource Include="Images\bw\krool-diddy.png" />
-    <Resource Include="Images\bw\krool-dk.png" />
     <Resource Include="Images\bw\krool-lanky.png" />
     <Resource Include="Images\bw\krool-tiny.png" />
     <Resource Include="Images\bw\krool.png" />
@@ -1052,6 +1104,23 @@
     <Resource Include="Images\bw\unknown_kong.png" />
     <Resource Include="Images\bw\x.png" />
     <Resource Include="Images\bw\yellow_vial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\none.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\donkey_krool.png" />
+    <Resource Include="Images\bw\none.png" />
+    <Resource Include="Images\bw\red_blue_shadow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\krool-donkey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\dk - Copy.png" />
+    <Resource Include="Images\dk64\dk_pad.png" />
+    <Resource Include="Images\dk64\krool-donkey.png" />
+    <Resource Include="Images\dk64\red_blue_shadow.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>

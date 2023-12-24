@@ -43,13 +43,14 @@
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True"  IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
+                <MenuItem Name="HintDisplay" Header="HintDisplay" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Click="HintDisplayToggle"/>
             </MenuItem>
             <MenuItem Header="Version 1.1.4" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="2.25*"/>
+                <ColumnDefinition x:Name="HintsColumn" Width="2.25*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -712,6 +713,19 @@
                 </Grid>
             </Grid>
             <Grid Grid.Column="1">
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="false">
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>

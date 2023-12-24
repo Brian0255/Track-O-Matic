@@ -25,6 +25,13 @@ namespace TrackOMatic
             Settings.Default.Save();
         }
 
+        private void HintDisplayToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.HintDisplay = HintDisplay.IsChecked;
+            ResetWidthHeight();
+            Settings.Default.Save();
+        }
+
         private void AutotrackToggle(object sender, RoutedEventArgs e)
         {
             Settings.Default.Autotracking = AutotrackOption.IsChecked;
