@@ -227,7 +227,7 @@ namespace TrackOMatic
 
         private void UpdateCollectibles()
         {
-            foreach (var entry in CollectibleItemAmounts)
+            foreach (var entry in CollectibleItemAmounts.ToList())
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
