@@ -5,7 +5,7 @@
         PATH,
         WAY_OF_THE_HOARD,
         FOOLISH_REGION,
-        PATHLESS_ITEM,
+        PATHLESS_MOVE,
         REGION_POTION_COUNT,
         UNHINTED,
         MISC,
