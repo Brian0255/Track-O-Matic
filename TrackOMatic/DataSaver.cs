@@ -61,7 +61,6 @@ namespace TrackOMatic
 
         public void Save()
         {
-            Console.WriteLine("SAVING");
             if (savedProgress == null) return;
             FindSavedHints();
             var JSONString = JsonConvert.SerializeObject(savedProgress);
