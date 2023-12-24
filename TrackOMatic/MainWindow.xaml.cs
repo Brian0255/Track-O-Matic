@@ -45,8 +45,9 @@ namespace TrackOMatic
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
         public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
-        public List<System.Windows.Controls.Image> KroolKongs { get; private set; }
-        public List<System.Windows.Controls.Image> HelmKongs { get; private set; }
+        public List<Image> KroolKongs { get; private set; }
+        public List<Image> HelmKongs { get; private set; }
+        public List<HintPanel> HintPanels { get; private set; }
 
         public List<Item> DraggableItems { get; private set; } = new();
         public List<HitListItem> HitListItems { get; private set; }
@@ -135,6 +136,7 @@ namespace TrackOMatic
                     }
                 }
             }
+            HintPanels = new() { PathsPanel, KongsPanel, WotHPanel, UnhintedPanel, FoolishPanel, PathlessPanel, PotionCountsPanel };
             Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting);
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
@@ -165,7 +167,8 @@ namespace TrackOMatic
 
         private void OnTimerSave(object sender, ElapsedEventArgs e)
         {
-            DataSaver.Save();
+            //probably don't need this
+            //DataSaver.Save();
         }
 
         public void UpdateCollectible(ItemType collectibleType, int newTotal)
@@ -234,8 +237,10 @@ namespace TrackOMatic
 
         private void ResetWidthHeight()
         {
-            Width = 570;
-            Height = (Properties.Settings.Default.HitList) ? 980 : 820;
+            Width = (Settings.Default.HintDisplay) ? 1800 : 580;
+            Height = (Settings.Default.HitList) ? 980 : 820;
+            double newColumnWidth = (Settings.Default.HintDisplay) ? 2.15 : 0;
+            HintsColumn.Width = new GridLength(newColumnWidth, GridUnitType.Star);
         }
 
         private void ResetSize(object sender, RoutedEventArgs e)
@@ -338,6 +343,7 @@ namespace TrackOMatic
             {
                 item.CanLeftClick = true;
                 item.SetStarVisibility(Visibility.Hidden);
+                item.ChangeOpacity(1.0);
             }
             foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
