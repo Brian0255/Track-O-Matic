@@ -10,6 +10,7 @@ namespace TrackOMatic
     public partial class HintItemList : UserControl
     {
         private List<ItemName> sortedItemList = new();
+        public List<ItemName> SelectedItems { get; set; } = new();
 
         public static readonly DependencyProperty CustomHorizontalAlignmentProperty =
             DependencyProperty.Register(
@@ -26,11 +27,12 @@ namespace TrackOMatic
         }
 
         public double[] SelectionDialogPosition { get; set; } = { 0, 0 };
+        public HintInfo HintInfo { get; set; }
         public HintItemList()
         {
             InitializeComponent();
             DataContext = this;
-            ProcessSelectedItems(new());
+            ProcessSelectedItems();
 
         }
 
@@ -42,7 +44,9 @@ namespace TrackOMatic
             dialog.Top = SelectionDialogPosition[1];
 
             dialog.ShowDialog();
-            ProcessSelectedItems(dialog.SelectedItems);
+            SelectedItems = dialog.SelectedItems;
+            ProcessSelectedItems();
+            if (HintInfo != null) HintInfo.UpdateSelectedItems();
         }
 
         public void Image_MouseDown(object sender, MouseEventArgs e)
@@ -59,12 +63,12 @@ namespace TrackOMatic
             ItemPanel.Children.Add(newItem);
         }
 
-        public void ProcessSelectedItems(List<ItemName> itemSet)
+        public void ProcessSelectedItems()
         {
             ItemPanel.Children.Clear();
             ItemPanel.BeginInit();
             sortedItemList = new();
-            foreach (var itemName in itemSet)
+            foreach (var itemName in SelectedItems)
             {
                 int index = (-1 * sortedItemList.BinarySearch(itemName)) - 1;
                 sortedItemList.Insert(index, itemName);

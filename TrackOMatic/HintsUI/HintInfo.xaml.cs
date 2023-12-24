@@ -21,6 +21,7 @@ namespace TrackOMatic
     public partial class HintInfo : UserControl, INotifyPropertyChanged
     {
         private bool UserInitialized = false;
+        private MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
         public HintTypeSettings HintTypeSettings
@@ -30,8 +31,9 @@ namespace TrackOMatic
         }
 
         public HintType HintType { get; private set; }
+        public bool DoSuggestions { get; set; } = true;
 
-        private ObservableCollection<string> suggestions;
+        public SavedHint SavedHint { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -39,15 +41,25 @@ namespace TrackOMatic
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public HintInfo(HintType hintType)
+        public HintInfo(HintType hintType, string panelName, bool isSavedHint = false)
         {
             InitializeComponent();
             DataContext = this;
-            Location.Loaded += (sender, e) => Location.Focus();
+            if (!isSavedHint) Location.Loaded += (sender, e) => Location.Focus();
             HintTypeSettings = HintTypeSettingsList.SETTINGS[hintType];
             OnPropertyChanged(nameof(HintTypeSettings));
             SuggestionBox.ItemsSource = new List<string>(HintData.SortedRegions);
             HintType = hintType;
+            SavedHint = new SavedHint(panelName, Location.Text, PotionCount.Text, new(), new());
+            ItemsOnPath.HintInfo = this;
+            RightItems.HintInfo = this;
+        }
+
+        public void UpdateSelectedItems()
+        {
+            SavedHint.PathItems = ItemsOnPath.SelectedItems;
+            SavedHint.FoundItems = RightItems.SelectedItems;
+            mainWindow.DataSaver.Save();
         }
 
         private void Location_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -60,6 +72,7 @@ namespace TrackOMatic
                 }
                 ProcessSelection();
                 Keyboard.ClearFocus();
+                mainWindow.DataSaver.Save();
                 if (HintType == HintType.REGION_POTION_COUNT)
                 {
                     PotionCount.Focus();
@@ -97,7 +110,12 @@ namespace TrackOMatic
         private void SetUpSuggestions()
         {
             var matches = new List<string>();
-            if(HintTypeSettings.HintSuggestion == HintSuggestion.LOCATION) 
+            if (HintTypeSettings.HintSuggestion == HintSuggestion.NONE)
+            {
+                SuggestionBox.ItemsSource = null;
+                return;
+            }
+            if (HintTypeSettings.HintSuggestion == HintSuggestion.LOCATION)
             {
                 CheckForShortcuts(matches);
             }
@@ -115,9 +133,10 @@ namespace TrackOMatic
 
         private void Location_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Location.Text == "") return;
+            if (Location.Text == "" || !DoSuggestions) return;
             SetUpSuggestions();
             BottomRow.IsOpen = (SuggestionBox.Items.Count > 0) && HintTypeSettings.HintSuggestion != HintSuggestion.NONE;
+            SavedHint.LocationText = Location.Text;
         }
 
         private void ProcessSelection()
@@ -146,6 +165,7 @@ namespace TrackOMatic
             if (e.Key == Key.Enter && SuggestionBox.SelectedItem != null)
             {
                 ProcessSelection();
+                mainWindow.DataSaver.Save();
             }
         }
 
@@ -154,23 +174,57 @@ namespace TrackOMatic
             if (SuggestionBox.SelectedItem != null)
             {
                 ProcessSelection();
+                mainWindow.DataSaver.Save();
             }
         }
 
         private void HintInfoWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
-            double[] selectionDialogPosition = { position.X - 10, position.Y };
-            ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
-            RightItems.SelectionDialogPosition = selectionDialogPosition;
-        }
+            if (ItemsOnPath != null && RightItems != null)
+            {
+                // Execute the code only when the visual tree is fully loaded
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
 
+                    var position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
+                    double[] selectionDialogPosition = { position.X - 10, position.Y };
+                    ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
+                    RightItems.SelectionDialogPosition = selectionDialogPosition;
+                }
+                ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
+            }
+        }
         private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 Keyboard.ClearFocus();
+                SavedHint.PotionCountText = PotionCount.Text;
             }
+        }
+        public void SetUpFromSavedHint(SavedHint savedHint)
+        {
+            DoSuggestions = false;
+            SavedHint = savedHint;
+            Location.Text = savedHint.LocationText;
+            PotionCount.Text = savedHint.PotionCountText;
+            ItemsOnPath.SelectedItems = savedHint.PathItems;
+            ItemsOnPath.ProcessSelectedItems();
+            RightItems.SelectedItems = savedHint.FoundItems;
+            RightItems.ProcessSelectedItems();
+            UserInitialized = true;
+            DoSuggestions = true;
+        }
+
+        private void Location_PreviewMouseRightButtonDown(object sender, MouseEventArgs e)
+        {
+            var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right)
+            {
+                RoutedEvent = MouseDownEvent,
+                Source = this
+            };
+            this.RaiseEvent(args);
+            e.Handled = true;
         }
     }
 }

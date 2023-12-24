@@ -54,12 +54,34 @@ namespace TrackOMatic
             }
         }
 
-        public void OnAddHint(object sender, MouseEventArgs e)
+        private HintInfo CreateNewHint(bool isSavedHint = false)
         {
-            var newHint = new HintInfo(HintType);
+            var newHint = new HintInfo(HintType, Name, isSavedHint);
             var insertionPoint = HintList.Children.Count - 1;
             HintList.Children.Insert(insertionPoint, newHint);
             newHint.MouseDown += RemoveHint;
+            return newHint;
+        }
+
+        public void OnAddHint(object sender, MouseEventArgs e)
+        {
+            CreateNewHint();
+        }
+
+        public void AddSavedHint(SavedHint savedHint)
+        {
+            var newHint = CreateNewHint(true);
+            newHint.SetUpFromSavedHint(savedHint);
+        }
+
+        public List<SavedHint> GetSavedHints()
+        {
+            List<SavedHint> hints = new();
+            foreach (var hint in HintList.Children)
+            {
+                if (hint is HintInfo hintInfo) hints.Add(hintInfo.SavedHint);
+            }
+            return hints;
         }
     }
 }
