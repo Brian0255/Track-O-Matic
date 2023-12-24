@@ -47,9 +47,23 @@ namespace TrackOMatic
             }
         }
 
+        private void FindSavedHints()
+        {
+            savedProgress.SavedHints.Clear();
+            foreach(var hintPanel in MainWindow.HintPanels)
+            {
+                foreach(var hint in hintPanel.GetSavedHints())
+                {
+                    savedProgress.SavedHints.Add(hint);
+                }
+            }
+        }
+
         public void Save()
         {
+            Console.WriteLine("SAVING");
             if (savedProgress == null) return;
+            FindSavedHints();
             var JSONString = JsonConvert.SerializeObject(savedProgress);
             var tempPath = "autosave_temp.json";
             var filePath = "autosave.json";
@@ -101,6 +115,11 @@ namespace TrackOMatic
                 }
                 matchingItem.Image.Opacity = savedItem.Opacity;
                 matchingItem.CanLeftClick = !autoPlace;
+            }
+            foreach (var savedHint in savedProgress.SavedHints)
+            {
+                var hintPanel = (HintPanel)MainWindow.FindName(savedHint.HintPanelKey);
+                hintPanel.AddSavedHint(savedHint);
             }
         }
 
