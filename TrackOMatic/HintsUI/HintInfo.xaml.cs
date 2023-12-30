@@ -98,7 +98,7 @@ namespace TrackOMatic
             {
                 var shortcut = entry.Key;
                 var matchingEnumString = entry.Value;
-                if (shortcut.Contains(Location.Text))
+                if (shortcut.Contains(Location.Text.ToLower()))
                 {
                     Enum.TryParse(matchingEnumString, out HintRegion region);
                     var hintRegion = HintData.HINT_REGION_TO_STRING[region];
