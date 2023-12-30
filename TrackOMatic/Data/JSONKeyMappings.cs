@@ -69,6 +69,7 @@ namespace TrackOMatic
 
         public static readonly Dictionary<string, RegionName> REGION_MAP = new()
         {
+            {"Cranky's Lab", RegionName.DK_ISLES },
             {"Training", RegionName.DK_ISLES },
             {"DK Isles", RegionName.DK_ISLES},
             {"Jungle Japes", RegionName.JUNGLE_JAPES},
