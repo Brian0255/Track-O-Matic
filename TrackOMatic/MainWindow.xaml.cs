@@ -345,6 +345,10 @@ namespace TrackOMatic
                 item.SetStarVisibility(Visibility.Hidden);
                 item.ChangeOpacity(1.0);
             }
+            foreach(var hintPanel in HintPanels)
+            {
+                hintPanel.Reset();
+            }
             foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
 

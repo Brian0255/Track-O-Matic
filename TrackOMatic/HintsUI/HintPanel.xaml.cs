@@ -45,6 +45,14 @@ namespace TrackOMatic
             DataContext = this;
         }
 
+        public void Reset()
+        {
+            foreach (var child in HintList.Children.OfType<HintInfo>().ToList()) 
+            {
+                HintList.Children.Remove(child);
+            }
+        }
+
         private void RemoveHint(object sender, MouseEventArgs e)
         {
             if (e.RightButton == MouseButtonState.Pressed)
