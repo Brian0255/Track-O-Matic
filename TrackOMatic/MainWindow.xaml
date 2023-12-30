@@ -45,7 +45,7 @@
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
                 <MenuItem Name="HintDisplay" Header="HintDisplay" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Click="HintDisplayToggle"/>
             </MenuItem>
-            <MenuItem Header="Version 1.1.4" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 1.2.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
