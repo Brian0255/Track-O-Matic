@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -22,6 +23,13 @@ namespace TrackOMatic
     {
         private bool UserInitialized = false;
         private MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+        private Dictionary<HintSuggestion, HintShortcutInfo> suggestionToShortcutInfo = new()
+        {
+            {HintSuggestion.LOCATION, new HintShortcutInfo("Hint Regions", HintData.SortedRegions) },
+            {HintSuggestion.CHECK, new HintShortcutInfo("Item Locations", HintData.SortedChecks) },
+            {HintSuggestion.MOVE, new HintShortcutInfo("Moves", HintData.SortedMoves) }
+        };
+        private HintShortcutInfo hintShortcutInfo;
 
         public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
         public HintTypeSettings HintTypeSettings
@@ -53,6 +61,7 @@ namespace TrackOMatic
             SavedHint = new SavedHint(panelName, Location.Text, PotionCount.Text, new(), new());
             ItemsOnPath.HintInfo = this;
             RightItems.HintInfo = this;
+            hintShortcutInfo = suggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
         }
 
         public void UpdateSelectedItems()
@@ -94,15 +103,12 @@ namespace TrackOMatic
 
         private void CheckForShortcuts(List<string> matches)
         {
-            foreach (var entry in HintData.UserShortcuts["Hint Regions"])
+            foreach (var entry in HintData.UserShortcuts[hintShortcutInfo.JSONShortcutsKey])
             {
                 var shortcut = entry.Key;
-                var matchingEnumString = entry.Value;
                 if (shortcut.Contains(Location.Text.ToLower()))
                 {
-                    Enum.TryParse(matchingEnumString, out HintRegion region);
-                    var hintRegion = HintData.HINT_REGION_TO_STRING[region];
-                    matches.Add(hintRegion);
+                    matches.Add(entry.Value);
                 }
             }
         }
@@ -115,10 +121,7 @@ namespace TrackOMatic
                 SuggestionBox.ItemsSource = null;
                 return;
             }
-            if (HintTypeSettings.HintSuggestion == HintSuggestion.LOCATION)
-            {
-                CheckForShortcuts(matches);
-            }
+            CheckForShortcuts(matches);
             if (matches.Count > 0)
             {
                 matches.Sort();
@@ -126,17 +129,45 @@ namespace TrackOMatic
             }
             else
             {
-                List<string> sortBy = (HintTypeSettings.HintSuggestion == HintSuggestion.LOCATION) ? HintData.SortedRegions : HintData.SortedMoves;
+                List<string> sortBy = hintShortcutInfo.DefaultSortedList;
                 SuggestionBox.ItemsSource = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
             }
         }
 
         private void Location_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Location.Text == "" || !DoSuggestions) return;
+            if (!DoSuggestions) return;
             SetUpSuggestions();
-            BottomRow.IsOpen = (SuggestionBox.Items.Count > 0) && HintTypeSettings.HintSuggestion != HintSuggestion.NONE;
+            BottomRow.IsOpen = Location.Text != "" && (SuggestionBox.Items.Count > 0) && HintTypeSettings.HintSuggestion != HintSuggestion.NONE;
             SavedHint.LocationText = Location.Text;
+        }
+
+        private bool TryProcessKongHint()
+        {
+            var hintWordList = Location.Text.Split(' ');
+            if (hintWordList.Length != 3) return false;
+            if (HintData.UserShortcuts["Kong Hint Shorthand"] == null) return false;
+            var shorthands = HintData.UserShortcuts["Kong Hint Shorthand"];
+            for (int i = 0; i < hintWordList.Length; ++i)
+            {
+                hintWordList[i] = hintWordList[i].ToLower();
+                if (!shorthands.ContainsKey(hintWordList[i])) return false;
+            }
+            var foundKongString = shorthands[hintWordList[1]];
+            if(!Enum.TryParse(foundKongString, out ItemName kongThatIsFound)) return false;
+            var textInfo = new CultureInfo("en-US", false).TextInfo;
+            var region = shorthands[hintWordList[2]];
+            var thingThatFinds = shorthands[hintWordList[0]];
+            thingThatFinds = textInfo.ToTitleCase(thingThatFinds.ToLower());
+            var newText = thingThatFinds + " in " + region;
+            if(thingThatFinds == "Boss")
+            {
+                newText = region + " Boss Defeated";
+            }
+            RightItems.SelectedItems = new() { kongThatIsFound };
+            RightItems.ProcessSelectedItems();
+            Location.Text = newText;
+            return true;
         }
 
         private void ProcessSelection()
@@ -151,6 +182,10 @@ namespace TrackOMatic
             {
                 ItemsOnPath.OpenItemSelectionDialog();
                 UserInitialized = true;
+            }
+            if (HintType == HintType.KONGS)
+            {
+                UserInitialized = TryProcessKongHint();
             }
             if (HintTypeSettings.PromptForFoundItem && !UserInitialized)
             {
