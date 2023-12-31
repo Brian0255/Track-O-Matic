@@ -61,7 +61,10 @@ namespace TrackOMatic
             SavedHint = new SavedHint(panelName, Location.Text, PotionCount.Text, new(), new());
             ItemsOnPath.HintInfo = this;
             RightItems.HintInfo = this;
-            hintShortcutInfo = suggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
+            if (suggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
+            {
+                hintShortcutInfo = suggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
+            }
         }
 
         public void UpdateSelectedItems()
