@@ -191,10 +191,17 @@ namespace TrackOMatic
             UpdatePoints();
             UpdateRequiredChecksTotal();
         }
-
+        
         public void SetLevelOrderNumber(int number)
         {
+            if (LevelOrderNumber == null) return;
             LevelOrderNumber.SetNumber(number);
+        }
+
+        public void SetAsEmptySpoiler()
+        {
+            if(BottomLabel != null) BottomLabel.Visibility = Visibility.Collapsed;
+            if(TopLabel != null) TopLabel.Visibility = Visibility.Collapsed;
         }
     }
 }

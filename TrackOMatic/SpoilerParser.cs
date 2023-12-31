@@ -219,18 +219,18 @@ namespace TrackOMatic
                 if (i < info.helm_order.Count)
                 {
                     var imageName = JSONKeyMappings.KONGS[info.helm_order[i]].ToString().ToLower();
-                    MainWindow.HelmKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
+                    MainWindow.HelmKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
+                    MainWindow.HelmKongs[i].Enabled = false;
                 }
-                else MainWindow.HelmKongs[i].Source = null;
             }
             for (int i = 0; i < MainWindow.KroolKongs.Count; ++i)
             {
                 if (i < info.krool_order.Count)
                 {
                     var imageName = JSONKeyMappings.KONGS[info.krool_order[i]].ToString().ToLower();
-                    MainWindow.KroolKongs[i].Source = new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative));
+                    MainWindow.KroolKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
+                    MainWindow.KroolKongs[i].Enabled = false;
                 }
-                else MainWindow.KroolKongs[i].Source = null;
             }
         }
 
@@ -322,12 +322,14 @@ namespace TrackOMatic
             string json = reader.ReadToEnd();
 
             dynamic JSONObject = JsonConvert.DeserializeObject(json);
-            if (JSONObject["Spoiler Hints Data"] == null)
+            if (JSONObject["Spoiler Hints Data"] != null)
             {
-                MessageBox.Show("Missing data detected in spoiler log. Please make sure you have a spoiler hints option selected in the \"Quality of Life\" tab of the web generator.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
+                ParseRegions(JSONObject);
             }
-            ParseRegions(JSONObject);
+            else
+            {
+                MainWindow.InitRegionsFromEmptySpoiler();
+            }
             //ReadItems(JSONObject);
             foreach (var entry in ImportantCheckList.ITEMS) entry.Value.InitPointValue();
             if (Properties.Settings.Default.HitList)
