@@ -91,6 +91,7 @@
     <Compile Include="AutoTracking\EmulatorName.cs" />
     <Compile Include="AutoTracking\Memory.cs" />
     <Compile Include="AutoTracking\AutotrackedCheck.cs" />
+    <Compile Include="Data\HintData.cs" />
     <Compile Include="Data\HintRegion.cs" />
     <Compile Include="Data\HintTypeSettingsList.cs" />
     <Compile Include="Data\Records.cs" />

@@ -46,7 +46,7 @@
                 <local:HintItemList x:Name="RightItems" Grid.Column="1" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible}"/>
             </Grid>
             <local:HintItemList Loaded="HintInfoWindow_Loaded" x:Name="ItemsOnPath" Grid.Row="1" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}"/>
-            <Popup Grid.Row="1" x:Name="BottomRow" Height="120" Width="200" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}">
+            <Popup Grid.Row="1" x:Name="BottomRow" Height="120" Width="250" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}">
             <ListBox MouseDoubleClick="SuggestionBox_MouseDoubleClick" Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" x:Name="SuggestionBox"  KeyDown="SuggestionBox_KeyDown"/>
             </Popup>
         </Grid>
