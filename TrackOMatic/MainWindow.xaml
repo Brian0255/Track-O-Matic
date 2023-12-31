@@ -624,9 +624,9 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Name="HelmLabel" Grid.Column="1" FontSize="28" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="HELM" />
-                        <Image  Name="HelmKong1"  Opacity="1" Grid.Column="3" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
-                        <Image  Name="HelmKong2" Opacity="1"  Grid.Column="4" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
-                        <Image  Name="HelmKong3"  Opacity="1" Grid.Column="5" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
+                        <local:ProgressiveItem  x:Name="HelmKong1"  Opacity="1" Grid.Column="3" />
+                        <local:ProgressiveItem x:Name="HelmKong2" Opacity="1"  Grid.Column="4" />
+                        <local:ProgressiveItem  x:Name="HelmKong3"  Opacity="1" Grid.Column="5" />
                     </Grid>
                     <Grid Grid.Column="1" Margin="0,3,0,8" >
                         <Grid.ColumnDefinitions>
@@ -639,9 +639,9 @@
                             <ColumnDefinition Width=".6*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Name="KRoolLabel" Grid.Column="1" FontSize="28" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="K. ROOL" />
-                        <Image  Name="KRoolKong1"  Opacity="1" Grid.Column="3" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
-                        <Image  Name="KRoolKong2" Opacity="1"  Grid.Column="4" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
-                        <Image  Name="KRoolKong3"  Opacity="1" Grid.Column="5" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
+                        <local:ProgressiveItem  x:Name="KRoolKong1"  Opacity="1" Grid.Column="3" />
+                        <local:ProgressiveItem x:Name="KRoolKong2" Opacity="1"  Grid.Column="4" />
+                        <local:ProgressiveItem  x:Name="KRoolKong3"  Opacity="1" Grid.Column="5" />
                         <!--<Image  Name="KRoolKong1" Grid.Column="3" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
                     <Image  Name="KRoolKong2" Grid.Column="4" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>
                     <Image  Name="KRoolKong3" Grid.Column="5" Source="Images\dk64\unknown_kong.png" Stretch="Uniform"/>-->

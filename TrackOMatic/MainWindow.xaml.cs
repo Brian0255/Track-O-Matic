@@ -45,8 +45,8 @@ namespace TrackOMatic
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
         public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
-        public List<Image> KroolKongs { get; private set; }
-        public List<Image> HelmKongs { get; private set; }
+        public List<ProgressiveItem> KroolKongs { get; private set; }
+        public List<ProgressiveItem> HelmKongs { get; private set; }
         public List<HintPanel> HintPanels { get; private set; }
 
         public List<Item> DraggableItems { get; private set; } = new();
@@ -60,6 +60,16 @@ namespace TrackOMatic
         public DataSaver DataSaver { get; private set; }
         public HitListHintManager HitListHintManager { get; private set; }
 
+        private List<BitmapImage> ProgressiveKongSource = new()
+        {
+                new BitmapImage( new Uri("images/dk64/unknown_kong.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/donkey.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/diddy.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/lanky.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/tiny.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/chunky.png", UriKind.Relative)),
+        };
+
         private Timer SaveTimer;
 
         public MainWindow()
@@ -67,6 +77,14 @@ namespace TrackOMatic
             InitializeComponent();
             InitOptions();
             InitData();
+            foreach (var progressiveItem in HelmKongs)
+            {
+                progressiveItem.ImageSources = ProgressiveKongSource;
+            }
+            foreach (var progressiveItem in KroolKongs)
+            {
+                progressiveItem.ImageSources = ProgressiveKongSource;
+            }
             SpoilerParser = new(this);
             DataSaver = new(this);
             HitListHintManager = new(this);
@@ -265,6 +283,11 @@ namespace TrackOMatic
             Keyboard.ClearFocus();
         }
 
+        public void InitRegionsFromEmptySpoiler()
+        {
+            foreach (var entry in Regions) entry.Value.SetAsEmptySpoiler();
+        }
+
         private void ParseSpoiler(string fileName)
         {
             SpoilerLoaded = SpoilerParser.ParseSpoiler(fileName);
@@ -338,6 +361,7 @@ namespace TrackOMatic
             {
                 var region = entry.Value;
                 region.Reset();
+                region.SetLevelOrderNumber(-1);
             }
             foreach (var item in DraggableItems.Cast<Item>())
             {
@@ -352,13 +376,8 @@ namespace TrackOMatic
             foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
 
-            HelmKong1.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
-            HelmKong2.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
-            HelmKong3.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
-
-            KRoolKong1.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
-            KRoolKong2.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
-            KRoolKong3.Source = new BitmapImage(new Uri("Images/dk64/unknown_kong.png", UriKind.Relative));
+            foreach (var progressiveItem in HelmKongs) progressiveItem.Reset();
+            foreach (var progressiveItem in KroolKongs) progressiveItem.Reset();
 
             ItemHintIcon.Source = null;
             ItemHintText.Text = "";
