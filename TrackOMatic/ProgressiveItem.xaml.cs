@@ -16,6 +16,8 @@ namespace TrackOMatic
 
         private int currentIndex = 0;
 
+        public bool Enabled { get; set; } = true;
+
         public List<BitmapImage> ImageSources
         {
             get { return (List<BitmapImage>)GetValue(ImageSourcesProperty); }
@@ -47,6 +49,7 @@ namespace TrackOMatic
         {
             currentIndex = 0;
             SetSource(currentIndex);
+            Enabled = true;
         }
 
         private void SetSource(int newIndex)
@@ -61,7 +64,7 @@ namespace TrackOMatic
 
         private void ImageButton_LeftPress(object sender, RoutedEventArgs e)
         {
-            if (ImageSources != null && ImageSources.Count > 0)
+            if (ImageSources != null && ImageSources.Count > 0 && Enabled)
             {
                 currentIndex++;
                 if (currentIndex >= ImageSources.Count)
@@ -73,7 +76,7 @@ namespace TrackOMatic
 
         private void ImageButton_RightPress(object sender, RoutedEventArgs e)
         {
-            if (ImageSources != null && ImageSources.Count > 0)
+            if (ImageSources != null && ImageSources.Count > 0 && Enabled)
             {
                 currentIndex--;
                 if (currentIndex == -1)
@@ -85,6 +88,7 @@ namespace TrackOMatic
 
         private void ImageButton_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (!Enabled) return;
             if (e.Delta > 0)
             {
                 ImageButton_LeftPress(sender, e);

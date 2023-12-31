@@ -3,7 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              MouseLeftButtonDown="ImageButton_LeftPress" MouseRightButtonDown="ImageButton_RightPress" MouseWheel="ImageButton_MouseWheel">
     <Grid>
-        <Image x:Name="image" Opacity="1">
-        </Image>
+        <Border BorderThickness="0" 
+                    UseLayoutRounding="True"
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                    RenderOptions.ClearTypeHint="Enabled">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+            </Border.Effect>
+            <Image x:Name="image" Opacity="1">
+            </Image>
+        </Border>
     </Grid>
 </UserControl>
