@@ -4,6 +4,7 @@
     { 
         LOCATION,
         MOVE,
+        CHECK,
         NONE
     }
 }
