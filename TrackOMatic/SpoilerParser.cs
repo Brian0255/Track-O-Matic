@@ -285,8 +285,8 @@ namespace TrackOMatic
                 if (!JSONKeyMappings.REGION_MAP.ContainsKey(info.level_name)) continue;
                 settings ??= SetUpSettings(info);
                 RegionName regionName = JSONKeyMappings.REGION_MAP[info.level_name];
-                MainWindow.Regions[regionName].SetInitialPoints(info.points);
-                MainWindow.Regions[regionName].SetRequiredCheckTotal(info.woth_count);
+                MainWindow.Regions[regionName].AddPoints(info.points);
+                MainWindow.Regions[regionName].AddRequiredCheckTotal(info.woth_count);
                 MainWindow.Regions[regionName].SpoilerSettings = settings;
                 var grid = MainWindow.Regions[regionName].RegionGrid;
                 //hoo boy i love enums

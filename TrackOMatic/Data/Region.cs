@@ -152,14 +152,14 @@ namespace TrackOMatic
             RegionName = newRegionName;
         }
 
-        public void SetInitialPoints(int newValue)
+        public void AddPoints(int newValue)
         {
-            TotalPoints = newValue;
+            TotalPoints += newValue;
         }
 
-        public void SetRequiredCheckTotal(int newValue)
+        public void AddRequiredCheckTotal(int newValue)
         {
-            requiredChecks = newValue;
+            requiredChecks += newValue;
         }
 
         private void ConfigureLabelsFromSettings()
