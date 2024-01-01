@@ -31,7 +31,10 @@ namespace TrackOMatic
             get { return (Image)GetValue(ItemImageProperty); }
             set { 
                 SetValue(ItemImageProperty, value);
-                mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
+                if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
+                {
+                    mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
+                }
             }
         }
 
@@ -45,6 +48,7 @@ namespace TrackOMatic
 
         private void Item_OnLoaded(object sender, RoutedEventArgs e)
         {
+            if (Tag == null) return;
             ItemName = (ItemName)Tag;
             ItemBrightnessChanger = new ItemBrightnessChanger(ItemImage, ItemName);
         }

@@ -269,6 +269,8 @@ namespace TrackOMatic
             var regionInfo = JSONObject["Spoiler Hints Data"].ToObject<Dictionary<string, string>>();
             SpoilerSettings settings = null;
 
+            List<string> Isles_Vials = new();
+
             foreach (var regionEntry in regionInfo)
             {
                 if(regionEntry.Key == "starting_info")
@@ -289,10 +291,23 @@ namespace TrackOMatic
                 MainWindow.Regions[regionName].AddRequiredCheckTotal(info.woth_count);
                 MainWindow.Regions[regionName].SpoilerSettings = settings;
                 var grid = MainWindow.Regions[regionName].RegionGrid;
-                //hoo boy i love enums
-                info.vial_colors.Sort( (a,b) => JSONKeyMappings.VIAL_MAP[a] - JSONKeyMappings.VIAL_MAP[b]);
-                foreach(var vial in info.vial_colors) grid.AddInitialVial(JSONKeyMappings.VIAL_MAP[vial]);
+                if (regionName == RegionName.DK_ISLES)
+                {
+                    Isles_Vials = Isles_Vials.Concat(info.vial_colors).ToList();
+                }
+                else
+                {
+                    ProcessVials(info.vial_colors, grid);
+                }
             }
+            //jetpac goes into isles, and we want to make sure it stays sorted so you can't metagame that an unsorted vial at the end of DK Isles is jetpac
+            ProcessVials(Isles_Vials, MainWindow.Regions[RegionName.DK_ISLES].RegionGrid);
+        }
+
+        private void ProcessVials(List<string> vial_colors, RegionGrid grid)
+        {
+            vial_colors.Sort((a, b) => JSONKeyMappings.VIAL_MAP[a] - JSONKeyMappings.VIAL_MAP[b]);
+            foreach (var vial in vial_colors) grid.AddInitialVial(JSONKeyMappings.VIAL_MAP[vial]);
         }
 
         private SpoilerSettings SetUpSettings(RegionSpoilerInfo info)
