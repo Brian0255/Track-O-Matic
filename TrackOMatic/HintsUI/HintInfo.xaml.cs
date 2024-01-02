@@ -156,11 +156,11 @@ namespace TrackOMatic
                 hintWordList[i] = hintWordList[i].ToLower();
                 if (!shorthands.ContainsKey(hintWordList[i])) return false;
             }
-            var foundKongString = shorthands[hintWordList[1]];
+            var foundKongString = shorthands[hintWordList[0]];
             if(!Enum.TryParse(foundKongString, out ItemName kongThatIsFound)) return false;
             var textInfo = new CultureInfo("en-US", false).TextInfo;
             var region = shorthands[hintWordList[2]];
-            var thingThatFinds = shorthands[hintWordList[0]];
+            var thingThatFinds = shorthands[hintWordList[1]];
             thingThatFinds = textInfo.ToTitleCase(thingThatFinds.ToLower());
             var newText = thingThatFinds + " in " + region;
             if(thingThatFinds == "Boss")
