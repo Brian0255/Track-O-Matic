@@ -26,6 +26,27 @@
                 <Setter Property="BorderThickness" Value="0"/>
             </Style>
 
+            <Style TargetType="ToolTip">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="Helvetica"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="OverridesDefaultStyle" Value="true" />
+                <Setter Property="HasDropShadow" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToolTip">
+                            <Border Name="Border" CornerRadius="3" Padding="2"
+                BorderThickness="2" BorderBrush="Black" Background="{StaticResource RegionImageBG}"
+                Width="{TemplateBinding Width}"
+                Height="{TemplateBinding Height}">
+                                <ContentPresenter Margin="4" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
                 <Setter Property="Template">
                     <Setter.Value>

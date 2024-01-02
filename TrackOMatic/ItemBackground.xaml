@@ -24,13 +24,18 @@
                     UseLayoutRounding="True"
                     RenderOptions.BitmapScalingMode="NearestNeighbor"
                     SnapsToDevicePixels="True"
-                    RenderOptions.ClearTypeHint="Enabled">
+                    RenderOptions.ClearTypeHint="Enabled"
+                    ToolTipService.InitialShowDelay="500">
+                <Border.ToolTip>
+                    <ToolTip Name="ToolTip" Content="" Placement="Mouse" IsEnabled="False">
+                    </ToolTip>
+                </Border.ToolTip>
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
                 <ContentPresenter x:Name="Image" Content="{Binding BackgroundItemImage}"/>
             </Border>
-            <ContentPresenter x:Name="Star" Content="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left"/>
+            <ContentPresenter x:Name="Star" Content="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left" IsHitTestVisible="False"/>
         </Grid>
     </ContentControl.Content>
 
