@@ -59,6 +59,7 @@ namespace TrackOMatic
         public SpoilerParser SpoilerParser { get; private set; }
         public DataSaver DataSaver { get; private set; }
         public HitListHintManager HitListHintManager { get; private set; }
+        public SpoilerSettings SpoilerSettings { get; private set; }
 
         private List<BitmapImage> ProgressiveKongSource = new()
         {
@@ -290,13 +291,13 @@ namespace TrackOMatic
 
         private void ParseSpoiler(string fileName)
         {
-            SpoilerLoaded = SpoilerParser.ParseSpoiler(fileName);
-            if (!SpoilerLoaded) return;
+            SpoilerSettings = SpoilerParser.ParseSpoiler(fileName);
             Autotracker.SetStartingItems(SpoilerParser.StartingItems);
             Autotracker.SetSpoilerLoaded(fileName);
             foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
             DataSaver.InitSavedDataFromSpoiler(fileName);
             HitListHintManager.InitializeFromSpoiler(SpoilerParser.StartingItems, SpoilerParser.TrainingItems);
+            foreach (var entry in ITEM_TO_BACKGROUND_IMAGE) entry.Key.InitHoverPoints();
         }
 
         private void DropFile(object sender, DragEventArgs e)
@@ -357,6 +358,9 @@ namespace TrackOMatic
             TotalGBs = 0;
             SpoilerLoaded = false;
             ITEM_NAME_TO_REGION.Clear();
+            PointValues.SpecificValues.Clear();
+            PointValues.GroupedValues.Clear();
+            SpoilerSettings = new SpoilerSettings();
             foreach (var entry in Regions)
             {
                 var region = entry.Value;
@@ -368,6 +372,7 @@ namespace TrackOMatic
                 item.CanLeftClick = true;
                 item.SetStarVisibility(Visibility.Hidden);
                 item.ChangeOpacity(1.0);
+                item.InitHoverPoints();
             }
             foreach(var hintPanel in HintPanels)
             {

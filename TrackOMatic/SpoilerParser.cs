@@ -264,7 +264,7 @@ namespace TrackOMatic
                 }
             }
         }
-        public void ParseRegions(dynamic JSONObject)
+        public SpoilerSettings ParseRegions(dynamic JSONObject)
         {
             var regionInfo = JSONObject["Spoiler Hints Data"].ToObject<Dictionary<string, string>>();
             SpoilerSettings settings = null;
@@ -302,6 +302,7 @@ namespace TrackOMatic
             }
             //jetpac goes into isles, and we want to make sure it stays sorted so you can't metagame that an unsorted vial at the end of DK Isles is jetpac
             ProcessVials(Isles_Vials, MainWindow.Regions[RegionName.DK_ISLES].RegionGrid);
+            return settings;
         }
 
         private void ProcessVials(List<string> vial_colors, RegionGrid grid)
@@ -328,8 +329,9 @@ namespace TrackOMatic
             RNGSeed = BitConverter.ToInt32(hashBytes, 0);
         }
 
-        public bool ParseSpoiler(string fileName)
+        public SpoilerSettings ParseSpoiler(string fileName)
         {
+            var spoilerSettings = new SpoilerSettings();
             StartingItems = new();
             TrainingItems = new();
             slamCount = 0;
@@ -339,7 +341,7 @@ namespace TrackOMatic
             dynamic JSONObject = JsonConvert.DeserializeObject(json);
             if (JSONObject["Spoiler Hints Data"] != null)
             {
-                ParseRegions(JSONObject);
+                spoilerSettings = ParseRegions(JSONObject);
             }
             else
             {
@@ -355,7 +357,7 @@ namespace TrackOMatic
                 GenerateHitListSeed(dataToHash, salt);
                 GenerateHitList();
             }
-            return true;
+            return spoilerSettings;
         }
     }
 }

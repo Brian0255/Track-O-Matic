@@ -5,7 +5,7 @@
         public bool PointsEnabled { get; }
         public bool VialsEnabled { get; }
         public  bool WOTHEnabled { get; }
-        public SpoilerSettings(bool pointsEnabled, bool vialsEnabled, bool wOTHEnabled)
+        public SpoilerSettings(bool pointsEnabled = false, bool vialsEnabled = false, bool wOTHEnabled = false )
         {
             PointsEnabled = pointsEnabled;
             VialsEnabled = vialsEnabled;
