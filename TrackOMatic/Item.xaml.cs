@@ -24,6 +24,18 @@ namespace TrackOMatic
         public static readonly DependencyProperty ItemImageProperty =
         DependencyProperty.Register("ItemImage", typeof(Image), typeof(Item));
 
+        public static readonly DependencyProperty HoverTextProperty =
+     DependencyProperty.Register(
+         "HoverText",
+         typeof(string),
+         typeof(Item));
+
+        public string HoverText
+        {
+            get { return (string)GetValue(HoverTextProperty); }
+            set { SetValue(HoverTextProperty, value); }
+        }
+
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         public Image ItemImage
@@ -36,6 +48,23 @@ namespace TrackOMatic
                     mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
                 }
             }
+        }
+
+        public void InitHoverPoints()
+        {
+            var matchingBackground = mainWindow.ITEM_TO_BACKGROUND_IMAGE[this];
+            if (!mainWindow.SpoilerSettings.PointsEnabled)
+            {
+                ToolTip.Visibility = Visibility.Collapsed;
+                matchingBackground.ToolTip.Visibility = Visibility.Collapsed;
+                return;
+            }
+            var itemName = (ItemName)Tag;
+            var matchingCheck = ImportantCheckList.ITEMS[itemName];
+            HoverText = matchingCheck.PointValue.ToString() + " points";
+            ToolTip.Visibility = Visibility.Visible;
+            matchingBackground.ToolTip.Visibility = Visibility.Visible;
+            matchingBackground.ToolTip.Content = HoverText;
         }
 
         private bool pressed = false;
