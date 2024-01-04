@@ -19,6 +19,8 @@ namespace TrackOMatic
             {0x004, RegionName.JUNGLE_JAPES },
             {0x006, RegionName.JUNGLE_JAPES },
             {0x007, RegionName.JUNGLE_JAPES },
+            //jetpac
+            {0x009, RegionName.DK_ISLES },
             {0x00C, RegionName.JUNGLE_JAPES },
             {0x00D, RegionName.JUNGLE_JAPES},
             {0x00E, RegionName.ANGRY_AZTEC },
