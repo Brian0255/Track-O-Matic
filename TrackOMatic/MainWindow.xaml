@@ -45,7 +45,7 @@
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
                 <MenuItem Name="HintDisplay" Header="Hint Display" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Click="HintDisplayToggle"/>
             </MenuItem>
-            <MenuItem Header="Version 1.3.5" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 1.3.6" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -752,7 +752,12 @@
                     <local:HintPanel Grid.Row="2" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="5" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
                 </Grid>
                 <Grid Grid.Column="3">
-                    <local:HintPanel Grid.Row="2" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="5" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5*"/>
+                        <RowDefinition Height="2.6*"/>
+                    </Grid.RowDefinitions>
+                    <local:HintPanel Grid.Row="0" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="5" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
+                    <local:BLockerPanel x:Name="BLockerHints" Grid.Row="1" Margin="5" Heading="B. LOCKERS" LineColor="#F0F000"/>
                 </Grid>
             </Grid>
         </Grid>
