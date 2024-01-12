@@ -378,6 +378,7 @@ namespace TrackOMatic
             {
                 hintPanel.Reset();
             }
+            BLockerHints.Reset();
             foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
 

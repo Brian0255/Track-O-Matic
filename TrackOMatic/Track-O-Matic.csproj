@@ -98,6 +98,9 @@
     <Compile Include="Data\HintSuggestion.cs" />
     <Compile Include="Data\HintType.cs" />
     <Compile Include="Data\SavedHint.cs" />
+    <Compile Include="HintsUI\BLockerHint.xaml.cs">
+      <DependentUpon>BLockerHint.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HintsUI\HintInfo.xaml.cs">
       <DependentUpon>HintInfo.xaml</DependentUpon>
     </Compile>
@@ -106,6 +109,9 @@
     </Compile>
     <Compile Include="HintsUI\HintItemSelectionDialog.xaml.cs">
       <DependentUpon>HintItemSelectionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HintsUI\BLockerPanel.xaml.cs">
+      <DependentUpon>BLockerPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="HintsUI\PathOrFoundItem.xaml.cs">
       <DependentUpon>PathOrFoundItem.xaml</DependentUpon>
@@ -159,6 +165,10 @@
       <DependentUpon>HintPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="WatermarkTextBox.cs" />
+    <Page Include="HintsUI\BLockerHint.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="HintsUI\HintInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -170,6 +180,10 @@
     <Page Include="HintsUI\HintItemSelectionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HintsUI\BLockerPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="HintsUI\PathOrFoundItem.xaml">
       <Generator>MSBuild:Compile</Generator>
