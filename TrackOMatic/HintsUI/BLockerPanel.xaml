@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="TrackOMatic.BLockerPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrackOMatic"
+             mc:Ignorable="d" 
+              Background="Transparent" 
+             d:DesignHeight="300" d:DesignWidth="200">
+    <Grid Background="Transparent">
+        <Border CornerRadius="3" BorderThickness=".5" BorderBrush="Black" Background="{StaticResource VeryDark}">
+            <Grid Background="Transparent" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="38"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="10,0,0,0" FontSize="24" Foreground="White" Grid.Row="0"  FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center"/>
+                <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
+                    <UniformGrid Name="MainGrid" Grid.Row="1" Columns="2">
+                        <local:BLockerHint RegionName="JUNGLE_JAPES"/>
+                        <local:BLockerHint RegionName="FUNGI_FOREST"/>
+                        <local:BLockerHint RegionName="ANGRY_AZTEC"/>
+                        <local:BLockerHint RegionName="CRYSTAL_CAVES"/>
+                        <local:BLockerHint RegionName="FRANTIC_FACTORY"/>
+                        <local:BLockerHint RegionName="CREEPY_CASTLE"/>
+                        <local:BLockerHint RegionName="GLOOMY_GALLEON"/>
+                        <local:BLockerHint RegionName="HIDEOUT_HELM"/>
+
+                    </UniformGrid>
+                </Border>
+            </Grid>
+        </Border>
+        <Border CornerRadius="2" BorderThickness="3">
+            <Border.BorderBrush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                    <GradientStop Color="{Binding LineColor}" Offset="0"/>
+                    <GradientStop Color="{Binding LineColor}" Offset="0.007"/>
+                    <GradientStop Color="Transparent" Offset="0.008"/>
+                    <GradientStop Color="Transparent" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+        </Border>
+    </Grid>
+</UserControl>
