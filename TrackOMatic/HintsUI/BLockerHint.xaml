@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="TrackOMatic.BLockerHint"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrackOMatic"
+             mc:Ignorable="d" 
+              Background="Transparent" 
+             d:DesignHeight="100" d:DesignWidth="200">
+    <Grid Background="Transparent" Margin="5,2,5,7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".75*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="6*"/>
+        </Grid.ColumnDefinitions>
+        <Image x:Name="Picture"  Grid.RowSpan="2" Grid.Column="0"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        <local:CollectibleItem x:Name="GBs" ImageSource="Images\dk64\GB.png" Text="0" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBox LostFocus="GBCount_LostFocus" PreviewMouseDown="GBCount_MouseDown" PreviewKeyDown="GBCount_PreviewKeyDown" ContextMenu="{x:Null}" Text="?" x:Name="GBCount" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Left" Style="{StaticResource BoldText}" FontSize="18" Margin="0,3,0,0" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch"/>
+    </Grid>
+</UserControl>
