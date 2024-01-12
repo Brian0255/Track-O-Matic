@@ -63,6 +63,7 @@ namespace TrackOMatic
         {
             if (savedProgress == null) return;
             FindSavedHints();
+            savedProgress.SavedGBCounts = MainWindow.BLockerHints.GetGBCounts();
             var JSONString = JsonConvert.SerializeObject(savedProgress);
             var tempPath = "autosave_temp.json";
             var filePath = "autosave.json";
@@ -120,6 +121,7 @@ namespace TrackOMatic
                 var hintPanel = (HintPanel)MainWindow.FindName(savedHint.HintPanelKey);
                 hintPanel.AddSavedHint(savedHint);
             }
+            MainWindow.BLockerHints.LoadSavedGBCounts(savedProgress.SavedGBCounts);
         }
 
         public void AddSavedItem(SavedItem savedItem, bool ignoreAutotrackingField = false)
