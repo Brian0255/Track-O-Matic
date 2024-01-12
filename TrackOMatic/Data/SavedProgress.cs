@@ -6,6 +6,7 @@ namespace TrackOMatic
     {
         public string SpoilerLogName { get; }
         public Dictionary<ItemName, SavedItem> SavedItems { get; }
+        public Dictionary<RegionName, string> SavedGBCounts { get; set; }
         public List<SavedHint> SavedHints { get; }
 
         public SavedProgress(string spoilerLogName)
@@ -13,6 +14,7 @@ namespace TrackOMatic
             SpoilerLogName = spoilerLogName;
             SavedItems = new();
             SavedHints = new();
+            SavedGBCounts = new();
         }
     }
 }
