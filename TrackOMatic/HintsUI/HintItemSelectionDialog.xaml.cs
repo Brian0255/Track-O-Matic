@@ -67,5 +67,14 @@ namespace TrackOMatic
         {
             ProcessItems();
         }
+
+        private void ItemGrid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ProcessItems();
+                Close();
+            }
+        }
     }
 }

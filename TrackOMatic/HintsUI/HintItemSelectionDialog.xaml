@@ -9,7 +9,7 @@
              Height="300" Width="400" Topmost ="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}"
     Title="Select Items"
         ResizeMode="NoResize"
-        Background="{StaticResource RegionBG}">
+        Background="{StaticResource RegionBG}"  KeyDown="ItemGrid_KeyDown">
     <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="2" >
         <Grid.RowDefinitions>
             <RowDefinition />
