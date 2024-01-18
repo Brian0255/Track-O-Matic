@@ -35,6 +35,7 @@ namespace TrackOMatic
         private void AutotrackToggle(object sender, RoutedEventArgs e)
         {
             Settings.Default.Autotracking = AutotrackOption.IsChecked;
+            /*
             if (!AutotrackOption.IsChecked) 
             {
                 foreach (var item in DraggableItems.Cast<Item>())
@@ -48,7 +49,7 @@ namespace TrackOMatic
             else
             {
                 Autotracker.ResetChecks();
-            }
+            }*/
             Settings.Default.Save();
         }
     }

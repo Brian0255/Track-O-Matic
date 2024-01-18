@@ -212,10 +212,6 @@ namespace TrackOMatic
                         parent.Handle_RegionGrid(item, false);
                     }
                     item.ChangeOpacity(1.0);
-                    var isSlam = itemToProcess.ToString().Contains("PROGRESSIVE_SLAM");
-                    //unlikely scenario can happen where a slam gets misplaced because of previous user input
-                    //as a result, always let slams be returnable to the bottom section
-                    itemControl.CanLeftClick = isSlam;
                     Regions[regionName].RegionGrid.Add_Item(item, false, shouldBrighten);
                     //should mean that there was no matching vial, item couldn't be placed as a result
                     if (item.Parent == ItemGrid) return false;

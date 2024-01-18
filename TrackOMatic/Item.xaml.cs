@@ -144,12 +144,12 @@ namespace TrackOMatic
             }
         }
 
-        private void PerformSave(bool ignoreAutotrackField)
+        private void PerformSave()
         {
             if (Tag == null) return;
             var itemName = (ItemName)Tag;
             var regionName = (Region == null) ? RegionName.UNKNOWN : Region.RegionName;
-            mainWindow.DataSaver.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, false, ItemImage.Opacity), ignoreAutotrackField);
+            mainWindow.DataSaver.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, false, ItemImage.Opacity));
         }
 
         //Struct to use in the GetCursorPos function
@@ -230,7 +230,7 @@ namespace TrackOMatic
                 if (Parent == parent) ChangeOpacity(1.0);
                 else ChangeOpacity(opacity);
 
-                PerformSave(false);
+                PerformSave();
                 adLayer.Remove(myAdornment);
             }
         }
@@ -244,7 +244,7 @@ namespace TrackOMatic
                 mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
             }
             if (Region != null) Region.UpdateRequiredChecksTotal();
-            PerformSave(true);
+            PerformSave();
         }
 
         public void Item_MouseDown(object sender, MouseEventArgs e)
@@ -269,10 +269,10 @@ namespace TrackOMatic
         public void Item_Return(object sender, MouseEventArgs e)
         {
             CheckMiddleClick(sender, e);
-            if (e.LeftButton == MouseButtonState.Pressed && CanLeftClick)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 HandleItemReturn();
-                PerformSave(false);
+                PerformSave();
             }
         }
 

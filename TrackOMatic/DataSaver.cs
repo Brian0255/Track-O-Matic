@@ -104,7 +104,7 @@ namespace TrackOMatic
                 Item matchingItem = FindMatchingItem(savedItem.ItemName);
                 matchingItem.SetStarVisibility(savedItem.Starred);
                 matchingItem.ChangeOpacity(savedItem.Opacity);
-                if (savedItem.Autotracked) MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
+                MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
                 if (savedItem.Region != RegionName.UNKNOWN && !savedItem.Hinted)
                 {
                     MainWindow.Regions[region].RegionGrid.Add_Item(matchingItem, !savedItem.Autotracked, !savedItem.Hinted);
@@ -114,7 +114,6 @@ namespace TrackOMatic
                     matchingItem.Darken();
                 }
                 matchingItem.Image.Opacity = savedItem.Opacity;
-                matchingItem.CanLeftClick = !autoPlace;
             }
             foreach (var savedHint in savedProgress.SavedHints)
             {
@@ -124,14 +123,12 @@ namespace TrackOMatic
             MainWindow.BLockerHints.LoadSavedGBCounts(savedProgress.SavedGBCounts);
         }
 
-        public void AddSavedItem(SavedItem savedItem, bool ignoreAutotrackingField = false)
+        public void AddSavedItem(SavedItem savedItem)
         {
             if (savedItem == null || savedProgress == null) return;
             var itemName = savedItem.ItemName;
             if (savedProgress.SavedItems.ContainsKey(itemName))
             {
-                bool existingAutotrackingValue = savedProgress.SavedItems[itemName].Autotracked;
-                if (ignoreAutotrackingField) savedItem.Autotracked = existingAutotrackingValue;
                 savedProgress.SavedItems[itemName] = savedItem;
             }
             else savedProgress.SavedItems.Add(itemName, savedItem);
