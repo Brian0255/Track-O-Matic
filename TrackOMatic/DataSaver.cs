@@ -104,7 +104,7 @@ namespace TrackOMatic
                 Item matchingItem = FindMatchingItem(savedItem.ItemName);
                 matchingItem.SetStarVisibility(savedItem.Starred);
                 matchingItem.ChangeOpacity(savedItem.Opacity);
-                MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
+                if(savedItem.Autotracked) MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
                 if (savedItem.Region != RegionName.UNKNOWN && !savedItem.Hinted)
                 {
                     MainWindow.Regions[region].RegionGrid.Add_Item(matchingItem, !savedItem.Autotracked, !savedItem.Hinted);
@@ -113,7 +113,7 @@ namespace TrackOMatic
                 {
                     matchingItem.Darken();
                 }
-                matchingItem.Image.Opacity = savedItem.Opacity;
+                matchingItem.ChangeOpacity(savedItem.Opacity);
             }
             foreach (var savedHint in savedProgress.SavedHints)
             {

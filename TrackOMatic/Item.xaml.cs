@@ -149,7 +149,8 @@ namespace TrackOMatic
             if (Tag == null) return;
             var itemName = (ItemName)Tag;
             var regionName = (Region == null) ? RegionName.UNKNOWN : Region.RegionName;
-            mainWindow.DataSaver.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, false, ItemImage.Opacity));
+            bool autotracked = mainWindow.Autotracker.ItemWasTracked(itemName);
+            mainWindow.DataSaver.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, autotracked, ItemImage.Opacity));
         }
 
         //Struct to use in the GetCursorPos function
