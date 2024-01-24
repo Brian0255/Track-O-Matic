@@ -110,7 +110,7 @@ namespace TrackOMatic
         private void AttachIfNecessary()
         {
             if (attached) return;
-            var verificationInfo = new GameVerificationInfo(0x759260, 32, 0x444F4E4B);
+            var verificationInfo = new GameVerificationInfo(0x759290, 32, 0x52414D42);
             var attachedProcessInfo = AttachToEmulator.Attach(verificationInfo, EmulatorName.PROJECT_64);
             if (attachedProcessInfo == null) return;
             attached = true;
