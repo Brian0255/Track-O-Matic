@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
-
+using System.Windows.Forms;
 
 namespace TrackOMatic
 {
@@ -14,27 +14,15 @@ namespace TrackOMatic
             {
                target = Process.GetProcessesByName("project64")[0];
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                System.Windows.Forms.MessageBox.Show(e.Message + "\nCould not find process \"project64\" on your machine.", "TrackOMatic", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
             uint romAddrStart = 0;
-            if (doOffsetScan)
-            {
-                //Project64 versions can differ in memory so try different offsets
-                for (uint potentialOffset = 0xDFD00000; potentialOffset < 0xE01FFFFF; potentialOffset += 16)
-                {
-                    if (Memory.ReadInt32(target, potentialOffset + verificationInfo.TargetAddress) == verificationInfo.TargetValue)
-                    {
-                        romAddrStart = potentialOffset;
-                        break;
-                    }
-                }
-                return new AttachedProcessInfo(target, romAddrStart);
-            }
 
-            for (int i = 0; i < 4; i++)
+            /*for (int i = 0; i < 4; i++)
             {
                 switch (i)
                 {
@@ -68,7 +56,18 @@ namespace TrackOMatic
                     Debug.WriteLine("Verified Project64");
                     return new AttachedProcessInfo(target, romAddrStart);
                 }
+            }*/
+
+            //Project64 versions can differ in memory so try different offsets
+            for (uint potentialOffset = 0xDFD00000; potentialOffset < 0xE01FFFFF; potentialOffset += 16)
+            {
+                if (Memory.ReadInt32(target, potentialOffset + verificationInfo.TargetAddress) == verificationInfo.TargetValue)
+                {
+                    return new AttachedProcessInfo(target, potentialOffset);
+                }
             }
+
+            System.Windows.Forms.MessageBox.Show("Could not find correct offset.", "TrackOMatic", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return null;
         }
 
