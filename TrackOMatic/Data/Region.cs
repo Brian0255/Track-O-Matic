@@ -121,6 +121,7 @@ namespace TrackOMatic
             RegionGrid.ResetVials();
             ResetLabels();
             if(LevelOrderNumber != null) LevelOrderNumber.Reset();
+            SetAsEmptySpoiler();
         }
 
         public void RemoveCheck(ImportantCheck check)
@@ -178,6 +179,7 @@ namespace TrackOMatic
                 BottomLabel.SetResourceReference(TextBlock.ForegroundProperty, "RequiredChecksColor");
                 SpoilerSettingToLabel["RequiredChecks"] = BottomLabel;
             }
+            SpoilerSettingToLabel["PointsLabel"].Visibility = (SpoilerSettings.PointsEnabled) ? Visibility.Visible : Visibility.Hidden;
             SpoilerSettingToLabel["RequiredChecks"].Visibility = (SpoilerSettings.WOTHEnabled) ? Visibility.Visible : Visibility.Hidden;
             if (RegionName == RegionName.START || RegionName == RegionName.DK_ISLES || RegionName == RegionName.HIDEOUT_HELM) return;
             int columnSpan = (SpoilerSettings.PointsEnabled || SpoilerSettings.WOTHEnabled) ? 2 : 4;
@@ -190,6 +192,8 @@ namespace TrackOMatic
             ConfigureLabelsFromSettings();
             UpdatePoints();
             UpdateRequiredChecksTotal();
+            if (RegionName == RegionName.START) return;
+            Grid.SetColumnSpan(RegionButton, 2);
         }
         
         public void SetLevelOrderNumber(int number)
@@ -200,8 +204,10 @@ namespace TrackOMatic
 
         public void SetAsEmptySpoiler()
         {
+            if (RegionName == RegionName.START) return;
             if(BottomLabel != null) BottomLabel.Visibility = Visibility.Collapsed;
             if(TopLabel != null) TopLabel.Visibility = Visibility.Collapsed;
+            Grid.SetColumnSpan(RegionButton, 3);
         }
     }
 }
