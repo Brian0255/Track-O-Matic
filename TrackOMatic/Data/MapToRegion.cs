@@ -12,8 +12,6 @@ namespace TrackOMatic
         {
             //only including addresses that we want tracked
             //(shoutouts to dk64 randomizer for having this info in the repository)
-            //this is mainly used for the progressive slams, as they are ambiguous as to which one is which memory flag in the spoiler log
-            //so, best I can do is tie it to the region the player is in
 
             {0x002, RegionName.FRANTIC_FACTORY },
             {0x004, RegionName.JUNGLE_JAPES },
@@ -67,6 +65,7 @@ namespace TrackOMatic
             {0x046, RegionName.FUNGI_FOREST },
             {0x047, RegionName.FUNGI_FOREST },
             {0x048, RegionName.CRYSTAL_CAVES },
+            //{0x050, RegionName.START },
             {0x052, RegionName.CRYSTAL_CAVES },
             {0x054, RegionName.CRYSTAL_CAVES },
             {0x055, RegionName.CRYSTAL_CAVES },
