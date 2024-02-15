@@ -15,8 +15,6 @@ namespace TrackOMatic
     {
         public static readonly DependencyProperty HintItemImageProperty =
         DependencyProperty.Register("HintItemImage", typeof(Image), typeof(SelectableHintItem));
-
-        MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
         private ItemName ItemName { get; set; }
         private ItemBrightnessChanger ItemBrightnessChanger { get; set; }
 
