@@ -106,5 +106,29 @@ namespace TrackOMatic.Properties {
                 this["HintDisplay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double DesiredWidth {
+            get {
+                return ((double)(this["DesiredWidth"]));
+            }
+            set {
+                this["DesiredWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double DesiredHeight {
+            get {
+                return ((double)(this["DesiredHeight"]));
+            }
+            set {
+                this["DesiredHeight"] = value;
+            }
+        }
     }
 }
