@@ -16,7 +16,7 @@ namespace TrackOMatic
             }
             catch (Exception e)
             {
-                System.Windows.Forms.MessageBox.Show(e.Message + "\nCould not find process \"project64\" on your machine.", "TrackOMatic", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //System.Windows.Forms.MessageBox.Show(e.Message + "\nCould not find process \"project64\" on your machine.", "TrackOMatic", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
@@ -67,7 +67,7 @@ namespace TrackOMatic
                 }
             }
 
-            System.Windows.Forms.MessageBox.Show("Could not find correct offset.", "TrackOMatic", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //System.Windows.Forms.MessageBox.Show("Could not find correct offset.", "TrackOMatic", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return null;
         }
 
