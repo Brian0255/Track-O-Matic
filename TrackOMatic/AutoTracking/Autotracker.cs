@@ -155,7 +155,7 @@ namespace TrackOMatic
         private void Autotrack(object state)
         {
             if (!Properties.Settings.Default.Autotracking) return;
-            if (!spoilerLoaded) return;
+            //if (!spoilerLoaded) return;
             AttachIfNecessary();
             if (!attached) return;
             if (!ProcessConnected()) return;
