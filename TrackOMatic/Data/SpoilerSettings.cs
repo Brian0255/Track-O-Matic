@@ -11,5 +11,9 @@
             VialsEnabled = vialsEnabled;
             WOTHEnabled = wOTHEnabled;
         }
+        public bool Empty()
+        {
+            return !PointsEnabled && !VialsEnabled && !WOTHEnabled;
+        }
     }
 }
