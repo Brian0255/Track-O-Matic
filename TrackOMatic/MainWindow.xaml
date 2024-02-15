@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:TrackOMatic"
         mc:Ignorable="d"
         ResizeMode="CanResize"
-        Closing="MainWindow_Closing"
+        Closing="Window_Closing"
+        Loaded="MainWindow_Loaded"
         LocationChanged="Window_LocationChanged"
         MouseDown="rootGrid_LostFocus" 
         SizeChanged="Window_SizeChanged"
@@ -45,7 +46,7 @@
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
                 <MenuItem Name="HintDisplay" Header="Hint Display" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Click="HintDisplayToggle"/>
             </MenuItem>
-            <MenuItem Header="Version 1.3.8" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 1.4.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -294,7 +295,7 @@
                                         <ColumnDefinition Width=".3*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Image x:Name="DKIslesPicture" Source="images\dk64\dk_isles.png" Grid.RowSpan="2" Grid.ColumnSpan="4" Margin="10" />
+                                    <Image x:Name="DKIslesPicture" Source="images\dk64\dk_isles.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0" />
                                     <TextBlock x:Name="DKIslesTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock Name="DKIslesPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?"/>
                                 </Grid>
@@ -400,7 +401,7 @@
                                         <ColumnDefinition Width=".3*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Image x:Name="HideoutHelmPicture" Source="images\dk64\hideout_helm.png" Grid.RowSpan="2" Grid.ColumnSpan="4" Margin="10" />
+                                    <Image x:Name="HideoutHelmPicture" Source="images\dk64\hideout_helm.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0" />
                                     <TextBlock x:Name="HideoutHelmTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="HideoutHelmPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
@@ -616,14 +617,16 @@
                     <Grid Grid.Column="0" Margin="0,3,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width=".5*"/>
-                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.25*"/>
                             <ColumnDefinition Width=".1*"/>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Name="HelmLabel" Grid.Column="1" FontSize="28" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="HELM" />
+                        <Viewbox Grid.Column="1" Margin="4">
+                        <TextBlock Name="HelmLabel" FontSize="28" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="HELM"/>
+                        </Viewbox>
                         <local:ProgressiveItem  x:Name="HelmKong1"  Opacity="1" Grid.Column="3" />
                         <local:ProgressiveItem x:Name="HelmKong2" Opacity="1"  Grid.Column="4" />
                         <local:ProgressiveItem  x:Name="HelmKong3"  Opacity="1" Grid.Column="5" />
@@ -638,7 +641,9 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width=".6*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Name="KRoolLabel" Grid.Column="1" FontSize="28" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="K. ROOL" />
+                        <Viewbox Grid.Column="1" Margin="4">
+                            <TextBlock Name="KRoolLabel" FontSize="28" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="K. ROOL"/>
+                        </Viewbox>
                         <local:ProgressiveItem  x:Name="KRoolKong1"  Opacity="1" Grid.Column="3" />
                         <local:ProgressiveItem x:Name="KRoolKong2" Opacity="1"  Grid.Column="4" />
                         <local:ProgressiveItem  x:Name="KRoolKong3"  Opacity="1" Grid.Column="5" />
@@ -743,13 +748,12 @@
                 </Grid>
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="5*"/>
+                        <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
                     <local:HintPanel Grid.Row="0" HintType="FOOLISH_REGION" x:Name="FoolishPanel" Margin="5" Heading="FOOLISH REGIONS" LineColor="#e02f2f"  />
-                    <local:HintPanel Grid.Row="1" HintType="PATHLESS_MOVE" x:Name="PathlessPanel" Margin="5" Heading="PATHLESS MOVES" LineColor="#f78436"  />
-                    <local:HintPanel Grid.Row="2" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="5" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
+                    <!--local:HintPanel Grid.Row="1" HintType="PATHLESS_MOVE" x:Name="PathlessPanel" Margin="5" Heading="PATHLESS MOVES" LineColor="#f78436"  /-->
+                    <local:HintPanel Grid.Row="1" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="5" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
                 </Grid>
                 <Grid Grid.Column="3">
                     <Grid.RowDefinitions>
