@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Timers;
 using TrackOMatic.Properties;
+using AutoUpdaterDotNET;
 
 namespace ClassLibrary
 {
@@ -89,6 +90,7 @@ namespace TrackOMatic
             SpoilerParser = new(this);
             DataSaver = new(this);
             HitListHintManager = new(this);
+            Reset();
         }
 
         private ItemBackground FindMatchingBackgroundImage(Item item)
@@ -155,7 +157,9 @@ namespace TrackOMatic
                     }
                 }
             }
-            HintPanels = new() { PathsPanel, KongsPanel, WotHPanel, UnhintedPanel, FoolishPanel, PathlessPanel, PotionCountsPanel };
+
+
+            HintPanels = new() { PathsPanel, KongsPanel, WotHPanel, UnhintedPanel, FoolishPanel, PotionCountsPanel };
             Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting);
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
@@ -178,10 +182,6 @@ namespace TrackOMatic
             {
                 entry.Value.SetAmount(0);
             }
-        }
-        private void MainWindow_Closing()
-        {
-            DataSaver.Save();
         }
 
         private void OnTimerSave(object sender, ElapsedEventArgs e)
@@ -232,12 +232,6 @@ namespace TrackOMatic
             Left = Properties.Settings.Default.WindowX;
 
             ResetWidthHeight();
-        }
-
-        private void MainWindow_Closing(object sender, CancelEventArgs e)
-        {
-            Properties.Settings.Default.Save();
-            DataSaver.Save();
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -291,6 +285,7 @@ namespace TrackOMatic
             Autotracker.SetStartingItems(SpoilerParser.StartingItems);
             Autotracker.SetSpoilerLoaded(fileName);
             foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
+            if (SpoilerSettings.Empty()) InitRegionsFromEmptySpoiler();
             DataSaver.InitSavedDataFromSpoiler(fileName);
             HitListHintManager.InitializeFromSpoiler(SpoilerParser.StartingItems, SpoilerParser.TrainingItems);
             foreach (var entry in ITEM_TO_BACKGROUND_IMAGE) entry.Key.InitHoverPoints();
@@ -328,7 +323,7 @@ namespace TrackOMatic
 
                 Properties.Settings.Default.LastFolderPath = folderPath;
                 Properties.Settings.Default.Save();
-
+                Reset();
                 ParseSpoiler(selectedFilePath);
             }
         }
@@ -390,5 +385,22 @@ namespace TrackOMatic
             Reset();
         }
 
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
+            AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
+            AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
+            if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0) return;
+            Width = Settings.Default.DesiredWidth;
+            Height = Settings.Default.DesiredHeight;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            Settings.Default.DesiredWidth = Width;
+            Settings.Default.DesiredHeight = Height;
+            Settings.Default.Save();
+            DataSaver.Save();
+        }
     }
 }
