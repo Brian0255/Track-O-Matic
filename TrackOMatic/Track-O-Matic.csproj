@@ -269,6 +269,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="default_shortcuts.json" />
     <None Include="Images\bw\aztec_img.webp" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

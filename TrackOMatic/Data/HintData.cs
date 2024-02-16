@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,9 +26,21 @@ namespace TrackOMatic
         public static List<string> SortedRegions { get; private set; }
         public static List<string> SortedMoves { get; private set; }
         public static List<string> SortedChecks { get; private set; }
+        private static void CreateUserShortcuts()
+        {
+            var defaultShortcutsResource = "TrackOMatic.default_shortcuts.json";
+            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(defaultShortcutsResource);
+            if (stream != null)
+            {
+                using FileStream fileStream = File.Create("shortcuts.json");
+                stream.CopyTo(fileStream);
+            }
+        }
         private static void InitUserShortcuts()
         {
-            using StreamReader reader = new("shortcuts.json");
+            var userShortcutsFile = "shortcuts.json";
+            if (!File.Exists(userShortcutsFile)) CreateUserShortcuts();
+            using StreamReader reader = new(userShortcutsFile);
             string json = reader.ReadToEnd();
             UserShortcuts = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
             foreach (var entry in UserShortcuts["Hint Regions"].ToList())
@@ -104,12 +117,16 @@ namespace TrackOMatic
             SortedChecks.Sort();
         }
 
-        static HintData()
+        public static void Init()
         {
             InitSortedRegions();
             InitUserShortcuts();
             InitSortedMoves();
             InitSortedChecks();
+        }
+
+        static HintData()
+        {
         }
     }
 }
