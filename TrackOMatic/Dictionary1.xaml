@@ -33,7 +33,6 @@
     <Image x:Key="x" Source="Images\dk64\x.png" x:Shared="false" />
 
     <Image x:Key="unknown_kong" Source="Images\dk64\unknown_kong.png" x:Shared="false" />
-
     <Image x:Key="dk_isles" Source="Images\dk64\dk_isles.png" x:Shared="false" />
     <Image x:Key="start" Source="Images\dk64\start.png" x:Shared="false" />
     
