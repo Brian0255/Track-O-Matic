@@ -77,6 +77,7 @@ namespace TrackOMatic
         public MainWindow()
         {
             InitializeComponent();
+            HintData.Init();
             InitOptions();
             InitData();
             foreach (var progressiveItem in HelmKongs)
