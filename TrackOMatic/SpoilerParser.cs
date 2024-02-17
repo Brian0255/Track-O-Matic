@@ -221,6 +221,11 @@ namespace TrackOMatic
                     var imageName = JSONKeyMappings.KONGS[info.helm_order[i]].ToString().ToLower();
                     MainWindow.HelmKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
                     MainWindow.HelmKongs[i].Enabled = false;
+                    MainWindow.HelmKongs[i].Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MainWindow.HelmKongs[i].Visibility = Visibility.Hidden;
                 }
             }
             for (int i = 0; i < MainWindow.KroolKongs.Count; ++i)
@@ -230,6 +235,11 @@ namespace TrackOMatic
                     var imageName = JSONKeyMappings.KONGS[info.krool_order[i]].ToString().ToLower();
                     MainWindow.KroolKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
                     MainWindow.KroolKongs[i].Enabled = false;
+                    MainWindow.KroolKongs[i].Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MainWindow.KroolKongs[i].Visibility = Visibility.Hidden;
                 }
             }
         }

@@ -141,8 +141,8 @@ namespace TrackOMatic
                 {ItemType.GOLDEN_BANANA, GBs },
             };
             Items = ItemGrid;
-            KroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3 };
-            HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3 };
+            KroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
+            HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
 
             //have a separate list of the movable tracker items so it's easy to find them even if they are moved out of the grid
             foreach (var control in Items.Children)
@@ -390,7 +390,7 @@ namespace TrackOMatic
         {
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
-            AutoUpdater.InstalledVersion = new Version("1.4.0");
+            AutoUpdater.InstalledVersion = new Version("1.4.1");
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0) return;
             Width = Settings.Default.DesiredWidth;
