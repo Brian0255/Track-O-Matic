@@ -48,6 +48,7 @@ namespace TrackOMatic
         public void Reset()
         {
             currentIndex = 0;
+            Visibility = Visibility.Visible;
             SetSource(currentIndex);
             Enabled = true;
         }
