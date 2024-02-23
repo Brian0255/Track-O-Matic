@@ -188,11 +188,6 @@ namespace TrackOMatic
         {
             StartingInfo info = System.Text.Json.JsonSerializer.Deserialize<StartingInfo>(JSONString);
             ReadKongsAndKeys(info);
-
-            //temporary
-            StartingItems.Add(ItemName.FAIRY_CAMERA, RegionName.START);
-            StartingItems.Add(ItemName.SHOCKWAVE, RegionName.START);
-
             ReadStartingItemsIntoUI();
             ReadHelmAndKRoolOrder(info);
             ReadLevelOrder(info);
@@ -258,6 +253,10 @@ namespace TrackOMatic
         private void ReadPointSpread(string JSONString)
         {
             var pointPairs = JsonConvert.DeserializeObject <Dictionary<string, int>>(JSONString);
+            if (!pointPairs.ContainsKey("fairy_moves"))
+            {
+                pointPairs["fairy_moves"] = pointPairs["training_moves"];
+            }
             foreach(var pair in pointPairs)
             {
                 var name = pair.Key;
@@ -339,6 +338,18 @@ namespace TrackOMatic
             RNGSeed = BitConverter.ToInt32(hashBytes, 0);
         }
 
+        private void ReadSettings(dynamic JSONObject)
+        {
+            var settingsDict = JSONObject["Settings"].ToObject<Dictionary<string, object>>();
+            if (settingsDict["Shockwave Shuffle"] == null) return;
+            var shockwaveShuffle = (string)settingsDict["Shockwave Shuffle"];
+            if (shockwaveShuffle == "start_with")
+            {
+                StartingItems.Add(ItemName.FAIRY_CAMERA, RegionName.START);
+                StartingItems.Add(ItemName.SHOCKWAVE, RegionName.START);
+            }
+        }
+
         public SpoilerSettings ParseSpoiler(string fileName)
         {
             var spoilerSettings = new SpoilerSettings();
@@ -349,6 +360,7 @@ namespace TrackOMatic
             string json = reader.ReadToEnd();
 
             dynamic JSONObject = JsonConvert.DeserializeObject(json);
+            if (JSONObject["Settings"] != null) ReadSettings(JSONObject);
             if (JSONObject["Spoiler Hints Data"] != null)
             {
                 spoilerSettings = ParseRegions(JSONObject);
