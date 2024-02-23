@@ -64,7 +64,7 @@ namespace TrackOMatic
 
         private List<BitmapImage> ProgressiveKongSource = new()
         {
-                new BitmapImage( new Uri("images/dk64/unknown_kong.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/bw/unknown_kong.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/donkey.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/diddy.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/lanky.png", UriKind.Relative)),
