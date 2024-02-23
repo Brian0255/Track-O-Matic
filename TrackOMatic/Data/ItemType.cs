@@ -3,6 +3,7 @@
     public enum ItemType
     {
         MISC = 0,
+        FAIRY_MOVE,
         SHARED_MOVE,
         TRAINING_MOVE,
         GUN,

@@ -13,8 +13,8 @@ namespace TrackOMatic
         {ItemName.PROGRESSIVE_SLAM_2, new ImportantCheck(ItemName.PROGRESSIVE_SLAM_2,ItemType.SHARED_MOVE, VialColor.CLEAR)},
         {ItemName.PROGRESSIVE_SLAM_3, new ImportantCheck(ItemName.PROGRESSIVE_SLAM_3,ItemType.SHARED_MOVE, VialColor.CLEAR)},
 
-        {ItemName.FAIRY_CAMERA, new ImportantCheck(ItemName.FAIRY_CAMERA, ItemType.SHARED_MOVE, VialColor.CLEAR) },
-        {ItemName.SHOCKWAVE, new ImportantCheck(ItemName.SHOCKWAVE, ItemType.SHARED_MOVE, VialColor.CLEAR) },
+        {ItemName.FAIRY_CAMERA, new ImportantCheck(ItemName.FAIRY_CAMERA, ItemType.FAIRY_MOVE, VialColor.CLEAR) },
+        {ItemName.SHOCKWAVE, new ImportantCheck(ItemName.SHOCKWAVE, ItemType.FAIRY_MOVE, VialColor.CLEAR) },
 
         {ItemName.VINE_SWINGING, new ImportantCheck(ItemName.VINE_SWINGING,ItemType.TRAINING_MOVE, VialColor.CLEAR)},
         {ItemName.BARREL_THROWING, new ImportantCheck(ItemName.BARREL_THROWING,ItemType.TRAINING_MOVE, VialColor.CLEAR)},
