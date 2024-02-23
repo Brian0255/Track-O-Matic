@@ -151,6 +151,7 @@ namespace TrackOMatic
             {"barrel_moves", ItemType.BARREL_MOVE },
             {"training_moves", ItemType.TRAINING_MOVE },
             {"important_shared_moves",ItemType.SHARED_MOVE },
+            {"fairy_moves", ItemType.FAIRY_MOVE }
         };
 
         public static readonly Dictionary<string, ItemName> POINT_NAME_TO_SPECIFIC_VALUE = new()
