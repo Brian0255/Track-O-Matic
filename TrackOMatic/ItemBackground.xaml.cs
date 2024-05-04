@@ -55,7 +55,14 @@ namespace TrackOMatic
 
         public void ItemBackground_MouseDown(object sender, MouseEventArgs e)
         {
+
             if (e.MiddleButton == MouseButtonState.Pressed) ToggleStar();
+            var item = mainWindow.BACKGROUND_IMAGE_TO_ITEM[this];
+            if(item.Parent != mainWindow.ItemGrid)
+            {
+                item.HandleItemReturn();
+                item.DoDragDrop(e.RightButton == MouseButtonState.Pressed);
+            }
         }
 
         public void ItemBackground_MouseWheel(object sender, MouseWheelEventArgs e)
