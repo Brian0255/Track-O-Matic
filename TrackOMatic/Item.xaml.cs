@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Windows.Media.Imaging;
+using System.IO.Ports;
 
 namespace TrackOMatic
 {
@@ -38,15 +39,25 @@ namespace TrackOMatic
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
+        public void SyncImages()
+        {
+            if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
+            {
+                mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
+            }
+            if (mainWindow.ITEM_TO_DIRECT_HINT.ContainsKey(ItemName))
+            {
+                mainWindow.ITEM_TO_DIRECT_HINT[ItemName].Image.Source = ItemImage.Source;
+            }
+        }
+
+
         public Image ItemImage
         {
             get { return (Image)GetValue(ItemImageProperty); }
-            set { 
+            set {
                 SetValue(ItemImageProperty, value);
-                if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
-                {
-                    mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
-                }
+                SyncImages();
             }
         }
 
@@ -193,6 +204,10 @@ namespace TrackOMatic
         {
             ItemImage.Opacity = newOpacity;
             mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].ChangeOpacity(newOpacity);
+            if (mainWindow.ITEM_TO_DIRECT_HINT.ContainsKey(ItemName))
+            {
+                mainWindow.ITEM_TO_DIRECT_HINT[ItemName].Opacity = newOpacity;
+            }
         }
 
         public void Brighten()
@@ -207,33 +222,35 @@ namespace TrackOMatic
             ItemImage = ItemBrightnessChanger.ItemImage;
         }
 
+        public void DoDragDrop(bool rightButtonPressed) 
+        { 
+            ItemName itemName = (ItemName)Tag;
+            var resourceName = itemName.ToString().ToLower();
+            ItemImage = (Image) FindResource(resourceName);
+            var opacity = (rightButtonPressed) ? 0.375 : 1.0;
+            Opacity = 1.0;
+             var adLayer = AdornerLayer.GetAdornerLayer(this);
+            myAdornment = new ItemAdorner(this, opacity);
+            adLayer.Add(myAdornment);
+            var parent = Parent;
+
+            DragDrop.DoDragDrop(this, this, DragDropEffects.Copy);
+
+            pressed = false;
+
+            if (Parent == parent) Darken();
+            else Brighten();
+
+            if (Parent == parent) ChangeOpacity(1.0);
+            else ChangeOpacity(opacity);
+
+            PerformSave();
+            adLayer.Remove(myAdornment);
+        }
+
         public void Item_MouseMove(object sender, MouseEventArgs e)
         {
-            if (pressed && Interactible)
-            {
-                ItemName itemName = (ItemName)Tag;
-                var resourceName = itemName.ToString().ToLower();
-                ItemImage = (Image)FindResource(resourceName);
-                var opacity = (e.RightButton == MouseButtonState.Pressed) ? 0.375 : 1.0;
-                Opacity = 1.0;
-                var adLayer = AdornerLayer.GetAdornerLayer(this);
-                myAdornment = new ItemAdorner(this, opacity);
-                adLayer.Add(myAdornment);
-                var parent = Parent;
-
-                DragDrop.DoDragDrop(this, this, DragDropEffects.Copy);
-
-                pressed = false;
-
-                if (Parent == parent) Darken();
-                else Brighten();
-
-                if (Parent == parent) ChangeOpacity(1.0);
-                else ChangeOpacity(opacity);
-
-                PerformSave();
-                adLayer.Remove(myAdornment);
-            }
+            if (pressed && Interactible) DoDragDrop(e.RightButton == MouseButtonState.Pressed);
         }
 
         public void ToggleStar()
