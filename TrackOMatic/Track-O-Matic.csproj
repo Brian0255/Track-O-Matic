@@ -1152,6 +1152,12 @@
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\tag_barrel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\tag_barrel.png" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>

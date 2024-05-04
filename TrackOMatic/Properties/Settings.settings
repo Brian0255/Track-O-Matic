@@ -20,8 +20,8 @@
     <Setting Name="HitList" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="HintDisplay" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="HintDisplay" Type="System.String" Scope="User">
+      <Value Profile="(Default)">"Multipath Hints"</Value>
     </Setting>
     <Setting Name="DesiredWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>

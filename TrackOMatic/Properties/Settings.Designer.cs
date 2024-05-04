@@ -97,10 +97,10 @@ namespace TrackOMatic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool HintDisplay {
+        [global::System.Configuration.DefaultSettingValueAttribute("\"Multipath Hints\"")]
+        public string HintDisplay {
             get {
-                return ((bool)(this["HintDisplay"]));
+                return ((string)(this["HintDisplay"]));
             }
             set {
                 this["HintDisplay"] = value;
