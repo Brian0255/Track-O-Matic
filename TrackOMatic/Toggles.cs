@@ -27,8 +27,10 @@ namespace TrackOMatic
 
         private void HintDisplayToggle(object sender, RoutedEventArgs e)
         {
-            Settings.Default.HintDisplay = HintDisplay.IsChecked;
+            var button = (sender as RadioButton);
+            Settings.Default.HintDisplay = button.Content.ToString();
             ResetWidthHeight();
+            UpdateHintDisplayToggles();
             Settings.Default.Save();
         }
 
