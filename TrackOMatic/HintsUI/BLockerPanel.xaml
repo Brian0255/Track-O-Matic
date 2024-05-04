@@ -11,10 +11,10 @@
         <Border CornerRadius="3" BorderThickness=".5" BorderBrush="Black" Background="{StaticResource VeryDark}">
             <Grid Background="Transparent" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="38"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Margin="10,0,0,0" FontSize="24" Foreground="White" Grid.Row="0"  FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center"/>
+                <TextBlock Margin="10,0,0,0" Padding="0,0,0,2" FontSize="20" Foreground="White" Grid.Row="0"  FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center"/>
                 <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
                     <UniformGrid Name="MainGrid" Grid.Row="1" Columns="2">
                         <local:BLockerHint RegionName="JUNGLE_JAPES"/>
