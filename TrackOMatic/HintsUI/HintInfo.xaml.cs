@@ -27,7 +27,7 @@ namespace TrackOMatic
         {
             {HintSuggestion.LOCATION, new HintShortcutInfo("Hint Regions", HintData.SortedRegions) },
             {HintSuggestion.CHECK, new HintShortcutInfo("Item Locations", HintData.SortedChecks) },
-            {HintSuggestion.MOVE, new HintShortcutInfo("Moves", HintData.SortedMoves) }
+            {HintSuggestion.MOVE, new HintShortcutInfo("Moves", HintData.SortedMoves) },
         };
         private HintShortcutInfo hintShortcutInfo;
 
@@ -41,6 +41,8 @@ namespace TrackOMatic
         public HintType HintType { get; private set; }
         public bool DoSuggestions { get; set; } = true;
 
+        public RegionName RegionName { get; }
+
         public SavedHint SavedHint { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -49,7 +51,7 @@ namespace TrackOMatic
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public HintInfo(HintType hintType, string panelName, bool isSavedHint = false)
+        public HintInfo(HintType hintType, string panelName, bool isSavedHint = false, RegionName regionName = RegionName.UNKNOWN)
         {
             InitializeComponent();
             DataContext = this;
@@ -65,6 +67,7 @@ namespace TrackOMatic
             {
                 hintShortcutInfo = suggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
             }
+            RegionName = regionName;
         }
 
         public void UpdateSelectedItems()
@@ -106,12 +109,23 @@ namespace TrackOMatic
 
         private void CheckForShortcuts(List<string> matches)
         {
-            foreach (var entry in HintData.UserShortcuts[hintShortcutInfo.JSONShortcutsKey])
+            var directHintExclusions = new List<string>() { "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss","Bought" };
+            var exclude = directHintExclusions;
+            var JSONKey = "Kong Hint Shorthand";
+            if(hintShortcutInfo != null)
             {
+                JSONKey = hintShortcutInfo.JSONShortcutsKey;
+                exclude = new();
+            }
+            var textInfo = new CultureInfo("en-US", false).TextInfo;
+            foreach (var entry in HintData.UserShortcuts[JSONKey])
+            {
+                var toAdd = entry.Value;
+                if (JSONKey == "Kong Hint Shorthand") toAdd = textInfo.ToTitleCase(toAdd.ToLower());
                 var shortcut = entry.Key;
-                if (shortcut.Contains(Location.Text.ToLower()))
+                if (shortcut.ToLower().Contains(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
                 {
-                    matches.Add(entry.Value);
+                    matches.Add(toAdd);
                 }
             }
         }
@@ -119,22 +133,25 @@ namespace TrackOMatic
         private void SetUpSuggestions()
         {
             var matches = new List<string>();
+            List<string> sortBy = new();
+            if (HintType == HintType.DIRECT_ITEM_HINT)
+            {
+                sortBy = HintData.REGIONS_WITHOUT_LEVEL_NAME[RegionName];
+            }
+            if (hintShortcutInfo != null)
+            {
+                sortBy = hintShortcutInfo.DefaultSortedList;
+            }
             if (HintTypeSettings.HintSuggestion == HintSuggestion.NONE)
             {
                 SuggestionBox.ItemsSource = null;
                 return;
             }
             CheckForShortcuts(matches);
-            if (matches.Count > 0)
-            {
-                matches.Sort();
-                SuggestionBox.ItemsSource = matches;
-            }
-            else
-            {
-                List<string> sortBy = hintShortcutInfo.DefaultSortedList;
-                SuggestionBox.ItemsSource = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
-            }
+            var filteredItems = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
+            matches = matches.Concat(filteredItems).Distinct().ToList();
+            matches.Sort();
+            SuggestionBox.ItemsSource = matches;
         }
 
         private void Location_TextChanged(object sender, TextChangedEventArgs e)
@@ -238,6 +255,21 @@ namespace TrackOMatic
             {
                 Keyboard.ClearFocus();
                 SavedHint.PotionCountText = PotionCount.Text;
+            }
+        }
+
+        public void OnRemove()
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (HintType != HintType.DIRECT_ITEM_HINT) return;
+            foreach(var itemName in RightItems.SelectedItems)
+            {
+                if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName)) continue;
+                var matchingItem = mainWindow.ITEM_NAME_TO_ITEM[itemName];
+                if (matchingItem.ItemImage.Source.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
+                {
+                    matchingItem.HandleItemReturn();
+                }
             }
         }
         public void SetUpFromSavedHint(SavedHint savedHint)
