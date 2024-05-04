@@ -118,6 +118,7 @@
     <Image x:Key="potion_tiny" Source="Images\dk64\purple_vial.png" x:Shared="false"/>
     <Image x:Key="potion_chunky" Source="Images\dk64\green_vial.png" x:Shared="false"/>
     <Image x:Key="potion_shared" Source="Images\dk64\clear_vial.png" x:Shared="false"/>
+    <Image x:Key="kong_family" Source="Images\dk64\tag_barrel.png" x:Shared="false"/>
 
     <!--Black&White-->
     <Image x:Key="potion_dk_bw" Source="Images\bw\yellow_vial.png" x:Shared="false"/>
@@ -192,6 +193,6 @@
     <Image x:Key="vine_swinging_bw" Source="Images\bw\vine_swinging.png"  x:Shared="false"/>
 
     <Image x:Key="bean_bw" Source="Images\bw\bean.png"  x:Shared="false"/>
-
+    <Image x:Key="kong_family_bw" Source="Images\bw\tag_barrel.png"  x:Shared="false"/>
 
 </ResourceDictionary>
