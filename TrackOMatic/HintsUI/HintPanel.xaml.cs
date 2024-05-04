@@ -22,6 +22,7 @@ namespace TrackOMatic
         public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register("Heading", typeof(string), typeof(HintPanel));
         public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register("LineColor", typeof(Color), typeof(HintPanel));
         public static readonly DependencyProperty HintTypeProperty = DependencyProperty.Register("HintType", typeof(HintType), typeof(HintPanel));
+        public static readonly DependencyProperty RegionNameProperty = DependencyProperty.Register("RegionName", typeof(RegionName), typeof(HintPanel));
         public string Heading
         {
             get { return (string)GetValue(HeadingProperty); }
@@ -38,6 +39,12 @@ namespace TrackOMatic
         {
             get { return (HintType)GetValue(HintTypeProperty); }
             set { SetValue(HintTypeProperty, value); }
+        }
+
+        public RegionName RegionName
+        {
+            get { return (RegionName)GetValue(RegionNameProperty); }
+            set { SetValue(RegionNameProperty, value); }
         }
         public HintPanel()
         {
@@ -58,16 +65,18 @@ namespace TrackOMatic
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 HintInfo hint = (HintInfo)sender;
+                hint.OnRemove();
                 HintList.Children.Remove(hint);
             }
         }
 
         private HintInfo CreateNewHint(bool isSavedHint = false)
         {
-            var newHint = new HintInfo(HintType, Name, isSavedHint);
+            var newHint = new HintInfo(HintType, Name, isSavedHint, RegionName);
             var insertionPoint = HintList.Children.Count - 1;
             HintList.Children.Insert(insertionPoint, newHint);
             newHint.MouseDown += RemoveHint;
+
             return newHint;
         }
 
