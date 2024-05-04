@@ -44,7 +44,11 @@
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True"  IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
-                <MenuItem Name="HintDisplay" Header="Hint Display" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Click="HintDisplayToggle"/>
+            </MenuItem>
+            <MenuItem Header="Hint Display" Focusable="False">
+                <RadioButton Name="hintDisplayOff" Checked="HintDisplayToggle">Off</RadioButton>
+                <RadioButton Name="hintDisplayMP" Checked="HintDisplayToggle">Multipath Hints</RadioButton>
+                <RadioButton Name="hintDisplayDirect" Checked="HintDisplayToggle">Direct Item Hints</RadioButton>
             </MenuItem>
             <MenuItem Header="Version 1.4.3" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
@@ -717,6 +721,11 @@
                 </Grid>
             </Grid>
             <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Name="DirectItemHintGrid">
                 <Grid.Style>
                     <Style TargetType="{x:Type Grid}">
                         <Setter Property="Visibility" Value="Visible" />
@@ -734,8 +743,59 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="5" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
+                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="5" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
+                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="5" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
+
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="5" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
+                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="5" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
+                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="5" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="5" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
+                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="5" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
+                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="HelmPanel" Margin="5" Heading="HELM" LineColor="#b580ff" RegionName="HIDEOUT_HELM" />
+
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="0" Name="MultipathGrid">
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="false">
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
                 <local:HintPanel HintType="PATH" x:Name="PathsPanel" Margin="5" Grid.Column="0" Heading="PATHS" LineColor="#dba512"  />
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
@@ -745,23 +805,25 @@
                     <local:HintPanel Grid.Row="0" HintType="KONGS" x:Name="KongsPanel" Margin="5" Heading="KONGS" LineColor="#ff59e1"  />
                     <local:HintPanel Grid.Row="1" HintType="WAY_OF_THE_HOARD" x:Name="WotHPanel" Margin="5" Heading="WAY OF THE HOARD" LineColor="#2652ff"  />
                 </Grid>
-                <Grid Grid.Column="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="5*"/>
-                        <RowDefinition Height="3*"/>
-                    </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="FOOLISH_REGION" x:Name="FoolishPanel" Margin="5" Heading="FOOLISH REGIONS" LineColor="#e02f2f"  />
-                    <!--local:HintPanel Grid.Row="1" HintType="PATHLESS_MOVE" x:Name="PathlessPanel" Margin="5" Heading="PATHLESS MOVES" LineColor="#f78436"  /-->
-                    <local:HintPanel Grid.Row="1" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="5" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5*"/>
+                            <RowDefinition Height="3*"/>
+                        </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" HintType="FOOLISH_REGION" x:Name="FoolishPanel" Margin="5" Heading="FOOLISH REGIONS" LineColor="#e02f2f"  />
+                        <local:HintPanel Grid.Row="1" HintType="PATHLESS_MOVE" x:Name="PathlessPanel" Margin="5" Heading="PATHLESS MOVES" LineColor="#f78436"  />
+                        <local:HintPanel Grid.Row="1" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="5" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
+                    </Grid>
                 </Grid>
-                <Grid Grid.Column="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="5*"/>
-                        <RowDefinition Height="2.6*"/>
-                    </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="5" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
-                    <local:BLockerPanel x:Name="BLockerHints" Grid.Row="1" Margin="5" Heading="B. LOCKERS" LineColor="#F0F000"/>
-                </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="2.6*"/>
+                </Grid.RowDefinitions>
+
+                <local:HintPanel Grid.Row="0" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="5" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
+                <local:BLockerPanel x:Name="BLockerHints" Grid.Row="1" Margin="5" Heading="B. LOCKERS" LineColor="#F0F000"/>
+            </Grid>
             </Grid>
         </Grid>
     </DockPanel>
