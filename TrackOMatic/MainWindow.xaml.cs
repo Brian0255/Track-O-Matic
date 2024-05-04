@@ -41,8 +41,8 @@ namespace TrackOMatic
     {
         public int TotalGBs { get; private set; }
         public Button SelectedButton { get; }
-        public Dictionary<RegionName, Region> Regions { get; private set;  }
-        public Dictionary<ItemType,CollectibleItem> Collectibles { get; private set; }
+        public Dictionary<RegionName, Region> Regions { get; private set; }
+        public Dictionary<ItemType, CollectibleItem> Collectibles { get; private set; }
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
         public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
@@ -72,6 +72,9 @@ namespace TrackOMatic
                 new BitmapImage( new Uri("images/dk64/chunky.png", UriKind.Relative)),
         };
 
+        public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
+        public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
+
         private Timer SaveTimer;
 
         public MainWindow()
@@ -94,6 +97,13 @@ namespace TrackOMatic
             Reset();
         }
 
+        private void UpdateHintDisplayToggles()
+        {
+            hintDisplayOff.IsChecked = (Settings.Default.HintDisplay == "Off");
+            hintDisplayMP.IsChecked = (Settings.Default.HintDisplay == "Multipath Hints");
+            hintDisplayDirect.IsChecked = (Settings.Default.HintDisplay == "Direct Item Hints");
+        }
+
         private ItemBackground FindMatchingBackgroundImage(Item item)
         {
             foreach (var control in Items.Children)
@@ -109,6 +119,7 @@ namespace TrackOMatic
 
         private void InitData()
         {
+            UpdateHintDisplayToggles();
             Regions = new()
             {
                 { RegionName.DK_ISLES, new Region(RegionName.DK_ISLES, DKIslesRegion, DKIslesPicture, DKIslesRegionGrid, DKIslesPoints, DKIslesTopLabel) },
@@ -143,24 +154,47 @@ namespace TrackOMatic
             Items = ItemGrid;
             KroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
             HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
-
-            //have a separate list of the movable tracker items so it's easy to find them even if they are moved out of the grid
-            foreach (var control in Items.Children)
+            foreach (var control in ItemGrid.Children)
             {
                 if (control is Item item)
                 {
-                    DraggableItems.Add(item);
-                    var matchingButton = FindMatchingBackgroundImage(item);
-                    if (matchingButton != null)
-                    {
-                        ITEM_TO_BACKGROUND_IMAGE[item] = matchingButton;
-                        BACKGROUND_IMAGE_TO_ITEM[matchingButton] = item;
-                    }
+                    var itemName = (ItemName)item.Tag;
+                    ITEM_NAME_TO_ITEM[itemName] = item;
+                }
+            }
+
+            //have a separate list of the movable tracker items so it's easy to find them even if they are moved out of the grid
+            foreach (Item item in ITEM_NAME_TO_ITEM.Values)
+            {
+                DraggableItems.Add(item);
+                var matchingButton = FindMatchingBackgroundImage(item);
+                if (matchingButton != null)
+                {
+                    ITEM_TO_BACKGROUND_IMAGE[item] = matchingButton;
+                    BACKGROUND_IMAGE_TO_ITEM[matchingButton] = item;
                 }
             }
 
 
-            HintPanels = new() { PathsPanel, KongsPanel, WotHPanel, UnhintedPanel, FoolishPanel, PotionCountsPanel };
+            HintPanels = new() { 
+            IslesPanel,
+            FactoryPanel,
+            CavesPanel,
+            JapesPanel,
+            GalleonPanel,
+            CastlePanel,
+            AztecPanel,
+            ForestPanel,
+            HelmPanel,
+            PathsPanel,
+            KongsPanel,
+            WotHPanel,
+            FoolishPanel,
+            PathlessPanel,
+            PotionCountsPanel,
+            UnhintedPanel
+
+            };
             Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting);
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
@@ -201,27 +235,22 @@ namespace TrackOMatic
 
         public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false)
         {
-            foreach (var itemControl in DraggableItems)
+            if (!ITEM_NAME_TO_ITEM.ContainsKey(itemToProcess)) return false;
+            var item = ITEM_NAME_TO_ITEM[itemToProcess];
+            bool darken = hint && item.Parent == ItemGrid;
+            if (item.Parent != ItemGrid)
             {
-                if (itemControl is Item item && itemToProcess == (ItemName)item.Tag)
-                {
-                    bool shouldBrighten = true;
-                    if (hint && !Autotracker.ItemWasTracked(itemToProcess)) shouldBrighten = false;
-                    if (item.Parent != ItemGrid)
-                    {
-                        var parent = (RegionGrid)item.Parent;
-                        parent.Handle_RegionGrid(item, false);
-                    }
-                    item.ChangeOpacity(1.0);
-                    Regions[regionName].RegionGrid.Add_Item(item, false, shouldBrighten);
-                    //should mean that there was no matching vial, item couldn't be placed as a result
-                    if (item.Parent == ItemGrid) return false;
-                    DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, shouldBrighten, item.ItemImage.Opacity, !shouldBrighten));
-                    DataSaver.Save();
-                    return true;
-                }
+                var parent = (RegionGrid)item.Parent;
+                parent.Handle_RegionGrid(item, false);
             }
-            return false;
+            if(!hint) item.ChangeOpacity(1.0);
+            Regions[regionName].RegionGrid.Add_Item(item, false, !darken);
+            item.SyncImages();
+            //should mean that there was no matching vial, item couldn't be placed as a result
+            if (item.Parent == ItemGrid) return false;
+            DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.ItemImage.Opacity));
+            DataSaver.Save();
+            return true;
         }
 
         private void InitOptions()
@@ -247,10 +276,20 @@ namespace TrackOMatic
 
         private void ResetWidthHeight()
         {
-            Width = (Settings.Default.HintDisplay) ? 1800 : 580;
+            Width = (Settings.Default.HintDisplay != "Off") ? 1800 : 580;
             Height = (Settings.Default.HitList) ? 980 : 820;
-            double newColumnWidth = (Settings.Default.HintDisplay) ? 2.15 : 0;
+            double newColumnWidth = (Settings.Default.HintDisplay != "Off") ? 2.15 : 0;
             HintsColumn.Width = new GridLength(newColumnWidth, GridUnitType.Star);
+            if (Settings.Default.HintDisplay == "Multipath Hints")
+            {
+                MultipathGrid.Visibility = Visibility.Visible;
+                DirectItemHintGrid.Visibility = Visibility.Hidden;
+            }
+            if (Settings.Default.HintDisplay == "Direct Item Hints")
+            {
+                DirectItemHintGrid.Visibility = Visibility.Visible;
+                MultipathGrid.Visibility = Visibility.Hidden;
+            }
         }
 
         private void ResetSize(object sender, RoutedEventArgs e)
