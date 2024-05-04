@@ -29,6 +29,7 @@ namespace TrackOMatic
             {
                 if (child is SelectableHintItem hintItem)
                 {
+                    hintItem.MouseDoubleClick += TextBlock_MouseDown;
                     ItemName itemName = (ItemName)hintItem.Tag;
                     if (itemsToTurnOn.Contains(itemName))
                     {

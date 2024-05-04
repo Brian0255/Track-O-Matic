@@ -111,6 +111,7 @@
         <local:SelectableHintItem x:Name="shockwave"  HintItemImage="{DynamicResource shockwave_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
 
         <!--Vials-->
+        <!--local:SelectableHintItem x:Name="kong_family"  HintItemImage="{DynamicResource kong_family_bw}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KONG_FAMILY}"/-->
         <local:SelectableHintItem x:Name="potion_shared"  HintItemImage="{DynamicResource potion_shared_bw}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_SHARED}"/>
         <local:SelectableHintItem x:Name="potion_dk"  HintItemImage="{DynamicResource potion_dk_bw}" Grid.Row="5" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DK}"/>
         <local:SelectableHintItem x:Name="potion_diddy"  HintItemImage="{DynamicResource potion_diddy_bw}" Grid.Row="5" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DIDDY}"/>
