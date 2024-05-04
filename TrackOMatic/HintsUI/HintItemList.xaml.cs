@@ -56,9 +56,26 @@ namespace TrackOMatic
 
         public void AddNewImageToPanel(ItemName itemName)
         {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
             var resourceName = itemName.ToString().ToLower();
-            var image = ((Image)FindResource(resourceName));
-            var newItem = new PathOrFoundItem(image);
+            var newItem = new PathOrFoundItem(itemName);
+            var validItem = mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName);
+            if (HintInfo != null && HintInfo.HintType == HintType.DIRECT_ITEM_HINT && validItem)
+            {
+                var item = mainWindow.ITEM_NAME_TO_ITEM[itemName];
+                if (!mainWindow.ITEM_TO_DIRECT_HINT.ContainsKey(itemName))
+                {
+                    mainWindow.ITEM_TO_DIRECT_HINT.Add(itemName, newItem);
+                }
+                else
+                {
+                    mainWindow.ITEM_TO_DIRECT_HINT[itemName] = newItem;
+                }
+                if (item.Parent == mainWindow.ItemGrid)
+                {
+                    mainWindow.ProcessNewAutotrackedItem(itemName, HintInfo.RegionName, true);
+                }
+            }
             newItem.MouseDown += Image_MouseDown;
             ItemPanel.Children.Add(newItem);
         }
