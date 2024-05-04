@@ -54,11 +54,11 @@
     "foma": "FOREST_MILLS_AREA",
 
     "cvmr": "CAVES_MEDAL_REWARDS",
-    "csvb": "CAVES_COLORED_BANANAS",
+    "cvcb": "CAVES_COLORED_BANANAS",
     "cvsh": "CAVES_SHOPS",
     "cvma": "CAVES_MAIN_AREA",
     "cvig": "CAVES_IGLOO",
-    "csva": "CAVES_CABINS",
+    "cvca": "CAVES_CABINS",
 
     "csmr": "CASTLE_MEDAL_REWARDS",
     "cscb": "CASTLE_COLORED_BANANAS",
@@ -150,7 +150,7 @@
     "isdrfl": "Isles Dirt: Floating Isle",
 
     "isfabfi": "Isles Fairy: Near BFI",
-    "isfrfa": "Isles Fairy: Factory Lobby",
+    "isfafa": "Isles Fairy: Factory Lobby",
     "isfafo": "Isles Fairy: Forest Lobby",
     "isfaki": "Isles Fairy: Top of Krem Isle",
 
