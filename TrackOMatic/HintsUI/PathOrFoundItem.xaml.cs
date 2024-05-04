@@ -14,10 +14,12 @@ namespace TrackOMatic
 {
     public partial class PathOrFoundItem : ContentControl
     {
-        public PathOrFoundItem(Image image)
+        private ItemBrightnessChanger ItemBrightnessChanger;
+        public PathOrFoundItem(ItemName itemName)
         {
             InitializeComponent();
-            Image.Content = image;
+            ItemBrightnessChanger = new ItemBrightnessChanger(Image, itemName);
+            ItemBrightnessChanger.Brighten();
             DataContext = this;
         }
     }

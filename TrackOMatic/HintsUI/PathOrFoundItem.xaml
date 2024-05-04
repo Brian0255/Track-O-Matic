@@ -16,7 +16,7 @@
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <ContentPresenter x:Name="Image" Content=""/>
+                <Image x:Name="Image"/>
             </Border>
         </Grid>
     </ContentControl.Content>
