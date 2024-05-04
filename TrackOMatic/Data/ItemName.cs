@@ -328,6 +328,8 @@
         POTION_LANKY,
         POTION_CHUNKY,
 
+        KONG_FAMILY,
+
         NONE
     }
 }

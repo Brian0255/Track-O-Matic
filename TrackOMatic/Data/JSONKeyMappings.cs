@@ -106,7 +106,7 @@ namespace TrackOMatic
             {"Galleon", RegionName.GLOOMY_GALLEON },
             {"Forest", RegionName.FUNGI_FOREST },
             {"Caves", RegionName.CRYSTAL_CAVES},
-            {"Castle", RegionName.CREEPY_CASTLE }
+            {"Castle", RegionName.CREEPY_CASTLE },
         };
 
         public static readonly Dictionary<RegionName, string> REGION_NAME_TO_SHORTENED = new()
