@@ -29,7 +29,7 @@ namespace TrackOMatic
         private Dictionary<ItemName, RegionName> trackedItemLocations;
         private System.Threading.Timer timer;
         private bool attached = false;
-        private uint startAddress;
+        private ulong startAddress;
         private int timeout;
         private bool is64Bit = false;
         private bool spoilerLoaded = false;
@@ -111,7 +111,7 @@ namespace TrackOMatic
         {
             if (attached) return;
             var verificationInfo = new GameVerificationInfo(0x759290, 32, 0x52414D42);
-            var attachedProcessInfo = AttachToEmulator.Attach(verificationInfo, EmulatorName.PROJECT_64);
+            var attachedProcessInfo = AttachToEmulator.Attach(verificationInfo);
             if (attachedProcessInfo == null) return;
             attached = true;
             startAddress = attachedProcessInfo.StartAddress;
