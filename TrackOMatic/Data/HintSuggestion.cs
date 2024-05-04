@@ -5,6 +5,7 @@
         LOCATION,
         MOVE,
         CHECK,
+        DIRECT_ITEM_HINT,
         NONE
     }
 }

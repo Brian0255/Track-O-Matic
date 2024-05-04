@@ -14,7 +14,9 @@ namespace TrackOMatic
             {HintType.FOOLISH_REGION, new HintTypeSettings(Visibility.Hidden, Visibility.Hidden, HintSuggestion.LOCATION) },
             {HintType.PATHLESS_MOVE, new HintTypeSettings(Visibility.Hidden, Visibility.Hidden, HintSuggestion.MOVE) },
             {HintType.UNHINTED, new HintTypeSettings(Visibility.Hidden, Visibility.Visible, HintSuggestion.CHECK, true) },
-            {HintType.MISC, new HintTypeSettings(Visibility.Hidden, Visibility.Hidden, HintSuggestion.NONE) }
+            {HintType.MISC, new HintTypeSettings(Visibility.Hidden, Visibility.Hidden, HintSuggestion.NONE) },
+            {HintType.DIRECT_ITEM_HINT, new HintTypeSettings(Visibility.Hidden, Visibility.Visible, HintSuggestion.DIRECT_ITEM_HINT, true, Visibility.Collapsed, Visibility.Visible) },
+            {HintType.ADVANCED_ITEM_HINT, new HintTypeSettings(Visibility.Hidden, Visibility.Visible, HintSuggestion.LOCATION, false) }
        };
     }
 }

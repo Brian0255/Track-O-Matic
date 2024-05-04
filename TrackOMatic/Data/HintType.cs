@@ -10,5 +10,8 @@
         UNHINTED,
         MISC,
         KONGS,
+        DIRECT_ITEM_HINT,
+        ADVANCED_ITEM_HINT,
+        ADVANCED_ITEM_HINT_KONG_MOVE
     }
 }
