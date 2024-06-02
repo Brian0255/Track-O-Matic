@@ -463,18 +463,19 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width=".5*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Kong 1 -->
@@ -611,6 +612,17 @@
                     <local:ItemBackground BackgroundItemImage="{DynamicResource homing_ammo}"     Grid.Row="4" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
                     <local:ItemBackground BackgroundItemImage="{DynamicResource fairy_camera}"     Grid.Row="4" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
                     <local:ItemBackground BackgroundItemImage="{DynamicResource shockwave}"     Grid.Row="4" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+                    
+                    <!--Shopkeepers-->
+                    <local:Item x:Name="cranky"  ItemImage="{DynamicResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>
+                    <local:Item x:Name="candy"  ItemImage="{DynamicResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
+                    <local:Item x:Name="funky"  ItemImage="{DynamicResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
+                    <local:Item x:Name="snide"  ItemImage="{DynamicResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
+
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource cranky}"     Grid.Row="0" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CRANKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource candy}"     Grid.Row="1" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CANDY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource funky}"     Grid.Row="2" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FUNKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource snide}"     Grid.Row="3" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIDE}"/>
                 </Grid>
                 <!--K.Rool/Helm order-->
                 <Grid Grid.Row="6" >
