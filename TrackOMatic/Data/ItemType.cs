@@ -32,6 +32,6 @@
 
         KEY,
 
-        KONG
+        KONG,
     }
 }

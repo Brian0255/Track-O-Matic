@@ -67,6 +67,11 @@ namespace TrackOMatic
         {ItemName.CHUNKY, new ImportantCheck(ItemName.CHUNKY,ItemType.KONG, VialColor.KONG)},
         {ItemName.KRUSHA, new ImportantCheck(ItemName.KRUSHA,ItemType.KONG, VialColor.KONG)},
 
+        {ItemName.CRANKY, new ImportantCheck(ItemName.CRANKY,ItemType.KONG, VialColor.KONG)},
+        {ItemName.CANDY, new ImportantCheck(ItemName.CANDY,ItemType.KONG, VialColor.KONG)},
+        {ItemName.FUNKY, new ImportantCheck(ItemName.FUNKY,ItemType.KONG, VialColor.KONG)},
+        {ItemName.SNIDE, new ImportantCheck(ItemName.SNIDE,ItemType.KONG, VialColor.KONG)},
+
         {ItemName.BEAN, new ImportantCheck(ItemName.BEAN,ItemType.MISC, VialColor.CLEAR)},
 
         {ItemName.DONKEY_JAPES_GBS, new ImportantCheck(ItemName.DONKEY_JAPES_GBS, ItemType.GOLDEN_BANANA)},
