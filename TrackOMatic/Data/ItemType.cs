@@ -33,5 +33,6 @@
         KEY,
 
         KONG,
+        SHOPKEEPER
     }
 }
