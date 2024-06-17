@@ -227,17 +227,7 @@ namespace TrackOMatic
             {
                 if (i < info.krool_order.Count)
                 {
-                    int kroolIndex = info.krool_order[i];
-                    string imageName = "";
-                    if (JSONKeyMappings.KROOL_MAP_TO_IMAGE.ContainsKey(kroolIndex))
-                    {
-                        imageName = JSONKeyMappings.KROOL_MAP_TO_IMAGE[kroolIndex];
-                    }
-                    else if(kroolIndex < JSONKeyMappings.KONGS.Count)
-                    {
-                        imageName = JSONKeyMappings.KONGS[kroolIndex].ToString();
-                    }
-                    imageName = imageName.ToLower();
+                    var imageName = JSONKeyMappings.KONGS[info.krool_order[i]].ToString().ToLower();
                     MainWindow.KroolKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
                     MainWindow.KroolKongs[i].Enabled = false;
                     MainWindow.KroolKongs[i].Visibility = Visibility.Visible;

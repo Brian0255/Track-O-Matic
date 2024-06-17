@@ -6,7 +6,7 @@
              xmlns:properties="clr-namespace:TrackOMatic.Properties"
              xmlns:local="clr-namespace:TrackOMatic"
              mc:Ignorable="d" 
-             Height="315" Width="420" Topmost ="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}"
+             Height="300" Width="400" Topmost ="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}"
     Title="Select Items"
         ResizeMode="NoResize"
         Background="{StaticResource RegionBG}"  KeyDown="ItemGrid_KeyDown">
@@ -22,19 +22,18 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="0.5*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <!-- KRool VS.-->
         <local:SelectableHintItem x:Name="donkey_krool" HintItemImage="{DynamicResource donkey_krool}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY_KROOL}"/>
@@ -112,21 +111,15 @@
         <local:SelectableHintItem x:Name="shockwave"  HintItemImage="{DynamicResource shockwave_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
 
         <!--Vials-->
-        <local:SelectableHintItem x:Name="kong_family"  HintItemImage="{DynamicResource kong_family_bw}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KONG_FAMILY}"/>
-        <local:SelectableHintItem x:Name="potion_shared"  HintItemImage="{DynamicResource potion_shared_bw}" Grid.Row="5" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_SHARED}"/>
-        <local:SelectableHintItem x:Name="potion_dk"  HintItemImage="{DynamicResource potion_dk_bw}" Grid.Row="5" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DK}"/>
-        <local:SelectableHintItem x:Name="potion_diddy"  HintItemImage="{DynamicResource potion_diddy_bw}" Grid.Row="5" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DIDDY}"/>
-        <local:SelectableHintItem x:Name="potion_lanky"  HintItemImage="{DynamicResource potion_lanky_bw}" Grid.Row="5" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_LANKY}"/>
-        <local:SelectableHintItem x:Name="potion_tiny"  HintItemImage="{DynamicResource potion_tiny_bw}" Grid.Row="5" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_TINY}"/>
-        <local:SelectableHintItem x:Name="potion_chunky"  HintItemImage="{DynamicResource potion_chunky_bw}" Grid.Row="5" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_CHUNKY}"/>
-        
-        <!--Shopkeepers-->
-        <local:SelectableHintItem x:Name="cranky"  HintItemImage="{DynamicResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>
-        <local:SelectableHintItem x:Name="candy"  HintItemImage="{DynamicResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
-        <local:SelectableHintItem x:Name="funky"  HintItemImage="{DynamicResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
-        <local:SelectableHintItem x:Name="snide"  HintItemImage="{DynamicResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
+        <!--local:SelectableHintItem x:Name="kong_family"  HintItemImage="{DynamicResource kong_family_bw}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KONG_FAMILY}"/-->
+        <local:SelectableHintItem x:Name="potion_shared"  HintItemImage="{DynamicResource potion_shared_bw}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_SHARED}"/>
+        <local:SelectableHintItem x:Name="potion_dk"  HintItemImage="{DynamicResource potion_dk_bw}" Grid.Row="5" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DK}"/>
+        <local:SelectableHintItem x:Name="potion_diddy"  HintItemImage="{DynamicResource potion_diddy_bw}" Grid.Row="5" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DIDDY}"/>
+        <local:SelectableHintItem x:Name="potion_lanky"  HintItemImage="{DynamicResource potion_lanky_bw}" Grid.Row="5" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_LANKY}"/>
+        <local:SelectableHintItem x:Name="potion_tiny"  HintItemImage="{DynamicResource potion_tiny_bw}" Grid.Row="5" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_TINY}"/>
+        <local:SelectableHintItem x:Name="potion_chunky"  HintItemImage="{DynamicResource potion_chunky_bw}" Grid.Row="5" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_CHUNKY}"/>
 
-        <Border  Cursor="Hand" MouseDown="TextBlock_MouseDown" Margin="5,18,5,5" CornerRadius="5" Grid.Row="6" Grid.RowSpan="2" Grid.ColumnSpan="13" Background="{StaticResource RegionImageBG }" BorderBrush="Black" BorderThickness="0.5">
+        <Border  Cursor="Hand" MouseDown="TextBlock_MouseDown" Margin="5,18,5,5" CornerRadius="5" Grid.Row="6" Grid.RowSpan="2" Grid.ColumnSpan="12" Background="{StaticResource RegionImageBG }" BorderBrush="Black" BorderThickness="0.5">
         <TextBlock  Margin="0" Grid.Row="6" Grid.ColumnSpan="12" Text="Done" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Border>
     </Grid>
