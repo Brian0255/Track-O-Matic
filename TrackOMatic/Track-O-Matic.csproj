@@ -64,6 +64,9 @@
     <Win32Resource>
     </Win32Resource>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -270,6 +273,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="default_shortcuts.json" />
+    <None Include="app.manifest" />
     <None Include="Images\bw\aztec_img.webp" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

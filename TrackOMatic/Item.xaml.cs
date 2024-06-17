@@ -73,6 +73,10 @@ namespace TrackOMatic
             var itemName = (ItemName)Tag;
             var matchingCheck = ImportantCheckList.ITEMS[itemName];
             HoverText = matchingCheck.PointValue.ToString() + " points";
+            if(matchingCheck.PointValue == 1)
+            {
+                HoverText = HoverText.Substring(0, HoverText.Length - 1);
+            }
             ToolTip.Visibility = Visibility.Visible;
             matchingBackground.ToolTip.Visibility = Visibility.Visible;
             matchingBackground.ToolTip.Content = HoverText;

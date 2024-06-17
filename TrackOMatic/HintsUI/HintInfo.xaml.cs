@@ -241,7 +241,16 @@ namespace TrackOMatic
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
 
-                    var position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
+                    Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
+
+                    // Get the DPI scaling factor
+                    Matrix matrix = PresentationSource.FromVisual(ItemsOnPath.ItemPanel).CompositionTarget.TransformToDevice;
+                    double dpiX = matrix.M11;
+                    double dpiY = matrix.M22;
+
+                    // Adjust position for DPI scaling
+                    position = new Point(position.X / dpiX, position.Y / dpiY);
+
                     double[] selectionDialogPosition = { position.X - 10, position.Y };
                     ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
                     RightItems.SelectionDialogPosition = selectionDialogPosition;
