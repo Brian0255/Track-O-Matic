@@ -140,6 +140,22 @@ namespace TrackOMatic
         ItemName.DONKEY, ItemName.DIDDY, ItemName.LANKY, ItemName.TINY, ItemName.CHUNKY
         };
 
+        public static readonly Dictionary<int, string> KROOL_MAP_TO_IMAGE = new()
+        {
+            {0x53, "doga" },
+            {0xC5, "doga2" },
+            {0x08, "army" },
+            {0xC4, "army2" },
+            {0x6F, "pufftoss" },
+            {0xC7, "kutout" },
+            {0x9A, "madjack" },
+            {0xCB, "donkey" },
+            {0xCC, "diddy" },
+            {0xCD, "lanky" },
+            {0xCE, "tiny" },
+            {0xCF, "chunky" },
+        };
+
         public static readonly Dictionary<string, ItemType> POINT_NAME_TO_GROUP = new()
         {
             {"kongs", ItemType.KONG },
@@ -151,7 +167,8 @@ namespace TrackOMatic
             {"barrel_moves", ItemType.BARREL_MOVE },
             {"training_moves", ItemType.TRAINING_MOVE },
             {"important_shared_moves",ItemType.SHARED_MOVE },
-            {"fairy_moves", ItemType.FAIRY_MOVE }
+            {"fairy_moves", ItemType.FAIRY_MOVE },
+            {"shopkeepers", ItemType.SHOPKEEPER }
         };
 
         public static readonly Dictionary<string, ItemName> POINT_NAME_TO_SPECIFIC_VALUE = new()

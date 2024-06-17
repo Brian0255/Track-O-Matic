@@ -1162,6 +1162,21 @@
   <ItemGroup>
     <Resource Include="Images\dk64\tag_barrel.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\snide.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\snide.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\ARMY.png" />
+    <Resource Include="Images\dk64\ARMY2.png" />
+    <Resource Include="Images\dk64\DOGA.png" />
+    <Resource Include="Images\dk64\DOGA2.png" />
+    <Resource Include="Images\dk64\kutout.png" />
+    <Resource Include="Images\dk64\madjack.png" />
+    <Resource Include="Images\dk64\PUFFTOSS.png" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>

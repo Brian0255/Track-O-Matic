@@ -120,6 +120,11 @@
     <Image x:Key="potion_shared" Source="Images\dk64\clear_vial.png" x:Shared="false"/>
     <Image x:Key="kong_family" Source="Images\dk64\tag_barrel.png" x:Shared="false"/>
 
+    <Image x:Key="cranky" Source="Images\dk64\cranky.png" x:Shared="false"/>
+    <Image x:Key="candy" Source="Images\dk64\candy.png" x:Shared="false"/>
+    <Image x:Key="funky" Source="Images\dk64\funky.png" x:Shared="false"/>
+    <Image x:Key="snide" Source="Images\dk64\snide.png" x:Shared="false"/>
+
     <!--Black&White-->
     <Image x:Key="potion_dk_bw" Source="Images\bw\yellow_vial.png" x:Shared="false"/>
     <Image x:Key="potion_diddy_bw" Source="Images\bw\red_vial.png" x:Shared="false"/>
@@ -194,5 +199,10 @@
 
     <Image x:Key="bean_bw" Source="Images\bw\bean.png"  x:Shared="false"/>
     <Image x:Key="kong_family_bw" Source="Images\bw\tag_barrel.png"  x:Shared="false"/>
+
+    <Image x:Key="cranky_bw" Source="Images\bw\cranky.png" x:Shared="false"/>
+    <Image x:Key="candy_bw" Source="Images\bw\candy.png" x:Shared="false"/>
+    <Image x:Key="funky_bw" Source="Images\bw\funky.png" x:Shared="false"/>
+    <Image x:Key="snide_bw" Source="Images\bw\snide.png" x:Shared="false"/>
 
 </ResourceDictionary>

@@ -319,6 +319,12 @@ namespace TrackOMatic
             new OffsetInfoEntry(ItemName.RAINBOW_COIN_14, 0x7ECEFD,8,8),
             new OffsetInfoEntry(ItemName.RAINBOW_COIN_15, 0x7ECEFD,8,16),
             new OffsetInfoEntry(ItemName.RAINBOW_COIN_16, 0x7ECEFD,8,32),
+
+            new OffsetInfoEntry(ItemName.SNIDE, 0x7ECF55,8,128),
+            new OffsetInfoEntry(ItemName.CANDY, 0x7ECF55,8,64),
+            new OffsetInfoEntry(ItemName.FUNKY, 0x7ECF55,8,32),
+            new OffsetInfoEntry(ItemName.CRANKY, 0x7ECF55,8,16),
+
         };
     }
 
