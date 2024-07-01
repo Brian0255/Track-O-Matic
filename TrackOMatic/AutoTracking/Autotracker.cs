@@ -13,11 +13,13 @@ namespace TrackOMatic
     public delegate bool ProcessNewItem(ItemName itemName, RegionName regionName, bool hint = false);
     public delegate void UpdateCollectible(ItemType collectibleType, int newTotal);
     public delegate void SetRegionLighting(RegionName region, bool lightUp);
+    public delegate void SetShopkeepers(bool on);
     public class Autotracker
     {
         public ProcessNewItem ProcessNewItem { get; set; }
         public UpdateCollectible UpdateCollectible { get; set; }
         public SetRegionLighting SetRegionLighting { get; set; }
+        public SetShopkeepers SetShopkeepers { get; set; }
         public Process EmulatorProcess { get; private set; }
         public List<AutotrackedCheck> Checks;
         public Dictionary<ItemName, bool> TrackedAlready;
@@ -33,7 +35,7 @@ namespace TrackOMatic
         private int timeout;
         private bool is64Bit = false;
         private bool spoilerLoaded = false;
-        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback)
+        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback)
         {
             CurrentRegion = RegionName.UNKNOWN;
             Checks = new();
@@ -45,6 +47,7 @@ namespace TrackOMatic
             ProcessNewItem = processItemCallback;
             UpdateCollectible = updateCollectibleCallback;
             SetRegionLighting = setRegionLightingCallback;
+            SetShopkeepers = setShopkeepersCallback;
         }
         private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
         {
@@ -152,6 +155,15 @@ namespace TrackOMatic
             foreach (var key in CollectibleItemAmounts.Keys.ToList()) CollectibleItemAmounts[key] = 0;
         }
 
+        private void CheckVersion()
+        {
+            uint versionOffset = 0x7FFFF4;
+            int version = ReadMemory(versionOffset, 8);
+            Application.Current.Dispatcher.Invoke(() => {
+                SetShopkeepers?.Invoke(version >= 4);
+            });
+        }
+
         private void Autotrack(object state)
         {
             if (!Properties.Settings.Default.Autotracking) return;
@@ -159,6 +171,7 @@ namespace TrackOMatic
             AttachIfNecessary();
             if (!attached) return;
             if (!ProcessConnected()) return;
+            CheckVersion();
             UpdateCurrentRegion();
             if (CurrentRegion == RegionName.UNKNOWN) return;
             ResetCollectibleAmounts();
