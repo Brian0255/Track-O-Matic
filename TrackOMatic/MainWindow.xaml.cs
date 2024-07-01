@@ -195,7 +195,7 @@ namespace TrackOMatic
             UnhintedPanel
 
             };
-            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting);
+            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers);
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
             SaveTimer.Start();
@@ -415,9 +415,6 @@ namespace TrackOMatic
 
             foreach (var progressiveItem in HelmKongs) progressiveItem.Reset();
             foreach (var progressiveItem in KroolKongs) progressiveItem.Reset();
-
-            ItemHintIcon.Source = null;
-            ItemHintText.Text = "";
             Autotracker.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)
@@ -429,7 +426,7 @@ namespace TrackOMatic
         {
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
-            AutoUpdater.InstalledVersion = new Version("1.5.0");
+            AutoUpdater.InstalledVersion = new Version("1.5.1");
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0) return;
             Width = Settings.Default.DesiredWidth;
@@ -442,6 +439,16 @@ namespace TrackOMatic
             Settings.Default.DesiredHeight = Height;
             Settings.Default.Save();
             DataSaver.Save();
+        }
+
+        public void SetShopkeepers(bool on)
+        {
+            var currentlyOn = ShopkeeperColumn.Width.Value > 0;
+            if (currentlyOn == on) return;
+            var separatorWidth = on ? 0.5 : 1.0;
+            var shopkeeperColumnWidth = on ? 1.0 : 0;
+            ItemsSeperator.Width = new GridLength(separatorWidth, GridUnitType.Star);
+            ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
         }
     }
 }
