@@ -283,12 +283,26 @@ namespace TrackOMatic
                 }
             }
         }
+        private void CheckIfShopkeepersAreOn(dynamic JSONObject)
+        {
+            if (JSONObject["Item Pool"] == null) return;
+            //first version of randomizer with this key is 4.0 so we don't need to check if version >= 4.0
+            if (JSONObject["Randomizer Version"] == null) return;
+            List<string> items = JSONObject["Item Pool"].ToObject < List<string> >();
+            if (items.Contains("Cranky")) return;
+            StartingItems.Add(ItemName.CRANKY, RegionName.START);
+            StartingItems.Add(ItemName.CANDY, RegionName.START);
+            StartingItems.Add(ItemName.FUNKY, RegionName.START);
+            StartingItems.Add(ItemName.SNIDE, RegionName.START);
+        }
         public SpoilerSettings ParseRegions(dynamic JSONObject)
         {
             var regionInfo = JSONObject["Spoiler Hints Data"].ToObject<Dictionary<string, string>>();
             SpoilerSettings settings = null;
 
             List<string> Isles_Vials = new();
+
+            CheckIfShopkeepersAreOn(JSONObject);
 
             foreach (var regionEntry in regionInfo)
             {
