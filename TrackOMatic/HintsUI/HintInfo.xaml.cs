@@ -195,6 +195,10 @@ namespace TrackOMatic
             if (SuggestionBox.SelectedItem != null)
             {
                 Location.Text = SuggestionBox.SelectedItem as string;
+                if (HintType == HintType.REGION_POTION_COUNT)
+                {
+                    PotionCount.Focus();
+                }
             }
             BottomRow.IsOpen = false;
 
