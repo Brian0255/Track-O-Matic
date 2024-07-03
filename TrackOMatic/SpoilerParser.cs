@@ -289,7 +289,7 @@ namespace TrackOMatic
             //first version of randomizer with this key is 4.0 so we don't need to check if version >= 4.0
             if (JSONObject["Randomizer Version"] == null) return;
             List<string> items = JSONObject["Item Pool"].ToObject < List<string> >();
-            if (items.Contains("Cranky")) return;
+            if (items.Contains("Cranky") || items.Contains("Candy") || items.Contains("Funky") || items.Contains("Snide")) return;
             StartingItems.Add(ItemName.CRANKY, RegionName.START);
             StartingItems.Add(ItemName.CANDY, RegionName.START);
             StartingItems.Add(ItemName.FUNKY, RegionName.START);
