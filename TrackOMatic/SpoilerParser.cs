@@ -227,7 +227,17 @@ namespace TrackOMatic
             {
                 if (i < info.krool_order.Count)
                 {
-                    var imageName = JSONKeyMappings.KONGS[info.krool_order[i]].ToString().ToLower();
+                    int kroolIndex = info.krool_order[i];
+                    string imageName = "";
+                    if (JSONKeyMappings.KROOL_MAP_TO_IMAGE.ContainsKey(kroolIndex))
+                    {
+                        imageName = JSONKeyMappings.KROOL_MAP_TO_IMAGE[kroolIndex];
+                    }
+                    else if(kroolIndex < JSONKeyMappings.KONGS.Count)
+                    {
+                        imageName = JSONKeyMappings.KONGS[kroolIndex].ToString();
+                    }
+                    imageName = imageName.ToLower();
                     MainWindow.KroolKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
                     MainWindow.KroolKongs[i].Enabled = false;
                     MainWindow.KroolKongs[i].Visibility = Visibility.Visible;
@@ -273,12 +283,26 @@ namespace TrackOMatic
                 }
             }
         }
+        private void CheckIfShopkeepersAreOn(dynamic JSONObject)
+        {
+            if (JSONObject["Item Pool"] == null) return;
+            //first version of randomizer with this key is 4.0 so we don't need to check if version >= 4.0
+            if (JSONObject["Randomizer Version"] == null) return;
+            List<string> items = JSONObject["Item Pool"].ToObject < List<string> >();
+            if (items.Contains("Cranky") || items.Contains("Candy") || items.Contains("Funky") || items.Contains("Snide")) return;
+            StartingItems.Add(ItemName.CRANKY, RegionName.START);
+            StartingItems.Add(ItemName.CANDY, RegionName.START);
+            StartingItems.Add(ItemName.FUNKY, RegionName.START);
+            StartingItems.Add(ItemName.SNIDE, RegionName.START);
+        }
         public SpoilerSettings ParseRegions(dynamic JSONObject)
         {
             var regionInfo = JSONObject["Spoiler Hints Data"].ToObject<Dictionary<string, string>>();
             SpoilerSettings settings = null;
 
             List<string> Isles_Vials = new();
+
+            CheckIfShopkeepersAreOn(JSONObject);
 
             foreach (var regionEntry in regionInfo)
             {

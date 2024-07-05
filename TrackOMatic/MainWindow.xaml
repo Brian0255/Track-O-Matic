@@ -50,7 +50,7 @@
                 <RadioButton Name="hintDisplayMP" Checked="HintDisplayToggle">Multipath Hints</RadioButton>
                 <RadioButton Name="hintDisplayDirect" Checked="HintDisplayToggle">Direct Item Hints</RadioButton>
             </MenuItem>
-            <MenuItem Header="Version 1.5.1" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 1.6.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -434,24 +434,12 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".2*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="HintsLabel" FontSize="28" Foreground="#FFFFFF" Grid.Column="1" Grid.ColumnSpan="10" HorizontalAlignment="Left" FontFamily="{DynamicResource DK64Font}" Text="" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                    <!--
-                <local:ToggleableItem Grid.Column="1" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
-                <local:ToggleableItem Grid.Column="2" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
-                <local:ToggleableItem Grid.Column="3" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
-                <local:ToggleableItem Grid.Column="4" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
-                <local:ToggleableItem Grid.Column="5" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
-                <local:ToggleableItem Grid.Column="6" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>
-                <local:ToggleableItem Grid.Column="7" OnImageSource="Images\dk64\troffnscoff_done.png" OffImageSource="Images\dk64\troffnscoff.png"/>-->
                     <local:CollectibleItem x:Name="Pearls" ImageSource="Images\bw\pearl.png" Text="0" Grid.Column="3"/>
                     <local:CollectibleItem x:Name="BattleCrowns" ImageSource="Images\bw\crown.png" Text="0" Grid.Column="5"/>
                     <local:CollectibleItem x:Name="BananaMedals" ImageSource="Images\bw\bananamedal.png" Text="0" Grid.Column="7"/>
                     <local:CollectibleItem x:Name="RainbowCoins" ImageSource="Images\bw\rainbowcoin.png" Text="0" Grid.Column="9"/>
                     <local:CollectibleItem x:Name="Fairies" ImageSource="Images\bw\fairy.png" Text="0" Grid.Column="11"/>
                     <local:CollectibleItem x:Name="GBs" ImageSource="Images\bw\GB.png" Text="0" Grid.Column="13"/>
-                    <Image x:Name="ItemHintIcon"  Grid.Column="1" Margin="1"/>
-                    <TextBlock Name="ItemHintText" Grid.Column="2" FontSize="28" Foreground="White"  VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Margin="5,0,0,0"  />
-                    <TextBlock/>
                 </Grid>
                 <!-- Items -->
                 <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="0" >
@@ -463,18 +451,19 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Name="ItemsSeperator" Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Name="ShopkeeperColumn" Width="0*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Kong 1 -->
@@ -611,6 +600,17 @@
                     <local:ItemBackground BackgroundItemImage="{DynamicResource homing_ammo}"     Grid.Row="4" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
                     <local:ItemBackground BackgroundItemImage="{DynamicResource fairy_camera}"     Grid.Row="4" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
                     <local:ItemBackground BackgroundItemImage="{DynamicResource shockwave}"     Grid.Row="4" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+                    
+                    <!--Shopkeepers-->
+                    <local:Item x:Name="cranky"  ItemImage="{DynamicResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>
+                    <local:Item x:Name="candy"  ItemImage="{DynamicResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
+                    <local:Item x:Name="funky"  ItemImage="{DynamicResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
+                    <local:Item x:Name="snide"  ItemImage="{DynamicResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
+
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource cranky}"     Grid.Row="0" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CRANKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource candy}"     Grid.Row="1" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CANDY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource funky}"     Grid.Row="2" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FUNKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource snide}"     Grid.Row="3" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIDE}"/>
                 </Grid>
                 <!--K.Rool/Helm order-->
                 <Grid Grid.Row="6" >

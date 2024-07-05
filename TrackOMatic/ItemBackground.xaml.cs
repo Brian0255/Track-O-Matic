@@ -57,11 +57,14 @@ namespace TrackOMatic
         {
 
             if (e.MiddleButton == MouseButtonState.Pressed) ToggleStar();
-            var item = mainWindow.BACKGROUND_IMAGE_TO_ITEM[this];
-            if(item.Parent != mainWindow.ItemGrid)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                item.HandleItemReturn();
-                item.DoDragDrop(e.RightButton == MouseButtonState.Pressed);
+                var item = mainWindow.BACKGROUND_IMAGE_TO_ITEM[this];
+                if (item.Parent != mainWindow.ItemGrid)
+                {
+                    item.HandleItemReturn();
+                    item.DoDragDrop(e.RightButton == MouseButtonState.Pressed);
+                }
             }
         }
 

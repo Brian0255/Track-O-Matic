@@ -330,6 +330,11 @@
 
         KONG_FAMILY,
 
+        CRANKY,
+        CANDY,
+        FUNKY,
+        SNIDE,
+
         NONE
     }
 }
