@@ -187,6 +187,7 @@ namespace TrackOMatic
             RightItems.SelectedItems = new() { kongThatIsFound };
             RightItems.ProcessSelectedItems();
             Location.Text = newText;
+            UpdateSelectedItems();
             return true;
         }
 
