@@ -343,6 +343,12 @@
         FUNKY,
         SNIDE,
 
+        DONKEY_ISLES_MEDAL,
+        DIDDY_ISLES_MEDAL,
+        LANKY_ISLES_MEDAL,
+        TINY_ISLES_MEDAL,
+        CHUNKY_ISLES_MEDAL,
+
         NONE
     }
 }

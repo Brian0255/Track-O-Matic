@@ -325,6 +325,12 @@ namespace TrackOMatic
         {ItemName.PEARL_3, new ImportantCheck(ItemName.PEARL_3, ItemType.PEARL)},
         {ItemName.PEARL_4, new ImportantCheck(ItemName.PEARL_4, ItemType.PEARL)},
         {ItemName.PEARL_5, new ImportantCheck(ItemName.PEARL_5, ItemType.PEARL)},
+
+        {ItemName.DONKEY_ISLES_MEDAL, new ImportantCheck(ItemName.DONKEY_ISLES_MEDAL, ItemType.BANANA_MEDAL)},
+        {ItemName.DIDDY_ISLES_MEDAL, new ImportantCheck(ItemName.DIDDY_ISLES_MEDAL, ItemType.BANANA_MEDAL)},
+        {ItemName.LANKY_ISLES_MEDAL, new ImportantCheck(ItemName.LANKY_ISLES_MEDAL, ItemType.BANANA_MEDAL)},
+        {ItemName.TINY_ISLES_MEDAL, new ImportantCheck(ItemName.TINY_ISLES_MEDAL, ItemType.BANANA_MEDAL)},
+        {ItemName.CHUNKY_ISLES_MEDAL, new ImportantCheck(ItemName.CHUNKY_ISLES_MEDAL, ItemType.BANANA_MEDAL)},
        };
     }
 
