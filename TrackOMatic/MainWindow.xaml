@@ -772,7 +772,7 @@
                             <ColumnDefinition Width=".1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Image x:Name="Headphones" Source="Images\dk64\headphones.png" Grid.Column="0" Margin="10" Panel.ZIndex="2" Opacity="1"/>
+                        <Image x:Name="Headphones" Source="Images\dk64\headphones.png" Grid.Column="0" Margin="8" Panel.ZIndex="2" Opacity="1"/>
                         <Grid Grid.Column="1" Margin="0,3,0,3" >
                             <Grid.RowDefinitions>
                                 <RowDefinition/>

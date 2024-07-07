@@ -14,8 +14,8 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="2.25*"/>
-            <ColumnDefinition Width=".2*"/>
+            <ColumnDefinition Width="2.1*"/>
+            <ColumnDefinition Width=".1*"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Image x:Name="Picture"  Grid.Row="1" Grid.Column="0"  Margin="0" VerticalAlignment="Bottom"/>
