@@ -64,12 +64,22 @@ namespace TrackOMatic
 
         private List<BitmapImage> ProgressiveKongSource = new()
         {
-                new BitmapImage( new Uri("images/bw/unknown_kong.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/donkey.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/diddy.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/lanky.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/tiny.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/chunky.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/bw/unknown_kong.png", UriKind.Relative)),
+        };
+        private List<BitmapImage> BossSource = new()
+        {
+                new BitmapImage( new Uri("images/dk64/army.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/doga.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/madjack.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/pufftoss.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/doga2.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/army2.png", UriKind.Relative)),
+                new BitmapImage( new Uri("images/dk64/kutout.png", UriKind.Relative)),
         };
 
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
@@ -83,13 +93,17 @@ namespace TrackOMatic
             HintData.Init();
             InitOptions();
             InitData();
+            var initialImage = ProgressiveKongSource[ProgressiveKongSource.Count - 1];
             foreach (var progressiveItem in HelmKongs)
             {
-                progressiveItem.ImageSources = ProgressiveKongSource;
+                progressiveItem.ImageSources = new() { ProgressiveKongSource };
+                progressiveItem.SetImage(initialImage);
             }
+            List<List<BitmapImage>> KRoolBosses = new() { ProgressiveKongSource, BossSource };
             foreach (var progressiveItem in KroolKongs)
             {
-                progressiveItem.ImageSources = ProgressiveKongSource;
+                progressiveItem.ImageSources = KRoolBosses;
+                progressiveItem.SetImage(initialImage);
             }
             SpoilerParser = new(this);
             DataSaver = new(this);
@@ -195,7 +209,7 @@ namespace TrackOMatic
             UnhintedPanel
 
             };
-            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers);
+            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong);
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
             SaveTimer.Start();
@@ -295,6 +309,17 @@ namespace TrackOMatic
         private void ResetSize(object sender, RoutedEventArgs e)
         {
             ResetWidthHeight();
+        }
+
+        public void SetSong(string songGame, string songName)
+        {
+            if(songName == "")
+            {
+                songGame = "";
+                songName = "Waiting for a 4.0 ROM...";
+            }
+            SongGame.Text = songGame;
+            SongName.Text = songName;
         }
 
         public bool TopMostSetting
@@ -415,6 +440,7 @@ namespace TrackOMatic
 
             foreach (var progressiveItem in HelmKongs) progressiveItem.Reset();
             foreach (var progressiveItem in KroolKongs) progressiveItem.Reset();
+            SetSong("", "");
             Autotracker.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)
@@ -447,7 +473,7 @@ namespace TrackOMatic
         {
             var currentlyOn = ShopkeeperColumn.Width.Value > 0;
             if (currentlyOn == on) return;
-            var separatorWidth = on ? 0.5 : 1.0;
+            var separatorWidth = on ? 1.0 : 1.25;
             var shopkeeperColumnWidth = on ? 1.0 : 0;
             ItemsSeperator.Width = new GridLength(separatorWidth, GridUnitType.Star);
             ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
