@@ -6,7 +6,7 @@
              xmlns:properties="clr-namespace:TrackOMatic.Properties"
              xmlns:local="clr-namespace:TrackOMatic"
              mc:Ignorable="d" 
-             Height="315" Width="420" Topmost ="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}"
+             Height="335" Width="420" Topmost ="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}"
     Title="Select Items"
         ResizeMode="NoResize"
         Background="{StaticResource RegionBG}"  KeyDown="ItemGrid_KeyDown">
@@ -17,6 +17,7 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -125,8 +126,17 @@
         <local:SelectableHintItem x:Name="candy"  HintItemImage="{DynamicResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
         <local:SelectableHintItem x:Name="funky"  HintItemImage="{DynamicResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
         <local:SelectableHintItem x:Name="snide"  HintItemImage="{DynamicResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
-
-        <Border  Cursor="Hand" MouseDown="TextBlock_MouseDown" Margin="5,18,5,5" CornerRadius="5" Grid.Row="6" Grid.RowSpan="2" Grid.ColumnSpan="13" Background="{StaticResource RegionImageBG }" BorderBrush="Black" BorderThickness="0.5">
+        
+        <!--Bosses-->
+        <local:SelectableHintItem x:Name="army"  HintItemImage="{DynamicResource army}" Grid.Row="6" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ARMY}"/>
+        <local:SelectableHintItem x:Name="doga"  HintItemImage="{DynamicResource doga}" Grid.Row="6" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DOGA}"/>
+        <local:SelectableHintItem x:Name="madjack"  HintItemImage="{DynamicResource madjack}" Grid.Row="6" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MADJACK}"/>
+        <local:SelectableHintItem x:Name="pufftoss"  HintItemImage="{DynamicResource pufftoss}" Grid.Row="6" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PUFFTOSS}"/>
+        <local:SelectableHintItem x:Name="doga2"  HintItemImage="{DynamicResource doga2}" Grid.Row="6" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DOGA2}"/>
+        <local:SelectableHintItem x:Name="army2"  HintItemImage="{DynamicResource army2}" Grid.Row="6" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ARMY2}"/>
+        <local:SelectableHintItem x:Name="kutout"  HintItemImage="{DynamicResource kutout}" Grid.Row="6" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KUTOUT}"/>
+        
+        <Border  Cursor="Hand" MouseDown="TextBlock_MouseDown" Margin="5,18,5,5" CornerRadius="5" Grid.Row="7" Grid.RowSpan="2" Grid.ColumnSpan="13" Background="{StaticResource RegionImageBG }" BorderBrush="Black" BorderThickness="0.5">
         <TextBlock  Margin="0" Grid.Row="6" Grid.ColumnSpan="12" Text="Done" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Border>
     </Grid>
