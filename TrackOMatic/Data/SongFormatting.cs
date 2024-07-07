@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Humanizer;
 
 namespace TrackOMatic
 {
@@ -37,6 +38,7 @@ namespace TrackOMatic
 
 
             {"dkc", "DKC" },
+            {"dk","DK" },
             {"isss64","ISSS64" },
             {"actraiser","ActRaiser" },
             {"antonblast","ANTONBLAST" },
@@ -67,6 +69,7 @@ namespace TrackOMatic
 
         public static string FormatSongString(string songString)
         {
+            songString = songString.ToLower();
             if (ENTIRE_NAME_REPLACEMENTS.ContainsKey(songString))
             {
                 return ENTIRE_NAME_REPLACEMENTS[songString];
@@ -82,8 +85,7 @@ namespace TrackOMatic
                 }
             }
             songString = string.Join(" ", words);
-            
-            return songString;
+            return songString.Transform(To.TitleCase);
         }
     }
 }

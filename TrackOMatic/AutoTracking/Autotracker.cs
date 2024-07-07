@@ -7,10 +7,8 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
-using System.Security.Cryptography;
 using System.Globalization;
 using System.Text;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace TrackOMatic
 {
