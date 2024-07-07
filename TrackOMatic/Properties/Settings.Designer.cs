@@ -130,5 +130,17 @@ namespace TrackOMatic.Properties {
                 this["DesiredHeight"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SongDisplay {
+            get {
+                return ((bool)(this["SongDisplay"]));
+            }
+            set {
+                this["SongDisplay"] = value;
+            }
+        }
     }
 }

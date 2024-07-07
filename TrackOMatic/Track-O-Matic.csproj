@@ -98,9 +98,11 @@
     <Compile Include="AutoTracking\EmulatorName.cs" />
     <Compile Include="AutoTracking\Memory.cs" />
     <Compile Include="AutoTracking\AutotrackedCheck.cs" />
+    <Compile Include="Data\UIUtils.cs" />
     <Compile Include="Data\HintData.cs" />
     <Compile Include="Data\HintRegion.cs" />
     <Compile Include="Data\HintTypeSettingsList.cs" />
+    <Compile Include="Data\SongFormatting.cs" />
     <Compile Include="Data\Records.cs" />
     <Compile Include="Data\HintSuggestion.cs" />
     <Compile Include="Data\HintType.cs" />
@@ -113,6 +115,9 @@
     </Compile>
     <Compile Include="HintsUI\HintItemList.xaml.cs">
       <DependentUpon>HintItemList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BasicItemSelector.xaml.cs">
+      <DependentUpon>BasicItemSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="HintsUI\HintItemSelectionDialog.xaml.cs">
       <DependentUpon>HintItemSelectionDialog.xaml</DependentUpon>
@@ -183,6 +188,10 @@
     <Page Include="HintsUI\HintItemList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BasicItemSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="HintsUI\HintItemSelectionDialog.xaml">
       <SubType>Designer</SubType>
@@ -1176,6 +1185,21 @@
     <Resource Include="Images\dk64\kutout.png" />
     <Resource Include="Images\dk64\madjack.png" />
     <Resource Include="Images\dk64\PUFFTOSS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\headphones.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\ninrarecoin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\ARMY.png" />
+    <Resource Include="Images\bw\ARMY2.png" />
+    <Resource Include="Images\bw\DOGA.png" />
+    <Resource Include="Images\bw\DOGA2.png" />
+    <Resource Include="Images\bw\kutout.png" />
+    <Resource Include="Images\bw\madjack.png" />
+    <Resource Include="Images\bw\PUFFTOSS.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>

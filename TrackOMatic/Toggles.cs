@@ -25,6 +25,12 @@ namespace TrackOMatic
             Settings.Default.Save();
         }
 
+        private void SongDisplayToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.SongDisplay = SongDisplayOption.IsChecked;
+            Settings.Default.Save();
+        }
+
         private void HintDisplayToggle(object sender, RoutedEventArgs e)
         {
             var button = (sender as RadioButton);
