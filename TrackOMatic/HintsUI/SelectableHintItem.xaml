@@ -13,7 +13,6 @@
         <Grid>
             <Border BorderThickness="0" 
                     UseLayoutRounding="True"
-                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                     SnapsToDevicePixels="True"
                     RenderOptions.ClearTypeHint="Enabled">
                 <Border.Effect>
