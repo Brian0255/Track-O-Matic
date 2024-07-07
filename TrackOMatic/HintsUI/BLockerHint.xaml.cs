@@ -30,7 +30,26 @@ namespace TrackOMatic
         {
             InitializeComponent();
             DataContext = this;
-        }
+            List<List<BitmapImage>> BLockerSources = new()
+            {
+                new()
+                {
+                    new BitmapImage( new Uri("images/dk64/gb.png", UriKind.Relative)),
+                    new BitmapImage( new Uri("images/dk64/bp.png", UriKind.Relative)),
+                    new BitmapImage( new Uri("images/dk64/pearl.png", UriKind.Relative)),
+                    new BitmapImage( new Uri("images/dk64/crown.png", UriKind.Relative)),
+                    new BitmapImage( new Uri("images/dk64/bananamedal.png", UriKind.Relative)),
+                    new BitmapImage( new Uri("images/dk64/rainbowcoin.png", UriKind.Relative)),
+                    new BitmapImage( new Uri("images/dk64/fairy.png", UriKind.Relative)),
+                },
+                new()
+                {
+                    new BitmapImage( new Uri("images/dk64/ninrarecoin.png", UriKind.Relative)),
+                    new BitmapImage( new Uri("images/dk64/bean.png", UriKind.Relative)),
+                }
+            };
+            GB.ImageSources = BLockerSources;
+    }
 
         public override void OnApplyTemplate()
         {
@@ -67,6 +86,11 @@ namespace TrackOMatic
         private void GBCount_LostFocus(object sender, RoutedEventArgs e)
         {
             CheckSave();
+        }
+
+        private void GB_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }
