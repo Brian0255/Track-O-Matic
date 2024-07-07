@@ -325,6 +325,11 @@ namespace TrackOMatic
             new OffsetInfoEntry(ItemName.FUNKY, 0x7ECF20,8,8),
             new OffsetInfoEntry(ItemName.CRANKY, 0x7ECF20,8,4),
 
+            new OffsetInfoEntry(ItemName.DONKEY_ISLES_MEDAL, 0x7ECF20,8,64),
+            new OffsetInfoEntry(ItemName.DIDDY_ISLES_MEDAL, 0x7ECF20,8,128),
+            new OffsetInfoEntry(ItemName.LANKY_ISLES_MEDAL, 0x7ECF21,8,1),
+            new OffsetInfoEntry(ItemName.TINY_ISLES_MEDAL, 0x7ECF21,8,2),
+            new OffsetInfoEntry(ItemName.CHUNKY_ISLES_MEDAL, 0x7ECF21,8,4),
         };
     }
 
