@@ -198,6 +198,23 @@ namespace TrackOMatic
             return SongFormatting.FormatSongString(textInfo.ToLower(name));
         }
 
+        private async void WriteToSongFiles(string songGame, string songName)
+        {
+            var songDisplayFolder = "TrackOMatic_SongDisplayOutput";
+            Dictionary<string, string> fileWrites = new()
+                {
+                    {"song_game_and_name.txt", songGame+"\n"+songName },
+                    {"song_game.txt",songGame },
+                    {"song_name.txt",songName }
+                };
+            Directory.CreateDirectory(songDisplayFolder);
+            foreach (var entry in fileWrites)
+            {
+                using var writer = new StreamWriter(songDisplayFolder + "/" + entry.Key);
+                await writer.WriteAsync(entry.Value);
+            }
+        }
+
         private void UpdateCurrentSong()
         {
             var songGame = "";
@@ -223,6 +240,7 @@ namespace TrackOMatic
                 {
                     SetSong?.Invoke(songGame, songName);
                 });
+                WriteToSongFiles(songGame, songName);
             }
             currentSongGame = songGame;
             currentSongName = songName;
