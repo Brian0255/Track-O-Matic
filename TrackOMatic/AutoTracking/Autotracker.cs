@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
+using System.Security.Cryptography;
+using System.Globalization;
+using System.Text;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace TrackOMatic
 {
@@ -14,18 +18,22 @@ namespace TrackOMatic
     public delegate void UpdateCollectible(ItemType collectibleType, int newTotal);
     public delegate void SetRegionLighting(RegionName region, bool lightUp);
     public delegate void SetShopkeepers(bool on);
+    public delegate void SetSong(string songGame, string songName);
     public class Autotracker
     {
         public ProcessNewItem ProcessNewItem { get; set; }
         public UpdateCollectible UpdateCollectible { get; set; }
         public SetRegionLighting SetRegionLighting { get; set; }
         public SetShopkeepers SetShopkeepers { get; set; }
+        public SetSong SetSong{ get; set; }
         public Process EmulatorProcess { get; private set; }
         public List<AutotrackedCheck> Checks;
         public Dictionary<ItemName, bool> TrackedAlready;
         public Dictionary<ItemName, RegionName> StartingItems { get; private set; }
         public GameVerificationInfo GameVerificationInfo { get; private set; }
         public RegionName CurrentRegion { get; private set; }
+        private string currentSongGame;
+        private string currentSongName;
         private SavedProgress savedProgress;
         public int RandomizerVersion { get; private set; }
 
@@ -36,7 +44,7 @@ namespace TrackOMatic
         private int timeout;
         private bool is64Bit = false;
         private bool spoilerLoaded = false;
-        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback)
+        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong)
         {
             CurrentRegion = RegionName.UNKNOWN;
             Checks = new();
@@ -49,6 +57,9 @@ namespace TrackOMatic
             UpdateCollectible = updateCollectibleCallback;
             SetRegionLighting = setRegionLightingCallback;
             SetShopkeepers = setShopkeepersCallback;
+            SetSong = setSong;
+            currentSongName = "";
+            currentSongGame = "";
         }
         private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
         {
@@ -91,6 +102,9 @@ namespace TrackOMatic
                 SetRegionLighting?.Invoke(CurrentRegion, false);
             });
             CurrentRegion = RegionName.UNKNOWN;
+            currentSongName = "";
+            RandomizerVersion = 0;
+            currentSongGame = "";
         }
 
         public void ResetChecks()
@@ -170,6 +184,52 @@ namespace TrackOMatic
             RandomizerVersion = version;
         }
 
+        private string ReadAscii(ref uint startAddress)
+        {
+            List<byte> ascii = new();
+            while(ascii.Count < 50)
+            {
+                byte next = (byte)ReadMemory(startAddress, 8);
+                if (next > 127) return "";
+                if (next == 0x00) break;
+                ascii.Add(next);
+                ++startAddress;
+            }
+            var textInfo = new CultureInfo("en-US", false).TextInfo;
+            string name = Encoding.ASCII.GetString(ascii.ToArray());
+            return SongFormatting.FormatSongString(textInfo.ToLower(name));
+        }
+
+        private void UpdateCurrentSong()
+        {
+            var songGame = "";
+            var songName = "";
+            if (RandomizerVersion >= 4)
+            {
+                uint songPointer = 0x7FFFF0;
+                int songAddr = ReadMemory(songPointer, 32);
+                if (songAddr == 0x00000000) return;
+                uint actualOffset = (uint)songAddr - 0x80000000;
+                songGame = ReadAscii(ref actualOffset);
+                actualOffset++;
+                songName = ReadAscii(ref actualOffset);
+            }
+            if(songName == "")
+            {
+                songName = songGame;
+                songGame = "Donkey Kong 64";
+            }
+            if (songGame != currentSongGame || songName != currentSongName)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SetSong?.Invoke(songGame, songName);
+                });
+            }
+            currentSongGame = songGame;
+            currentSongName = songName;
+        }
+
         private void Autotrack(object state)
         {
             if (!Properties.Settings.Default.Autotracking) return;
@@ -179,6 +239,7 @@ namespace TrackOMatic
             if (!ProcessConnected()) return;
             CheckVersion();
             UpdateCurrentRegion();
+            UpdateCurrentSong();
             if (CurrentRegion == RegionName.UNKNOWN) return;
             ResetCollectibleAmounts();
             ReadMemoryForChecks();
