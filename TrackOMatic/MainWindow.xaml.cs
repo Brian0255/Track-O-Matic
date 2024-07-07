@@ -437,9 +437,9 @@ namespace TrackOMatic
             BLockerHints.Reset();
             foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
-
-            foreach (var progressiveItem in HelmKongs) progressiveItem.Reset();
-            foreach (var progressiveItem in KroolKongs) progressiveItem.Reset();
+            var initialImage = ProgressiveKongSource[ProgressiveKongSource.Count - 1];
+            foreach (var progressiveItem in HelmKongs) progressiveItem.SetImage(initialImage);
+            foreach (var progressiveItem in KroolKongs) progressiveItem.SetImage(initialImage);
             SetSong("", "");
             Autotracker.Reset();
         }

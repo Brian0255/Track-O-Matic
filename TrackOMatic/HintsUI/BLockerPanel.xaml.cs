@@ -59,6 +59,7 @@ namespace TrackOMatic
             foreach (var hint in RegionToBLockerHint.Values)
             {
                 hint.GBCount.Text = "?";
+                hint.GB.SetImage(new BitmapImage(new Uri("../images/dk64/gb.png", UriKind.Relative)));
             }
         }
 
