@@ -40,8 +40,12 @@ namespace TrackOMatic
         {
             var dialog = new HintItemSelectionDialog(sortedItemList);
 
-            dialog.Left = SelectionDialogPosition[0];
-            dialog.Top = SelectionDialogPosition[1];
+            var mousePosition = Mouse.GetPosition(this);
+            mousePosition = PointToScreen(mousePosition);
+            UIUtils.MoveWindowAndEnsureVisibile(dialog, mousePosition.X - 20, mousePosition.Y - 10);
+
+            //dialog.Left = SelectionDialogPosition[0];
+            //dialog.Top = SelectionDialogPosition[1];
 
             dialog.ShowDialog();
             SelectedItems = dialog.SelectedItems;
