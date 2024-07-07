@@ -8,6 +8,14 @@
         TINY_KROOL,
         CHUNKY_KROOL,
 
+        ARMY,
+        DOGA,
+        MADJACK,
+        PUFFTOSS,
+        DOGA2,
+        ARMY2,
+        KUTOUT,
+
         DONKEY,
         DIDDY,
         LANKY,
