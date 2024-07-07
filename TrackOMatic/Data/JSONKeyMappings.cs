@@ -142,8 +142,8 @@ namespace TrackOMatic
 
         public static readonly Dictionary<int, string> KROOL_MAP_TO_IMAGE = new()
         {
-            {0x53, "doga" },
-            {0xC5, "doga2" },
+            {0x53, "doga2" },
+            {0xC5, "doga" },
             {0x08, "army" },
             {0xC4, "army2" },
             {0x6F, "pufftoss" },
