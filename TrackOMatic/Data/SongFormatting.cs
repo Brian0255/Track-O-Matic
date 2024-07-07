@@ -54,7 +54,7 @@ namespace TrackOMatic
             {"3d","3D" },
             {"ds","DS" },
             {"rpg","RPG" },
-            {"smrpg","SMRPG" },
+            {"smrpg:","SMRPG:" },
             {"tmnt","TMNT" },
             {"yu-gi-oh!","Yu-Gi-Oh!" }
 
