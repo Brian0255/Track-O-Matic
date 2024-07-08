@@ -51,7 +51,7 @@
                 <RadioButton Name="hintDisplayMP" Checked="HintDisplayToggle">Multipath Hints</RadioButton>
                 <RadioButton Name="hintDisplayDirect" Checked="HintDisplayToggle">Direct Item Hints</RadioButton>
             </MenuItem>
-            <MenuItem Header="Version 1.6.1" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 1.6.2" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
