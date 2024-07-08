@@ -745,7 +745,7 @@
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid Background="Transparent" Grid.Row="11" Margin="3,-1,1,3" >
+                <Grid Background="Transparent" Grid.Row="11" Margin="3,-2,-1,3" >
                     <Grid.Style>
                         <Style TargetType="{x:Type Grid}">
                             <Setter Property="Visibility" Value="Visible" />
@@ -760,27 +760,37 @@
                         </Style>
                     </Grid.Style>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height=".1*"/>
+                        <RowDefinition Height=".2*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height=".1*"/>
+                        <RowDefinition Height=".2*"/>
                     </Grid.RowDefinitions>
 
                     <Border Grid.Row="0" Grid.RowSpan="3" CornerRadius="4" BorderThickness="1" BorderBrush="{StaticResource BaseBG}" Background="{StaticResource RegionImageBG}">
                     </Border>
                     <Grid Background="Transparent" Grid.Row="1"  >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width=".1*"/>
+                            <ColumnDefinition Width=".10*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Image x:Name="Headphones" Source="Images\dk64\headphones.png" Grid.Column="0" Margin="8" Panel.ZIndex="2" Opacity="1"/>
-                        <Grid Grid.Column="1" Margin="0,3,0,3" >
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height=".12*"/>
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height=".12*"/>
+                            </Grid.RowDefinitions>
+                            <Image x:Name="Headphones" Grid.Row="1" Source="Images\dk64\headphones.png" Grid.Column="0" Margin="0" Panel.ZIndex="2" Opacity="1" HorizontalAlignment="Center"/>
+                        </Grid>
+                        <Grid Grid.Column="1" Margin="0,0,0,0" >
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <TextBlock x:Name="SongGame" Text="Waiting for DK64R 4.0 ROM to be loaded..." Foreground="White" FontFamily="Helvetica" VerticalAlignment="Center" FontSize="14" />
-                            <TextBlock x:Name="SongName" Grid.Row="1" Text="" Foreground="White" FontFamily="Helvetica" FontWeight="SemiBold"  VerticalAlignment="Center" FontSize="14" />
-
+                            <Viewbox HorizontalAlignment="Left"  VerticalAlignment="Center">
+                            <TextBlock x:Name="SongGame" Text="Waiting for DK64R 4.0 ROM to be loaded..." FontWeight="Light"  Foreground="White" FontFamily="Helvetica" VerticalAlignment="Center" FontSize="16" />
+                            </Viewbox>
+                            <Viewbox HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="SongName" Text="" Foreground="White" FontFamily="Helvetica" FontWeight="Medium"  VerticalAlignment="Center" FontSize="16" />
+                            </Viewbox>
                         </Grid>
                     </Grid>
                 </Grid>
