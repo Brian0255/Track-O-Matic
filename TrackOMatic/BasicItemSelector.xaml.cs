@@ -18,9 +18,12 @@ namespace TrackOMatic
 {
     public partial class BasicItemSelector : Window
     {
-        public ImageSource SelectedImageSource { get; private set; }
+        public int SelectedImageIndex { get; private set; }
+        private List<Image> images;
         public BasicItemSelector(List<List<BitmapImage>> toAdd)
         {
+            SelectedImageIndex = -1;
+            images = new();
             InitializeComponent();
             DataContext = this;
             for(int i = 0; i < toAdd.Count; ++i)
@@ -56,6 +59,7 @@ namespace TrackOMatic
                     border.Child = image;
                     Grid.SetRow(border, i);
                     Grid.SetColumn(border, j);
+                    images.Add(image);
                     ItemGrid.Children.Add(border);
                 }
             }
@@ -68,7 +72,7 @@ namespace TrackOMatic
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var image = (Image)sender;
-                SelectedImageSource = image.Source;
+                SelectedImageIndex = images.IndexOf(image);
                 Close();
             }
         }

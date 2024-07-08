@@ -64,12 +64,12 @@ namespace TrackOMatic
 
         private List<BitmapImage> ProgressiveKongSource = new()
         {
+                new BitmapImage( new Uri("images/bw/unknown_kong.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/donkey.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/diddy.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/lanky.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/tiny.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/chunky.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/bw/unknown_kong.png", UriKind.Relative)),
         };
         private List<BitmapImage> BossSource = new()
         {
@@ -93,18 +93,16 @@ namespace TrackOMatic
             HintData.Init();
             InitOptions();
             InitData();
-            var initialImage = ProgressiveKongSource[ProgressiveKongSource.Count - 1];
             foreach (var progressiveItem in HelmKongs)
             {
                 progressiveItem.ImageSources = new() { ProgressiveKongSource };
-                progressiveItem.SetImage(initialImage);
             }
             List<List<BitmapImage>> KRoolBosses = new() { ProgressiveKongSource, BossSource };
             foreach (var progressiveItem in KroolKongs)
             {
                 progressiveItem.ImageSources = KRoolBosses;
-                progressiveItem.SetImage(initialImage);
             }
+
             SpoilerParser = new(this);
             DataSaver = new(this);
             HitListHintManager = new(this);
@@ -437,9 +435,8 @@ namespace TrackOMatic
             BLockerHints.Reset();
             foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
-            var initialImage = ProgressiveKongSource[ProgressiveKongSource.Count - 1];
-            foreach (var progressiveItem in HelmKongs) progressiveItem.SetImage(initialImage);
-            foreach (var progressiveItem in KroolKongs) progressiveItem.SetImage(initialImage);
+            foreach (var progressiveImage in KroolKongs) progressiveImage.Reset();
+            foreach (var progressiveImage in HelmKongs) progressiveImage.Reset();
             SetSong("", "");
             Autotracker.Reset();
         }

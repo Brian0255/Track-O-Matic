@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,6 +17,8 @@ namespace TrackOMatic
             DependencyProperty.Register("ImageSources", typeof(List<List<BitmapImage>>), typeof(ProgressiveItem), new PropertyMetadata(new List<List<BitmapImage>>()));
 
         public bool Enabled { get; set; } = true;
+        private int currentIndex;
+        private List<BitmapImage> images;
 
         public List<List<BitmapImage>> ImageSources
         {
@@ -26,6 +29,7 @@ namespace TrackOMatic
                 if(value.Count > 0 && value[0].Count > 0){
                     SetImage(value[0][0]);
                 }
+                images = value.SelectMany(list => list).ToList();
             }
         }
 
@@ -41,6 +45,13 @@ namespace TrackOMatic
         {
             Visibility = Visibility.Visible;
             Enabled = true;
+            SetIndex(0);
+        }
+
+        public void SetIndex(int index)
+        {
+            currentIndex = index;
+            ReadCurrentIndex();
         }
 
         public void SetImage(BitmapImage newImage)
@@ -48,17 +59,37 @@ namespace TrackOMatic
             image.Source = newImage;
         }
 
+        private void ReadCurrentIndex()
+        {
+            image.Source = images[currentIndex];
+        }
+
         private void ImageButton_LeftPress(object sender, RoutedEventArgs e)
         {
-            if (!Enabled && ImageSources.Count == 0) return;
+            if (!Enabled || ImageSources.Count == 0) return;
             var itemSelector = new BasicItemSelector(ImageSources);
             var mousePosition = Mouse.GetPosition(this);
             mousePosition = PointToScreen(mousePosition);
             UIUtils.MoveWindowAndEnsureVisibile(itemSelector, mousePosition.X - itemSelector.Width / 2, mousePosition.Y - itemSelector.Height);
             itemSelector.ShowDialog();
-            var source = itemSelector.SelectedImageSource;
-            if (source == null) return;
-            image.Source = itemSelector.SelectedImageSource;
+            var index = itemSelector.SelectedImageIndex;
+            if (index == -1) return;
+            currentIndex = index;
+            ReadCurrentIndex();
+        }
+
+        private void ImageButton_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!Enabled) return;
+            if(e.Delta > 0)
+            {
+                currentIndex = (currentIndex + 1) % images.Count;
+            }
+            else if(e.Delta < 0)
+            {
+                currentIndex = (currentIndex + images.Count - 1) % images.Count;
+            }
+            ReadCurrentIndex();
         }
     }
 }
