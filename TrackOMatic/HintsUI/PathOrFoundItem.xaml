@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TrackOMatic"
-             mc:Ignorable="d" Background="Transparent">
+             mc:Ignorable="d" Background="Transparent" MouseDown="Image_MouseDown" MouseWheel="Image_MouseWheel">
 
     <ContentControl.Content>
         <Grid>
@@ -16,8 +16,9 @@
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <Image x:Name="Image"/>
+                <Image x:Name="Image" Source="../images/dk64/k1.png"/>
             </Border>
+            <Image x:Name="Checkmark" Source="../images/dk64/checkmark.png" Visibility="Hidden"/>
         </Grid>
     </ContentControl.Content>
 
