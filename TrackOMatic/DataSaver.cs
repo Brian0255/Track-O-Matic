@@ -115,7 +115,7 @@ namespace TrackOMatic
                 }
                 matchingItem.ChangeOpacity(savedItem.Opacity);
             }
-            foreach (var savedHint in savedProgress.SavedHints)
+            foreach (var savedHint in savedProgress.SavedHints.ToList())
             {
                 var hintPanel = (HintPanel)MainWindow.FindName(savedHint.HintPanelKey);
                 hintPanel.AddSavedHint(savedHint);
@@ -144,9 +144,9 @@ namespace TrackOMatic
                 if (savedData.SpoilerLogName == savedProgress.SpoilerLogName) savedProgress = savedData;
                 ReadSavedProgress();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Error reading saved data");
+                Console.WriteLine(e);
             }
         }
 
