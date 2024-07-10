@@ -10,7 +10,8 @@ namespace TrackOMatic
     public partial class HintItemList : UserControl
     {
         private List<ItemName> sortedItemList = new();
-        public List<ItemName> SelectedItems { get; set; } = new();
+        private List<bool> checkmarkedItems = new();
+        public Dictionary<ItemName, bool> SelectedItems { get; set; } = new();
 
         public static readonly DependencyProperty CustomHorizontalAlignmentProperty =
             DependencyProperty.Register(
@@ -48,8 +49,23 @@ namespace TrackOMatic
             //dialog.Top = SelectionDialogPosition[1];
 
             dialog.ShowDialog();
+            var copy = new Dictionary<ItemName, bool>(dialog.SelectedItems);
+            foreach(var entry in copy)
+            {
+                if (SelectedItems.ContainsKey(entry.Key))
+                {
+                    dialog.SelectedItems[entry.Key] = SelectedItems[entry.Key];
+                }
+            }
             SelectedItems = dialog.SelectedItems;
             ProcessSelectedItems();
+            if (HintInfo != null) HintInfo.UpdateSelectedItems();
+        }
+
+        public void UpdateCheckmark(ItemName itemName, bool isChecked)
+        {
+            if (!SelectedItems.ContainsKey(itemName)) return;
+            SelectedItems[itemName] = isChecked;
             if (HintInfo != null) HintInfo.UpdateSelectedItems();
         }
 
@@ -58,11 +74,11 @@ namespace TrackOMatic
             if(e.LeftButton == MouseButtonState.Pressed) OpenItemSelectionDialog();
         }
 
-        public void AddNewImageToPanel(ItemName itemName)
+        public void AddNewImageToPanel(ItemName itemName, bool isChecked)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             var resourceName = itemName.ToString().ToLower();
-            var newItem = new PathOrFoundItem(itemName);
+            var newItem = new PathOrFoundItem(itemName, isChecked, this);
             var validItem = mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName);
             if (HintInfo != null && HintInfo.HintType == HintType.DIRECT_ITEM_HINT && validItem)
             {
@@ -89,18 +105,23 @@ namespace TrackOMatic
             ItemPanel.Children.Clear();
             ItemPanel.BeginInit();
             sortedItemList = new();
-            foreach (var itemName in SelectedItems)
+            checkmarkedItems = new();
+            foreach (var entry in SelectedItems)
             {
+                var itemName = entry.Key;
+                var isChecked = entry.Value;
                 int index = (-1 * sortedItemList.BinarySearch(itemName)) - 1;
                 sortedItemList.Insert(index, itemName);
+                checkmarkedItems.Insert(index, isChecked);
             }
             if (sortedItemList.Count == 0)
             {
                 sortedItemList.Add(ItemName.NONE);
+                checkmarkedItems.Add(false);
             }
-            foreach (var item in sortedItemList)
+            for(int i = 0; i < sortedItemList.Count; ++i)
             {
-                AddNewImageToPanel(item);
+                AddNewImageToPanel(sortedItemList[i], checkmarkedItems[i]);
             }
             ItemPanel.EndInit();
         }

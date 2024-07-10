@@ -20,7 +20,7 @@ namespace TrackOMatic
     /// </summary>
     public partial class HintItemSelectionDialog : Window
     {
-        public List<ItemName> SelectedItems { get; private set; } = new();
+        public Dictionary<ItemName, bool> SelectedItems { get; private set; } = new();
         public HintItemSelectionDialog(List<ItemName> itemsToTurnOn)
         {
             InitializeComponent();
@@ -50,7 +50,7 @@ namespace TrackOMatic
             {
                 if (child is SelectableHintItem hintItem && hintItem.On)
                 {
-                    SelectedItems.Add((ItemName)hintItem.Tag);
+                    SelectedItems.Add((ItemName)hintItem.Tag, false);
                 }
             }
         }

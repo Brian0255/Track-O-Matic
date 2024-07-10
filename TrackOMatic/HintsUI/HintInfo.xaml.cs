@@ -184,7 +184,7 @@ namespace TrackOMatic
             {
                 newText = region + " Boss Defeated";
             }
-            RightItems.SelectedItems = new() { kongThatIsFound };
+            RightItems.SelectedItems = new() { { kongThatIsFound, false } };
             RightItems.ProcessSelectedItems();
             Location.Text = newText;
             UpdateSelectedItems();
@@ -276,8 +276,9 @@ namespace TrackOMatic
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             if (HintType != HintType.DIRECT_ITEM_HINT) return;
-            foreach(var itemName in RightItems.SelectedItems)
+            foreach(var entry in RightItems.SelectedItems)
             {
+                var itemName = entry.Key;
                 if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName)) continue;
                 var matchingItem = mainWindow.ITEM_NAME_TO_ITEM[itemName];
                 if (matchingItem.ItemImage.Source.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
