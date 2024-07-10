@@ -210,8 +210,12 @@ namespace TrackOMatic
             Directory.CreateDirectory(songDisplayFolder);
             foreach (var entry in fileWrites)
             {
-                using var writer = new StreamWriter(songDisplayFolder + "/" + entry.Key);
-                await writer.WriteAsync(entry.Value);
+                try
+                {
+                    File.WriteAllText(songDisplayFolder + "/" + entry.Key, entry.Value);
+                }
+                catch (IOException) { }
+                catch (Exception) { }
             }
         }
 
