@@ -273,6 +273,10 @@ namespace TrackOMatic
         {
             CheckMiddleClick(sender, e);
             pressed = (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed && Interactible);
+            var shiftClicked = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
+            //shift clicking should not start any drag/drop operation
+            if (shiftClicked) pressed = false;
+            if (e.LeftButton == MouseButtonState.Pressed && shiftClicked) ToggleStar();
         }
 
         private void CheckMiddleClick(object sender, MouseEventArgs e)
