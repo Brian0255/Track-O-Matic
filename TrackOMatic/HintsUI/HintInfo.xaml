@@ -36,16 +36,16 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="7*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <TextBox ContextMenu="{x:Null}" TextChanged="Location_TextChanged" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}"/>
-                <TextBox ContextMenu="{x:Null}"   x:Name="PotionCount" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="PotionCount_PreviewKeyDown" Margin="0,0,3,0"  Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility}"/>
-                <local:HintItemList x:Name="RightItems" Grid.Column="1" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible}"/>
-            </Grid>
-            <local:HintItemList Loaded="HintInfoWindow_Loaded" x:Name="ItemsOnPath" Grid.Row="1" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox ContextMenu="{x:Null}" TextChanged="Location_TextChanged" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}"/>
+            <TextBox ContextMenu="{x:Null}" x:Name="PotionCount" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="PotionCount_PreviewKeyDown" Margin="0,0,3,0"  Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility}"/>
+
+            <local:HintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="RightItems" BottomRowHeight="*" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible}"/>
+            <local:HintItemList Loaded="HintInfoWindow_Loaded" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}"/>
             <Popup Grid.Row="1" x:Name="BottomRow" Height="120" Width="250" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}">
             <ListBox MouseDoubleClick="SuggestionBox_MouseDoubleClick" Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" x:Name="SuggestionBox"  KeyDown="SuggestionBox_KeyDown"/>
             </Popup>

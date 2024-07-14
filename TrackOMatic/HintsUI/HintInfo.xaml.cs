@@ -63,6 +63,10 @@ namespace TrackOMatic
             SavedHint = new SavedHint(panelName, Location.Text, PotionCount.Text, new(), new());
             ItemsOnPath.HintInfo = this;
             RightItems.HintInfo = this;
+            if (HintTypeSettings.PathItemsVisible != Visibility.Visible)
+            {
+                RightItems.BottomRow.Height = new GridLength(0);
+            }
             if (suggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
             {
                 hintShortcutInfo = suggestionToShortcutInfo[HintTypeSettings.HintSuggestion];

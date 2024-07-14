@@ -6,7 +6,16 @@
              xmlns:local="clr-namespace:TrackOMatic"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UniformGrid
-        x:Name="ItemPanel" Rows="1" HorizontalAlignment="{Binding CustomHorizontalAlignment}" Background="{StaticResource RegionBG}">
-    </UniformGrid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Name="BottomRow" Height="{Binding BottomRowHeight}"/>
+        </Grid.RowDefinitions>
+        <UniformGrid Grid.Row="0" Rows="1"
+            x:Name="ItemPanel" HorizontalAlignment="{Binding CustomHorizontalAlignment}" Background="{StaticResource RegionBG}">
+        </UniformGrid>
+        <UniformGrid Grid.Row="1" Rows="1"
+            x:Name="ItemPanel2" HorizontalAlignment="{Binding CustomHorizontalAlignment}" Background="{StaticResource RegionBG}">
+        </UniformGrid>
+    </Grid>
 </UserControl>

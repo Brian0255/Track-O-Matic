@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace TrackOMatic
@@ -21,10 +22,23 @@ namespace TrackOMatic
                 new PropertyMetadata(HorizontalAlignment.Left)
             );
 
+        public static readonly DependencyProperty BottomRowHeightProperty =
+           DependencyProperty.Register(
+               "BottomRowHeight",
+               typeof(GridLength),
+               typeof(HintItemList)
+           );
+
         public HorizontalAlignment CustomHorizontalAlignment
         {
             get { return (HorizontalAlignment)GetValue(CustomHorizontalAlignmentProperty); }
             set { SetValue(CustomHorizontalAlignmentProperty, value); }
+        }
+
+        public GridLength BottomRowHeight
+        {
+            get { return (GridLength)GetValue(BottomRowHeightProperty); }
+            set { SetValue(BottomRowHeightProperty, value); }
         }
 
         public double[] SelectionDialogPosition { get; set; } = { 0, 0 };
@@ -71,10 +85,14 @@ namespace TrackOMatic
 
         public void Image_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed) OpenItemSelectionDialog();
+            var image = (PathOrFoundItem)sender;
+            var shiftClicked = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
+            if (e.LeftButton == MouseButtonState.Pressed && shiftClicked) image.Toggle();
+            else if (e.LeftButton == MouseButtonState.Pressed) OpenItemSelectionDialog();
+            else if (e.MiddleButton == MouseButtonState.Pressed) image.Toggle();
         }
 
-        public void AddNewImageToPanel(ItemName itemName, bool isChecked)
+        public void AddNewImageToPanel(ItemName itemName, bool isChecked, UniformGrid row)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             var resourceName = itemName.ToString().ToLower();
@@ -97,12 +115,14 @@ namespace TrackOMatic
                 }
             }
             newItem.MouseDown += Image_MouseDown;
-            ItemPanel.Children.Add(newItem);
+            row.Children.Add(newItem);
         }
 
         public void ProcessSelectedItems()
         {
+
             ItemPanel.Children.Clear();
+            ItemPanel2.Children.Clear();
             ItemPanel.BeginInit();
             sortedItemList = new();
             checkmarkedItems = new();
@@ -121,7 +141,12 @@ namespace TrackOMatic
             }
             for(int i = 0; i < sortedItemList.Count; ++i)
             {
-                AddNewImageToPanel(sortedItemList[i], checkmarkedItems[i]);
+                var row = ItemPanel;
+                if(BottomRow.Height != new GridLength(0) && sortedItemList.Count > 2 && i > (sortedItemList.Count-1)/2 )
+                {
+                    row = ItemPanel2;
+                }
+                AddNewImageToPanel(sortedItemList[i], checkmarkedItems[i], row);
             }
             ItemPanel.EndInit();
         }
