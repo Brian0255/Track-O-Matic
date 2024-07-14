@@ -198,7 +198,7 @@ namespace TrackOMatic
             return SongFormatting.FormatSongString(textInfo.ToLower(name));
         }
 
-        private async void WriteToSongFiles(string songGame, string songName)
+        private void WriteToSongFiles(string songGame, string songName)
         {
             var songDisplayFolder = "TrackOMatic_SongDisplayOutput";
             Dictionary<string, string> fileWrites = new()

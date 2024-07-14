@@ -16,7 +16,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Margin="10,0,0,0" FontSize="20" Foreground="White" Grid.Row="0"  FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center" Padding="0,0,0,2"/>
                 <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                         <StackPanel x:Name="HintList" Margin="2,1,5,1">
                             <StackPanel.Resources>
                                 <Style TargetType="{x:Type local:HintInfo}">

@@ -18,7 +18,8 @@ using System.Windows.Shapes;
 namespace TrackOMatic
 {
     public partial class HintPanel : UserControl
-    {
+    { 
+
         public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register("Heading", typeof(string), typeof(HintPanel));
         public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register("LineColor", typeof(Color), typeof(HintPanel));
         public static readonly DependencyProperty HintTypeProperty = DependencyProperty.Register("HintType", typeof(HintType), typeof(HintPanel));
@@ -99,6 +100,25 @@ namespace TrackOMatic
                 if (hint is HintInfo hintInfo) hints.Add(hintInfo.SavedHint);
             }
             return hints;
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            /*
+            var hitTest = VisualTreeHelper.HitTest(this, e.GetPosition(this)).VisualHit;
+            int maxDepth = 5;
+            int depth = 0;
+            while(hitTest != null && depth < maxDepth)
+            {
+                if(hitTest is PathOrFoundItem item)
+                {
+                    item.Toggle();
+                    e.Handled = (item.ItemName != ItemName.NONE);
+                    break;
+                }
+                hitTest = VisualTreeHelper.GetParent(hitTest);
+                ++depth;
+            }*/
         }
     }
 }
