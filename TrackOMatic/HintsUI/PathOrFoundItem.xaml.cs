@@ -43,15 +43,5 @@ namespace TrackOMatic
             UpdateCheckmark();
         }
 
-
-        private void  Image_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.MiddleButton == MouseButtonState.Pressed) Toggle();
-        }
-
-        private void Image_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (e.Delta != 0) Toggle();
-        }
     }
 }
