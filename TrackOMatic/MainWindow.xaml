@@ -198,7 +198,7 @@
 
                                     <Image x:Name="StartPicture" Source="images\dk64\start.png" Grid.RowSpan="2" Grid.ColumnSpan="4" Margin="10" />
                                 </Grid>
-                                <local:RegionGrid  x:Name="StartRegionGrid" Margin="5,0,5,0" Grid.Column="1" Tag="{x:Static local:RegionName.START}"/>
+                                <local:RegionGrid  x:Name="StartRegionGrid" Margin="3" Grid.Column="1" Tag="{x:Static local:RegionName.START}"/>
                             </Grid>
                             <Grid Name="Level1" Grid.Row="1"  Margin="1" Background="{StaticResource RegionBG}">
                                 <Grid.ColumnDefinitions>
@@ -225,7 +225,7 @@
                                     <TextBlock x:Name="Level1TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="Level1Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
-                                <local:RegionGrid Margin="5,0,5,0"  x:Name="Level1RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.JUNGLE_JAPES}"/>
+                                <local:RegionGrid Margin="3"  x:Name="Level1RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.JUNGLE_JAPES}"/>
                             </Grid>
                             <Grid Name="Level2" Grid.Row="2" Margin="1" Background="{StaticResource RegionBG}">
                                 <Grid.ColumnDefinitions>
@@ -251,7 +251,7 @@
                                     <TextBlock x:Name="Level2TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="Level2Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
-                                <local:RegionGrid Margin="5,0,5,0"  x:Name="Level2RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.ANGRY_AZTEC}"/>
+                                <local:RegionGrid Margin="3"  x:Name="Level2RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.ANGRY_AZTEC}"/>
                             </Grid>
                             <Grid Name="Level3" Grid.Row="3"  Margin="1" Background="{StaticResource RegionBG}">
                                 <Grid.ColumnDefinitions>
@@ -277,7 +277,7 @@
                                     <TextBlock x:Name="Level3TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="Level3Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
-                                <local:RegionGrid Margin="5,0,5,0"  x:Name="Level3RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.FRANTIC_FACTORY}"/>
+                                <local:RegionGrid Margin="3"  x:Name="Level3RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.FRANTIC_FACTORY}"/>
                             </Grid>
                             <Grid Name="Level4" Grid.Row="4"  Margin="1" Background="{StaticResource RegionBG}">
                                 <Grid.ColumnDefinitions>
@@ -303,7 +303,7 @@
                                     <TextBlock x:Name="Level4TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="Level4Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
-                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="5,0,5,0" x:Name="Level4RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.GLOOMY_GALLEON}"/>
+                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3" x:Name="Level4RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.GLOOMY_GALLEON}"/>
                             </Grid>
                         </Grid>
                         <Grid Grid.Column="1">
@@ -337,7 +337,7 @@
                                     <TextBlock x:Name="DKIslesTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock Name="DKIslesPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?"/>
                                 </Grid>
-                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="5,0,5,0"  x:Name="DKIslesRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.DK_ISLES}"/>
+                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3"  x:Name="DKIslesRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.DK_ISLES}"/>
                             </Grid>
                             <Grid Name="Level5" Grid.Row="1" Margin="1" Background="{StaticResource RegionBG}">
                                 <Grid.ColumnDefinitions>
@@ -363,7 +363,7 @@
                                     <TextBlock x:Name="Level5TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="Level5Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
-                                <local:RegionGrid Margin="5,0,5,0" x:Name="Level5RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.FUNGI_FOREST}"/>
+                                <local:RegionGrid Margin="3" x:Name="Level5RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.FUNGI_FOREST}"/>
                             </Grid>
 
                             <Grid Name="Level6" Grid.Row="2" Margin="1" Background="{StaticResource RegionBG}">
@@ -390,7 +390,7 @@
                                     <TextBlock x:Name="Level6TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="Level6Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
-                                <local:RegionGrid Margin="5,0,5,0"  x:Name="Level6RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.CRYSTAL_CAVES}"/>
+                                <local:RegionGrid Margin="3"  x:Name="Level6RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.CRYSTAL_CAVES}"/>
                             </Grid>
 
                             <Grid Name="Level7" Grid.Row="3" Margin="1" Background="{StaticResource RegionBG}">
@@ -417,7 +417,7 @@
                                     <TextBlock x:Name="Level7TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="Level7Points" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
-                                <local:RegionGrid  Margin="5,0,5,0" x:Name="Level7RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.CREEPY_CASTLE}"/>
+                                <local:RegionGrid  Margin="3" x:Name="Level7RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.CREEPY_CASTLE}"/>
                             </Grid>
                             <Grid Name="HideoutHelm" Grid.Row="4"  Margin="1" Background="{StaticResource RegionBG}">
 
@@ -443,7 +443,7 @@
                                     <TextBlock x:Name="HideoutHelmTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="HideoutHelmPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
-                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="5,0,5,0"  x:Name="HideoutHelmRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.HIDEOUT_HELM}"/>
+                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3"  x:Name="HideoutHelmRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.HIDEOUT_HELM}"/>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -614,26 +614,28 @@
                     <local:ItemBackground BackgroundItemImage="{DynamicResource bean}"     Grid.Row="2" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BEAN}"/>
 
                     <!--Training Moves-->
-                    <local:Item x:Name="diving"  ItemImage="{DynamicResource diving_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
-                    <local:Item x:Name="orange_throwing"  ItemImage="{DynamicResource orange_throwing_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-                    <local:Item x:Name="barrel_throwing"  ItemImage="{DynamicResource barrel_throwing_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-                    <local:Item x:Name="vine_swinging"  ItemImage="{DynamicResource vine_swinging_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                    <local:Item x:Name="diving"  ItemImage="{DynamicResource diving_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
+                    <local:Item x:Name="orange_throwing"  ItemImage="{DynamicResource orange_throwing_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+                    <local:Item x:Name="barrel_throwing"  ItemImage="{DynamicResource barrel_throwing_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+                    <local:Item x:Name="vine_swinging"  ItemImage="{DynamicResource vine_swinging_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                    <local:Item x:Name="climbing"  ItemImage="{DynamicResource climbing_bw}" Grid.Row="4" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CLIMBING}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource diving}"     Grid.Row="3" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIVING}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource orange_throwing}"     Grid.Row="3" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource barrel_throwing}"     Grid.Row="3" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource vine_swinging}"     Grid.Row="3" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
-
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource diving}"     Grid.Row="4" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIVING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource orange_throwing}"     Grid.Row="4" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource barrel_throwing}"     Grid.Row="4" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource vine_swinging}"     Grid.Row="4" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource climbing}"     Grid.Row="4" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CLIMBING}"/>
+                    
                     <!--Sniper/Homing/Camera/Shockwave-->
-                    <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                    <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
-                    <local:Item x:Name="fairy_camera"  ItemImage="{DynamicResource fairy_camera_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
-                    <local:Item x:Name="shockwave"  ItemImage="{DynamicResource shockwave_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+                    <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+                    <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+                    <local:Item x:Name="fairy_camera"  ItemImage="{DynamicResource fairy_camera_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
+                    <local:Item x:Name="shockwave"  ItemImage="{DynamicResource shockwave_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource sniper_scope}"     Grid.Row="4" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource homing_ammo}"     Grid.Row="4" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource fairy_camera}"     Grid.Row="4" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource shockwave}"     Grid.Row="4" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource sniper_scope}"     Grid.Row="3" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource homing_ammo}"     Grid.Row="3" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource fairy_camera}"     Grid.Row="3" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource shockwave}"     Grid.Row="3" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
                     
                     <!--Shopkeepers-->
                     <local:Item x:Name="cranky"  ItemImage="{DynamicResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>

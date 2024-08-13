@@ -1204,6 +1204,16 @@
     <Resource Include="Images\bw\madjack.png" />
     <Resource Include="Images\bw\PUFFTOSS.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\diddy_minecart.png" />
+    <Resource Include="Images\dk64\donkey_minecart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\climbing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\climbing.png" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
