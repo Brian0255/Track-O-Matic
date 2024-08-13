@@ -9,7 +9,7 @@
         <ResourceDictionary>
             <FontFamily x:Key="DK64Font">pack://application:,,,/Fonts/#Jumpman</FontFamily>
             <FontFamily x:Key="DKCFont">pack://application:,,,/Fonts/#Gill Sans Ultra Bold Condensed</FontFamily>
-            <sys:Double x:Key="BigFontSize">28</sys:Double>
+            <sys:Double x:Key="BigFontSize">26</sys:Double>
 
             <Style x:Key="DefaultText" TargetType="TextBlock">
                 <Setter Property="Foreground" Value="White"/>
