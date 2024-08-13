@@ -60,7 +60,8 @@ namespace TrackOMatic
 
             Rows = gridnum;
 
-            double height = 1 + ((Children.Count - 1) / 5) / 2;
+            double height = (1 + ((Children.Count - 1) / 5)) / 2.0;
+            if (Children.Count <= 5) height = 1;
             var outerGrid = ((Parent as Grid).Parent as Grid);
             int row = (int)Parent.GetValue(Grid.RowProperty);
             outerGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
@@ -167,6 +168,7 @@ namespace TrackOMatic
 
         public void Handle_RegionGrid(Item button, bool add, bool userPlacing = true, bool brighten = true)
         {
+            button.Margin = new Thickness(2);
             ImportantCheck check = null;
             ItemName item;
             if(button.Tag != null)
