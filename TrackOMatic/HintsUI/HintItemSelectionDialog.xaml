@@ -101,16 +101,17 @@
         <local:SelectableHintItem x:Name="bean"  HintItemImage="{DynamicResource bean_bw}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
 
         <!--Training Moves-->
-        <local:SelectableHintItem x:Name="diving"  HintItemImage="{DynamicResource diving_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
-        <local:SelectableHintItem x:Name="orange_throwing"  HintItemImage="{DynamicResource orange_throwing_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-        <local:SelectableHintItem x:Name="barrel_throwing"  HintItemImage="{DynamicResource barrel_throwing_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-        <local:SelectableHintItem x:Name="vine_swinging"  HintItemImage="{DynamicResource vine_swinging_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
-
+        <local:SelectableHintItem x:Name="diving"  HintItemImage="{DynamicResource diving_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
+        <local:SelectableHintItem x:Name="orange_throwing"  HintItemImage="{DynamicResource orange_throwing_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+        <local:SelectableHintItem x:Name="barrel_throwing"  HintItemImage="{DynamicResource barrel_throwing_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+        <local:SelectableHintItem x:Name="vine_swinging"  HintItemImage="{DynamicResource vine_swinging_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+        <local:SelectableHintItem x:Name="climbing"  HintItemImage="{DynamicResource climbing}" Grid.Row="4" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CLIMBING}"/>
+        
         <!--Sniper/Homing/Camera/Shockwave-->
-        <local:SelectableHintItem x:Name="sniper_scope"  HintItemImage="{DynamicResource sniper_scope_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-        <local:SelectableHintItem x:Name="homing_ammo"  HintItemImage="{DynamicResource homing_ammo_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
-        <local:SelectableHintItem x:Name="fairy_camera"  HintItemImage="{DynamicResource fairy_camera_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
-        <local:SelectableHintItem x:Name="shockwave"  HintItemImage="{DynamicResource shockwave_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+        <local:SelectableHintItem x:Name="sniper_scope"  HintItemImage="{DynamicResource sniper_scope_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+        <local:SelectableHintItem x:Name="homing_ammo"  HintItemImage="{DynamicResource homing_ammo_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+        <local:SelectableHintItem x:Name="fairy_camera"  HintItemImage="{DynamicResource fairy_camera_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
+        <local:SelectableHintItem x:Name="shockwave"  HintItemImage="{DynamicResource shockwave_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
 
         <!--Vials-->
         <local:SelectableHintItem x:Name="kong_family"  HintItemImage="{DynamicResource kong_family_bw}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KONG_FAMILY}"/>
