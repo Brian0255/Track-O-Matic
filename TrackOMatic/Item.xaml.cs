@@ -300,7 +300,7 @@ namespace TrackOMatic
                 HandleItemReturn();
                 PerformSave();
             }
-        }
+        } 
 
         public void HandleItemReturn()
         {
@@ -317,6 +317,11 @@ namespace TrackOMatic
             var BWResourceName = itemName.ToString().ToLower() + "_bw";
             ItemImage = (Image)FindResource(BWResourceName);
             SetBackgroundImageVisibility(Visibility.Hidden);
+            Margin = new Thickness(0);
+            if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
+            {
+                mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].Margin = new Thickness(0);
+            }
             MouseDown -= Item_Return;
             MouseDown += Item_MouseDown;
             MouseMove -= Item_MouseMove;
