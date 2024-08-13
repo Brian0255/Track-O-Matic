@@ -76,6 +76,7 @@
         BARREL_THROWING,
         DIVING,
         ORANGE_THROWING,
+        CLIMBING,
 
         BEAN,
 

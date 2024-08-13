@@ -20,6 +20,7 @@ namespace TrackOMatic
         {ItemName.BARREL_THROWING, new ImportantCheck(ItemName.BARREL_THROWING,ItemType.TRAINING_MOVE, VialColor.CLEAR)},
         {ItemName.DIVING, new ImportantCheck(ItemName.DIVING,ItemType.TRAINING_MOVE, VialColor.CLEAR)},
         {ItemName.ORANGE_THROWING, new ImportantCheck(ItemName.ORANGE_THROWING,ItemType.TRAINING_MOVE, VialColor.CLEAR)},
+        {ItemName.CLIMBING, new ImportantCheck(ItemName.CLIMBING,ItemType.TRAINING_MOVE, VialColor.CLEAR)},
 
         {ItemName.COCONUT_GUN, new ImportantCheck(ItemName.COCONUT_GUN,ItemType.GUN, VialColor.YELLOW)},
         {ItemName.PEANUT_POPGUNS,new  ImportantCheck(ItemName.PEANUT_POPGUNS,ItemType.GUN, VialColor.RED)},
