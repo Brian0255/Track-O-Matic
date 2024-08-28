@@ -107,6 +107,9 @@
     <Compile Include="Data\HintSuggestion.cs" />
     <Compile Include="Data\HintType.cs" />
     <Compile Include="Data\SavedHint.cs" />
+    <Compile Include="BroadcastView.xaml.cs">
+      <DependentUpon>BroadcastView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HintsUI\BLockerHint.xaml.cs">
       <DependentUpon>BLockerHint.xaml</DependentUpon>
     </Compile>
@@ -154,9 +157,6 @@
     </Compile>
     <Compile Include="Data\MapToRegion.cs" />
     <Compile Include="DataSaver.cs" />
-    <Compile Include="ToggleableItem.xaml.cs">
-      <DependentUpon>ToggleableItem.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Data\ImportantCheckList.cs" />
     <Compile Include="Data\Region.cs" />
     <Compile Include="Data\RegionName.cs" />
@@ -177,6 +177,10 @@
       <DependentUpon>HintPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="WatermarkTextBox.cs" />
+    <Page Include="BroadcastView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="HintsUI\BLockerHint.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -226,10 +230,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ProgressiveItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ToggleableItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -382,7 +382,7 @@
     <Resource Include="Images\dk64\arena.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\aztec.png" />
+    <Resource Include="Images\dk64\angry_aztec_label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\aztec_w3.png" />
@@ -415,7 +415,7 @@
     <Resource Include="Images\dk64\candy.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\castle.png" />
+    <Resource Include="Images\dk64\creepy_castle_label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\castle_w3.png" />
@@ -424,7 +424,7 @@
     <Resource Include="Images\dk64\castle_w4.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\caves.png" />
+    <Resource Include="Images\dk64\crystal_caves_label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\caves_w3.png" />
@@ -502,7 +502,7 @@
     <Resource Include="Images\dk64\door.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\factory.png" />
+    <Resource Include="Images\dk64\frantic_factory_label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\factory_w3.png" />
@@ -523,13 +523,13 @@
     <Resource Include="Images\dk64\filmwave.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\filmwave1.png" />
+    <Resource Include="Images\dk64\fairycamonly.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\filmwave2.png" />
+    <Resource Include="Images\dk64\shockwaveonly.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\forest.png" />
+    <Resource Include="Images\dk64\fungi_forest_label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\forest_w3.png" />
@@ -544,7 +544,7 @@
     <Resource Include="Images\dk64\funky.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\galleon.png" />
+    <Resource Include="Images\dk64\gloomy_galleon_label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\galleon_w3.png" />
@@ -568,10 +568,10 @@
     <Resource Include="Images\dk64\homingscope.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\homingscope1.png" />
+    <Resource Include="Images\dk64\homingonly.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\homingscope2.png" />
+    <Resource Include="Images\dk64\scopeonly.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\isles.png" />
@@ -580,7 +580,7 @@
     <Resource Include="Images\dk64\isles_w3.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\japes.png" />
+    <Resource Include="Images\dk64\jungle_japes_label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\japes_w3.png" />
@@ -1213,6 +1213,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\bw\climbing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\k1_broadcast.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\k2_broadcast.png" />
+    <Resource Include="Images\bw\k3_broadcast.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
