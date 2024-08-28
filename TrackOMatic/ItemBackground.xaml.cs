@@ -7,12 +7,12 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
-using System.Windows.Media.Imaging;
 
 namespace TrackOMatic
 {
     public partial class ItemBackground : ContentControl, INotifyPropertyChanged
     {
+        public ItemBrightnessChanger ItemBrightnessChanger { get; private set; }
         public static readonly DependencyProperty BackgroundItemImageProperty =
         DependencyProperty.Register("BackgroundItemImage", typeof(Image), typeof(ItemBackground));
 
@@ -22,6 +22,15 @@ namespace TrackOMatic
         {
             get { return (Image)GetValue(BackgroundItemImageProperty); }
             set { SetValue(BackgroundItemImageProperty, value); }
+        }
+
+        public static readonly DependencyProperty InteractibleProperty =
+        DependencyProperty.Register("Interactible", typeof(bool), typeof(ItemBackground), new PropertyMetadata(true));
+
+        public bool Interactible
+        {
+            get { return (bool)GetValue(InteractibleProperty); }
+            set { SetValue(InteractibleProperty, value); }
         }
 
         public ItemBackground()
@@ -55,6 +64,7 @@ namespace TrackOMatic
 
         public void ItemBackground_MouseDown(object sender, MouseEventArgs e)
         {
+            if (!Interactible) return;
             var shiftClicked = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
             if (e.MiddleButton == MouseButtonState.Pressed) ToggleStar();
             else if (e.LeftButton == MouseButtonState.Pressed && shiftClicked) ToggleStar();
@@ -71,7 +81,14 @@ namespace TrackOMatic
 
         public void ItemBackground_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (!Interactible) return;
             if (e.Delta != 0) ToggleStar();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (Tag == null) return;
+            ItemBrightnessChanger = new ItemBrightnessChanger(BackgroundItemImage, (ItemName) Tag);
         }
     }
 }
