@@ -78,7 +78,7 @@ namespace TrackOMatic
               }
             };
             vialImage.SetRegion(Region);
-            vialImage.Interactible = false;
+            vialImage.Disable();
             vialImage.MouseDown -= vialImage.Item_MouseDown;
             vialImage.MouseDown += vialImage.Item_Return;
             Vials[color].Add(vialImage);
@@ -210,6 +210,11 @@ namespace TrackOMatic
             // move item to region
             Panel itemGrid = item.Parent as Panel;
             if(itemGrid != null) itemGrid.Children.Remove(item);
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.BroadcastView != null && item.ItemImage.Opacity > 0.9 && brighten && item.Tag != null)
+            {
+                mainWindow.BroadcastView.TurnItemOn((ItemName)item.Tag);
+            }
             Handle_RegionGrid(item, true, userPlacing, brighten);
             if (item.Parent == null) item.HandleItemReturn();
             else
