@@ -15,12 +15,13 @@ namespace TrackOMatic
     public partial class Item : ContentControl, INotifyPropertyChanged
     {
         public Region Region { get; set; }
-        public bool Interactible { get; set; } = true;
+
+        public bool Brightened { get; private set; } = false;
 
         public bool CanLeftClick { get; set; } = true;
         public bool AutoPlaced { get; set; } = false;
         private ItemName ItemName { get; set; }
-        private ItemBrightnessChanger ItemBrightnessChanger { get; set; }
+        public ItemBrightnessChanger ItemBrightnessChanger { get; set; }
 
         public static readonly DependencyProperty ItemImageProperty =
         DependencyProperty.Register("ItemImage", typeof(Image), typeof(Item));
@@ -31,10 +32,19 @@ namespace TrackOMatic
          typeof(string),
          typeof(Item));
 
+        public static readonly DependencyProperty InteractibleProperty =
+     DependencyProperty.Register("Interactible", typeof(bool), typeof(Item), new PropertyMetadata(true));
+
         public string HoverText
         {
             get { return (string)GetValue(HoverTextProperty); }
             set { SetValue(HoverTextProperty, value); }
+        }
+
+        public bool Interactible
+        {
+            get { return (bool)GetValue(InteractibleProperty); }
+            set { SetValue(InteractibleProperty, value); }
         }
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
@@ -49,6 +59,11 @@ namespace TrackOMatic
             {
                 mainWindow.ITEM_TO_DIRECT_HINT[ItemName].Image.Source = ItemImage.Source;
             }
+        }
+
+        public void Disable()
+        {
+            Interactible = false;
         }
 
 
@@ -68,6 +83,10 @@ namespace TrackOMatic
             {
                 ToolTip.Visibility = Visibility.Collapsed;
                 matchingBackground.ToolTip.Visibility = Visibility.Collapsed;
+                if (mainWindow.BroadcastView != null && Tag != null)
+                {
+                    mainWindow.BroadcastView.DisableTooltip((ItemName)Tag);
+                }
                 return;
             }
             var itemName = (ItemName)Tag;
@@ -80,6 +99,10 @@ namespace TrackOMatic
             ToolTip.Visibility = Visibility.Visible;
             matchingBackground.ToolTip.Visibility = Visibility.Visible;
             matchingBackground.ToolTip.Content = HoverText;
+            if(mainWindow.BroadcastView != null && Tag != null)
+            {
+                mainWindow.BroadcastView.ActivateTooltip((ItemName)Tag, HoverText);
+            }
         }
 
         private bool pressed = false;
@@ -105,10 +128,13 @@ namespace TrackOMatic
 
         public void SetStarVisibility(Visibility newVisibility)
         {
+            if(mainWindow.BroadcastView != null && Tag != null)
+            {
+                mainWindow.BroadcastView.SetItemStar((ItemName) Tag, newVisibility);
+            }
             Star.Visibility = newVisibility;
-            MainWindow MainWindow = (MainWindow)Application.Current.MainWindow;
-            if (MainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
-                MainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
+            if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
+                mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
         }
 
         public void SetRegion(Region newRegion)
@@ -218,12 +244,15 @@ namespace TrackOMatic
         {
             ItemBrightnessChanger.Brighten();
             ItemImage = ItemBrightnessChanger.ItemImage;
+            Brightened = true;
         }
 
         public void Darken()
         {
             ItemBrightnessChanger.Darken();
             ItemImage = ItemBrightnessChanger.ItemImage;
+            if (mainWindow.BroadcastView != null) mainWindow.BroadcastView.TurnItemOff((ItemName)Tag);
+            Brightened = false;
         }
 
         public void DoDragDrop(bool rightButtonPressed) 
@@ -231,6 +260,10 @@ namespace TrackOMatic
             ItemName itemName = (ItemName)Tag;
             var resourceName = itemName.ToString().ToLower();
             ItemImage = (Image) FindResource(resourceName);
+            if (!rightButtonPressed && Tag != null)
+            {
+                if (mainWindow.BroadcastView != null) mainWindow.BroadcastView.TurnItemOn((ItemName)Tag);
+            }
             var opacity = (rightButtonPressed) ? 0.375 : 1.0;
             Opacity = 1.0;
              var adLayer = AdornerLayer.GetAdornerLayer(this);
@@ -295,12 +328,18 @@ namespace TrackOMatic
         public void Item_Return(object sender, MouseEventArgs e)
         {
             CheckMiddleClick(sender, e);
+            var shiftClicked = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
+            if(e.LeftButton == MouseButtonState.Pressed && shiftClicked)
+            {
+                ToggleStar();
+                return;
+            }
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 HandleItemReturn();
                 PerformSave();
             }
-        } 
+        }
 
         public void HandleItemReturn()
         {
@@ -316,6 +355,7 @@ namespace TrackOMatic
             var itemName = (ItemName)Tag;
             var BWResourceName = itemName.ToString().ToLower() + "_bw";
             ItemImage = (Image)FindResource(BWResourceName);
+            Brightened = false;
             SetBackgroundImageVisibility(Visibility.Hidden);
             Margin = new Thickness(0);
             if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
@@ -326,6 +366,10 @@ namespace TrackOMatic
             MouseDown += Item_MouseDown;
             MouseMove -= Item_MouseMove;
             MouseMove += Item_MouseMove;
+            if (mainWindow.BroadcastView != null && Tag != null)
+            {
+                mainWindow.BroadcastView.TurnItemOff((ItemName)Tag);
+            }
         }
 
         private void Item_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
