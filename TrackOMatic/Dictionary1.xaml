@@ -96,6 +96,8 @@
     <Image x:Key="key_7" Source="Images\dk64\k7.png"  x:Shared="false"/>
     <Image x:Key="key_8" Source="Images\dk64\k8.png"  x:Shared="false"/>
 
+    <Image x:Key="basic_key" Source="Images\dk64\key.png"  x:Shared="false"/>
+
     <Image x:Key="progressive_slam_1" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
     <Image x:Key="progressive_slam_2" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
     <Image x:Key="progressive_slam_3" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
@@ -193,6 +195,8 @@
     <Image x:Key="key_7_bw" Source="Images\bw\k7.png"  x:Shared="false"/>
     <Image x:Key="key_8_bw" Source="Images\bw\k8.png"  x:Shared="false"/>
 
+    <Image x:Key="basic_key_bw" Source="Images\bw\key.png"  x:Shared="false"/>
+
     <Image x:Key="progressive_slam_1_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
     <Image x:Key="progressive_slam_2_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
     <Image x:Key="progressive_slam_3_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
@@ -222,5 +226,8 @@
     <Image x:Key="pufftoss_bw" Source="Images\bw\pufftoss.png" x:Shared="false"/>
     <Image x:Key="madjack_bw" Source="Images\bw\madjack.png" x:Shared="false"/>
     <Image x:Key="kutout_bw" Source="Images\bw\kutout.png" x:Shared="false"/>
+
+    <Image x:Key="homing_scope_bw" Source="Images\bw\homingscope.png" x:Shared="false"/>
+    <Image x:Key="camera_shockwave_bw" Source="Images\bw\filmwave.png" x:Shared="false"/>
 
 </ResourceDictionary>
