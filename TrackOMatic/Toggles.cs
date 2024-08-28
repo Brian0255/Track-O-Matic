@@ -6,6 +6,7 @@ using System.Windows.Media.Imaging;
 using System.Linq;
 using System.Windows.Data;
 using TrackOMatic.Properties;
+using System.ComponentModel;
 
 namespace TrackOMatic
 {
@@ -29,6 +30,10 @@ namespace TrackOMatic
         {
             Settings.Default.SongDisplay = SongDisplayOption.IsChecked;
             Settings.Default.Save();
+            if(BroadcastView != null)
+            {
+                BroadcastView.UpdateSongDisplayHeight();
+            }
         }
 
         private void HintDisplayToggle(object sender, RoutedEventArgs e)
@@ -59,6 +64,34 @@ namespace TrackOMatic
                 Autotracker.ResetChecks();
             }*/
             Settings.Default.Save();
+        }
+
+        private void BroadcastToggle(object sender, RoutedEventArgs e)
+        {
+            if(BroadcastView != null)
+            {
+                BroadcastView.Close();
+                BroadcastView = null;
+                return;
+            }
+            BroadcastView = new BroadcastView();
+            BroadcastView.UpdateSongInfo(SongGame.Text, SongName.Text);
+            BroadcastView.Closed += BroadcastClosed;
+            BroadcastView.Show();
+            BroadcastView.InitializeFromItems(ITEM_NAME_TO_ITEM);
+            foreach (var entry in Collectibles)
+            {
+                BroadcastView.UpdateCollectible(entry.Key, entry.Value.Text);
+            }
+            foreach (var entry in Regions)
+            {
+                var region = entry.Value;
+                if (region.LevelOrderNumber != null) region.LevelOrderNumber.UpdateLabel();
+                region.UpdatePoints();
+            }
+            BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
+            BroadcastView.SetShopkeepers(ShopkeeperColumn.ActualWidth > 0);
+            BroadcastOption.IsChecked = true;
         }
     }
 }
