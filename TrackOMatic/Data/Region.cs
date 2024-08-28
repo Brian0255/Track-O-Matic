@@ -71,6 +71,7 @@ namespace TrackOMatic
             BottomLabel = bottomLabel;
             TopLabel = topLabel;
             LevelOrderNumber = levelOrderNumber;
+            if(LevelOrderNumber != null) LevelOrderNumber.SetRegion(regionName);
             CurrentChecks = new();
             RegionGrid.Region = this;
             ResetLabels();
@@ -106,6 +107,7 @@ namespace TrackOMatic
             requiredChecks = 0;
             CurrentChecks = new();
             SpoilerLoaded = false;
+            SpoilerSettings = null;
             //put them into a list first to avoid the "cant remove while enumerating" 
             var elements = new List<Item>(RegionGrid.Children.Count);
 
@@ -146,6 +148,11 @@ namespace TrackOMatic
             pointsLabel.Text = (SpoilerLoaded) ? remaining.ToString() : "?";
             var resource = (CurrentPoints >= TotalPoints && SpoilerLoaded) ? "RegionComplete" : "RegionInProgress";
             pointsLabel.SetResourceReference(TextBlock.ForegroundProperty, resource);
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if(mainWindow.BroadcastView != null)
+            {
+                mainWindow.BroadcastView.UpdateRegionPoints(RegionName, remaining, resource);
+            }
         }
 
         public void SetShuffledRegion(RegionName newRegionName)
