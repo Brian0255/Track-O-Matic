@@ -30,8 +30,8 @@ namespace TrackOMatic
         public Dictionary<ItemName, RegionName> StartingItems { get; private set; }
         public GameVerificationInfo GameVerificationInfo { get; private set; }
         public RegionName CurrentRegion { get; private set; }
-        private string currentSongGame;
-        private string currentSongName;
+        public string currentSongGame { get; private set; }
+        public string currentSongName { get; private set; }
         private SavedProgress savedProgress;
         public int RandomizerVersion { get; private set; }
 
