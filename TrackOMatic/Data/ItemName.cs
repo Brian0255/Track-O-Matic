@@ -32,6 +32,8 @@
         KEY_7,
         KEY_8,
 
+        BASIC_KEY,
+
         COCONUT_GUN,
         BONGO_BLAST,
         GORILLA_GRAB,
@@ -64,6 +66,7 @@
 
         SNIPER_SCOPE,
         HOMING_AMMO,
+        HOMING_SCOPE,
 
         PROGRESSIVE_SLAM_1,
         PROGRESSIVE_SLAM_2,
@@ -71,6 +74,7 @@
 
         FAIRY_CAMERA,
         SHOCKWAVE,
+        CAMERA_SHOCKWAVE,
 
         VINE_SWINGING,
         BARREL_THROWING,
