@@ -40,7 +40,6 @@
                 <MenuItem Header="Reset Tracker" Click="OnReset"/>
             </MenuItem>
             <MenuItem Header="Toggles" Focusable="False">
-                <Separator/>
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True"  IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
@@ -50,6 +49,9 @@
                 <RadioButton Name="hintDisplayOff" Checked="HintDisplayToggle">Off</RadioButton>
                 <RadioButton Name="hintDisplayMP" Checked="HintDisplayToggle">Multipath Hints</RadioButton>
                 <RadioButton Name="hintDisplayDirect" Checked="HintDisplayToggle">Direct Item Hints</RadioButton>
+            </MenuItem>
+            <MenuItem Header="Broadcast View" Focusable="False">
+                <MenuItem Name="BroadcastOption" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
             </MenuItem>
             <MenuItem Header="Version 1.7.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
@@ -468,12 +470,12 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".2*"/>
                     </Grid.ColumnDefinitions>
-                    <local:CollectibleItem x:Name="Pearls" ImageSource="Images\bw\pearl.png" Text="0" Grid.Column="3"/>
-                    <local:CollectibleItem x:Name="BattleCrowns" ImageSource="Images\bw\crown.png" Text="0" Grid.Column="5"/>
-                    <local:CollectibleItem x:Name="BananaMedals" ImageSource="Images\bw\bananamedal.png" Text="0" Grid.Column="7"/>
-                    <local:CollectibleItem x:Name="RainbowCoins" ImageSource="Images\bw\rainbowcoin.png" Text="0" Grid.Column="9"/>
-                    <local:CollectibleItem x:Name="Fairies" ImageSource="Images\bw\fairy.png" Text="0" Grid.Column="11"/>
-                    <local:CollectibleItem x:Name="GBs" ImageSource="Images\bw\GB.png" Text="0" Grid.Column="13"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Pearls" ImageSource="Images\bw\pearl.png" Text="0" Grid.Column="3"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BattleCrowns" ImageSource="Images\bw\crown.png" Text="0" Grid.Column="5"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BananaMedals" ImageSource="Images\bw\bananamedal.png" Text="0" Grid.Column="7"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="RainbowCoins" ImageSource="Images\bw\rainbowcoin.png" Text="0" Grid.Column="9"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Fairies" ImageSource="Images\bw\fairy.png" Text="0" Grid.Column="11"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="GBs" ImageSource="Images\bw\GB.png" Text="0" Grid.Column="13"/>
                 </Grid>
                 <!-- Items -->
                 <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="0" >
@@ -577,11 +579,11 @@
                     <local:ItemBackground BackgroundItemImage="{DynamicResource gorilla_gone}"    Grid.Row="4" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
 
                     <!--Blueprints-->
-                    <local:CollectibleItem x:Name="DonkeyBPs" ImageSource="Images\bw\dk_bp.png" Text="0" Grid.Row="0" Grid.Column="6"/>
-                    <local:CollectibleItem x:Name="DiddyBPs" ImageSource="Images\bw\diddy_bp.png" Text="0" Grid.Row="1" Grid.Column="6"/>
-                    <local:CollectibleItem x:Name="LankyBPs" ImageSource="Images\bw\lanky_bp.png" Text="0" Grid.Row="2" Grid.Column="6"/>
-                    <local:CollectibleItem x:Name="TinyBPs" ImageSource="Images\bw\tiny_bp.png" Text="0" Grid.Row="3" Grid.Column="6"/>
-                    <local:CollectibleItem x:Name="ChunkyBPs" ImageSource="Images\bw\chunky_bp.png" Text="0" Grid.Row="4" Grid.Column="6"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="DonkeyBPs" ImageSource="Images\bw\dk_bp.png" Text="0" Grid.Row="0" Grid.Column="6"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="DiddyBPs" ImageSource="Images\bw\diddy_bp.png" Text="0" Grid.Row="1" Grid.Column="6"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="LankyBPs" ImageSource="Images\bw\lanky_bp.png" Text="0" Grid.Row="2" Grid.Column="6"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="TinyBPs" ImageSource="Images\bw\tiny_bp.png" Text="0" Grid.Row="3" Grid.Column="6"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="ChunkyBPs" ImageSource="Images\bw\chunky_bp.png" Text="0" Grid.Row="4" Grid.Column="6"/>
 
                     <!-- Keys-->
                     <local:Item x:Name="key_1"  ItemImage="{DynamicResource key_1_bw}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_1}"/>
