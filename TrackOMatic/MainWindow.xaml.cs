@@ -41,6 +41,7 @@ namespace TrackOMatic
     {
         public int TotalGBs { get; private set; }
         public Button SelectedButton { get; }
+        public BroadcastView BroadcastView { get; private set; }
         public Dictionary<RegionName, Region> Regions { get; private set; }
         public Dictionary<ItemType, CollectibleItem> Collectibles { get; private set; }
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
@@ -242,11 +243,13 @@ namespace TrackOMatic
             if (Collectibles.ContainsKey(collectibleType))
             {
                 Collectibles[collectibleType].SetAmount(newTotal);
+                if (BroadcastView != null) BroadcastView.UpdateCollectible(collectibleType, newTotal);
             }
         }
 
         public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false)
         {
+            if (regionName == RegionName.UNKNOWN) return false;
             if (!ITEM_NAME_TO_ITEM.ContainsKey(itemToProcess)) return false;
             var item = ITEM_NAME_TO_ITEM[itemToProcess];
             bool darken = hint && item.Parent == ItemGrid;
@@ -260,6 +263,7 @@ namespace TrackOMatic
             item.SyncImages();
             //should mean that there was no matching vial, item couldn't be placed as a result
             if (item.Parent == ItemGrid) return false;
+            if (BroadcastView != null && !hint) BroadcastView.TurnItemOn(itemToProcess);
             DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.ItemImage.Opacity));
             DataSaver.Save();
             return true;
@@ -318,6 +322,10 @@ namespace TrackOMatic
             }
             SongGame.Text = songGame;
             SongName.Text = songName;
+            if(BroadcastView != null)
+            {
+                BroadcastView.UpdateSongInfo(songGame, songName);
+            }
         }
 
         public bool TopMostSetting
@@ -345,10 +353,15 @@ namespace TrackOMatic
         private void ParseSpoiler(string fileName)
         {
             SpoilerSettings = SpoilerParser.ParseSpoiler(fileName);
+            foreach(var entry in SpoilerParser.StartingItems)
+            {
+                if (BroadcastView != null) BroadcastView.TurnItemOn(entry.Key);
+            }
             Autotracker.SetStartingItems(SpoilerParser.StartingItems);
             Autotracker.SetSpoilerLoaded(fileName);
             foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
             if (SpoilerSettings.Empty()) InitRegionsFromEmptySpoiler();
+            if (BroadcastView != null) BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
             DataSaver.InitSavedDataFromSpoiler(fileName);
             HitListHintManager.InitializeFromSpoiler(SpoilerParser.StartingItems, SpoilerParser.TrainingItems);
             foreach (var entry in ITEM_TO_BACKGROUND_IMAGE) entry.Key.InitHoverPoints();
@@ -439,6 +452,7 @@ namespace TrackOMatic
             foreach (var progressiveImage in HelmKongs) progressiveImage.Reset();
             SetSong("", "");
             Autotracker.Reset();
+            if (BroadcastView != null) BroadcastView.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)
         {
@@ -464,6 +478,10 @@ namespace TrackOMatic
             Settings.Default.DesiredHeight = Height;
             Settings.Default.Save();
             DataSaver.Save();
+            if(BroadcastView != null)
+            {
+                BroadcastView.Close();
+            }
         }
 
         public void SetShopkeepers(bool on)
@@ -474,6 +492,13 @@ namespace TrackOMatic
             var shopkeeperColumnWidth = on ? 1.0 : 0;
             ItemsSeperator.Width = new GridLength(separatorWidth, GridUnitType.Star);
             ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
+            if (BroadcastView != null) BroadcastView.SetShopkeepers(on);
+        }
+
+        private void BroadcastClosed(object sender, EventArgs e)
+        {
+            BroadcastOption.IsChecked = false;
+            BroadcastView = null;
         }
     }
 }
