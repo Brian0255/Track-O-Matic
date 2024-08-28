@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace TrackOMatic
 {
@@ -18,6 +18,18 @@ namespace TrackOMatic
         public static readonly DependencyProperty TextProperty =
       DependencyProperty.Register("Text", typeof(int), typeof(CollectibleItem), new PropertyMetadata(null));
 
+        public static readonly DependencyProperty InteractibleProperty =
+        DependencyProperty.Register("Interactible", typeof(bool), typeof(CollectibleItem), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty BGColorProperty =
+        DependencyProperty.Register("BGColor", typeof(Brush), typeof(CollectibleItem));
+
+        public bool Interactible
+        {
+            get { return (bool)GetValue(InteractibleProperty); }
+            set { SetValue(InteractibleProperty, value); }
+        }
+
         private string baseSourcePath = "";
         private string BWSourcePath = "";
 
@@ -25,6 +37,12 @@ namespace TrackOMatic
         {
             get { return (string)GetValue(ImageSourceProperty); }
             set { SetValue(ImageSourceProperty, value); }
+        }
+
+        public Brush BGColor
+        {
+            get { return (Brush)GetValue(BGColorProperty); }
+            set { SetValue(BGColorProperty, value); }
         }
 
         private void Darken()
@@ -74,6 +92,22 @@ namespace TrackOMatic
             }
         }
 
+        private void UpdateBroadcast()
+        {
+            //kinda janky way to update broadcast correctly on user input
+            var window = (MainWindow)Application.Current.MainWindow;
+            ItemType collectibleType = 0;
+            foreach(var entry in window.Collectibles)
+            {
+                if(entry.Value == this)
+                {
+                    collectibleType = entry.Key;
+                    break;
+                }
+            }
+            if (window.BroadcastView != null) window.BroadcastView.UpdateCollectible(collectibleType, Text);
+        }
+
         public void SetAmount(int newAmount)
         {
             Text = newAmount;
@@ -87,18 +121,22 @@ namespace TrackOMatic
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Properties.Settings.Default.Autotracking) return;
+            if (Properties.Settings.Default.Autotracking || !Interactible) return;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Text++;
+                UpdateBroadcast();
             }
         }
 
         private void Image_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Properties.Settings.Default.Autotracking) return;
+            if (Properties.Settings.Default.Autotracking || !Interactible) return;
             if (e.RightButton == MouseButtonState.Pressed)
+            {
                 Text = Math.Max(Text - 1, 0);
+                UpdateBroadcast();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

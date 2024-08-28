@@ -13,7 +13,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition x:Name="NumberGridColumn" Width="18"/>
             </Grid.ColumnDefinitions>
-            <Grid x:Name="NumberGrid" Grid.Column="1" Background="#1e2024" Opacity="0">
+            <Grid x:Name="NumberGrid" Grid.Column="1" Background="{Binding BGColor}" Opacity="0">
                 <TextBlock x:Name="count" Padding="1,0,0,2" Text="{Binding Text}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"  Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" Visibility="Hidden"/>
             </Grid>
         </Grid>
