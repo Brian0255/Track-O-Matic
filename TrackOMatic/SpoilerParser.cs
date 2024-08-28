@@ -131,7 +131,6 @@ namespace TrackOMatic
                     var itemName = (ItemName)item.Tag;
                     var region = StartingItems[itemName];
                     MainWindow.Regions[region].RegionGrid.Add_Item(item);
-                    item.CanLeftClick = false;
                     item.ItemImage = (Image)MainWindow.FindResource(itemName.ToString().ToLower());
                 }
             }
