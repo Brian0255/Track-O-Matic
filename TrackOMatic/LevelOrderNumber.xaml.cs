@@ -12,6 +12,7 @@ namespace TrackOMatic
 
         private int currentNumber = 0;
         private bool disabled = false;
+        public RegionName RegionName { get; private set; }
 
         public LevelOrderNumber()
         {
@@ -20,9 +21,19 @@ namespace TrackOMatic
             currentNumber = 0;
         }
 
-        private void UpdateLabel()
+        public void UpdateLabel()
         {
             NumberLabel.Text = (currentNumber != 0) ? currentNumber.ToString() : "?";
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.BroadcastView != null && currentNumber != -1)
+            {
+                mainWindow.BroadcastView.UpdateLevelNumber(RegionName, currentNumber);
+            }
+        }
+
+        public void SetRegion(RegionName newRegion)
+        {
+            RegionName = newRegion;
         }
 
         public void Reset()
