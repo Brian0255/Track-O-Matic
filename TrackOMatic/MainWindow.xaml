@@ -53,7 +53,7 @@
             <MenuItem Header="Broadcast View" Focusable="False">
                 <MenuItem Name="BroadcastOption" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
             </MenuItem>
-            <MenuItem Header="Version 1.8.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 1.8.1" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
