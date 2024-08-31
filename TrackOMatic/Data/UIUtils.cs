@@ -34,7 +34,6 @@ namespace TrackOMatic
             double windowScaledWidth = window.Width * dpiScale;
             double windowScaledHeight = window.Height * dpiScale;
             window.Left = Math.Max(currentScreen.WorkingArea.Left, x) / dpiScale;
-            Console.WriteLine("mouse coords (" + x + ", " + y + ")");
             if (window.Left + window.Width > (currentScreen.WorkingArea.Left + currentScreen.WorkingArea.Width) / dpiScale)
             {
                 window.Left = (currentScreen.WorkingArea.Left + currentScreen.WorkingArea.Width - windowScaledWidth) / dpiScale;
@@ -44,8 +43,6 @@ namespace TrackOMatic
             {
                 window.Top = (currentScreen.WorkingArea.Top + currentScreen.WorkingArea.Height - windowScaledHeight) / dpiScale;
             }
-            Console.WriteLine("Window Pos: (" + window.Left + ", " + window.Top + ")");
-            Console.WriteLine("Window Size: (" + window.Width + ", " + window.Height + ")");
         }
     }
 }
