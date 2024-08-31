@@ -120,6 +120,7 @@ namespace TrackOMatic
 
         public void InitializeFromItems(Dictionary<ItemName, Item> items)
         {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
             foreach(var entry in items)
             {
                 var itemName = entry.Key;
@@ -130,6 +131,10 @@ namespace TrackOMatic
                 }
                 if (GetMatchingItem(itemName) != null || SharedMoves.ContainsKey(itemName))
                 {
+                    if (mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName))
+                    {
+                        mainWindow.ITEM_NAME_TO_ITEM[itemName].InitHoverPoints();
+                    }
                     SetItemStar(itemName, item.Star.Visibility);
                     if(item.Brightened && item.ItemImage.Opacity > 0.9)
                     {
