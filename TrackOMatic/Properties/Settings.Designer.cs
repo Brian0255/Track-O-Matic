@@ -142,5 +142,41 @@ namespace TrackOMatic.Properties {
                 this["SongDisplay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BroadcastShopkeepers {
+            get {
+                return ((bool)(this["BroadcastShopkeepers"]));
+            }
+            set {
+                this["BroadcastShopkeepers"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BroadcastHelmKRool {
+            get {
+                return ((bool)(this["BroadcastHelmKRool"]));
+            }
+            set {
+                this["BroadcastHelmKRool"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BroadcastSongDisplay {
+            get {
+                return ((bool)(this["BroadcastSongDisplay"]));
+            }
+            set {
+                this["BroadcastSongDisplay"] = value;
+            }
+        }
     }
 }
