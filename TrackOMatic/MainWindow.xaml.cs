@@ -492,7 +492,6 @@ namespace TrackOMatic
             var shopkeeperColumnWidth = on ? 1.0 : 0;
             ItemsSeperator.Width = new GridLength(separatorWidth, GridUnitType.Star);
             ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
-            if (BroadcastView != null) BroadcastView.SetShopkeepers(on);
         }
 
         private void BroadcastClosed(object sender, EventArgs e)
