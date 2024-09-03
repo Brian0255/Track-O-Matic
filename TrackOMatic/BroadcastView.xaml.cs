@@ -27,6 +27,9 @@ namespace TrackOMatic
         public Dictionary<ItemName, bool> SelectedItems { get; private set; } = new();
         private Dictionary<ItemName, ItemBackground> ItemMap = new();
 
+        private List<ProgressiveItem> KRoolKongs;
+        private List<ProgressiveItem> HelmKongs;
+
         public Dictionary<ItemType, CollectibleItem> Collectibles { get; private set; }
 
         //need to keep count of which of these you currently have because their item display is different
@@ -184,7 +187,33 @@ namespace TrackOMatic
                 HelmPoints,
                 IslesPoints,
             };
-            UpdateSongDisplayHeight();
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            KRoolKongs = new() { KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
+            HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
+            for(int i =0; i < KRoolKongs.Count;++i)
+            {
+                var item = KRoolKongs[i];
+                item.Enabled = false;
+                UpdateKRoolKong(i, mainWindow.KroolKongs[i].image.Source);
+            }
+            for (int i = 0; i < HelmKongs.Count; ++i)
+            {
+                var item = HelmKongs[i];
+                item.Enabled = false;
+                UpdateHelmKong(i, mainWindow.HelmKongs[i].image.Source);
+            }
+            UpdateShopkeeperHeight();
+            AdjustWindowSize();
+        }
+
+        public void UpdateKRoolKong(int index, ImageSource newSource)
+        {
+            KRoolKongs[index].image.Source = newSource;
+        }
+
+        public void UpdateHelmKong(int index, ImageSource newSource)
+        {
+            HelmKongs[index].image.Source = newSource;
         }
 
         public void UpdateCollectible(ItemType itemType, int newAmount)
@@ -239,25 +268,22 @@ namespace TrackOMatic
             MovesWidth.Width = new GridLength(width, GridUnitType.Pixel);
         }
 
-        private void AdjustWindowSize()
+        public void AdjustWindowSize()
         {
-            var baseHeight = 392;
+            var baseHeight = 394;
             if(ShopkeepersRow.Height.Value > 0)
             {
                 baseHeight += 47;
             }
             if(song_display.Height.Value > 0)
             {
-                baseHeight += 48;
+                baseHeight += 50;
+            }
+            if(HelmKRool.Height.Value > 0)
+            {
+                baseHeight += 47;
             }
             Height = baseHeight;
-        }
-
-        public void UpdateSongDisplayHeight()
-        {
-            var songRowHeight = (Settings.Default.SongDisplay) ? 50 : 0;
-            song_display.Height = new GridLength(songRowHeight, GridUnitType.Pixel);
-            AdjustWindowSize();
         }
 
         public void UpdateSongInfo(string songGame, string songName)
@@ -266,10 +292,11 @@ namespace TrackOMatic
             SongGame.Text = songGame;
         }
 
-        public void SetShopkeepers(bool on)
+        public void UpdateShopkeeperHeight()
         {
+            bool on = Settings.Default.BroadcastShopkeepers;
             var shopkeeperHeight = on ? 1.0 : 0;
-            var mainItemsHeight = on ? 337 : 290;
+            var mainItemsHeight = on ? 336 : 290;
             var climbingColumnWidth = on ? 0 : 0;
             ShopkeepersRow.Height = new GridLength(shopkeeperHeight, GridUnitType.Star);
             MainItemsRow.Height = new GridLength(mainItemsHeight,GridUnitType.Pixel);
