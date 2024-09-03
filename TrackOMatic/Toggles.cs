@@ -30,9 +30,35 @@ namespace TrackOMatic
         {
             Settings.Default.SongDisplay = SongDisplayOption.IsChecked;
             Settings.Default.Save();
-            if(BroadcastView != null)
+        }
+
+        private void BroadcastSongDisplayToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.BroadcastSongDisplay = BroadcastSongDisplay.IsChecked;
+            Settings.Default.Save();
+            if (BroadcastView != null)
             {
-                BroadcastView.UpdateSongDisplayHeight();
+                BroadcastView.AdjustWindowSize();
+            }
+        }
+
+        private void BroadcastHelmKRoolToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.BroadcastHelmKRool = BroadcastHelmKRool.IsChecked;
+            Settings.Default.Save();
+            if (BroadcastView != null)
+            {
+                BroadcastView.AdjustWindowSize();
+            }
+        }
+
+        private void BroadcastShopkeepersToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.BroadcastShopkeepers = BroadcastShopkeepers.IsChecked;
+            Settings.Default.Save();
+            if (BroadcastView != null)
+            {
+                BroadcastView.UpdateShopkeeperHeight();
             }
         }
 
@@ -90,7 +116,6 @@ namespace TrackOMatic
                 region.UpdatePoints();
             }
             BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
-            BroadcastView.SetShopkeepers(ShopkeeperColumn.ActualWidth > 0);
             BroadcastOption.IsChecked = true;
         }
     }
