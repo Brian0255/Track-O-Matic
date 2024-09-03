@@ -40,6 +40,19 @@ namespace TrackOMatic
             ImageSources = new List<List<BitmapImage>>();
         }
 
+        private void UpdateBroadcastView()
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.BroadcastView == null) return;
+            if (mainWindow.KroolKongs.IndexOf(this) != -1)
+            {
+                mainWindow.BroadcastView.UpdateKRoolKong(mainWindow.KroolKongs.IndexOf(this), image.Source);
+            }
+            if (mainWindow.HelmKongs.IndexOf(this) != -1)
+            {
+                mainWindow.BroadcastView.UpdateHelmKong(mainWindow.HelmKongs.IndexOf(this), image.Source);
+            }
+        }
 
         public void Reset()
         {
@@ -57,11 +70,13 @@ namespace TrackOMatic
         public void SetImage(BitmapImage newImage)
         {
             image.Source = newImage;
+            UpdateBroadcastView();
         }
 
         private void ReadCurrentIndex()
         {
             image.Source = images[currentIndex];
+            UpdateBroadcastView();
         }
 
         private void ImageButton_LeftPress(object sender, RoutedEventArgs e)
