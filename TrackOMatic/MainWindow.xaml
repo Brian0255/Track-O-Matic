@@ -35,15 +35,15 @@
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
             <MenuItem Header="File" Focusable="False">
-                <MenuItem Header="Open Spoiler Log" Click="OpenSpoiler"/>
-                <MenuItem Header="Reset Size" Click="ResetSize"/>
-                <MenuItem Header="Reset Tracker" Click="OnReset"/>
+                <MenuItem Header="Open Spoiler Log" StaysOpenOnClick="True"  Click="OpenSpoiler"/>
+                <MenuItem Header="Reset Size" StaysOpenOnClick="True"  Click="ResetSize"/>
+                <MenuItem Header="Reset Tracker" StaysOpenOnClick="True"  Click="OnReset"/>
             </MenuItem>
             <MenuItem Header="Toggles" Focusable="False">
-                <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True"  IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
-                <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
-                <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
-                <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Click="SongDisplayToggle"/>
+                <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
+                <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
+                <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
+                <MenuItem Name="SongDisplayOption" Header="Song Display (4.0)" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Click="SongDisplayToggle"/>
             </MenuItem>
             <MenuItem Header="Hint Display" Focusable="False">
                 <RadioButton Name="hintDisplayOff" Checked="HintDisplayToggle">Off</RadioButton>
@@ -51,7 +51,12 @@
                 <RadioButton Name="hintDisplayDirect" Checked="HintDisplayToggle">Direct Item Hints</RadioButton>
             </MenuItem>
             <MenuItem Header="Broadcast View" Focusable="False">
-                <MenuItem Name="BroadcastOption" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
+                <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
+                <MenuItem Name="BroadcastCustomize" Header="Options">
+                    <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastHelmKRool}" Click="BroadcastHelmKRoolToggle"/>
+                    <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers (4.0)" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastShopkeepers}" Click="BroadcastShopkeepersToggle"/>
+                    <MenuItem Name="BroadcastSongDisplay" Header="Song Display (4.0)" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastSongDisplay}" Click="BroadcastSongDisplayToggle"/>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Version 1.8.1" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
