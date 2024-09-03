@@ -35,7 +35,7 @@
                 </Border.Effect>
                 <ContentPresenter x:Name="Image" Content="{Binding BackgroundItemImage}"/>
             </Border>
-            <ContentPresenter x:Name="Star" Content="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left" IsHitTestVisible="False"/>
+            <ContentPresenter Margin="0,0,4,4" x:Name="Star" Content="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left" IsHitTestVisible="False"/>
         </Grid>
     </ContentControl.Content>
 
