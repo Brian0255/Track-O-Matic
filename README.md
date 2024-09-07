@@ -2,11 +2,10 @@
 ### An autotracker for Project64 and RMG that supports all playstyles of DK64R, such as using Spoiler Hints. Contains large sections for hint notetaking as well as showing what levels items have been obtained in.
 
 ### Regular View
-![image](https://github.com/user-attachments/assets/429a8c91-edca-4945-81b0-fa19efd1be17)
+![image](https://github.com/user-attachments/assets/d81bc648-0d1b-4710-bdd7-5d7fea83543d)
 
 ### Broadcast View
-![image](https://github.com/user-attachments/assets/b3d01ef4-397e-40db-a829-042d5a320243)
-
+![image](https://github.com/user-attachments/assets/25199a73-4d58-4721-b52b-e88e4642bc63)
 
 ## Installation
 1. You'll need some sort of emulator. Currently this tracker supports Project64 and Rosalie's Mupen GUI.
