@@ -44,11 +44,21 @@
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
                 <MenuItem Name="SongDisplayOption" Header="Song Display (4.0)" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Click="SongDisplayToggle"/>
+                <MenuItem Name="HelmInLevelOrder" Header='Helm in Level Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmInLevelOrder}" Click="HelmInLevelOrder_Click"/>
+                <MenuItem Name="CollectiblesDisplayOption" Header="Collectibles">
+                    <MenuItem Name="TotalBPs" Header='Total Blueprints' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TotalBPs}" Click="TotalBPs_Click"/>
+                    <MenuItem Name="CompanyCoins" Header='Company Coins' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CompanyCoins}" Click="CompanyCoins_Click"/>
+                </MenuItem>
+                <MenuItem Name="SpoilerHintsOption" Header="Spoiler Hints">
+                    <MenuItem Name="KRoolOrder" Header='K. Rool Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=KRoolOrder}" Click="HelmOrder_Click"/>
+                    <MenuItem Name="HelmOrder" Header='Helm Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmOrder}" Click="KRoolOrder_Click"/>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Hint Display" Focusable="False">
                 <RadioButton Name="hintDisplayOff" Checked="HintDisplayToggle">Off</RadioButton>
                 <RadioButton Name="hintDisplayMP" Checked="HintDisplayToggle">Multipath Hints</RadioButton>
                 <RadioButton Name="hintDisplayDirect" Checked="HintDisplayToggle">Direct Item Hints</RadioButton>
+                <MenuItem Name="HelmDoors" Header="Helm Doors" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmDoors}" Click="HelmDoors_Click"/>
             </MenuItem>
             <MenuItem Header="Broadcast View" Focusable="False">
                 <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
@@ -446,7 +456,8 @@
                                         <ColumnDefinition Width=".3*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Image x:Name="HideoutHelmPicture" Source="images\dk64\hideout_helm.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0" />
+                                    <Image x:Name="HideoutHelmPicture" Source="images\dk64\hideout_helm.png" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}" />
+                                    <local:LevelOrderNumber x:Name="Level8Order" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
                                     <TextBlock x:Name="HideoutHelmTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="HideoutHelmPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="?" VerticalAlignment="Center"/>
                                 </Grid>
@@ -457,11 +468,16 @@
                 </Grid>
 
                 <!--GB/other stuff display-->
-                <Grid Grid.Row="2" Background="{StaticResource RegionBG}" Margin="0,5,0,0">
+                <Grid Grid.Row="2" Name="CollectiblesGrid" Background="{StaticResource RegionBG}" Margin="0,5,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width=".2*"/>
+                        <ColumnDefinition Width=".7*"/>
                         <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width=".1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width=".1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width=".1*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".1*"/>
                         <ColumnDefinition Width="1*"/>
@@ -475,12 +491,36 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".2*"/>
                     </Grid.ColumnDefinitions>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Pearls" ImageSource="Images\bw\pearl.png" Text="0" Grid.Column="3"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BattleCrowns" ImageSource="Images\bw\crown.png" Text="0" Grid.Column="5"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BananaMedals" ImageSource="Images\bw\bananamedal.png" Text="0" Grid.Column="7"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="RainbowCoins" ImageSource="Images\bw\rainbowcoin.png" Text="0" Grid.Column="9"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Fairies" ImageSource="Images\bw\fairy.png" Text="0" Grid.Column="11"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="GBs" ImageSource="Images\bw\GB.png" Text="0" Grid.Column="13"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BlueprintsTotal" ImageSource="Images\bw\total_bps.png" Text="0" Grid.Column="4">
+                        <local:CollectibleItem.Style>
+                            <Style TargetType="{x:Type local:CollectibleItem}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=TotalBPs}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </local:CollectibleItem.Style>
+                    </local:CollectibleItem>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="CompanyCoinsTotal" ImageSource="Images\bw\company_coin.png" Text="0" Grid.Column="6">
+                        <local:CollectibleItem.Style>
+                            <Style TargetType="{x:Type local:CollectibleItem}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=CompanyCoins}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </local:CollectibleItem.Style>
+                    </local:CollectibleItem>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Pearls" ImageSource="Images\bw\pearl.png" Text="0" Grid.Column="8"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BattleCrowns" ImageSource="Images\bw\crown.png" Text="0" Grid.Column="10"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BananaMedals" ImageSource="Images\bw\bananamedal.png" Text="0" Grid.Column="12"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="RainbowCoins" ImageSource="Images\bw\rainbowcoin.png" Text="0" Grid.Column="14"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Fairies" ImageSource="Images\bw\fairy.png" Text="0" Grid.Column="16"/>
+                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="GBs" ImageSource="Images\bw\GB.png" Text="0" Grid.Column="18"/>
                 </Grid>
                 <!-- Items -->
                 <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="0" >
@@ -927,10 +967,24 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="5*"/>
                     <RowDefinition Height="2.6*"/>
+                        <RowDefinition>
+                            <RowDefinition.Style>
+                                <Style TargetType="{x:Type RowDefinition}">
+                                    <Setter Property="Height" Value="0*" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HelmDoors}" Value="True">
+                                            <Setter Property="Height" Value="1*" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RowDefinition.Style>
+                        </RowDefinition>
                 </Grid.RowDefinitions>
 
                 <local:HintPanel Grid.Row="0" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="5" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
                 <local:BLockerPanel x:Name="BLockerHints" Grid.Row="1" Margin="5" Heading="B. LOCKERS" LineColor="#F0F000"/>
+                    <local:HelmDoorPanel x:Name="HelmDoorHints" Grid.Row="2" Margin="5" Heading="HELM DOORS" LineColor="#404040">
+                    </local:HelmDoorPanel>
             </Grid>
             </Grid>
         </Grid>
