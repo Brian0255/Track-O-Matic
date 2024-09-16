@@ -64,6 +64,9 @@ namespace TrackOMatic
             if (savedProgress == null) return;
             FindSavedHints();
             savedProgress.SavedGBCounts = MainWindow.BLockerHints.GetGBCounts();
+            savedProgress.BLockerImageIndexes = MainWindow.BLockerHints.GetImageIndexes();
+            savedProgress.HelmDoorImageIndexes = MainWindow.HelmDoorHints.GetImageIndexes();
+            savedProgress.HelmDoorCounts = MainWindow.HelmDoorHints.GetItemCounts();
             var JSONString = JsonConvert.SerializeObject(savedProgress);
             var tempPath = "autosave_temp.json";
             var filePath = "autosave.json";
@@ -121,6 +124,9 @@ namespace TrackOMatic
                 hintPanel.AddSavedHint(savedHint);
             }
             MainWindow.BLockerHints.LoadSavedGBCounts(savedProgress.SavedGBCounts);
+            MainWindow.BLockerHints.LoadSavedImageIndexes(savedProgress.BLockerImageIndexes);
+            MainWindow.HelmDoorHints.LoadSavedHelmDoorCounts(savedProgress.HelmDoorCounts);
+            MainWindow.HelmDoorHints.LoadSavedImageIndexes(savedProgress.HelmDoorImageIndexes);
         }
 
         public void AddSavedItem(SavedItem savedItem)
