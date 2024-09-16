@@ -68,6 +68,7 @@ namespace TrackOMatic
             {RegionName.FUNGI_FOREST, -1 },
             {RegionName.CRYSTAL_CAVES , -1 },
             {RegionName.CREEPY_CASTLE, -1 },
+            {RegionName.HIDEOUT_HELM, -1 }
         };
 
         private List<BitmapImage> homingScopeImages = new()
@@ -173,7 +174,8 @@ namespace TrackOMatic
                 Level4Image,
                 Level5Image,
                 Level6Image,
-                Level7Image
+                Level7Image,
+                HelmImage
             };
             PointLabels = new()
             {
