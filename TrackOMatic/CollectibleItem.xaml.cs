@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using TrackOMatic.Properties;
 
 namespace TrackOMatic
 {
@@ -21,6 +22,9 @@ namespace TrackOMatic
         public static readonly DependencyProperty InteractibleProperty =
         DependencyProperty.Register("Interactible", typeof(bool), typeof(CollectibleItem), new PropertyMetadata(true));
 
+        public static readonly DependencyProperty NumberDisplayProperty =
+        DependencyProperty.Register("NumberDisplay", typeof(bool), typeof(CollectibleItem), new PropertyMetadata(true));
+
         public static readonly DependencyProperty BGColorProperty =
         DependencyProperty.Register("BGColor", typeof(Brush), typeof(CollectibleItem));
 
@@ -28,6 +32,12 @@ namespace TrackOMatic
         {
             get { return (bool)GetValue(InteractibleProperty); }
             set { SetValue(InteractibleProperty, value); }
+        }
+
+        public bool NumberDisplay
+        {
+            get { return (bool)GetValue(NumberDisplayProperty); }
+            set { SetValue(NumberDisplayProperty, value); }
         }
 
         private string baseSourcePath = "";
@@ -84,7 +94,7 @@ namespace TrackOMatic
                         NumberGridColumn.Width = new GridLength(columnWidth);
                         NumberGrid.Opacity = 1.0;
                         LightUp();
-                        count.Visibility = Visibility.Visible;
+                        count.Visibility = (NumberDisplay) ? Visibility.Visible : Visibility.Hidden;
                     }
                     MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
                     mainWindow.OnCollectibleTextChanged();
@@ -121,7 +131,7 @@ namespace TrackOMatic
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Properties.Settings.Default.Autotracking || !Interactible) return;
+            if (Settings.Default.Autotracking || !Interactible) return;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Text++;
@@ -131,7 +141,7 @@ namespace TrackOMatic
 
         private void Image_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Properties.Settings.Default.Autotracking || !Interactible) return;
+            if (Settings.Default.Autotracking || !Interactible) return;
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 Text = Math.Max(Text - 1, 0);
