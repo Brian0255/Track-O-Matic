@@ -60,6 +60,9 @@ namespace TrackOMatic
 
             new OffsetInfoEntry(ItemName.BEAN, 0x7ECF08,8,1),
 
+            new OffsetInfoEntry(ItemName.NINTENDO_COIN, 0x7ECEB8,8,16),
+            new OffsetInfoEntry(ItemName.RAREWARE_COIN, 0x7ECED7,8,8),
+
             new OffsetInfoEntry(ItemName.DIVING, 0x7ECED8,8,4),
             new OffsetInfoEntry(ItemName.ORANGE_THROWING, 0x7ECED8,8,16),
             new OffsetInfoEntry(ItemName.BARREL_THROWING, 0x7ECED8,8,32),
