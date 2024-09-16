@@ -120,7 +120,6 @@ namespace TrackOMatic
 
         public void ProcessSelectedItems()
         {
-
             ItemPanel.Children.Clear();
             ItemPanel2.Children.Clear();
             ItemPanel.BeginInit();
@@ -142,7 +141,7 @@ namespace TrackOMatic
             for(int i = 0; i < sortedItemList.Count; ++i)
             {
                 var row = ItemPanel;
-                if(BottomRow.Height != new GridLength(0) && sortedItemList.Count > 2 && i > (sortedItemList.Count-1)/2 )
+                if(BottomRowHeight != new GridLength(0) && sortedItemList.Count > 2 && i > (sortedItemList.Count-1)/2 )
                 {
                     row = ItemPanel2;
                 }
