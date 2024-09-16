@@ -118,5 +118,47 @@ namespace TrackOMatic
             BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
             BroadcastOption.IsChecked = true;
         }
+
+        private void TotalBPs_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.TotalBPs = TotalBPs.IsChecked;
+            FormatCollectibles();
+            Settings.Default.Save();
+        }
+
+        private void CompanyCoins_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.CompanyCoins = CompanyCoins.IsChecked;
+            FormatCollectibles();
+            Settings.Default.Save();
+        }
+
+        private void KRoolOrder_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.KRoolOrder = KRoolOrder.IsChecked;
+            Settings.Default.Save();
+        }
+
+        private void HelmOrder_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.HelmOrder = HelmOrder.IsChecked;
+            Settings.Default.Save();
+        }
+
+        private void HelmInLevelOrder_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.HelmInLevelOrder = HelmInLevelOrder.IsChecked;
+            if (!Settings.Default.HelmInLevelOrder)
+            {
+                Regions[RegionName.HIDEOUT_HELM].SetLevelOrderNumber(8);
+            }
+            Settings.Default.Save();
+        }
+
+        private void HelmDoors_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.HelmDoors = HelmDoors.IsChecked;
+            Settings.Default.Save();
+        }
     }
 }
