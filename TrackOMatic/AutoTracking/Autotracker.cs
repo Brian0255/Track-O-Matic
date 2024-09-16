@@ -71,7 +71,9 @@ namespace TrackOMatic
             {ItemType.BANANA_MEDAL, 0 },
             {ItemType.FAIRY, 0 },
             {ItemType.RAINBOW_COIN, 0 },
-            {ItemType.BATTLE_CROWN, 0 }
+            {ItemType.BATTLE_CROWN, 0 },
+            {ItemType.COMPANY_COIN, 0 },
+            { ItemType.TOTAL_BLUEPRINTS, 0 }
         };
         private Dictionary<ItemType, ItemType> TURNED_BLUEPRINT_TO_COLLECTIBLE { get; } = new()
         {
@@ -290,6 +292,10 @@ namespace TrackOMatic
         {
             var toAdd = output;
             var itemTypeToUse = checkInfo.ItemType;
+            if (checkInfo.ItemType.ToString().EndsWith("BLUEPRINT"))
+            {
+                CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] = CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] + 1;
+            }
             //collectibles not gbs are flags, add 1 to their total instead of the bitmask
             if (checkInfo.ItemType != ItemType.GOLDEN_BANANA)
             {
