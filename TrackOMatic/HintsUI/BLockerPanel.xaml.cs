@@ -80,5 +80,23 @@ namespace TrackOMatic
             }
             return GBCounts;
         }
+
+        public void LoadSavedImageIndexes(Dictionary<RegionName, int> imageIndexes)
+        {
+            foreach(var entry in imageIndexes)
+            {
+                RegionToBLockerHint[entry.Key].GB.SetIndex(entry.Value);
+            }
+        }
+
+        public Dictionary<RegionName, int> GetImageIndexes()
+        {
+            var imageIndexes = new Dictionary<RegionName, int>();
+            foreach (var entry in RegionToBLockerHint)
+            {
+                imageIndexes[entry.Key] = entry.Value.GB.GetIndex();
+            }
+            return imageIndexes;
+        }
     }
 }
