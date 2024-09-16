@@ -98,6 +98,9 @@
 
     <Image x:Key="basic_key" Source="Images\dk64\key.png"  x:Shared="false"/>
 
+    <Image x:Key="unknown_vial" Source="Images\dk64\unknown_vial.png"  x:Shared="false"/>
+    <Image x:Key="unknown_key" Source="Images\dk64\unknown_key.png"  x:Shared="false"/>
+
     <Image x:Key="progressive_slam_1" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
     <Image x:Key="progressive_slam_2" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
     <Image x:Key="progressive_slam_3" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
@@ -113,6 +116,10 @@
     <Image x:Key="climbing" Source="Images\dk64\climbing.png"  x:Shared="false"/>
 
     <Image x:Key="bean" Source="Images\dk64\bean.png"  x:Shared="false"/>
+
+    <Image x:Key="rareware_coin" Source="Images\dk64\rareware_coin.png"  x:Shared="false"/>
+    <Image x:Key="nintendo_coin" Source="Images\dk64\nintendo_coin.png"  x:Shared="false"/>
+
     <Image x:Key="pearl" Source="Images\dk64\pearl.png"  x:Shared="false"/>
 
     <Image x:Key="potion_dk" Source="Images\dk64\yellow_vial.png" x:Shared="false"/>
@@ -196,6 +203,9 @@
     <Image x:Key="key_8_bw" Source="Images\bw\k8.png"  x:Shared="false"/>
 
     <Image x:Key="basic_key_bw" Source="Images\bw\key.png"  x:Shared="false"/>
+    
+    <Image x:Key="unknown_vial_bw" Source="Images\bw\unknown_vial.png"  x:Shared="false"/>
+    <Image x:Key="unknown_key_bw" Source="Images\bw\unknown_key.png"  x:Shared="false"/>
 
     <Image x:Key="progressive_slam_1_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
     <Image x:Key="progressive_slam_2_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
@@ -212,6 +222,10 @@
     <Image x:Key="climbing_bw" Source="Images\bw\climbing.png"  x:Shared="false"/>
 
     <Image x:Key="bean_bw" Source="Images\bw\bean.png"  x:Shared="false"/>
+    
+    <Image x:Key="rareware_coin_bw" Source="Images\bw\rareware_coin.png"  x:Shared="false"/>
+    <Image x:Key="nintendo_coin_bw" Source="Images\bw\nintendo_coin.png"  x:Shared="false"/>
+    
     <Image x:Key="kong_family_bw" Source="Images\bw\tag_barrel.png"  x:Shared="false"/>
 
     <Image x:Key="cranky_bw" Source="Images\bw\cranky.png" x:Shared="false"/>
