@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TrackOMatic.Properties;
 
 namespace TrackOMatic
 {
@@ -44,22 +46,23 @@ namespace TrackOMatic
 
         public void SetNumber(int newNumber)
         {
-            disabled = (newNumber != -1);
-            if (disabled) currentNumber = newNumber;
+            currentNumber = newNumber;
             UpdateLabel();
         }
 
         private void LevelOrder_LeftPress(object sender, RoutedEventArgs e)
         {
-            if(disabled) return;
-            currentNumber = (currentNumber + 1) % 8;
+            if (RegionName == RegionName.HIDEOUT_HELM && currentNumber == 8 && !Settings.Default.HelmInLevelOrder) return;
+            int max = (Settings.Default.HelmInLevelOrder) ? 8 : 7;
+            currentNumber = (currentNumber + 1) % (max + 1);
             UpdateLabel();
         }
 
         private void LevelOrder_RightPress(object sender, RoutedEventArgs e)
         {
-            if (disabled) return;
-            currentNumber = (currentNumber + 7) % 8;
+            if (RegionName == RegionName.HIDEOUT_HELM && currentNumber == 8 && !Settings.Default.HelmInLevelOrder) return;
+            int max = (Settings.Default.HelmInLevelOrder) ? 8 : 7;
+            currentNumber = (currentNumber + (max)) % (max + 1);
             UpdateLabel();
         }
 
