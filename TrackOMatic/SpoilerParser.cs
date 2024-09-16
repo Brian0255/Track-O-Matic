@@ -11,6 +11,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
+using TrackOMatic.Properties;
 
 namespace TrackOMatic
 {
@@ -208,42 +209,48 @@ namespace TrackOMatic
 
         private void ReadHelmAndKRoolOrder(StartingInfo info)
         {
-            for (int i = 0; i < MainWindow.HelmKongs.Count; ++i)
+            if (Settings.Default.HelmOrder)
             {
-                if (i < info.helm_order.Count)
+                for (int i = 0; i < MainWindow.HelmKongs.Count; ++i)
                 {
-                    var imageName = JSONKeyMappings.KONGS[info.helm_order[i]].ToString().ToLower();
-                    MainWindow.HelmKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
-                    MainWindow.HelmKongs[i].Enabled = false;
-                    MainWindow.HelmKongs[i].Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    MainWindow.HelmKongs[i].Visibility = Visibility.Hidden;
+                    if (i < info.helm_order.Count)
+                    {
+                        var imageName = JSONKeyMappings.KONGS[info.helm_order[i]].ToString().ToLower();
+                        MainWindow.HelmKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
+                        MainWindow.HelmKongs[i].Enabled = false;
+                        MainWindow.HelmKongs[i].Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        MainWindow.HelmKongs[i].Visibility = Visibility.Hidden;
+                    }
                 }
             }
-            for (int i = 0; i < MainWindow.KroolKongs.Count; ++i)
+            if (Settings.Default.KRoolOrder)
             {
-                if (i < info.krool_order.Count)
+                for (int i = 0; i < MainWindow.KroolKongs.Count; ++i)
                 {
-                    int kroolIndex = info.krool_order[i];
-                    string imageName = "";
-                    if (JSONKeyMappings.KROOL_MAP_TO_IMAGE.ContainsKey(kroolIndex))
+                    if (i < info.krool_order.Count)
                     {
-                        imageName = JSONKeyMappings.KROOL_MAP_TO_IMAGE[kroolIndex];
+                        int kroolIndex = info.krool_order[i];
+                        string imageName = "";
+                        if (JSONKeyMappings.KROOL_MAP_TO_IMAGE.ContainsKey(kroolIndex))
+                        {
+                            imageName = JSONKeyMappings.KROOL_MAP_TO_IMAGE[kroolIndex];
+                        }
+                        else if (kroolIndex < JSONKeyMappings.KONGS.Count)
+                        {
+                            imageName = JSONKeyMappings.KONGS[kroolIndex].ToString();
+                        }
+                        imageName = imageName.ToLower();
+                        MainWindow.KroolKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
+                        MainWindow.KroolKongs[i].Enabled = false;
+                        MainWindow.KroolKongs[i].Visibility = Visibility.Visible;
                     }
-                    else if(kroolIndex < JSONKeyMappings.KONGS.Count)
+                    else
                     {
-                        imageName = JSONKeyMappings.KONGS[kroolIndex].ToString();
+                        MainWindow.KroolKongs[i].Visibility = Visibility.Hidden;
                     }
-                    imageName = imageName.ToLower();
-                    MainWindow.KroolKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
-                    MainWindow.KroolKongs[i].Enabled = false;
-                    MainWindow.KroolKongs[i].Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    MainWindow.KroolKongs[i].Visibility = Visibility.Hidden;
                 }
             }
         }
@@ -252,10 +259,14 @@ namespace TrackOMatic
         {
             for(int i = 0; i < Region.LOBBY_ORDER.Count; ++i)
             {
-                var levelOrderNumber = (info.level_order == null) ? -1 : info.level_order[i];
-                var newLevelOrderNumber = (info.level_order == null) ? -1 : (i + 1);
-                var toChange = (info.level_order == null) ? Region.LOBBY_ORDER[i] : Region.LOBBY_ORDER[levelOrderNumber];
+                var levelOrderNumber = (info.level_order == null || i >= info.level_order.Count) ? 0 : info.level_order[i];
+                var newLevelOrderNumber = (info.level_order == null || i >= info.level_order.Count) ? 0 : (i + 1);
+                var toChange = (info.level_order == null || i >= info.level_order.Count) ? Region.LOBBY_ORDER[i] : Region.LOBBY_ORDER[levelOrderNumber];
                 MainWindow.Regions[toChange].SetLevelOrderNumber(newLevelOrderNumber);
+                if(info.level_order.Count == 7)
+                {
+                    MainWindow.Regions[RegionName.HIDEOUT_HELM].SetLevelOrderNumber(8);
+                }
             }
         }
 
