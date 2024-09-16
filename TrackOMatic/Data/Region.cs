@@ -19,7 +19,8 @@ namespace TrackOMatic
             RegionName.GLOOMY_GALLEON, 
             RegionName.FUNGI_FOREST, 
             RegionName.CRYSTAL_CAVES, 
-            RegionName.CREEPY_CASTLE
+            RegionName.CREEPY_CASTLE,
+            RegionName.HIDEOUT_HELM
         };
 
         public bool complete;
