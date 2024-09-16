@@ -110,8 +110,14 @@
     <Compile Include="BroadcastView.xaml.cs">
       <DependentUpon>BroadcastView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HintsUI\HelmDoorHint.xaml.cs">
+      <DependentUpon>HelmDoorHint.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HintsUI\BLockerHint.xaml.cs">
       <DependentUpon>BLockerHint.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HintsUI\HelmDoorPanel.xaml.cs">
+      <DependentUpon>HelmDoorPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="HintsUI\HintInfo.xaml.cs">
       <DependentUpon>HintInfo.xaml</DependentUpon>
@@ -131,6 +137,7 @@
     <Compile Include="HintsUI\PathOrFoundItem.xaml.cs">
       <DependentUpon>PathOrFoundItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HintsUI\ItemCountBox.cs" />
     <Compile Include="HitListHintManager.cs" />
     <Compile Include="Data\Extensions.cs" />
     <Compile Include="Data\SpoilerSettings.cs" />
@@ -181,7 +188,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="HintsUI\HelmDoorHint.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="HintsUI\BLockerHint.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="HintsUI\HelmDoorPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -556,7 +571,7 @@
     <Resource Include="Images\dk64\GB.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\dk64\helm.png" />
+    <Resource Include="Images\dk64\hideout_helm_label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\helm_w3.png" />
@@ -1220,6 +1235,36 @@
   <ItemGroup>
     <Resource Include="Images\bw\k2_broadcast.png" />
     <Resource Include="Images\bw\k3_broadcast.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\unknown_vial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\unknown_vial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\unknown_key.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\unknown_key.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\nintendo_coin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\nintendo_coin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\company_coin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\company_coin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\total_bps.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\total_bps.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>

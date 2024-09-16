@@ -178,5 +178,149 @@ namespace TrackOMatic.Properties {
                 this["BroadcastSongDisplay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TotalBPs {
+            get {
+                return ((bool)(this["TotalBPs"]));
+            }
+            set {
+                this["TotalBPs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CompanyCoins {
+            get {
+                return ((bool)(this["CompanyCoins"]));
+            }
+            set {
+                this["CompanyCoins"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Pearls {
+            get {
+                return ((bool)(this["Pearls"]));
+            }
+            set {
+                this["Pearls"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool BattleCrowns {
+            get {
+                return ((bool)(this["BattleCrowns"]));
+            }
+            set {
+                this["BattleCrowns"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool BananaCoins {
+            get {
+                return ((bool)(this["BananaCoins"]));
+            }
+            set {
+                this["BananaCoins"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RainbowCoins {
+            get {
+                return ((bool)(this["RainbowCoins"]));
+            }
+            set {
+                this["RainbowCoins"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool BananaFairies {
+            get {
+                return ((bool)(this["BananaFairies"]));
+            }
+            set {
+                this["BananaFairies"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GoldenBananas {
+            get {
+                return ((bool)(this["GoldenBananas"]));
+            }
+            set {
+                this["GoldenBananas"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool KRoolOrder {
+            get {
+                return ((bool)(this["KRoolOrder"]));
+            }
+            set {
+                this["KRoolOrder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HelmOrder {
+            get {
+                return ((bool)(this["HelmOrder"]));
+            }
+            set {
+                this["HelmOrder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HelmInLevelOrder {
+            get {
+                return ((bool)(this["HelmInLevelOrder"]));
+            }
+            set {
+                this["HelmInLevelOrder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HelmDoors {
+            get {
+                return ((bool)(this["HelmDoors"]));
+            }
+            set {
+                this["HelmDoors"] = value;
+            }
+        }
     }
 }
