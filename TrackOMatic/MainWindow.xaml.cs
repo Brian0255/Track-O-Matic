@@ -146,7 +146,7 @@ namespace TrackOMatic
                 { RegionName.CRYSTAL_CAVES, new Region(RegionName.CRYSTAL_CAVES, Level6, Level6Picture, Level6RegionGrid, Level6Points,Level6TopLabel, Level6Order) },
                 { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, Level7Order) },
 
-                { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel) },
+                { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel, Level8Order) },
             };
             HitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10};
             Collectibles = new()
@@ -163,6 +163,8 @@ namespace TrackOMatic
                 {ItemType.RAINBOW_COIN, RainbowCoins },
                 {ItemType.FAIRY, Fairies },
                 {ItemType.GOLDEN_BANANA, GBs },
+                {ItemType.COMPANY_COIN, CompanyCoinsTotal },
+                {ItemType.TOTAL_BLUEPRINTS, BlueprintsTotal }
             };
             Items = ItemGrid;
             KroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
@@ -212,7 +214,7 @@ namespace TrackOMatic
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
             SaveTimer.Start();
-
+            FormatCollectibles();
         }
 
         public void SetRegionLighting(RegionName regionName, bool lightUp)
@@ -432,7 +434,11 @@ namespace TrackOMatic
             {
                 var region = entry.Value;
                 region.Reset();
-                region.SetLevelOrderNumber(-1);
+                region.SetLevelOrderNumber(0);
+                if(entry.Key == RegionName.HIDEOUT_HELM && !Settings.Default.HelmInLevelOrder)
+                {
+                    region.SetLevelOrderNumber(8);
+                }
             }
             foreach (var item in DraggableItems.Cast<Item>())
             {
@@ -492,6 +498,20 @@ namespace TrackOMatic
             var shopkeeperColumnWidth = on ? 1.0 : 0;
             ItemsSeperator.Width = new GridLength(separatorWidth, GridUnitType.Star);
             ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
+        }
+
+        private void FormatCollectibles()
+        {
+            int startColumn = 18;
+            for(int i = CollectiblesGrid.Children.Count-1; i >= 0; --i)
+            {
+                var element = CollectiblesGrid.Children[i];
+                if(element is CollectibleItem collectible && collectible.Visibility == Visibility.Visible)
+                {
+                    Grid.SetColumn(collectible, startColumn);
+                    startColumn -= 2;
+                }
+            }
         }
 
         private void BroadcastClosed(object sender, EventArgs e)
