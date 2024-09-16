@@ -452,6 +452,7 @@ namespace TrackOMatic
                 hintPanel.Reset();
             }
             BLockerHints.Reset();
+            HelmDoorHints.Reset();
             foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
             foreach (var progressiveImage in KroolKongs) progressiveImage.Reset();
