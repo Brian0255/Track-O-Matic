@@ -34,6 +34,9 @@
 
         BASIC_KEY,
 
+        UNKNOWN_VIAL,
+        UNKNOWN_KEY,
+
         COCONUT_GUN,
         BONGO_BLAST,
         GORILLA_GRAB,
@@ -89,6 +92,9 @@
         PEARL_3,
         PEARL_4,
         PEARL_5,
+
+        NINTENDO_COIN,
+        RAREWARE_COIN,
         
         DONKEY_JAPES_GBS,
         DONKEY_AZTEC_GBS,

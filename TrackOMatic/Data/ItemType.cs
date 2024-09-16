@@ -30,6 +30,10 @@
         BANANA_MEDAL,
         PEARL,
 
+        COMPANY_COIN,
+
+        TOTAL_BLUEPRINTS,
+
         KEY,
 
         KONG,
