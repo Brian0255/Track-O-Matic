@@ -57,40 +57,5 @@ namespace TrackOMatic
             Picture.Source = new BitmapImage(new Uri("../Images/dk64/" + RegionName.ToString().ToLower() + ".png", UriKind.Relative));
         }
 
-        private void GBCount_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if(e.LeftButton == MouseButtonState.Pressed && GBCount.Text == "?")
-            {
-                GBCount.Text = "";
-            }
-        }
-
-        private void CheckSave()
-        {
-            if (GBCount.Text != "?")
-            {
-                var mainWindow = (MainWindow)Application.Current.MainWindow;
-                mainWindow.DataSaver.Save();
-            }
-        }
-
-        private void GBCount_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Keyboard.ClearFocus();
-                CheckSave();
-            }
-        }
-
-        private void GBCount_LostFocus(object sender, RoutedEventArgs e)
-        {
-            CheckSave();
-        }
-
-        private void GB_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
     }
 }
