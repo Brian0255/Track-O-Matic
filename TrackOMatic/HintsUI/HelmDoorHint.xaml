@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="TrackOMatic.HelmDoorHint"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrackOMatic"
+             mc:Ignorable="d" 
+              Background="Transparent" 
+             d:DesignHeight="100" d:DesignWidth="200">
+    <Grid Background="Transparent" Margin="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="1.75*"/>
+            <ColumnDefinition Width=".15*"/>
+            <ColumnDefinition Width="2.5*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="Label" Text="{Binding LabelText}" FontSize="16" FontFamily="Helvetica" Foreground="White" Grid.Column="0"/>
+        <local:ProgressiveItem x:Name="DoorItem" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"  />
+        <local:ItemCountBox  VerticalAlignment="Center" HorizontalAlignment="Stretch" ContextMenu="{x:Null}" Text="?" x:Name="ItemCount" Grid.Column="3" Style="{StaticResource BoldText}" FontSize="18"/>
+    </Grid>
+</UserControl>
