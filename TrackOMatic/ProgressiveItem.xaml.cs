@@ -20,6 +20,11 @@ namespace TrackOMatic
         private int currentIndex;
         private List<BitmapImage> images;
 
+        public int GetIndex()
+        {
+            return currentIndex;
+        }
+
         public List<List<BitmapImage>> ImageSources
         {
             get { return (List<List<BitmapImage>>)GetValue(ImageSourcesProperty); }
