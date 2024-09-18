@@ -983,7 +983,7 @@
 
                 <local:HintPanel Grid.Row="0" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="5" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
                 <local:BLockerPanel x:Name="BLockerHints" Grid.Row="1" Margin="5" Heading="B. LOCKERS" LineColor="#F0F000"/>
-                    <local:HelmDoorPanel x:Name="HelmDoorHints" Grid.Row="2" Margin="5" Heading="HELM DOORS" LineColor="#404040">
+                    <local:HelmDoorPanel x:Name="HelmDoorHints" Grid.Row="2" Margin="5" Heading="HELM DOORS" LineColor="#7d3cbd">
                     </local:HelmDoorPanel>
             </Grid>
             </Grid>
