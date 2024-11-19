@@ -230,6 +230,10 @@ namespace TrackOMatic
             {
                 image.Source = new BitmapImage(new Uri("Images/dk64/unknown.png", UriKind.Relative));
             }
+            for (int i = 0; i < PointLabels.Count - 1; ++i) //skip isles
+            {
+                PointLabels[i].Text = "";
+            }
         }
 
         public void Reset()
@@ -316,14 +320,19 @@ namespace TrackOMatic
                 var matchingImage = LevelNames[levelNumber];
                 var imagePath = "Images/dk64/" + region.ToString().ToLower() + "_label.png";
                 matchingImage.Source = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+                var mainWindow = (MainWindow)Application.Current.MainWindow;
+                if (mainWindow.Regions.ContainsKey(region))
+                {
+                    mainWindow.Regions[region].UpdatePoints();
+                }
             }
         }
 
         public void UpdateRegionPoints(RegionName region, int points, string foregroundResource)
         {
             var levelIndex = -1;
-            if (region == RegionName.HIDEOUT_HELM) levelIndex = 7;
-            else if (region == RegionName.DK_ISLES) levelIndex = 8;
+            //if (region == RegionName.HIDEOUT_HELM) levelIndex = 7;
+            if (region == RegionName.DK_ISLES) levelIndex = 8;
             else if(LevelNumbers.ContainsKey(region))
             {
                 levelIndex = LevelNumbers[region];
