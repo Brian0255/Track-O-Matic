@@ -263,7 +263,7 @@ namespace TrackOMatic
                 var newLevelOrderNumber = (info.level_order == null || i >= info.level_order.Count) ? 0 : (i + 1);
                 var toChange = (info.level_order == null || i >= info.level_order.Count) ? Region.LOBBY_ORDER[i] : Region.LOBBY_ORDER[levelOrderNumber];
                 MainWindow.Regions[toChange].SetLevelOrderNumber(newLevelOrderNumber);
-                if(info.level_order.Count == 7)
+                if(info.level_order != null && info.level_order.Count == 7)
                 {
                     MainWindow.Regions[RegionName.HIDEOUT_HELM].SetLevelOrderNumber(8);
                 }
