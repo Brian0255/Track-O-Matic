@@ -424,6 +424,7 @@ namespace TrackOMatic
 
         public void Reset()
         {
+            if (BroadcastView != null) BroadcastView.Reset();
             TotalGBs = 0;
             SpoilerLoaded = false;
             ITEM_NAME_TO_REGION.Clear();
@@ -459,7 +460,6 @@ namespace TrackOMatic
             foreach (var progressiveImage in HelmKongs) progressiveImage.Reset();
             SetSong("", "");
             Autotracker.Reset();
-            if (BroadcastView != null) BroadcastView.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)
         {
