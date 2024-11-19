@@ -43,6 +43,7 @@ namespace TrackOMatic
         public int TotalPoints { get; private set; }
         public bool SpoilerLoaded { get; private set; }
         public int CurrentPoints { get; private set; }
+        public int RemainingPoints { get; private set; }
         public int BLockerAmount { get; private set; }
 
         private void ResetLabels()
@@ -66,6 +67,7 @@ namespace TrackOMatic
             RegionName = regionName;
             BLockerAmount = 0;
             TotalPoints = 0;
+            RemainingPoints = 0;
             MainUIGrid = mainUIGrid;
             RegionButton = regionButton;
             RegionGrid = checksContainer;
@@ -105,6 +107,7 @@ namespace TrackOMatic
         public void Reset()
         {
             TotalPoints = 0;
+            RemainingPoints = 0;
             requiredChecks = 0;
             CurrentChecks = new();
             SpoilerLoaded = false;
@@ -143,16 +146,16 @@ namespace TrackOMatic
                 var check = entry.Key;
                 CurrentPoints += check.PointValue;
             }
-            var remaining = Math.Max(0,TotalPoints - CurrentPoints);
+            RemainingPoints = Math.Max(0,TotalPoints - CurrentPoints);
             var pointsLabel = SpoilerSettingToLabel["PointsLabel"];
             if(pointsLabel == null) return;
-            pointsLabel.Text = (SpoilerLoaded) ? remaining.ToString() : "?";
+            pointsLabel.Text = (SpoilerLoaded) ? RemainingPoints.ToString() : "?";
             var resource = (CurrentPoints >= TotalPoints && SpoilerLoaded) ? "RegionComplete" : "RegionInProgress";
             pointsLabel.SetResourceReference(TextBlock.ForegroundProperty, resource);
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             if(mainWindow.BroadcastView != null)
             {
-                mainWindow.BroadcastView.UpdateRegionPoints(RegionName, remaining, resource);
+                mainWindow.BroadcastView.UpdateRegionPoints(RegionName, RemainingPoints, resource);
             }
         }
 
