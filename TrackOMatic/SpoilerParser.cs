@@ -132,6 +132,9 @@ namespace TrackOMatic
                     var itemName = (ItemName)item.Tag;
                     var region = StartingItems[itemName];
                     MainWindow.Regions[region].RegionGrid.Add_Item(item);
+                    MainWindow.DataSaver.AddSavedItem(new SavedItem(itemName,  region, item.Star.Visibility, true, 1.0));
+                    MainWindow.DataSaver.Save();
+
                     item.ItemImage = (Image)MainWindow.FindResource(itemName.ToString().ToLower());
                 }
             }
@@ -297,7 +300,7 @@ namespace TrackOMatic
         {
             if (JSONObject["Item Pool"] == null) return;
             //first version of randomizer with this key is 4.0 so we don't need to check if version >= 4.0
-            if (JSONObject["Randomizer Version"] == null) return;
+            //if (JSONObject["Randomizer Version"] == null) return;
             List<string> items = JSONObject["Item Pool"].ToObject < List<string> >();
             if (items.Contains("Cranky") || items.Contains("Candy") || items.Contains("Funky") || items.Contains("Snide")) return;
             StartingItems.Add(ItemName.CRANKY, RegionName.START);
