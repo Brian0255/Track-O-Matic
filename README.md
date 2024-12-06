@@ -8,7 +8,7 @@
 ![image](https://github.com/user-attachments/assets/25199a73-4d58-4721-b52b-e88e4642bc63)
 
 ## Installation
-1. You'll need some sort of emulator. Currently this tracker supports Project64 and Rosalie's Mupen GUI.
+1. You'll need some sort of emulator. Currently this tracker supports Project64, Rosalie's Mupen GUI and Parallel Launcher/Retroarch
 2. Download the latest release zip from [here.](https://github.com/Brian0255/Track-O-Matic/releases/latest) Extract that to wherever you'd like.
 3. When you generate a seed, make sure to click "Download Spoiler Log" afterwards.
 4. Run the executable file and the tracker should begin running correctly.
