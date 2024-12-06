@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using System.Windows.Media.Animation;
 using System.Globalization;
 using System.Text;
+using System.Timers;
 
 namespace TrackOMatic
 {
@@ -36,12 +37,13 @@ namespace TrackOMatic
         public int RandomizerVersion { get; private set; }
 
         private Dictionary<ItemName, RegionName> trackedItemLocations;
-        private System.Threading.Timer timer;
+        private System.Timers.Timer timer;
         private bool attached = false;
         private ulong startAddress;
         private int timeout;
         private bool is64Bit = false;
         private bool spoilerLoaded = false;
+        private static bool attaching = false;
         public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong)
         {
             CurrentRegion = RegionName.UNKNOWN;
@@ -49,7 +51,9 @@ namespace TrackOMatic
             StartingItems = new();
             TrackedAlready = new();
             InitializeChecks();
-            timer = new System.Threading.Timer(Autotrack, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+            timer = new System.Timers.Timer(1000);
+            timer.AutoReset = false;
+            timer.Elapsed += TimerHandler;
             trackedItemLocations = new();
             ProcessNewItem = processItemCallback;
             UpdateCollectible = updateCollectibleCallback;
@@ -58,6 +62,7 @@ namespace TrackOMatic
             SetSong = setSong;
             currentSongName = "";
             currentSongGame = "";
+            timer.Start();
         }
         private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
         {
@@ -252,7 +257,13 @@ namespace TrackOMatic
             currentSongName = songName;
         }
 
-        private void Autotrack(object state)
+        private void TimerHandler(object sender, ElapsedEventArgs e)
+        {
+            Autotrack();
+            timer.Start();
+        }
+
+        private void Autotrack()
         {
             if (!Properties.Settings.Default.Autotracking) return;
             //if (!spoilerLoaded) return;
@@ -403,11 +414,6 @@ namespace TrackOMatic
                 attached = false;
             }
             return false;
-        }
-
-        public void StopTimer()
-        {
-            timer.Change(-1, -1);
         }
     }
 }
