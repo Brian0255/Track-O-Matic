@@ -88,48 +88,12 @@ namespace TrackOMatic
             }
             return null;
         }
-
-        private static AttachedProcessInfo AttachToRetroarch(Process target, GameVerificationInfo gameVerificationInfo)
-        {
-            ulong addressDLL = 0;
-            bool mupen = false;
-            foreach (ProcessModule mo in target.Modules)
-            {
-                if (mo.ModuleName.ToLower() == "parallel_n64_next_libretro.dll")
-                {
-                    addressDLL = (ulong)mo.BaseAddress.ToInt64();
-                    break;
-                }
-                else if (mo.ModuleName.ToLower() == "mupen64plus_next_libretro.dll")
-                {
-                    addressDLL = (ulong)mo.BaseAddress.ToInt64();
-                    mupen = true;
-                    break;
-                }
-            }
-
-            if (addressDLL == 0) return null;
-
-            for (uint potOff = 0; potOff < 0xFFFFFF; potOff += 4)
-            {
-                ulong romAddrStart = addressDLL + potOff;
-                ulong readAddress = Memory.ReadInt64(target, (romAddrStart));
-                var testValue = Memory.ReadInt32(target, (readAddress + gameVerificationInfo.TargetAddress));
-                if (testValue == gameVerificationInfo.TargetValue)
-                {
-                    return new AttachedProcessInfo(target, readAddress);
-                }
-            }
-            return null;
-        }
-
         public static AttachedProcessInfo Attach(GameVerificationInfo verificationInfo)
         {
             var emu_to_function_call = new Dictionary<string, Func<Process, GameVerificationInfo, AttachedProcessInfo>>()
             {
                 {"project64", AttachToProject64 },
                 {"rmg", AttachToRMG },
-                {"retroarch", AttachToRetroarch }
                 //something weird keeps this from working?
                 //{"emuhawk", AttachToBizhawk }
             };
