@@ -18,6 +18,7 @@ namespace TrackOMatic
     public delegate void SetRegionLighting(RegionName region, bool lightUp);
     public delegate void SetShopkeepers(bool on);
     public delegate void SetSong(string songGame, string songName);
+    public delegate void UpdateUIAmountToNextHint(int amountToNextHint);
     public class Autotracker
     {
         public ProcessNewItem ProcessNewItem { get; set; }
@@ -25,12 +26,14 @@ namespace TrackOMatic
         public SetRegionLighting SetRegionLighting { get; set; }
         public SetShopkeepers SetShopkeepers { get; set; }
         public SetSong SetSong{ get; set; }
+        public UpdateUIAmountToNextHint UpdateUIAmountToNextHint { get; set; }
         public Process EmulatorProcess { get; private set; }
         public List<AutotrackedCheck> Checks;
         public Dictionary<ItemName, bool> TrackedAlready;
         public Dictionary<ItemName, RegionName> StartingItems { get; private set; }
         public GameVerificationInfo GameVerificationInfo { get; private set; }
         public RegionName CurrentRegion { get; private set; }
+        private RegionName previousRegion;
         public string currentSongGame { get; private set; }
         public string currentSongName { get; private set; }
         private SavedProgress savedProgress;
@@ -44,9 +47,10 @@ namespace TrackOMatic
         private bool is64Bit = false;
         private bool spoilerLoaded = false;
         private static bool attaching = false;
-        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong)
+        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint)
         {
             CurrentRegion = RegionName.UNKNOWN;
+            previousRegion = RegionName.UNKNOWN;
             Checks = new();
             StartingItems = new();
             TrackedAlready = new();
@@ -59,6 +63,7 @@ namespace TrackOMatic
             UpdateCollectible = updateCollectibleCallback;
             SetRegionLighting = setRegionLightingCallback;
             SetShopkeepers = setShopkeepersCallback;
+            UpdateUIAmountToNextHint = updateUIAmountToNextHint;
             SetSong = setSong;
             currentSongName = "";
             currentSongGame = "";
@@ -150,6 +155,45 @@ namespace TrackOMatic
             }
         }
 
+        private int GetTotalCBs()
+        {
+            uint world_cb_offset_donkey = 0x7FC95A;
+            int diff_between_kongs = 0x5E;
+            int total = 0;
+            for (int kong = 0; kong < 5; ++kong)
+            {
+                uint world_start = (uint)(world_cb_offset_donkey + (diff_between_kongs * kong));
+                uint tns_start = world_start + 0x1C;
+                for(int world = 0; world < 16; world += 2)
+                {
+                    total += ReadMemory((uint)(world_start + world), 16);
+                }
+                for (int tns_count = 0; tns_count < 16; tns_count +=2)
+                {
+                    total += ReadMemory((uint)(tns_start + tns_count), 16);
+                }
+            };
+            return total;
+        }
+
+        public void UpdateAmountToNextHint()
+        {
+            var hintItem = (ItemType)Properties.Settings.Default.ProgressiveHintItem;
+            int totalItems = 0;
+            if (hintItem == ItemType.COLORED_BANANA)
+            {
+                totalItems = GetTotalCBs();
+            }
+            else
+            {
+                totalItems = CollectibleItemAmounts[hintItem];
+            }
+            var amount = HintHelper.GetAmountToNextHint(totalItems);
+            Application.Current.Dispatcher.Invoke(() => {
+                UpdateUIAmountToNextHint?.Invoke(amount);
+            });
+        }
+
         private void UpdateCurrentRegion()
         {
             uint offset = 0x76A0A8;
@@ -165,6 +209,7 @@ namespace TrackOMatic
                     Application.Current.Dispatcher.Invoke(() => {
                         SetRegionLighting?.Invoke(CurrentRegion, false);
                     });
+                    previousRegion = CurrentRegion;
                     CurrentRegion = newRegion;
                 }
             }
@@ -277,6 +322,7 @@ namespace TrackOMatic
             ResetCollectibleAmounts();
             ReadMemoryForChecks();
             UpdateCollectibles();
+            UpdateAmountToNextHint();
         }
 
         private void ReadMemoryForChecks()
@@ -323,6 +369,13 @@ namespace TrackOMatic
 
         private void ProcessRegularItem(AutotrackedCheck check)
         {
+            if (CurrentRegion == RegionName.START) return;
+            var regionToUse = CurrentRegion;
+            //when player initially loads in from menu, put the items in the star area
+            if(CurrentRegion == RegionName.DK_ISLES && previousRegion == RegionName.START && !spoilerLoaded)
+            {
+                regionToUse = RegionName.START;
+            }
             var checkInfo = ImportantCheckList.ITEMS[check.ItemName];
             if (checkInfo.ItemType == ItemType.SHOPKEEPER && RandomizerVersion < 4)
             {
@@ -333,7 +386,7 @@ namespace TrackOMatic
             bool success = false;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                success = (bool)ProcessNewItem?.Invoke(check.ItemName, CurrentRegion);
+                success = (bool)ProcessNewItem?.Invoke(check.ItemName, regionToUse);
             });
             TrackedAlready[check.ItemName] = success;
         }
