@@ -11,19 +11,29 @@
         <Border CornerRadius="3" BorderThickness=".5" BorderBrush="Black" Background="{StaticResource VeryDark}">
             <Grid Background="Transparent" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="26"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Margin="10,0,0,0" FontSize="20" Foreground="White" Grid.Row="0"  FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center" Padding="0,0,0,2"/>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width=".1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Margin="10,0,0,0" FontSize="18" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center" Padding="0,0,0,2"/>
+                    <Image Name="FilterButton" Grid.Column="1" Source="../Images/dk64/filter_empty.png" HorizontalAlignment="Center" Margin="2,2,2,3" MouseDown="FilterButton_MouseDown" Cursor="Hand" Visibility="Hidden"/>
+                    <Image Name="SortButton" Grid.Column="2" Source="../Images/dk64/sort.png" HorizontalAlignment="Center" Margin="2,2,2,3" MouseDown="SortButton_MouseDown" Cursor="Hand" Visibility="Hidden"/>
+                </Grid>
                 <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                        <StackPanel x:Name="HintList" Margin="2,1,5,1">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" CanContentScroll="True">
+                        <StackPanel x:Name="HintList" Margin="2,0,0,1">
                             <StackPanel.Resources>
                                 <Style TargetType="{x:Type local:HintInfo}">
-                                    <Setter Property="Margin" Value="0,5,0,0"/>
+                                    <Setter Property="Margin" Value="0,0,0,0"/>
                                 </Style>
                             </StackPanel.Resources>
-                            <TextBlock Panel.ZIndex="-1" MouseDown="OnAddHint" Cursor="Hand" Margin="10,5,0,0" Padding="0,5,0,0" Text="+ Add new hint" Foreground="White" FontFamily="Helvetica" FontSize="16" Height="30" />
+                            <TextBlock Panel.ZIndex="-1" MouseDown="OnAddHint" Cursor="Hand" Margin="10,5,0,0" Padding="0,5,0,0" Text="+ Add new hint" Foreground="White" FontFamily="Helvetica" FontSize="14" Height="30" />
                         </StackPanel>
                     </ScrollViewer>
                 </Border>
