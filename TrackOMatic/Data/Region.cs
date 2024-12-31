@@ -35,6 +35,7 @@ namespace TrackOMatic
         };
         private int requiredChecks = 0;
         public Grid MainUIGrid { get; }
+        public Grid ImagePointsGrid { get; }
         public Image RegionButton { get; }
         public RegionGrid RegionGrid { get; }
         public TextBlock BottomLabel { get; }
@@ -62,7 +63,7 @@ namespace TrackOMatic
             }
         }
 
-        public Region(RegionName regionName, Grid mainUIGrid, Image regionButton, RegionGrid checksContainer, TextBlock bottomLabel = null, TextBlock topLabel = null, LevelOrderNumber levelOrderNumber = null)
+        public Region(RegionName regionName, Grid mainUIGrid, Grid imagePointsGrid, Image regionButton, RegionGrid checksContainer, TextBlock bottomLabel = null, TextBlock topLabel = null, LevelOrderNumber levelOrderNumber = null)
         {
             RegionName = regionName;
             BLockerAmount = 0;
@@ -70,6 +71,7 @@ namespace TrackOMatic
             RemainingPoints = 0;
             MainUIGrid = mainUIGrid;
             RegionButton = regionButton;
+            ImagePointsGrid = imagePointsGrid;
             RegionGrid = checksContainer;
             BottomLabel = bottomLabel;
             TopLabel = topLabel;
