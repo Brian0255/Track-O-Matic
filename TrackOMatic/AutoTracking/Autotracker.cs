@@ -184,7 +184,7 @@ namespace TrackOMatic
             {
                 totalItems = GetTotalCBs();
             }
-            else
+            else if (CollectibleItemAmounts.ContainsKey(hintItem))
             {
                 totalItems = CollectibleItemAmounts[hintItem];
             }
