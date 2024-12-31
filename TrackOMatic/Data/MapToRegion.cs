@@ -65,7 +65,7 @@ namespace TrackOMatic
             {0x046, RegionName.FUNGI_FOREST },
             {0x047, RegionName.FUNGI_FOREST },
             {0x048, RegionName.CRYSTAL_CAVES },
-            //{0x050, RegionName.START },
+            {0x050, RegionName.START },
             {0x052, RegionName.CRYSTAL_CAVES },
             {0x054, RegionName.CRYSTAL_CAVES },
             {0x055, RegionName.CRYSTAL_CAVES },
