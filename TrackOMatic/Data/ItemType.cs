@@ -37,6 +37,8 @@
         KEY,
 
         KONG,
-        SHOPKEEPER
+        SHOPKEEPER,
+
+        COLORED_BANANA
     }
 }
