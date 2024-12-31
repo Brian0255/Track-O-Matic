@@ -28,6 +28,9 @@ namespace TrackOMatic
         public static readonly DependencyProperty BGColorProperty =
         DependencyProperty.Register("BGColor", typeof(Brush), typeof(CollectibleItem));
 
+        public static readonly DependencyProperty RowHeightProperty =
+        DependencyProperty.Register("RowHeight", typeof(GridLength), typeof(CollectibleItem), new PropertyMetadata(new GridLength(1.2, GridUnitType.Star)));
+
         public bool Interactible
         {
             get { return (bool)GetValue(InteractibleProperty); }
@@ -53,6 +56,12 @@ namespace TrackOMatic
         {
             get { return (Brush)GetValue(BGColorProperty); }
             set { SetValue(BGColorProperty, value); }
+        }
+
+        public GridLength RowHeight
+        {
+            get { return (GridLength)GetValue(RowHeightProperty); }
+            set { SetValue(RowHeightProperty, value); }
         }
 
         private void Darken()
@@ -84,17 +93,17 @@ namespace TrackOMatic
                     SetValue(TextProperty, value);
                     if(value == 0)
                     {
-                        NumberGrid.Opacity = 0;
+                        //NumberGrid.Visibility = Visibility.Hidden;
                         Darken();
-                        count.Visibility = Visibility.Hidden;
+                        CountViewbox.Visibility = Visibility.Hidden;
                     }
                     else
                     {
                         int columnWidth = (text >= 10) ? 25 : 17;
-                        NumberGridColumn.Width = new GridLength(columnWidth);
-                        NumberGrid.Opacity = 1.0;
+                        //NumberGridColumn.Width = new GridLength(columnWidth);
+                        //NumberGrid.Visibility = Visibility.Visible;
                         LightUp();
-                        count.Visibility = (NumberDisplay) ? Visibility.Visible : Visibility.Hidden;
+                        CountViewbox.Visibility = (NumberDisplay) ? Visibility.Visible : Visibility.Hidden;
                     }
                     MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
                     mainWindow.OnCollectibleTextChanged();

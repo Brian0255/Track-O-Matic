@@ -5,26 +5,23 @@
              MouseRightButtonDown="Image_MouseRightButtonDown">
     <Grid >
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="21"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="{Binding RowHeight}"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="1" Panel.ZIndex="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition x:Name="NumberGridColumn" Width="18"/>
-            </Grid.ColumnDefinitions>
-            <Grid x:Name="NumberGrid" Grid.Column="1" Background="{Binding BGColor}" Opacity="0">
-                <TextBlock x:Name="count" Padding="1,0,0,2" Text="{Binding Text}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"  Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" Visibility="Hidden"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Viewbox Name="CountViewbox" Grid.Row="1" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="2">
+            <Grid Background="{Binding BGColor}">
+                <TextBlock Margin="3,-1,2,0" x:Name="count" Text="{Binding Text}" Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" />
             </Grid>
-        </Grid>
-        <Image Source="{Binding ImageSource}" x:Name="image" Panel.ZIndex="0" Stretch="Uniform" Margin="2" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
-                    UseLayoutRounding="True"
-                    SnapsToDevicePixels="True"
-                    RenderOptions.ClearTypeHint="Enabled">
-                <Image.Effect>
-                    <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
-                </Image.Effect>
-            </Image>
-
+        </Viewbox>
+        <Image Source="{Binding ImageSource}" x:Name="image" Margin="2" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                RenderOptions.ClearTypeHint="Enabled" HorizontalAlignment="Left">
+            <Image.Effect>
+                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+            </Image.Effect>
+        </Image>
     </Grid>
 </UserControl>
