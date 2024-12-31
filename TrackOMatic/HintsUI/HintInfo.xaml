@@ -7,7 +7,7 @@
                 xmlns:wpf="http://wpfcontrols.com/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="200">
-    <Border x:Name="border" Background="{StaticResource RegionBG}" CornerRadius="3" Margin="5,0,0,0" Padding="5" BorderBrush="Black" BorderThickness=".5">
+    <Border x:Name="border" Background="{StaticResource RegionBG}" CornerRadius="0" Padding="4,3,3,3" BorderBrush="Black" BorderThickness=".5">
         <Grid x:Name="yes"> 
             <Grid.RowDefinitions>
                 <RowDefinition x:Name="LocationItemsRow" Height="*"/>
@@ -28,10 +28,10 @@
                 <Style TargetType="Grid">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}" Value="Hidden">
-                            <Setter Property="Height" Value="25"/>
+                            <Setter Property="Height" Value="23"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}" Value="Visible">
-                            <Setter Property="Height" Value="50"/>
+                            <Setter Property="Height" Value="46"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -40,12 +40,11 @@
                 <ColumnDefinition Width="7*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-
-            <TextBox ContextMenu="{x:Null}" TextChanged="Location_TextChanged" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}"/>
+            <TextBox ContextMenu="{x:Null}" Margin="1,0,0,0" TextChanged="Location_TextChanged" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}"/>
             <TextBox ContextMenu="{x:Null}" x:Name="PotionCount" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="PotionCount_PreviewKeyDown" Margin="0,0,3,0"  Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility}"/>
 
             <local:HintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="RightItems" BottomRowHeight="*" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible}"/>
-            <local:HintItemList Loaded="HintInfoWindow_Loaded" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}"/>
+            <local:HintItemList Margin="1,0,0,0" Loaded="HintInfoWindow_Loaded" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}"/>
             <Popup Grid.Row="1" x:Name="BottomRow" Height="120" Width="250" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}">
             <ListBox MouseDoubleClick="SuggestionBox_MouseDoubleClick" Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" x:Name="SuggestionBox"  KeyDown="SuggestionBox_KeyDown"/>
             </Popup>
