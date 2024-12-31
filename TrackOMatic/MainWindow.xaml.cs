@@ -11,6 +11,7 @@ using System.Linq;
 using System.Timers;
 using TrackOMatic.Properties;
 using AutoUpdaterDotNET;
+using Xceed.Wpf.AvalonDock.Controls;
 
 namespace ClassLibrary
 {
@@ -108,6 +109,8 @@ namespace TrackOMatic
             DataSaver = new(this);
             HitListHintManager = new(this);
             Reset();
+            AdjustBasedOnCompactMode();
+            UpdateProgHintImage();
         }
 
         private void UpdateHintDisplayToggles()
@@ -135,18 +138,18 @@ namespace TrackOMatic
             UpdateHintDisplayToggles();
             Regions = new()
             {
-                { RegionName.DK_ISLES, new Region(RegionName.DK_ISLES, DKIslesRegion, DKIslesPicture, DKIslesRegionGrid, DKIslesPoints, DKIslesTopLabel) },
-                { RegionName.START, new Region(RegionName.START, StartRegion, StartPicture, StartRegionGrid) },
+                { RegionName.DK_ISLES, new Region(RegionName.DK_ISLES, DKIslesRegion, DKIslesImagePointsGrid, DKIslesPicture, DKIslesRegionGrid, DKIslesPoints, DKIslesTopLabel) },
+                { RegionName.START, new Region(RegionName.START, StartRegion, StartImagePointsGrid, StartPicture, StartRegionGrid) },
 
-                { RegionName.JUNGLE_JAPES, new Region(RegionName.JUNGLE_JAPES, Level1, Level1Picture, Level1RegionGrid, Level1Points, Level1TopLabel, Level1Order) },
-                { RegionName.ANGRY_AZTEC, new Region(RegionName.ANGRY_AZTEC, Level2, Level2Picture, Level2RegionGrid, Level2Points,Level2TopLabel, Level2Order) },
-                { RegionName.FRANTIC_FACTORY, new Region(RegionName.FRANTIC_FACTORY, Level3, Level3Picture, Level3RegionGrid, Level3Points,Level3TopLabel, Level3Order) },
-                { RegionName.GLOOMY_GALLEON, new Region(RegionName.GLOOMY_GALLEON, Level4, Level4Picture, Level4RegionGrid, Level4Points,Level4TopLabel, Level4Order) },
-                { RegionName.FUNGI_FOREST, new Region(RegionName.FUNGI_FOREST, Level5, Level5Picture, Level5RegionGrid, Level5Points, Level5TopLabel, Level5Order) },
-                { RegionName.CRYSTAL_CAVES, new Region(RegionName.CRYSTAL_CAVES, Level6, Level6Picture, Level6RegionGrid, Level6Points,Level6TopLabel, Level6Order) },
-                { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, Level7Order) },
+                { RegionName.JUNGLE_JAPES, new Region(RegionName.JUNGLE_JAPES, Level1, Level1ImagePointsGrid, Level1Picture, Level1RegionGrid, Level1Points, Level1TopLabel, Level1Order) },
+                { RegionName.ANGRY_AZTEC, new Region(RegionName.ANGRY_AZTEC, Level2, Level2ImagePointsGrid, Level2Picture, Level2RegionGrid, Level2Points,Level2TopLabel, Level2Order) },
+                { RegionName.FRANTIC_FACTORY, new Region(RegionName.FRANTIC_FACTORY, Level3, Level3ImagePointsGrid, Level3Picture, Level3RegionGrid, Level3Points,Level3TopLabel, Level3Order) },
+                { RegionName.GLOOMY_GALLEON, new Region(RegionName.GLOOMY_GALLEON, Level4, Level4ImagePointsGrid, Level4Picture, Level4RegionGrid, Level4Points,Level4TopLabel, Level4Order) },
+                { RegionName.FUNGI_FOREST, new Region(RegionName.FUNGI_FOREST, Level5, Level5ImagePointsGrid, Level5Picture, Level5RegionGrid, Level5Points, Level5TopLabel, Level5Order) },
+                { RegionName.CRYSTAL_CAVES, new Region(RegionName.CRYSTAL_CAVES, Level6, Level6ImagePointsGrid, Level6Picture, Level6RegionGrid, Level6Points,Level6TopLabel, Level6Order) },
+                { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7ImagePointsGrid, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, Level7Order) },
 
-                { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel, Level8Order) },
+                { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HelmImagePointsGrid, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel, Level8Order) },
             };
             HitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10};
             Collectibles = new()
@@ -205,12 +208,11 @@ namespace TrackOMatic
             KongsPanel,
             WotHPanel,
             FoolishPanel,
-            PathlessPanel,
             PotionCountsPanel,
             UnhintedPanel
 
             };
-            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong);
+            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong, UpdateUIAmountToNextHint);
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
             SaveTimer.Start();
@@ -294,10 +296,13 @@ namespace TrackOMatic
 
         private void ResetWidthHeight()
         {
-            Width = (Settings.Default.HintDisplay != "Off") ? 1800 : 580;
+            double newWidth = 580;
+            if(Settings.Default.HintDisplay != "Off")
+            {
+                newWidth = (Settings.Default.CompactMode) ? 1392.0 : 1800.0;
+            }
+            Width = newWidth;
             Height = (Settings.Default.HitList) ? 980 : 820;
-            double newColumnWidth = (Settings.Default.HintDisplay != "Off") ? 2.15 : 0;
-            HintsColumn.Width = new GridLength(newColumnWidth, GridUnitType.Star);
             if (Settings.Default.HintDisplay == "Multipath Hints")
             {
                 MultipathGrid.Visibility = Visibility.Visible;
@@ -308,6 +313,91 @@ namespace TrackOMatic
                 DirectItemHintGrid.Visibility = Visibility.Visible;
                 MultipathGrid.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void CompactModeMultipathChanges(bool on)
+        {
+            var multipath2Width = on ? 0 : 1;
+            MultipathColumn2.Width = new GridLength(multipath2Width, GridUnitType.Star);
+            var multipathColumn1Row0Height = on ? 1.6 : 0;
+            MultipathColumn1Row0.Height = new GridLength(multipathColumn1Row0Height, GridUnitType.Star);
+            var potionsRowHeight = on ? 2.54 : 0;
+            OptionalPotionsRow.Height = new GridLength(potionsRowHeight, GridUnitType.Star);
+
+            if (on)
+            {
+                MultipathMainColumn2.Children.Remove(FoolishPanel);
+                MultipathMainColumn2.Children.Remove(PotionCountsPanel);
+                MultipathColumn1.Children.Add(FoolishPanel);
+                Grid.SetRow(FoolishPanel, 0);
+                UnhintedColumn.Children.Add(PotionCountsPanel);
+                Grid.SetRow(PotionCountsPanel, 0);
+            }
+            else
+            {
+                UnhintedColumn.Children.Remove(PotionCountsPanel);
+                MultipathColumn1.Children.Remove(FoolishPanel);
+                MultipathMainColumn2.Children.Add(FoolishPanel);
+                Grid.SetRow(FoolishPanel, 0);
+                MultipathMainColumn2.Children.Add(PotionCountsPanel);
+                Grid.SetRow(PotionCountsPanel, 1);
+            }
+        }
+
+        private void CompactModeDirectItemChanges(bool on)
+        {
+            //god i hate this
+            var lastRowHeights = on ? 1 : 0;
+            DirectHintsCol0LastRow.Height = new GridLength(lastRowHeights, GridUnitType.Star);
+            DirectHintsCol1LastRow.Height = new GridLength(lastRowHeights, GridUnitType.Star);
+            var thirdColumnWidth = on ? 0 : 1;
+            DirectHintsThirdMain.Width = new GridLength(thirdColumnWidth, GridUnitType.Star);
+            DirectHintsCol0.Children.Clear();
+            DirectHintsCol1.Children.Clear();
+            DirectHintsCol2.Children.Clear();
+            if (on)
+            {
+                UIUtils.AddToGridRow(DirectHintsCol0, IslesPanel, 0);
+                UIUtils.AddToGridRow(DirectHintsCol0, AztecPanel, 1);
+                UIUtils.AddToGridRow(DirectHintsCol0, GalleonPanel, 2);
+                UIUtils.AddToGridRow(DirectHintsCol0, CavesPanel, 3);
+                UIUtils.AddToGridRow(DirectHintsCol1, JapesPanel, 0);
+                UIUtils.AddToGridRow(DirectHintsCol1, FactoryPanel, 1);
+                UIUtils.AddToGridRow(DirectHintsCol1, ForestPanel, 2);
+                UIUtils.AddToGridRow(DirectHintsCol1, CastlePanel, 3);
+                UIUtils.AddToGridRow(UnhintedColumn, HelmPanel, 0);
+            }
+            else
+            {
+                UnhintedColumn.Children.Remove(HelmPanel);
+                UIUtils.AddToGridRow(DirectHintsCol0, IslesPanel, 0);
+                UIUtils.AddToGridRow(DirectHintsCol0, FactoryPanel, 1);
+                UIUtils.AddToGridRow(DirectHintsCol0, CavesPanel, 2);
+                UIUtils.AddToGridRow(DirectHintsCol1, JapesPanel, 0);
+                UIUtils.AddToGridRow(DirectHintsCol1, GalleonPanel, 1);
+                UIUtils.AddToGridRow(DirectHintsCol1, CastlePanel, 2);
+                UIUtils.AddToGridRow(DirectHintsCol2, AztecPanel, 0);
+                UIUtils.AddToGridRow(DirectHintsCol2, ForestPanel, 1);
+                UIUtils.AddToGridRow(DirectHintsCol2, HelmPanel, 2);
+            }
+        }
+
+        private void AdjustBasedOnCompactMode()
+        {
+            var isActuallyOn = (MultipathColumns.Width.Value == 2 && MultipathColumns.Width.IsStar);
+            var on = Settings.Default.CompactMode;
+            if (on == isActuallyOn) return;
+            var totalColumns = on ? 2 : 3;
+            MultipathColumns.Width = new GridLength(totalColumns, GridUnitType.Star);
+            double newRatio = on ? 1.43 : 2.15;
+            if (Settings.Default.HintDisplay != "Off")
+            {
+                HintsColumn.Width = new GridLength(newRatio, GridUnitType.Star);
+            }
+            var newWidth = on ? (Width * (1392.0 / 1800.0)) : (Width * (1800.0 / 1392.0));
+            Width = newWidth;
+            CompactModeMultipathChanges(on);
+            CompactModeDirectItemChanges(on);
         }
 
         private void ResetSize(object sender, RoutedEventArgs e)
@@ -408,18 +498,29 @@ namespace TrackOMatic
 
         public void OnCollectibleTextChanged()
         {
-            /*
-            if (ITEM_NAME_TO_REGION.Count == 0) return;
-            var itemToHint = HitListHintManager.OnGBUpdate(GBs.Text);
-            if (itemToHint == ItemName.NONE) return;
-            var image = (Image)FindResource(itemToHint.ToString().ToLower());
-            ItemHintIcon.Source = image.Source;
-            ItemHintIcon.UpdateLayout();
-            var regionName = ITEM_NAME_TO_REGION[itemToHint];
-            ItemHintText.Text = JSONKeyMappings.REGION_NAME_TO_SHORTENED[regionName];
-            //not really an autotracked item but it's easier to just call this function with an extra parameter
-            if(Settings.Default.Autotracking) ProcessNewAutotrackedItem(itemToHint, regionName, true);
-            */
+        }
+
+        public void UpdateProgHintImage()
+        {
+            var itemType = (ItemType)Settings.Default.ProgressiveHintItem;
+            Dictionary<ItemType, string> itemTypeToImageString = new()
+            {
+                {ItemType.GOLDEN_BANANA, "Images/dk64/gb.png" },
+                {ItemType.TOTAL_BLUEPRINTS, "Images/dk64/total_bps.png" },
+                {ItemType.KEY, "Images/dk64/blankkey.png" },
+                {ItemType.BANANA_MEDAL, "Images/dk64/bananamedal.png" },
+                {ItemType.BATTLE_CROWN, "Images/dk64/crown.png" },
+                {ItemType.FAIRY,"Images/dk64/fairy.png" },
+                {ItemType.RAINBOW_COIN, "Images/dk64/rainbowcoin.png" },
+                {ItemType.PEARL, "Images/dk64/pearl.png" },
+                {ItemType.COLORED_BANANA, "Images/dk64/colored_bananas.png" }
+            };
+           ItemsToNextHintImage.Source = new BitmapImage(new Uri(itemTypeToImageString[itemType], UriKind.Relative));
+        }
+
+        public void UpdateUIAmountToNextHint(int newAmount)
+        {
+           ItemsToNextHint.Text = newAmount.ToString();
         }
 
         public void Reset()
@@ -458,6 +559,8 @@ namespace TrackOMatic
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
             foreach (var progressiveImage in KroolKongs) progressiveImage.Reset();
             foreach (var progressiveImage in HelmKongs) progressiveImage.Reset();
+            UpdateUIAmountToNextHint(0);
+            HintHelper.GenerateThresholds();
             SetSong("", "");
             Autotracker.Reset();
         }
