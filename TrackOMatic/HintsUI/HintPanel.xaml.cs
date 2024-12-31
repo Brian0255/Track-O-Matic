@@ -1,19 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using TrackOMatic.Properties;
 
 namespace TrackOMatic
 {
@@ -24,6 +19,10 @@ namespace TrackOMatic
         public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register("LineColor", typeof(Color), typeof(HintPanel));
         public static readonly DependencyProperty HintTypeProperty = DependencyProperty.Register("HintType", typeof(HintType), typeof(HintPanel));
         public static readonly DependencyProperty RegionNameProperty = DependencyProperty.Register("RegionName", typeof(RegionName), typeof(HintPanel));
+
+
+        public List<ItemName> ItemsToFilterBy { get; private set; } = new();
+    
         public string Heading
         {
             get { return (string)GetValue(HeadingProperty); }
@@ -47,10 +46,19 @@ namespace TrackOMatic
             get { return (RegionName)GetValue(RegionNameProperty); }
             set { SetValue(RegionNameProperty, value); }
         }
+
+        public void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var hintSettings = HintTypeSettingsList.SETTINGS[HintType];
+            SortButton.Visibility = hintSettings.HintSorterVisibility;
+            FilterButton.Visibility = hintSettings.HintSorterVisibility;
+        }
         public HintPanel()
         {
+            Console.WriteLine(HintType);
             InitializeComponent();
             DataContext = this;
+            Loaded += OnLoaded;
         }
 
         public void Reset()
@@ -59,6 +67,8 @@ namespace TrackOMatic
             {
                 HintList.Children.Remove(child);
             }
+            ItemsToFilterBy = new();
+            UpdateFilterImage();
         }
 
         private void RemoveHint(object sender, MouseEventArgs e)
@@ -77,7 +87,7 @@ namespace TrackOMatic
             var insertionPoint = HintList.Children.Count - 1;
             HintList.Children.Insert(insertionPoint, newHint);
             newHint.MouseDown += RemoveHint;
-
+            newHint.ItemsOnPath.OnItemsSelected += OnPathItemsSelected;
             return newHint;
         }
 
@@ -104,21 +114,88 @@ namespace TrackOMatic
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            /*
-            var hitTest = VisualTreeHelper.HitTest(this, e.GetPosition(this)).VisualHit;
-            int maxDepth = 5;
-            int depth = 0;
-            while(hitTest != null && depth < maxDepth)
+        }
+
+        private List<HintInfo> FetchCurrentHintList()
+        {
+            return HintList.Children.OfType<HintInfo>().ToList();
+        }
+
+        private void BuildHintPanelFromHintList(List<HintInfo> hints)
+        {
+            var addNewHint = HintList.Children[HintList.Children.Count - 1];
+            HintList.Children.Clear();
+            foreach(var hint in hints)
             {
-                if(hitTest is PathOrFoundItem item)
+                HintList.Children.Add(hint);
+            }
+            HintList.Children.Add(addNewHint);
+        }
+
+        private void UpdateFilterImage()
+        {
+            var source = "../Images/dk64/filter_empty.png";
+            if(ItemsToFilterBy.Count > 0)
+            {
+                source = "../Images/dk64/filter_on.png";
+            }
+            FilterButton.Source = new BitmapImage(new Uri(source, UriKind.Relative));
+        }
+
+        private void ApplyFilter()
+        {
+            var filteredHints = new List<HintInfo>();
+            var rejectedHints = new List<HintInfo>();
+            foreach(var child in HintList.Children)
+            {
+                if(child is HintInfo hintInfo)
                 {
-                    item.Toggle();
-                    e.Handled = (item.ItemName != ItemName.NONE);
-                    break;
+                    var selectedItems = hintInfo.ItemsOnPath.SelectedItems;
+                    if (ItemsToFilterBy.All(filterItem => selectedItems.ContainsKey(filterItem))){
+                        filteredHints.Add(hintInfo);
+                    }
+                    else
+                    {
+                        rejectedHints.Add(hintInfo);
+                    }
                 }
-                hitTest = VisualTreeHelper.GetParent(hitTest);
-                ++depth;
-            }*/
+            }
+            var combined = filteredHints.Concat(rejectedHints).ToList();
+            BuildHintPanelFromHintList(combined);
+            UpdateFilterImage();
+        }
+
+        private void Sort()
+        {
+            var hints = FetchCurrentHintList();
+            hints.Sort((hint1, hint2) => hint2.ItemsOnPath.SelectedItems.Count - hint1.ItemsOnPath.SelectedItems.Count);
+            BuildHintPanelFromHintList(hints);
+        }
+
+        private void OnPathItemsSelected()
+        {
+            if(Settings.Default.AutoSortPathHints) Sort();
+            ApplyFilter();
+        }
+
+        private void FilterButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var dialog = new HintItemSelectionDialog(ItemsToFilterBy.ToList())
+            {
+                Title = "Select Items to Prioritize"
+            };
+            var mousePosition = Mouse.GetPosition(this);
+            mousePosition = PointToScreen(mousePosition);
+            UIUtils.MoveWindowAndEnsureVisibile(dialog, mousePosition.X - 20, mousePosition.Y - 10);
+            dialog.ShowDialog();
+            ItemsToFilterBy = dialog.SelectedItems.Keys.ToList();
+            ApplyFilter();
+        }
+
+        public void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Sort();
+            ApplyFilter();
         }
     }
 }
