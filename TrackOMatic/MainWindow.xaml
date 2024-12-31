@@ -1008,9 +1008,9 @@
                         <RowDefinition Height="1*"/>
                         <RowDefinition Name="DirectHintsCol0LastRow" Height="0*"/>
                     </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="5" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
-                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="5" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
-                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="5" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
+                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="3" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
+                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="3" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
+                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="3" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
 
                 </Grid>
                 <Grid Name="DirectHintsCol1" Grid.Column="1">
@@ -1020,9 +1020,9 @@
                         <RowDefinition Height="1*"/>
                         <RowDefinition Name="DirectHintsCol1LastRow" Height="0*"/>
                     </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="5" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
-                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="5" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
-                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="5" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
+                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="3" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
+                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="3" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
+                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="3" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
                 </Grid>
                 <Grid Name="DirectHintsCol2" Grid.Column="2">
                     <Grid.RowDefinitions>
@@ -1030,9 +1030,9 @@
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="5" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
-                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="5" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
-                        <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="HelmPanel" Margin="5" Heading="HELM" LineColor="#b580ff" RegionName="HIDEOUT_HELM">
+                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="3" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
+                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="3" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
+                        <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="HelmPanel" Margin="3" Heading="HELM" LineColor="#b580ff" RegionName="HIDEOUT_HELM">
                             <local:HintPanel.Style>
                                 <Style TargetType="{x:Type local:HintPanel}">
                                     <Setter Property="Visibility" Value="Visible" />
