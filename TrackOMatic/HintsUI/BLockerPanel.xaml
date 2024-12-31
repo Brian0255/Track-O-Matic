@@ -11,7 +11,7 @@
         <Border CornerRadius="3" BorderThickness=".5" BorderBrush="Black" Background="{StaticResource VeryDark}">
             <Grid Background="Transparent" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="26"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Margin="10,0,0,0" Padding="0,0,0,2" FontSize="20" Foreground="White" Grid.Row="0"  FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center"/>
