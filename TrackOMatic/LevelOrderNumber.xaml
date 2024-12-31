@@ -3,9 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              MouseLeftButtonDown="LevelOrder_LeftPress" MouseRightButtonDown="LevelOrder_RightPress" MouseWheel="LevelOrder_MouseWheel">
     <Grid Background="Transparent">
-        <Grid Background="Transparent" Margin="0,0,0,0" Width="26" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Border Background="{StaticResource BaseBG}" CornerRadius="3" Margin="0">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-3,-3,-3,-1" x:Name="NumberLabel" Panel.ZIndex="2" FontSize="{StaticResource BigFontSize}"   Foreground="White"  FontFamily="{DynamicResource DK64Font}" Text="?"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Name="TopRow" Height=".9*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Name="LeftCol" Width=".9*"/>
+            <ColumnDefinition Width="2.5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0" Margin="0,0,0,0">
+            <Border CornerRadius="3" Margin="0" Background="{StaticResource BaseBG}">
+                <Viewbox>
+                <TextBlock  Margin="1,-2,1,1" x:Name="NumberLabel" Panel.ZIndex="2" FontSize="{StaticResource BigFontSize}"   Foreground="White"  FontFamily="{DynamicResource DK64Font}" Text="?"/>
+                </Viewbox>
             </Border>
         </Grid>
     </Grid>
