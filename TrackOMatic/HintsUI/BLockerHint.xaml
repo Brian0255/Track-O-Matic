@@ -20,6 +20,6 @@
         </Grid.ColumnDefinitions>
         <Image x:Name="Picture"  Grid.Row="1" Grid.Column="0"  Margin="0" VerticalAlignment="Bottom"/>
         <local:ProgressiveItem x:Name="GB" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom"  />
-        <local:ItemCountBox VerticalAlignment="Bottom" ContextMenu="{x:Null}" Text="?" x:Name="GBCount" Grid.Column="3" Grid.Row="1"  Style="{StaticResource BoldText}" FontSize="18" />
+        <local:ItemCountBox Margin="0,2,0,0" VerticalAlignment="Bottom" ContextMenu="{x:Null}" Text="?" x:Name="GBCount" Grid.Column="3" Grid.Row="1"  Style="{StaticResource BoldText}" FontSize="17" />
     </Grid>
 </UserControl>
