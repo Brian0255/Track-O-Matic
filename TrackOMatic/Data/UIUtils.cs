@@ -1,12 +1,19 @@
 using System;
 using System.Drawing;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 
 namespace TrackOMatic
 {
     static class UIUtils
     {
+        public static void AddToGridRow(Grid grid, UIElement element, int row)
+        {
+            grid.Children.Add(element);
+            Grid.SetRow(element, row);
+        }
+
         public static float GetDpiScale()
         {
             Form form = new Form();
