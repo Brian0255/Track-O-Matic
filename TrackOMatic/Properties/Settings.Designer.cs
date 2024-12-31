@@ -322,5 +322,65 @@ namespace TrackOMatic.Properties {
                 this["HelmDoors"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int ProgressiveHintItem {
+            get {
+                return ((int)(this["ProgressiveHintItem"]));
+            }
+            set {
+                this["ProgressiveHintItem"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int ProgressiveHintCap {
+            get {
+                return ((int)(this["ProgressiveHintCap"]));
+            }
+            set {
+                this["ProgressiveHintCap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowAmountForHints {
+            get {
+                return ((bool)(this["ShowAmountForHints"]));
+            }
+            set {
+                this["ShowAmountForHints"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CompactMode {
+            get {
+                return ((bool)(this["CompactMode"]));
+            }
+            set {
+                this["CompactMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoSortPathHints {
+            get {
+                return ((bool)(this["AutoSortPathHints"]));
+            }
+            set {
+                this["AutoSortPathHints"] = value;
+            }
+        }
     }
 }

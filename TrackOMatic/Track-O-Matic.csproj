@@ -98,6 +98,7 @@
     <Compile Include="AutoTracking\EmulatorName.cs" />
     <Compile Include="AutoTracking\Memory.cs" />
     <Compile Include="AutoTracking\AutotrackedCheck.cs" />
+    <Compile Include="Data\HintHelper.cs" />
     <Compile Include="Data\UIUtils.cs" />
     <Compile Include="Data\HintData.cs" />
     <Compile Include="Data\HintRegion.cs" />
@@ -109,6 +110,9 @@
     <Compile Include="Data\SavedHint.cs" />
     <Compile Include="BroadcastView.xaml.cs">
       <DependentUpon>BroadcastView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProgHintDialog.xaml.cs">
+      <DependentUpon>ProgHintDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="HintsUI\HelmDoorHint.xaml.cs">
       <DependentUpon>HelmDoorHint.xaml</DependentUpon>
@@ -185,6 +189,10 @@
     </Compile>
     <Compile Include="WatermarkTextBox.cs" />
     <Page Include="BroadcastView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ProgHintDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1265,6 +1273,19 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\dk64\total_bps.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\filter_empty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\sort.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\filter_on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\blankkey.png" />
+    <Resource Include="Images\dk64\colored_bananas.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
