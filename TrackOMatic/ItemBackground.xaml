@@ -21,9 +21,7 @@
     <ContentControl.Content>
         <Grid>
             <Border BorderThickness="0" 
-                    UseLayoutRounding="True"
                     RenderOptions.BitmapScalingMode="NearestNeighbor"
-                    SnapsToDevicePixels="True"
                     RenderOptions.ClearTypeHint="Enabled"
                     ToolTipService.InitialShowDelay="500">
                 <Border.ToolTip>
