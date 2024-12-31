@@ -50,6 +50,25 @@ namespace TrackOMatic
             InitializeVials();
         }
 
+        private void PerformTheJankiestResizing(double height)
+        {
+            if (Region.ImagePointsGrid.RowDefinitions.Count > 3)
+            {
+                var newTextHeight = 0.75 * (height - 0.5) * 2;
+                Region.ImagePointsGrid.RowDefinitions[1].Height = new GridLength(newTextHeight, GridUnitType.Star);
+                Region.ImagePointsGrid.RowDefinitions[3].Height = new GridLength(newTextHeight, GridUnitType.Star);
+            }
+            var newLevelOrderHeight = 0.9;
+            if (height > 1)
+            {
+                newLevelOrderHeight = 0.9 / (height * 1.22);
+            }
+            if (Region.LevelOrderNumber != null)
+            {
+                Region.LevelOrderNumber.TopRow.Height = new GridLength(newLevelOrderHeight, GridUnitType.Star);
+            }
+        }
+
         private void AdjustSpacing()
         {
             int gridremainder = 0;
@@ -62,9 +81,10 @@ namespace TrackOMatic
 
             double height = (1 + ((Children.Count - 1) / 5)) / 2.0;
             if (Children.Count <= 5) height = 1;
-            var outerGrid = ((Parent as Grid).Parent as Grid);
+            var outerOuterGrid = ((Parent as Grid).Parent as Grid);
             int row = (int)Parent.GetValue(Grid.RowProperty);
-            outerGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
+            outerOuterGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
+            PerformTheJankiestResizing(height);
         }
 
         public void AddInitialVial(VialColor color)
@@ -168,7 +188,7 @@ namespace TrackOMatic
 
         public void Handle_RegionGrid(Item button, bool add, bool userPlacing = true, bool brighten = true)
         {
-            button.Margin = new Thickness(2);
+            button.Margin = new Thickness(1);
             ImportantCheck check = null;
             ItemName item;
             if(button.Tag != null)
