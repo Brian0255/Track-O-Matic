@@ -7,6 +7,8 @@ using System.Linq;
 using System.Windows.Data;
 using TrackOMatic.Properties;
 using System.ComponentModel;
+using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace TrackOMatic
 {
@@ -17,6 +19,19 @@ namespace TrackOMatic
             Settings.Default.TopMost = TopMostOption.IsChecked;
             Topmost = TopMostOption.IsChecked;
             Settings.Default.Save();
+        }
+
+        private void AutoSortToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.AutoSortPathHints = SortNewHintsOption.IsChecked;
+            Settings.Default.Save();
+        }
+
+        private void CompactModeToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.CompactMode = CompactOption.IsChecked;
+            Settings.Default.Save();
+            AdjustBasedOnCompactMode();
         }
 
         private void HitListToggle(object sender, RoutedEventArgs e)
@@ -66,6 +81,27 @@ namespace TrackOMatic
         {
             var button = (sender as RadioButton);
             Settings.Default.HintDisplay = button.Content.ToString();
+            bool compactModeOn = Settings.Default.CompactMode;
+            var newRatio = compactModeOn ? 1.43 : 2.15;
+            if (Settings.Default.HintDisplay == "Multipath Hints")
+            {
+                MultipathGrid.Visibility = Visibility.Visible;
+                DirectItemHintGrid.Visibility = Visibility.Hidden;
+                HelmPanel.Visibility = Visibility.Hidden;
+                PotionCountsPanel.Visibility = Visibility.Visible;
+            }
+            else if (Settings.Default.HintDisplay == "Direct Item Hints")
+            {
+                DirectItemHintGrid.Visibility = Visibility.Visible;
+                MultipathGrid.Visibility = Visibility.Hidden;
+                HelmPanel.Visibility = Visibility.Visible;
+                PotionCountsPanel.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                newRatio = 0;
+            }
+            HintsColumn.Width = new GridLength(newRatio, GridUnitType.Star);
             ResetWidthHeight();
             UpdateHintDisplayToggles();
             Settings.Default.Save();
@@ -74,21 +110,6 @@ namespace TrackOMatic
         private void AutotrackToggle(object sender, RoutedEventArgs e)
         {
             Settings.Default.Autotracking = AutotrackOption.IsChecked;
-            /*
-            if (!AutotrackOption.IsChecked) 
-            {
-                foreach (var item in DraggableItems.Cast<Item>())
-                {
-                    item.IsEnabled = true;
-                    item.CanLeftClick = true;
-                }
-                DataSaver.TurnOffAutotrackingField();
-                foreach (var entry in Regions) SetRegionLighting(entry.Key, false);
-            }
-            else
-            {
-                Autotracker.ResetChecks();
-            }*/
             Settings.Default.Save();
         }
 
@@ -159,6 +180,16 @@ namespace TrackOMatic
         {
             Settings.Default.HelmDoors = HelmDoors.IsChecked;
             Settings.Default.Save();
+        }
+
+        private void SetProgHintTypeAmount(object sender, RoutedEventArgs e)
+        {
+            var dialog = new ProgHintDialog();
+            var mousePosition = Mouse.GetPosition(this);
+            mousePosition = PointToScreen(mousePosition);
+            UIUtils.MoveWindowAndEnsureVisibile(dialog, mousePosition.X - dialog.Width/2, mousePosition.Y-dialog.Height/2);
+            dialog.ShowDialog();
+            UpdateProgHintImage();
         }
     }
 }
