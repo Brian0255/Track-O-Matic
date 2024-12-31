@@ -8,8 +8,10 @@ using System.Windows.Input;
 
 namespace TrackOMatic
 {
+    public delegate void ItemsSelectedHandler();
     public partial class HintItemList : UserControl
     {
+        public ItemsSelectedHandler OnItemsSelected { get; set; }
         private List<ItemName> sortedItemList = new();
         private List<bool> checkmarkedItems = new();
         public Dictionary<ItemName, bool> SelectedItems { get; set; } = new();
@@ -51,6 +53,18 @@ namespace TrackOMatic
 
         }
 
+        private void UpdateCheckmarks(HintItemSelectionDialog dialog)
+        {
+            var copy = new Dictionary<ItemName, bool>(dialog.SelectedItems);
+            foreach (var entry in copy)
+            {
+                if (SelectedItems.ContainsKey(entry.Key))
+                {
+                    dialog.SelectedItems[entry.Key] = SelectedItems[entry.Key];
+                }
+            }
+        }
+
         public void OpenItemSelectionDialog()
         {
             var dialog = new HintItemSelectionDialog(sortedItemList);
@@ -58,19 +72,8 @@ namespace TrackOMatic
             var mousePosition = Mouse.GetPosition(this);
             mousePosition = PointToScreen(mousePosition);
             UIUtils.MoveWindowAndEnsureVisibile(dialog, mousePosition.X - 20, mousePosition.Y - 10);
-
-            //dialog.Left = SelectionDialogPosition[0];
-            //dialog.Top = SelectionDialogPosition[1];
-
             dialog.ShowDialog();
-            var copy = new Dictionary<ItemName, bool>(dialog.SelectedItems);
-            foreach(var entry in copy)
-            {
-                if (SelectedItems.ContainsKey(entry.Key))
-                {
-                    dialog.SelectedItems[entry.Key] = SelectedItems[entry.Key];
-                }
-            }
+            UpdateCheckmarks(dialog);
             SelectedItems = dialog.SelectedItems;
             ProcessSelectedItems();
             if (HintInfo != null) HintInfo.UpdateSelectedItems();
@@ -148,6 +151,7 @@ namespace TrackOMatic
                 AddNewImageToPanel(sortedItemList[i], checkmarkedItems[i], row);
             }
             ItemPanel.EndInit();
+            if(OnItemsSelected != null) OnItemsSelected?.Invoke();
         }
     }
 }
