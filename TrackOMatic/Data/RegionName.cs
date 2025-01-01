@@ -13,6 +13,7 @@
         CREEPY_CASTLE,
         HIDEOUT_HELM,
         SHOPS,
-        UNKNOWN
+        UNKNOWN,
+        UNHINTABLE_MOVES
     }
 }
