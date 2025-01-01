@@ -54,9 +54,13 @@ namespace TrackOMatic
         {
             if (Region.ImagePointsGrid.RowDefinitions.Count > 3)
             {
-                var newTextHeight = 0.75 * (height - 0.5) * 2;
-                Region.ImagePointsGrid.RowDefinitions[1].Height = new GridLength(newTextHeight, GridUnitType.Star);
-                Region.ImagePointsGrid.RowDefinitions[3].Height = new GridLength(newTextHeight, GridUnitType.Star);
+                var mult = (height - 0.5) * 0.25;
+                var rows = Region.ImagePointsGrid.RowDefinitions;
+                if (height == 1) mult = 1;
+                rows[1].Height = new GridLength(.75 * mult, GridUnitType.Star);
+                rows[2].Height = new GridLength(.25 * mult, GridUnitType.Star);
+                rows[3].Height = new GridLength(.75 * mult, GridUnitType.Star);
+                rows[4].Height = new GridLength(1 * mult, GridUnitType.Star);
             }
             var newLevelOrderHeight = 0.9;
             if (height > 1)
@@ -80,7 +84,9 @@ namespace TrackOMatic
             Rows = gridnum;
 
             double height = (1 + ((Children.Count - 1) / 5)) / 2.0;
+            //if (Region.RegionName == RegionName.START) height = 1;
             if (Children.Count <= 5) height = 1;
+            height = 1;
             var outerOuterGrid = ((Parent as Grid).Parent as Grid);
             int row = (int)Parent.GetValue(Grid.RowProperty);
             outerOuterGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
@@ -104,6 +110,7 @@ namespace TrackOMatic
             Vials[color].Add(vialImage);
             VialItems.Add(vialImage);
             Children.Add(vialImage);
+            if (Region.RegionName == RegionName.UNHINTABLE_MOVES) return;
             AdjustSpacing();
         }
 
@@ -211,7 +218,8 @@ namespace TrackOMatic
                 button.ClearRegion();
                 Region.RemoveCheck(check);
             }
-            AdjustSpacing();
+            button.Region = Region;
+            if(Region.RegionName != RegionName.UNHINTABLE_MOVES) AdjustSpacing();
             Region.UpdateRequiredChecksTotal();
         }
 
