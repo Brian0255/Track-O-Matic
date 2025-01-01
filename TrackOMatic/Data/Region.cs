@@ -194,25 +194,25 @@ namespace TrackOMatic
             }
             if (SpoilerSettingToLabel["PointsLabel"] != null)
             {
-                SpoilerSettingToLabel["PointsLabel"].Visibility = (SpoilerSettings.PointsEnabled) ? Visibility.Visible : Visibility.Hidden;
+                SpoilerSettingToLabel["PointsLabel"].Visibility = (SpoilerSettings.PointsEnabled && RegionName != RegionName.START) ? Visibility.Visible : Visibility.Hidden;
             }
             if (SpoilerSettingToLabel["RequiredChecks"] != null) 
             {
                 SpoilerSettingToLabel["RequiredChecks"].Visibility = (SpoilerSettings.WOTHEnabled) ? Visibility.Visible : Visibility.Hidden;
             }
-            if (RegionName == RegionName.START) return;
+            if (RegionName == RegionName.UNHINTABLE_MOVES) return;
             int columnSpan = (SpoilerSettings.PointsEnabled || SpoilerSettings.WOTHEnabled) ? 2 : 4;
+            if (RegionName == RegionName.START) columnSpan = 3;
             Grid.SetColumnSpan(RegionButton, columnSpan);
         }
 
         public void SetSpoilerAsLoaded()
         {
             SpoilerLoaded = true;
-            Grid.SetColumnSpan(RegionButton, 4);
+            if(RegionButton != null) Grid.SetColumnSpan(RegionButton, 4);
             ConfigureLabelsFromSettings();
             UpdatePoints();
             UpdateRequiredChecksTotal();
-            if (RegionName == RegionName.START) return;
         }
         
         public void SetLevelOrderNumber(int number)
@@ -223,9 +223,10 @@ namespace TrackOMatic
 
         public void SetAsEmptySpoiler()
         {
-            if (RegionName == RegionName.START) return;
+            if (RegionName == RegionName.UNHINTABLE_MOVES) return;
             if(BottomLabel != null) BottomLabel.Visibility = Visibility.Collapsed;
             if(TopLabel != null) TopLabel.Visibility = Visibility.Collapsed;
+            if (RegionName == RegionName.START) return;
             Grid.SetColumnSpan(RegionButton, 3);
         }
     }
