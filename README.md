@@ -2,7 +2,7 @@
 ### An autotracker for Project64 and RMG that supports all playstyles of DK64R, such as using Spoiler Hints. Contains large sections for hint notetaking as well as showing what levels items have been obtained in.
 
 ### Regular View
-![image](https://github.com/user-attachments/assets/d81bc648-0d1b-4710-bdd7-5d7fea83543d)
+![maintracker](https://github.com/user-attachments/assets/67564f1d-082c-4c04-9cc9-54d0564c568c)
 
 ### Broadcast View
 ![image](https://github.com/user-attachments/assets/25199a73-4d58-4721-b52b-e88e4642bc63)
