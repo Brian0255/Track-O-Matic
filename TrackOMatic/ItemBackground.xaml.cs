@@ -74,7 +74,7 @@ namespace TrackOMatic
                 if (item.Parent != mainWindow.ItemGrid)
                 {
                     item.HandleItemReturn();
-                    item.DoDragDrop(e.RightButton == MouseButtonState.Pressed);
+                    if(item.Region != null && item.Region.RegionName != RegionName.UNHINTABLE_MOVES) item.DoDragDrop(e.RightButton == MouseButtonState.Pressed);
                 }
             }
         }
