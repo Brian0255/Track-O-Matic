@@ -139,7 +139,7 @@ namespace TrackOMatic
             Regions = new()
             {
                 { RegionName.DK_ISLES, new Region(RegionName.DK_ISLES, DKIslesRegion, DKIslesImagePointsGrid, DKIslesPicture, DKIslesRegionGrid, DKIslesPoints, DKIslesTopLabel) },
-                { RegionName.START, new Region(RegionName.START, StartRegion, StartImagePointsGrid, StartPicture, StartRegionGrid) },
+                { RegionName.START, new Region(RegionName.START, StartRegion, StartImagePointsGrid, StartPicture, StartRegionGrid, StartPoints, StartTopLabel) },
 
                 { RegionName.JUNGLE_JAPES, new Region(RegionName.JUNGLE_JAPES, Level1, Level1ImagePointsGrid, Level1Picture, Level1RegionGrid, Level1Points, Level1TopLabel, Level1Order) },
                 { RegionName.ANGRY_AZTEC, new Region(RegionName.ANGRY_AZTEC, Level2, Level2ImagePointsGrid, Level2Picture, Level2RegionGrid, Level2Points,Level2TopLabel, Level2Order) },
@@ -150,6 +150,8 @@ namespace TrackOMatic
                 { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7ImagePointsGrid, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, Level7Order) },
 
                 { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HelmImagePointsGrid, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel, Level8Order) },
+
+                {RegionName.UNHINTABLE_MOVES, new Region(RegionName.UNHINTABLE_MOVES, UnhintableMovesRegion, UnhintableMovesImagePointsGrid, null, UnhintableMovesRegionGrid) }
             };
             HitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10};
             Collectibles = new()
