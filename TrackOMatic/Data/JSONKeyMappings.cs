@@ -176,6 +176,51 @@ namespace TrackOMatic
             {"bean", ItemName.BEAN }
         };
 
+        public static readonly Dictionary<string, ItemName> RANDO_NAME_TO_ITEM_NAME = new()
+        {
+            {"Progressive Slam 1", ItemName.PROGRESSIVE_SLAM_1 },
+            {"Progressive Slam 2", ItemName.PROGRESSIVE_SLAM_2 },
+            {"Progressive Slam 3", ItemName.PROGRESSIVE_SLAM_3 },
+            {"Coconut",ItemName.COCONUT_GUN },
+            {"Bongos", ItemName.BONGO_BLAST },
+            {"Baboon Blast", ItemName.BABOON_BLAST },
+            {"Strong Kong", ItemName.STRONG_KONG },
+            {"Gorilla Grab",ItemName.GORILLA_GRAB },
+            {"Peanut",ItemName.PEANUT_POPGUNS },
+            {"Guitar",ItemName.GUITAR_GAZUMP },
+            {"Chimpy Charge",ItemName.CHIMPY_CHARGE },
+            {"Simian Spring", ItemName.SIMIAN_SPRING },
+            {"Rocketbarrel Boost",ItemName.ROCKETBARREL_BOOST },
+            {"Grape",ItemName.GRAPE_SHOOTER },
+            {"Trombone",ItemName.TROMBONE_TREMOR },
+            {"Orangstand",ItemName.ORANGSTAND },
+            {"Baboon Balloon", ItemName.BABOON_BALLOON },
+            {"Orangstand Sprint", ItemName.ORANGSTAND_SPRINT },
+            {"Feather",ItemName.FEATHER_BOW },
+            {"Saxophone",ItemName.SAXOPHONE_SLAM },
+            {"Mini Monkey",ItemName.MINI_MONKEY },
+            {"Pony Tail Twirl",ItemName.PONYTAIL_TWIRL },
+            {"Monkeyport",ItemName.MONKEYPORT },
+            {"Pineapple",ItemName.PINEAPPLE_LAUNCHER },
+            {"Triangle",ItemName.TRIANGLE_TRAMPLE },
+            {"Hunky Chunky",ItemName.HUNKY_CHUNKY },
+            {"Primate Punch",ItemName.PRIMATE_PUNCH },
+            {"Gorilla Gone", ItemName.GORILLA_GONE },
+            {"Homing Ammo", ItemName.HOMING_AMMO },
+            {"Sniper Sight",ItemName.SNIPER_SCOPE },
+            {"Oranges",ItemName.ORANGE_THROWING },
+            {"Barrels",ItemName.BARREL_THROWING },
+            {"Vines", ItemName.VINE_SWINGING },
+            {"Diving", ItemName.DIVING },
+            {"Cranky", ItemName.CRANKY },
+            {"Funky", ItemName.FUNKY },
+            {"Candy", ItemName.CANDY },
+            {"Snide", ItemName.SNIDE },
+            {"Climbing", ItemName.CLIMBING },
+            {"Shockwave", ItemName.SHOCKWAVE },
+            {"Fairy Camera", ItemName.FAIRY_CAMERA }
+        };
+
     }
 
 }
