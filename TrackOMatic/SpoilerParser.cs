@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
 using TrackOMatic.Properties;
+using System.Runtime;
 
 namespace TrackOMatic
 {
@@ -120,14 +121,16 @@ namespace TrackOMatic
 
         private void ReadStartingItemsIntoUI()
         {
-            var childElements = new List<UIElement>(MainWindow.Items.Children.Count);
+            var childElements = new List<Item>(MainWindow.Items.Children.Count);
             foreach (UIElement child in MainWindow.Items.Children)
             {
-                childElements.Add(child);
+                if(child is Item item)
+                childElements.Add(item);
             }
-            foreach (var itemControl in childElements)
+            var sortedElements = childElements.OrderBy(child => (ItemName)child.Tag).ToList();
+            foreach (var item in sortedElements)
             {
-                if (itemControl is Item item && StartingItems.ContainsKey((ItemName)item.Tag))
+                if (StartingItems.ContainsKey((ItemName)item.Tag))
                 {
                     var itemName = (ItemName)item.Tag;
                     var region = StartingItems[itemName];
@@ -175,15 +178,39 @@ namespace TrackOMatic
             public List<int> helm_order { get; }
             public List<int> starting_kongs { get; }
             public List<string> starting_keys { get; }
+            public List<string> starting_moves { get; }
+            public List<string> starting_moves_not_hintable { get; }
+            public int starting_moves_woth_count { get; }
             public List<int> level_order { get; }
 
-            public StartingInfo(List<int> krool_order, List<int> helm_order, List<int> starting_kongs, List<string> starting_keys, List<int> level_order)
+            public StartingInfo(List<int> krool_order, List<int> helm_order, List<int> starting_kongs, List<string> starting_keys, List<int> level_order, List<string> starting_moves, List<string> starting_moves_not_hintable, int starting_moves_woth_count)
             {
                 this.krool_order = krool_order;
                 this.helm_order = helm_order;
                 this.starting_kongs = starting_kongs;
                 this.starting_keys = starting_keys;
                 this.level_order = level_order;
+                this.starting_moves = starting_moves;
+                this.starting_moves_not_hintable = starting_moves_not_hintable;
+                this.starting_moves_woth_count = starting_moves_woth_count;
+            }
+        }
+
+        private void ReadStartingMoves(List<string> starting_moves, RegionName regionToPlace = RegionName.START)
+        {
+            var slams = 0;
+            for(int i = 0; i < starting_moves.Count; ++i)
+            {
+                var itemString = starting_moves[i];
+                if(itemString == "Progressive Slam")
+                {
+                    slams++;
+                    itemString = itemString + " " + slams.ToString();
+                }
+                if (JSONKeyMappings.RANDO_NAME_TO_ITEM_NAME.ContainsKey(itemString))
+                {
+                    StartingItems[JSONKeyMappings.RANDO_NAME_TO_ITEM_NAME[itemString]] = regionToPlace;
+                }
             }
         }
 
@@ -191,6 +218,9 @@ namespace TrackOMatic
         {
             StartingInfo info = System.Text.Json.JsonSerializer.Deserialize<StartingInfo>(JSONString);
             ReadKongsAndKeys(info);
+            if (info.starting_moves != null) ReadStartingMoves(info.starting_moves);
+            if (info.starting_moves_not_hintable != null) ReadStartingMoves(info.starting_moves_not_hintable, RegionName.UNHINTABLE_MOVES);
+            MainWindow.Regions[RegionName.START].AddRequiredCheckTotal(info.starting_moves_woth_count);
             ReadStartingItemsIntoUI();
             ReadHelmAndKRoolOrder(info);
             ReadLevelOrder(info);
@@ -201,12 +231,12 @@ namespace TrackOMatic
             foreach (var kongIndex in info.starting_kongs)
             {
                 var kongItem = JSONKeyMappings.KONGS[kongIndex];
-                StartingItems.Add(kongItem, RegionName.START);
+                StartingItems.Add(kongItem, RegionName.UNHINTABLE_MOVES);
             }
             foreach (var keyString in info.starting_keys)
             {
                 var key = JSONKeyMappings.ITEM_MAP[keyString];
-                StartingItems.Add(key, RegionName.START);
+                StartingItems.Add(key, RegionName.UNHINTABLE_MOVES);
             }
         }
 
@@ -346,6 +376,7 @@ namespace TrackOMatic
                     ProcessVials(info.vial_colors, grid);
                 }
             }
+            MainWindow.Regions[RegionName.START].SpoilerSettings = settings;
             //jetpac goes into isles, and we want to make sure it stays sorted so you can't metagame that an unsorted vial at the end of DK Isles is jetpac
             ProcessVials(Isles_Vials, MainWindow.Regions[RegionName.DK_ISLES].RegionGrid);
             return settings;
