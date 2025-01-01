@@ -199,14 +199,15 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition Height="0*"/>
                             </Grid.RowDefinitions>
-                            <Grid Name="StartRegion" Grid.Row="0"  Margin="1" Background="{StaticResource RegionBG}">
+                            <Grid Name="UnhintableMovesRegion" Grid.Row="5"  Margin="1" Background="{StaticResource RegionBG}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1.5*"/>
                                     <ColumnDefinition Width="3.3*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Grid Name="StartImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}" Margin="0">
+                                <Grid Name="UnhintableMovesImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}" Margin="0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition/>
@@ -218,10 +219,42 @@
                                         <ColumnDefinition Width=".1*"/>
                                         <ColumnDefinition Width=".3*"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="StartPicture" Source="images\dk64\start.png" Grid.RowSpan="2" Grid.ColumnSpan="4" Margin="10" />
                                 </Grid>
-                                <local:RegionGrid  x:Name="StartRegionGrid" Margin="3" Grid.Column="1" Tag="{x:Static local:RegionName.START}"/>
+                                <local:RegionGrid  x:Name="UnhintableMovesRegionGrid" Margin="3" Grid.Column="1" Tag="{x:Static local:RegionName.UNHINTABLE_MOVES}"/>
+                            </Grid>
+                            <Grid Name="StartRegion" Grid.Row="0" Margin="1" Background="{StaticResource RegionBG}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="3.3*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Name="StartImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height=".1*"/>
+                                        <RowDefinition Height=".75*"/>
+                                        <RowDefinition Height=".25*"/>
+                                        <RowDefinition Height=".75*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height=".1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3.5*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width=".1*"/>
+                                        <ColumnDefinition Width=".3*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image x:Name="StartPicture" Source="Images\dk64\start.png" Grid.RowSpan="6" Grid.ColumnSpan="5" Margin="10"/>
+
+                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
+                                        <TextBlock x:Name="StartTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                    </Viewbox>
+                                    <Viewbox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Right">
+                                        <TextBlock x:Name="StartPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                    </Viewbox>
+                                </Grid>
+                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3"  x:Name="StartRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.START}"/>
                             </Grid>
                             <Grid Name="Level1" Grid.Row="1"  Margin="1" Background="{StaticResource RegionBG}">
                                 <Grid.ColumnDefinitions>
