@@ -19,6 +19,7 @@ namespace TrackOMatic
         public DataSaver(MainWindow mainWindow)
         {
             MainWindow = mainWindow;
+            savedProgress = new SavedProgress();
         }
 
         public void LoadProgress(object Sender, RoutedEventArgs e)
@@ -59,7 +60,7 @@ namespace TrackOMatic
             }
         }
 
-        public void Save()
+        public void Save(string filePath = "autosave.json")
         {
             if (savedProgress == null) return;
             FindSavedHints();
@@ -68,12 +69,7 @@ namespace TrackOMatic
             savedProgress.HelmDoorImageIndexes = MainWindow.HelmDoorHints.GetImageIndexes();
             savedProgress.HelmDoorCounts = MainWindow.HelmDoorHints.GetItemCounts();
             var JSONString = JsonConvert.SerializeObject(savedProgress);
-            var tempPath = "autosave_temp.json";
-            var filePath = "autosave.json";
-            File.WriteAllText(tempPath, JSONString);
-            if (File.Exists(filePath)) File.Delete(filePath);
-            File.Move(tempPath, filePath);
-            File.Delete(tempPath);
+            File.WriteAllText(filePath, JSONString);
         }
 
         private Item FindMatchingItem(ItemName toFind)
@@ -140,14 +136,14 @@ namespace TrackOMatic
             else savedProgress.SavedItems.Add(itemName, savedItem);
         }
 
-        private void ReadSavedDataFromFile(string filePath)
+        public void ReadSavedDataFromFile(string filePath)
         {
             if (!File.Exists(filePath)) return;
             try
             {
                 var jsonString = File.ReadAllText(filePath);
                 SavedProgress savedData = JsonConvert.DeserializeObject<SavedProgress>(jsonString);
-                if (savedData.SpoilerLogName == savedProgress.SpoilerLogName) savedProgress = savedData;
+                savedProgress = savedData;
                 ReadSavedProgress();
             }
             catch (Exception e)
@@ -155,6 +151,8 @@ namespace TrackOMatic
                 Console.WriteLine(e);
             }
         }
+
+        /*
 
         private void CheckForAutosave()
         {
@@ -167,5 +165,6 @@ namespace TrackOMatic
             savedProgress = new SavedProgress(fileName);
             CheckForAutosave();
         }
+        */
     }
 }

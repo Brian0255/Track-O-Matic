@@ -4,7 +4,6 @@ namespace TrackOMatic
 {
     public class SavedProgress
     {
-        public string SpoilerLogName { get; }
         public Dictionary<ItemName, SavedItem> SavedItems { get; }
         public Dictionary<RegionName, string> SavedGBCounts { get; set; }
         public Dictionary<RegionName, int> BLockerImageIndexes { get; set; }
@@ -12,9 +11,8 @@ namespace TrackOMatic
         public List<string> HelmDoorCounts { get; set; }
         public List<SavedHint> SavedHints { get; }
 
-        public SavedProgress(string spoilerLogName)
+        public SavedProgress()
         {
-            SpoilerLogName = spoilerLogName;
             SavedItems = new();
             SavedHints = new();
             SavedGBCounts = new();
