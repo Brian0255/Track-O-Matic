@@ -135,6 +135,7 @@ namespace TrackOMatic
             Star.Visibility = newVisibility;
             if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
                 mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
+            if (Region != null) Region.UpdateRequiredChecksTotal();
         }
 
         public void SetRegion(Region newRegion)
@@ -298,7 +299,6 @@ namespace TrackOMatic
             {
                 mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
             }
-            if (Region != null) Region.UpdateRequiredChecksTotal();
             PerformSave();
         }
 
