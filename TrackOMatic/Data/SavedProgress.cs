@@ -10,6 +10,7 @@ namespace TrackOMatic
         public List<int> HelmDoorImageIndexes { get; set; }
         public List<string> HelmDoorCounts { get; set; }
         public List<SavedHint> SavedHints { get; }
+        public string spoilerPath { get; set; }
 
         public SavedProgress()
         {
@@ -19,6 +20,7 @@ namespace TrackOMatic
             BLockerImageIndexes = new();
             HelmDoorImageIndexes = new();
             HelmDoorCounts = new();
+            spoilerPath = "";
         }
     }
 }
