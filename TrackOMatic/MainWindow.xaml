@@ -38,6 +38,8 @@
                 <MenuItem Header="Open Spoiler Log" StaysOpenOnClick="True"  Click="OpenSpoiler"/>
                 <MenuItem Header="Reset Size" StaysOpenOnClick="True"  Click="ResetSize"/>
                 <MenuItem Header="Reset Tracker" StaysOpenOnClick="True"  Click="OnReset"/>
+                <MenuItem Header="Save Data" StaysOpenOnClick="True"  Click="OnSave"/>
+                <MenuItem Header="Load Data" StaysOpenOnClick="True"  Click="OnLoad"/>
             </MenuItem>
             <MenuItem Header="Toggles" Focusable="False">
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>

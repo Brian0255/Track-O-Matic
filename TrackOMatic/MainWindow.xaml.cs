@@ -456,7 +456,6 @@ namespace TrackOMatic
             foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
             if (SpoilerSettings.Empty()) InitRegionsFromEmptySpoiler();
             if (BroadcastView != null) BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
-            DataSaver.InitSavedDataFromSpoiler(fileName);
             HitListHintManager.InitializeFromSpoiler(SpoilerParser.StartingItems, SpoilerParser.TrainingItems);
             foreach (var entry in ITEM_TO_BACKGROUND_IMAGE) entry.Key.InitHoverPoints();
         }
@@ -569,6 +568,41 @@ namespace TrackOMatic
         private void OnReset(object sender, RoutedEventArgs e)
         {
             Reset();
+        }
+
+        private void OnSave(object sender, RoutedEventArgs e)
+        {
+            var saveDialog = new SaveFileDialog
+            {
+                RestoreDirectory = false,
+                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                Title = "Save Data",
+                Filter = "JSON Files (*.json)|*.json"
+            };
+            if (saveDialog.ShowDialog() == true)
+            {
+                var filePath = saveDialog.FileName;
+                DataSaver.Save(filePath);
+            }
+        }
+
+
+        private void OnLoad(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                RestoreDirectory = false,
+                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                Title = "Load Data",
+                Filter = "JSON Files (*.json)|*.json"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var filePath = openFileDialog.FileName;
+                Reset();
+                DataSaver.ReadSavedDataFromFile(filePath);
+            }
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
