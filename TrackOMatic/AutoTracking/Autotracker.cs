@@ -209,9 +209,9 @@ namespace TrackOMatic
                     Application.Current.Dispatcher.Invoke(() => {
                         SetRegionLighting?.Invoke(CurrentRegion, false);
                     });
-                    previousRegion = CurrentRegion;
-                    CurrentRegion = newRegion;
                 }
+                previousRegion = CurrentRegion;
+                CurrentRegion = newRegion;
             }
         }
 

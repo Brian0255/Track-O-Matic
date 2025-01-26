@@ -1287,6 +1287,12 @@
     <Resource Include="Images\dk64\blankkey.png" />
     <Resource Include="Images\dk64\colored_bananas.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\hint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\hint.png" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>

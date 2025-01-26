@@ -126,6 +126,7 @@
         <local:SelectableHintItem x:Name="unknown_key"  HintItemImage="{DynamicResource unknown_key_bw}" Grid.Row="5" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.UNKNOWN_KEY}"/>
         <local:SelectableHintItem x:Name="nintendo_coin"  HintItemImage="{DynamicResource nintendo_coin_bw}" Grid.Row="5" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.NINTENDO_COIN}"/>
         <local:SelectableHintItem x:Name="rareware_coin"  HintItemImage="{DynamicResource rareware_coin_bw}" Grid.Row="5" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.RAREWARE_COIN}"/>
+        <local:SelectableHintItem x:Name="hint"  HintItemImage="{DynamicResource hint_bw}" Grid.Row="5" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HINT}"/>
         <!--Shopkeepers-->
         <local:SelectableHintItem x:Name="cranky"  HintItemImage="{DynamicResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>
         <local:SelectableHintItem x:Name="candy"  HintItemImage="{DynamicResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>

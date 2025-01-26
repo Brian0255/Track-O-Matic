@@ -360,6 +360,8 @@
         TINY_ISLES_MEDAL,
         CHUNKY_ISLES_MEDAL,
 
+        HINT,
+
         NONE
     }
 }

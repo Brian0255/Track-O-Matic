@@ -143,6 +143,8 @@
     <Image x:Key="madjack" Source="Images\dk64\madjack.png" x:Shared="false"/>
     <Image x:Key="kutout" Source="Images\dk64\kutout.png" x:Shared="false"/>
 
+    <Image x:Key="hint" Source="Images\dk64\hint.png" x:Shared="false"/>
+
     <!--Black&White-->
     <Image x:Key="potion_dk_bw" Source="Images\bw\yellow_vial.png" x:Shared="false"/>
     <Image x:Key="potion_diddy_bw" Source="Images\bw\red_vial.png" x:Shared="false"/>
@@ -243,5 +245,7 @@
 
     <Image x:Key="homing_scope_bw" Source="Images\bw\homingscope.png" x:Shared="false"/>
     <Image x:Key="camera_shockwave_bw" Source="Images\bw\filmwave.png" x:Shared="false"/>
+
+    <Image x:Key="hint_bw" Source="Images\bw\hint.png" x:Shared="false"/>
 
 </ResourceDictionary>
