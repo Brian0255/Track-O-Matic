@@ -135,8 +135,8 @@ namespace TrackOMatic
                     var itemName = (ItemName)item.Tag;
                     var region = StartingItems[itemName];
                     MainWindow.Regions[region].RegionGrid.Add_Item(item);
-                    MainWindow.DataSaver.AddSavedItem(new SavedItem(itemName,  region, item.Star.Visibility, true, 1.0));
-                    MainWindow.DataSaver.Save();
+                    //MainWindow.DataSaver.AddSavedItem(new SavedItem(itemName,  region, item.Star.Visibility, true, 1.0));
+                    //MainWindow.DataSaver.Save();
 
                     item.ItemImage = (Image)MainWindow.FindResource(itemName.ToString().ToLower());
                 }
