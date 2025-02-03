@@ -21,7 +21,7 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Margin="10,0,0,0" FontSize="18" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center" Padding="0,0,0,2"/>
+                    <TextBlock Grid.Column="0" Margin="10,0,0,0" FontSize="18" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center" Padding="0,0,0,2"/>
                     <Image Name="FilterButton" Grid.Column="1" Source="../Images/dk64/filter_empty.png" HorizontalAlignment="Center" Margin="2,2,2,3" MouseDown="FilterButton_MouseDown" Cursor="Hand" Visibility="Hidden"/>
                     <Image Name="SortButton" Grid.Column="2" Source="../Images/dk64/sort.png" HorizontalAlignment="Center" Margin="2,2,2,3" MouseDown="SortButton_MouseDown" Cursor="Hand" Visibility="Hidden"/>
                 </Grid>

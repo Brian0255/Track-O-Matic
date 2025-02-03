@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
         <Viewbox Name="CountViewbox" Grid.Row="1" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="2">
             <Grid Background="{Binding BGColor}">
-                <TextBlock Margin="3,-1,2,0" x:Name="count" Text="{Binding Text}" Foreground="#FFFFFF" FontFamily="{StaticResource DK64Font}" />
+                <TextBlock Margin="3,-1,2,0" x:Name="count" Text="{Binding Text}" Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" />
             </Grid>
         </Viewbox>
         <Image Source="{Binding ImageSource}" x:Name="image" Margin="2" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"

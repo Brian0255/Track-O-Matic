@@ -250,10 +250,10 @@
                                     <Image x:Name="StartPicture" Source="Images\dk64\start.png" Grid.RowSpan="6" Grid.ColumnSpan="5" Margin="10"/>
 
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="StartTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="StartTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="StartPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="StartPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3"  x:Name="StartRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.START}"/>
@@ -286,10 +286,10 @@
 
                                     <local:LevelOrderNumber x:Name="Level1Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level1TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level1TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level1Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level1Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid Margin="3"  x:Name="Level1RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.JUNGLE_JAPES}"/>
@@ -321,10 +321,10 @@
 
                                     <local:LevelOrderNumber x:Name="Level2Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level2TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level2TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level2Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level2Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid Margin="3"  x:Name="Level2RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.ANGRY_AZTEC}"/>
@@ -357,10 +357,10 @@
 
                                     <local:LevelOrderNumber x:Name="Level3Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level3TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level3TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level3Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level3Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid Margin="3"  x:Name="Level3RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.FRANTIC_FACTORY}"/>
@@ -393,10 +393,10 @@
 
                                     <local:LevelOrderNumber x:Name="Level4Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level4TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level4TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level4Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level4Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3" x:Name="Level4RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.GLOOMY_GALLEON}"/>
@@ -436,10 +436,10 @@
                                     <Image x:Name="DKIslesPicture" Source="Images\dk64\dk_isles.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="0,15,0,0"/>
 
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="DKIslesTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="DKIslesTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="DKIslesPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="DKIslesPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3"  x:Name="DKIslesRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.DK_ISLES}"/>
@@ -471,10 +471,10 @@
 
                                     <local:LevelOrderNumber x:Name="Level5Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level5TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level5TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level5Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level5Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid Margin="3" x:Name="Level5RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.FUNGI_FOREST}"/>
@@ -507,10 +507,10 @@
 
                                     <local:LevelOrderNumber x:Name="Level6Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level6TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level6TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level6Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level6Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid Margin="3"  x:Name="Level6RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.CRYSTAL_CAVES}"/>
@@ -543,10 +543,10 @@
 
                                     <local:LevelOrderNumber x:Name="Level7Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level7TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level7TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level7Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="Level7Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid  Margin="3" x:Name="Level7RegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.CREEPY_CASTLE}"/>
@@ -579,10 +579,10 @@
 
                                     <local:LevelOrderNumber x:Name="Level8Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
                                     <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="HideoutHelmTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{StaticResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="HideoutHelmTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
                                     </Viewbox>
                                     <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="HideoutHelmPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{StaticResource DK64Font}" Text="323" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="HideoutHelmPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
                                     </Viewbox>
                                 </Grid>
                                 <local:RegionGrid  Margin="3" x:Name="HideoutHelmRegionGrid" Grid.Column="1" Tag="{x:Static local:RegionName.HIDEOUT_HELM}"/>
@@ -654,7 +654,7 @@
                             
                             <Viewbox Grid.Column="1" HorizontalAlignment="Left" Margin="0">
                                 <Border Background="{StaticResource VeryDark}" Padding="0,0,0,1">
-                                    <TextBlock Margin="0,-2,3,-1" x:Name="ItemsToNextHint" Text="0" VerticalAlignment="Center" FontSize="20"  Foreground="#FFFFFF" FontFamily="{StaticResource DK64Font}" Visibility="Visible"/>
+                                    <TextBlock Margin="0,-2,3,-1" x:Name="ItemsToNextHint" Text="0" VerticalAlignment="Center" FontSize="20"  Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" Visibility="Visible"/>
                                 </Border>
                             </Viewbox>
                         </Grid>
@@ -716,80 +716,80 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Kong 1 -->
-                    <local:Item x:Name="dk" ItemImage="{StaticResource donkey_bw}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY}"/>
-                    <local:Item x:Name="dk_gun"  ItemImage="{StaticResource coconut_gun_bw}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
-                    <local:Item x:Name="dk_inst"  ItemImage="{StaticResource bongo_blast_bw}" Grid.Row="0" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
-                    <local:Item x:Name="dk_move"   ItemImage="{StaticResource gorilla_grab_bw}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
-                    <local:Item x:Name="dk_barrel"  ItemImage="{StaticResource strong_kong_bw}" Grid.Row="0" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
-                    <local:Item x:Name="dk_pad"  ItemImage="{StaticResource baboon_blast_bw}" Grid.Row="0" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
+                    <local:Item x:Name="dk" ItemImage="{DynamicResource donkey_bw}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY}"/>
+                    <local:Item x:Name="dk_gun"  ItemImage="{DynamicResource coconut_gun_bw}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
+                    <local:Item x:Name="dk_inst"  ItemImage="{DynamicResource bongo_blast_bw}" Grid.Row="0" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
+                    <local:Item x:Name="dk_move"   ItemImage="{DynamicResource gorilla_grab_bw}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
+                    <local:Item x:Name="dk_barrel"  ItemImage="{DynamicResource strong_kong_bw}" Grid.Row="0" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
+                    <local:Item x:Name="dk_pad"  ItemImage="{DynamicResource baboon_blast_bw}" Grid.Row="0" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource donkey}"  Grid.Row="0" Grid.Column="0" Panel.ZIndex="-1" Visibility="Collapsed" Tag="{x:Static local:ItemName.DONKEY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource coconut_gun}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource bongo_blast}"  Grid.Row="0" Grid.Column="2" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource gorilla_grab}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource strong_kong}"  Grid.Row="0" Grid.Column="4" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource baboon_blast}"  Grid.Row="0" Grid.Column="5" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource donkey}"  Grid.Row="0" Grid.Column="0" Panel.ZIndex="-1" Visibility="Collapsed" Tag="{x:Static local:ItemName.DONKEY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource coconut_gun}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource bongo_blast}"  Grid.Row="0" Grid.Column="2" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource gorilla_grab}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource strong_kong}"  Grid.Row="0" Grid.Column="4" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource baboon_blast}"  Grid.Row="0" Grid.Column="5" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
 
 
                     <!-- Kong 2 -->
-                    <local:Item x:Name="diddy"  ItemImage="{StaticResource diddy_bw}"   Grid.Row="1" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIDDY}"/>
-                    <local:Item x:Name="diddy_gun"  ItemImage="{StaticResource peanut_popguns_bw}" Grid.Row="1" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
-                    <local:Item x:Name="diddy_inst"  ItemImage="{StaticResource guitar_gazump_bw}" Grid.Row="1" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
-                    <local:Item x:Name="diddy_move"   ItemImage="{StaticResource chimpy_charge_bw}" Grid.Row="1" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
-                    <local:Item x:Name="diddy_barrel"  ItemImage="{StaticResource rocketbarrel_boost_bw}" Grid.Row="1" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
-                    <local:Item x:Name="diddy_pad"  ItemImage="{StaticResource simian_spring_bw}" Grid.Row="1" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
+                    <local:Item x:Name="diddy"  ItemImage="{DynamicResource diddy_bw}"   Grid.Row="1" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIDDY}"/>
+                    <local:Item x:Name="diddy_gun"  ItemImage="{DynamicResource peanut_popguns_bw}" Grid.Row="1" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
+                    <local:Item x:Name="diddy_inst"  ItemImage="{DynamicResource guitar_gazump_bw}" Grid.Row="1" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
+                    <local:Item x:Name="diddy_move"   ItemImage="{DynamicResource chimpy_charge_bw}" Grid.Row="1" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
+                    <local:Item x:Name="diddy_barrel"  ItemImage="{DynamicResource rocketbarrel_boost_bw}" Grid.Row="1" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
+                    <local:Item x:Name="diddy_pad"  ItemImage="{DynamicResource simian_spring_bw}" Grid.Row="1" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource diddy}"    Grid.Row="1" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIDDY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource peanut_popguns}"    Grid.Row="1" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource guitar_gazump}"    Grid.Row="1" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource chimpy_charge}"    Grid.Row="1" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource rocketbarrel_boost}"    Grid.Row="1" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource simian_spring}"    Grid.Row="1" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource diddy}"    Grid.Row="1" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIDDY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource peanut_popguns}"    Grid.Row="1" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource guitar_gazump}"    Grid.Row="1" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource chimpy_charge}"    Grid.Row="1" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource rocketbarrel_boost}"    Grid.Row="1" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource simian_spring}"    Grid.Row="1" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
 
                     <!-- Kong 3 -->
-                    <local:Item x:Name="lanky"  ItemImage="{StaticResource lanky_bw}"   Grid.Row="2" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.LANKY}"/>
-                    <local:Item x:Name="lanky_gun"  ItemImage="{StaticResource grape_shooter_bw}" Grid.Row="2" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
-                    <local:Item x:Name="lanky_inst"  ItemImage="{StaticResource trombone_tremor_bw}" Grid.Row="2" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
-                    <local:Item x:Name="lanky_move"   ItemImage="{StaticResource orangstand_bw}" Grid.Row="2" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
-                    <local:Item x:Name="lanky_barrel"  ItemImage="{StaticResource orangstand_sprint_bw}" Grid.Row="2" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
-                    <local:Item x:Name="lanky_pad"  ItemImage="{StaticResource baboon_balloon_bw}" Grid.Row="2" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
+                    <local:Item x:Name="lanky"  ItemImage="{DynamicResource lanky_bw}"   Grid.Row="2" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.LANKY}"/>
+                    <local:Item x:Name="lanky_gun"  ItemImage="{DynamicResource grape_shooter_bw}" Grid.Row="2" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
+                    <local:Item x:Name="lanky_inst"  ItemImage="{DynamicResource trombone_tremor_bw}" Grid.Row="2" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
+                    <local:Item x:Name="lanky_move"   ItemImage="{DynamicResource orangstand_bw}" Grid.Row="2" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
+                    <local:Item x:Name="lanky_barrel"  ItemImage="{DynamicResource orangstand_sprint_bw}" Grid.Row="2" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
+                    <local:Item x:Name="lanky_pad"  ItemImage="{DynamicResource baboon_balloon_bw}" Grid.Row="2" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource lanky}"    Grid.Row="2" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.LANKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource grape_shooter}"    Grid.Row="2" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource trombone_tremor}"    Grid.Row="2" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource orangstand}"    Grid.Row="2" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource orangstand_sprint}"    Grid.Row="2" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource baboon_balloon}"    Grid.Row="2" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource lanky}"    Grid.Row="2" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.LANKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource grape_shooter}"    Grid.Row="2" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource trombone_tremor}"    Grid.Row="2" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource orangstand}"    Grid.Row="2" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource orangstand_sprint}"    Grid.Row="2" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource baboon_balloon}"    Grid.Row="2" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
 
                     <!-- Kong 4 -->
-                    <local:Item x:Name="tiny"  ItemImage="{StaticResource tiny_bw}"   Grid.Row="3" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TINY}"/>
-                    <local:Item x:Name="tiny_gun"  ItemImage="{StaticResource feather_bow_bw}" Grid.Row="3" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
-                    <local:Item x:Name="tiny_inst"  ItemImage="{StaticResource saxophone_slam_bw}" Grid.Row="3" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
-                    <local:Item x:Name="tiny_move"   ItemImage="{StaticResource ponytail_twirl_bw}" Grid.Row="3" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
-                    <local:Item x:Name="tiny_barrel"  ItemImage="{StaticResource mini_monkey_bw}" Grid.Row="3" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
-                    <local:Item x:Name="tiny_pad"  ItemImage="{StaticResource monkeyport_bw}" Grid.Row="3" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
+                    <local:Item x:Name="tiny"  ItemImage="{DynamicResource tiny_bw}"   Grid.Row="3" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TINY}"/>
+                    <local:Item x:Name="tiny_gun"  ItemImage="{DynamicResource feather_bow_bw}" Grid.Row="3" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
+                    <local:Item x:Name="tiny_inst"  ItemImage="{DynamicResource saxophone_slam_bw}" Grid.Row="3" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
+                    <local:Item x:Name="tiny_move"   ItemImage="{DynamicResource ponytail_twirl_bw}" Grid.Row="3" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
+                    <local:Item x:Name="tiny_barrel"  ItemImage="{DynamicResource mini_monkey_bw}" Grid.Row="3" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
+                    <local:Item x:Name="tiny_pad"  ItemImage="{DynamicResource monkeyport_bw}" Grid.Row="3" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource tiny}"    Grid.Row="3" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TINY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource feather_bow}"    Grid.Row="3" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource saxophone_slam}"    Grid.Row="3" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource ponytail_twirl}"    Grid.Row="3" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource mini_monkey}"    Grid.Row="3" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource monkeyport}"    Grid.Row="3" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource tiny}"    Grid.Row="3" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TINY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource feather_bow}"    Grid.Row="3" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource saxophone_slam}"    Grid.Row="3" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource ponytail_twirl}"    Grid.Row="3" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource mini_monkey}"    Grid.Row="3" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource monkeyport}"    Grid.Row="3" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
 
                     <!-- Kong 5 -->
-                    <local:Item x:Name="chunky"  ItemImage="{StaticResource chunky_bw}"   Grid.Row="4" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHUNKY}"/>
-                    <local:Item x:Name="chunky_gun"  ItemImage="{StaticResource pineapple_launcher_bw}" Grid.Row="4" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
-                    <local:Item x:Name="chunky_inst"  ItemImage="{StaticResource triangle_trample_bw}" Grid.Row="4" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
-                    <local:Item x:Name="chunky_move"   ItemImage="{StaticResource primate_punch_bw}" Grid.Row="4" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
-                    <local:Item x:Name="chunky_barrel"  ItemImage="{StaticResource hunky_chunky_bw}" Grid.Row="4" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
-                    <local:Item x:Name="chunky_pad"  ItemImage="{StaticResource gorilla_gone_bw}" Grid.Row="4" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
+                    <local:Item x:Name="chunky"  ItemImage="{DynamicResource chunky_bw}"   Grid.Row="4" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHUNKY}"/>
+                    <local:Item x:Name="chunky_gun"  ItemImage="{DynamicResource pineapple_launcher_bw}" Grid.Row="4" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
+                    <local:Item x:Name="chunky_inst"  ItemImage="{DynamicResource triangle_trample_bw}" Grid.Row="4" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
+                    <local:Item x:Name="chunky_move"   ItemImage="{DynamicResource primate_punch_bw}" Grid.Row="4" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
+                    <local:Item x:Name="chunky_barrel"  ItemImage="{DynamicResource hunky_chunky_bw}" Grid.Row="4" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
+                    <local:Item x:Name="chunky_pad"  ItemImage="{DynamicResource gorilla_gone_bw}" Grid.Row="4" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource chunky}"    Grid.Row="4" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CHUNKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource pineapple_launcher}"    Grid.Row="4" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource triangle_trample}"    Grid.Row="4" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource primate_punch}"    Grid.Row="4" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource hunky_chunky}"    Grid.Row="4" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource gorilla_gone}"    Grid.Row="4" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource chunky}"    Grid.Row="4" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CHUNKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource pineapple_launcher}"    Grid.Row="4" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource triangle_trample}"    Grid.Row="4" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource primate_punch}"    Grid.Row="4" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource hunky_chunky}"    Grid.Row="4" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource gorilla_gone}"    Grid.Row="4" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
 
                     <!--Blueprints-->
                     <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="DonkeyBPs" ImageSource="Images\bw\dk_bp.png" Text="0" Grid.Row="0" Grid.Column="6"/>
@@ -799,69 +799,69 @@
                     <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="ChunkyBPs" ImageSource="Images\bw\chunky_bp.png" Text="0" Grid.Row="4" Grid.Column="6"/>
 
                     <!-- Keys-->
-                    <local:Item x:Name="key_1"  ItemImage="{StaticResource key_1_bw}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_1}"/>
-                    <local:Item x:Name="key_2"  ItemImage="{StaticResource key_2_bw}" Grid.Row="0" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_2}"/>
-                    <local:Item x:Name="key_3"  ItemImage="{StaticResource key_3_bw}" Grid.Row="0" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_3}"/>
-                    <local:Item x:Name="key_4"  ItemImage="{StaticResource key_4_bw}" Grid.Row="0" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_4}"/>
-                    <local:Item x:Name="key_5"  ItemImage="{StaticResource key_5_bw}" Grid.Row="1" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_5}"/>
-                    <local:Item x:Name="key_6"  ItemImage="{StaticResource key_6_bw}" Grid.Row="1" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_6}"/>
-                    <local:Item x:Name="key_7"  ItemImage="{StaticResource key_7_bw}" Grid.Row="1" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_7}"/>
-                    <local:Item x:Name="key_8"  ItemImage="{StaticResource key_8_bw}" Grid.Row="1" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_8}"/>
+                    <local:Item x:Name="key_1"  ItemImage="{DynamicResource key_1_bw}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_1}"/>
+                    <local:Item x:Name="key_2"  ItemImage="{DynamicResource key_2_bw}" Grid.Row="0" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_2}"/>
+                    <local:Item x:Name="key_3"  ItemImage="{DynamicResource key_3_bw}" Grid.Row="0" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_3}"/>
+                    <local:Item x:Name="key_4"  ItemImage="{DynamicResource key_4_bw}" Grid.Row="0" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_4}"/>
+                    <local:Item x:Name="key_5"  ItemImage="{DynamicResource key_5_bw}" Grid.Row="1" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_5}"/>
+                    <local:Item x:Name="key_6"  ItemImage="{DynamicResource key_6_bw}" Grid.Row="1" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_6}"/>
+                    <local:Item x:Name="key_7"  ItemImage="{DynamicResource key_7_bw}" Grid.Row="1" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_7}"/>
+                    <local:Item x:Name="key_8"  ItemImage="{DynamicResource key_8_bw}" Grid.Row="1" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_8}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource key_1}"     Grid.Row="0" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_1}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource key_2}"     Grid.Row="0" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_2}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource key_3}"     Grid.Row="0" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_3}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource key_4}"     Grid.Row="0" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_4}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource key_5}"     Grid.Row="1" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_5}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource key_6}"     Grid.Row="1" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_6}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource key_7}"     Grid.Row="1" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_7}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource key_8}"     Grid.Row="1" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_8}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_1}"     Grid.Row="0" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_1}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_2}"     Grid.Row="0" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_2}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_3}"     Grid.Row="0" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_3}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_4}"     Grid.Row="0" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_4}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_5}"     Grid.Row="1" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_5}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_6}"     Grid.Row="1" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_6}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_7}"     Grid.Row="1" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_7}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_8}"     Grid.Row="1" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.KEY_8}"/>
 
                     <!--Slams/Bean-->
-                    <local:Item x:Name="progressive_slam_1"  ItemImage="{StaticResource progressive_slam_1_bw}" Grid.Row="2" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
-                    <local:Item x:Name="progressive_slam_2"  ItemImage="{StaticResource progressive_slam_2_bw}"  Grid.Row="2" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
-                    <local:Item x:Name="progressive_slam_3"  ItemImage="{StaticResource progressive_slam_3_bw}" Grid.Row="2" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
-                    <local:Item x:Name="bean"  ItemImage="{StaticResource bean_bw}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
+                    <local:Item x:Name="progressive_slam_1"  ItemImage="{DynamicResource progressive_slam_1_bw}" Grid.Row="2" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
+                    <local:Item x:Name="progressive_slam_2"  ItemImage="{DynamicResource progressive_slam_2_bw}"  Grid.Row="2" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
+                    <local:Item x:Name="progressive_slam_3"  ItemImage="{DynamicResource progressive_slam_3_bw}" Grid.Row="2" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
+                    <local:Item x:Name="bean"  ItemImage="{DynamicResource bean_bw}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource progressive_slam_1}"     Grid.Row="2" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource progressive_slam_2}"     Grid.Row="2" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource progressive_slam_3}"     Grid.Row="2" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource bean}"     Grid.Row="2" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BEAN}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_1}"     Grid.Row="2" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_2}"     Grid.Row="2" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_3}"     Grid.Row="2" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource bean}"     Grid.Row="2" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BEAN}"/>
 
                     <!--Training Moves-->
-                    <local:Item x:Name="diving"  ItemImage="{StaticResource diving_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
-                    <local:Item x:Name="orange_throwing"  ItemImage="{StaticResource orange_throwing_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-                    <local:Item x:Name="barrel_throwing"  ItemImage="{StaticResource barrel_throwing_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-                    <local:Item x:Name="vine_swinging"  ItemImage="{StaticResource vine_swinging_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
-                    <local:Item x:Name="climbing"  ItemImage="{StaticResource climbing_bw}" Grid.Row="4" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CLIMBING}"/>
+                    <local:Item x:Name="diving"  ItemImage="{DynamicResource diving_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
+                    <local:Item x:Name="orange_throwing"  ItemImage="{DynamicResource orange_throwing_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+                    <local:Item x:Name="barrel_throwing"  ItemImage="{DynamicResource barrel_throwing_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+                    <local:Item x:Name="vine_swinging"  ItemImage="{DynamicResource vine_swinging_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                    <local:Item x:Name="climbing"  ItemImage="{DynamicResource climbing_bw}" Grid.Row="4" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CLIMBING}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource diving}"     Grid.Row="4" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIVING}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource orange_throwing}"     Grid.Row="4" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource barrel_throwing}"     Grid.Row="4" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource vine_swinging}"     Grid.Row="4" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource climbing}"     Grid.Row="4" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CLIMBING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource diving}"     Grid.Row="4" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DIVING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource orange_throwing}"     Grid.Row="4" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource barrel_throwing}"     Grid.Row="4" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource vine_swinging}"     Grid.Row="4" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource climbing}"     Grid.Row="4" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CLIMBING}"/>
                     
                     <!--Sniper/Homing/Camera/Shockwave-->
-                    <local:Item x:Name="sniper_scope"  ItemImage="{StaticResource sniper_scope_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                    <local:Item x:Name="homing_ammo"  ItemImage="{StaticResource homing_ammo_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
-                    <local:Item x:Name="fairy_camera"  ItemImage="{StaticResource fairy_camera_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
-                    <local:Item x:Name="shockwave"  ItemImage="{StaticResource shockwave_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+                    <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+                    <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+                    <local:Item x:Name="fairy_camera"  ItemImage="{DynamicResource fairy_camera_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
+                    <local:Item x:Name="shockwave"  ItemImage="{DynamicResource shockwave_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource sniper_scope}"     Grid.Row="3" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource homing_ammo}"     Grid.Row="3" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource fairy_camera}"     Grid.Row="3" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource shockwave}"     Grid.Row="3" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource sniper_scope}"     Grid.Row="3" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource homing_ammo}"     Grid.Row="3" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource fairy_camera}"     Grid.Row="3" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource shockwave}"     Grid.Row="3" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
                     
                     <!--Shopkeepers-->
-                    <local:Item x:Name="cranky"  ItemImage="{StaticResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>
-                    <local:Item x:Name="candy"  ItemImage="{StaticResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
-                    <local:Item x:Name="funky"  ItemImage="{StaticResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
-                    <local:Item x:Name="snide"  ItemImage="{StaticResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
+                    <local:Item x:Name="cranky"  ItemImage="{DynamicResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>
+                    <local:Item x:Name="candy"  ItemImage="{DynamicResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
+                    <local:Item x:Name="funky"  ItemImage="{DynamicResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
+                    <local:Item x:Name="snide"  ItemImage="{DynamicResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
 
-                    <local:ItemBackground BackgroundItemImage="{StaticResource cranky}"     Grid.Row="0" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CRANKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource candy}"     Grid.Row="1" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CANDY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource funky}"     Grid.Row="2" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FUNKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{StaticResource snide}"     Grid.Row="3" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIDE}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource cranky}"     Grid.Row="0" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CRANKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource candy}"     Grid.Row="1" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CANDY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource funky}"     Grid.Row="2" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FUNKY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource snide}"     Grid.Row="3" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIDE}"/>
                 </Grid>
                 <!--K.Rool/Helm order-->
                 <Grid Grid.Row="6" >
@@ -925,7 +925,7 @@
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="0.4*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Name="GoalsLabel" Margin="0,0,22,0" Grid.Column="0" FontSize="28" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{StaticResource DK64Font}" Text="GOALS" />
+                    <TextBlock Name="GoalsLabel" Margin="0,0,22,0" Grid.Column="0" FontSize="28" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="GOALS" />
                     <Grid Grid.Column="1" >
                         <Grid.RowDefinitions>
                             <RowDefinition/>

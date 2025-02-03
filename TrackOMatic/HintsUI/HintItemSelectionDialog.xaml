@@ -38,109 +38,109 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <!-- KRool VS.-->
-        <local:SelectableHintItem x:Name="donkey_krool" HintItemImage="{StaticResource donkey_krool}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY_KROOL}"/>
-        <local:SelectableHintItem x:Name="diddy_krool"  HintItemImage="{StaticResource diddy_krool}" Grid.Row="1" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIDDY_KROOL}"/>
-        <local:SelectableHintItem x:Name="lanky_krool"  HintItemImage="{StaticResource lanky_krool}" Grid.Row="2" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.LANKY_KROOL}"/>
-        <local:SelectableHintItem x:Name="tiny_krool"   HintItemImage="{StaticResource tiny_krool}" Grid.Row="3" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TINY_KROOL}"/>
-        <local:SelectableHintItem x:Name="chunky_krool"  HintItemImage="{StaticResource chunky_krool}" Grid.Row="4" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHUNKY_KROOL}"/>
+        <local:SelectableHintItem x:Name="donkey_krool" HintItemImage="{DynamicResource donkey_krool}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY_KROOL}"/>
+        <local:SelectableHintItem x:Name="diddy_krool"  HintItemImage="{DynamicResource diddy_krool}" Grid.Row="1" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIDDY_KROOL}"/>
+        <local:SelectableHintItem x:Name="lanky_krool"  HintItemImage="{DynamicResource lanky_krool}" Grid.Row="2" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.LANKY_KROOL}"/>
+        <local:SelectableHintItem x:Name="tiny_krool"   HintItemImage="{DynamicResource tiny_krool}" Grid.Row="3" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TINY_KROOL}"/>
+        <local:SelectableHintItem x:Name="chunky_krool"  HintItemImage="{DynamicResource chunky_krool}" Grid.Row="4" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHUNKY_KROOL}"/>
 
         <!-- Kong 1 -->
-        <local:SelectableHintItem x:Name="dk" HintItemImage="{StaticResource donkey_bw}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY}"/>
-        <local:SelectableHintItem x:Name="dk_gun"  HintItemImage="{StaticResource coconut_gun_bw}" Grid.Row="0" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
-        <local:SelectableHintItem x:Name="dk_inst"  HintItemImage="{StaticResource bongo_blast_bw}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
-        <local:SelectableHintItem x:Name="dk_move"   HintItemImage="{StaticResource gorilla_grab_bw}" Grid.Row="0" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
-        <local:SelectableHintItem x:Name="dk_barrel"  HintItemImage="{StaticResource strong_kong_bw}" Grid.Row="0" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
-        <local:SelectableHintItem x:Name="dk_pad"  HintItemImage="{StaticResource baboon_blast_bw}" Grid.Row="0" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
+        <local:SelectableHintItem x:Name="dk" HintItemImage="{DynamicResource donkey_bw}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DONKEY}"/>
+        <local:SelectableHintItem x:Name="dk_gun"  HintItemImage="{DynamicResource coconut_gun_bw}" Grid.Row="0" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.COCONUT_GUN}"/>
+        <local:SelectableHintItem x:Name="dk_inst"  HintItemImage="{DynamicResource bongo_blast_bw}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BONGO_BLAST}"/>
+        <local:SelectableHintItem x:Name="dk_move"   HintItemImage="{DynamicResource gorilla_grab_bw}" Grid.Row="0" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GRAB}"/>
+        <local:SelectableHintItem x:Name="dk_barrel"  HintItemImage="{DynamicResource strong_kong_bw}" Grid.Row="0" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.STRONG_KONG}"/>
+        <local:SelectableHintItem x:Name="dk_pad"  HintItemImage="{DynamicResource baboon_blast_bw}" Grid.Row="0" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BLAST}"/>
 
         <!-- Kong 2 -->
-        <local:SelectableHintItem x:Name="diddy"  HintItemImage="{StaticResource diddy_bw}"   Grid.Row="1" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIDDY}"/>
-        <local:SelectableHintItem x:Name="diddy_gun"  HintItemImage="{StaticResource peanut_popguns_bw}" Grid.Row="1" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
-        <local:SelectableHintItem x:Name="diddy_inst"  HintItemImage="{StaticResource guitar_gazump_bw}" Grid.Row="1" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
-        <local:SelectableHintItem x:Name="diddy_move"   HintItemImage="{StaticResource chimpy_charge_bw}" Grid.Row="1" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
-        <local:SelectableHintItem x:Name="diddy_barrel"  HintItemImage="{StaticResource rocketbarrel_boost_bw}" Grid.Row="1" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
-        <local:SelectableHintItem x:Name="diddy_pad"  HintItemImage="{StaticResource simian_spring_bw}" Grid.Row="1" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
+        <local:SelectableHintItem x:Name="diddy"  HintItemImage="{DynamicResource diddy_bw}"   Grid.Row="1" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIDDY}"/>
+        <local:SelectableHintItem x:Name="diddy_gun"  HintItemImage="{DynamicResource peanut_popguns_bw}" Grid.Row="1" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PEANUT_POPGUNS}"/>
+        <local:SelectableHintItem x:Name="diddy_inst"  HintItemImage="{DynamicResource guitar_gazump_bw}" Grid.Row="1" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GUITAR_GAZUMP}"/>
+        <local:SelectableHintItem x:Name="diddy_move"   HintItemImage="{DynamicResource chimpy_charge_bw}" Grid.Row="1" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHIMPY_CHARGE}"/>
+        <local:SelectableHintItem x:Name="diddy_barrel"  HintItemImage="{DynamicResource rocketbarrel_boost_bw}" Grid.Row="1" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ROCKETBARREL_BOOST}"/>
+        <local:SelectableHintItem x:Name="diddy_pad"  HintItemImage="{DynamicResource simian_spring_bw}" Grid.Row="1" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SIMIAN_SPRING}"/>
 
         <!-- Kong 3 -->
-        <local:SelectableHintItem x:Name="lanky"  HintItemImage="{StaticResource lanky_bw}"   Grid.Row="2" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.LANKY}"/>
-        <local:SelectableHintItem x:Name="lanky_gun"  HintItemImage="{StaticResource grape_shooter_bw}" Grid.Row="2" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
-        <local:SelectableHintItem x:Name="lanky_inst"  HintItemImage="{StaticResource trombone_tremor_bw}" Grid.Row="2" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
-        <local:SelectableHintItem x:Name="lanky_move"   HintItemImage="{StaticResource orangstand_bw}" Grid.Row="2" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
-        <local:SelectableHintItem x:Name="lanky_barrel"  HintItemImage="{StaticResource orangstand_sprint_bw}" Grid.Row="2" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
-        <local:SelectableHintItem x:Name="lanky_pad"  HintItemImage="{StaticResource baboon_balloon_bw}" Grid.Row="2" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
+        <local:SelectableHintItem x:Name="lanky"  HintItemImage="{DynamicResource lanky_bw}"   Grid.Row="2" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.LANKY}"/>
+        <local:SelectableHintItem x:Name="lanky_gun"  HintItemImage="{DynamicResource grape_shooter_bw}" Grid.Row="2" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GRAPE_SHOOTER}"/>
+        <local:SelectableHintItem x:Name="lanky_inst"  HintItemImage="{DynamicResource trombone_tremor_bw}" Grid.Row="2" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TROMBONE_TREMOR}"/>
+        <local:SelectableHintItem x:Name="lanky_move"   HintItemImage="{DynamicResource orangstand_bw}" Grid.Row="2" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND}"/>
+        <local:SelectableHintItem x:Name="lanky_barrel"  HintItemImage="{DynamicResource orangstand_sprint_bw}" Grid.Row="2" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGSTAND_SPRINT}"/>
+        <local:SelectableHintItem x:Name="lanky_pad"  HintItemImage="{DynamicResource baboon_balloon_bw}" Grid.Row="2" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BABOON_BALLOON}"/>
 
         <!-- Kong 4 -->
-        <local:SelectableHintItem x:Name="tiny"  HintItemImage="{StaticResource tiny_bw}"   Grid.Row="3" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TINY}"/>
-        <local:SelectableHintItem x:Name="tiny_gun"  HintItemImage="{StaticResource feather_bow_bw}" Grid.Row="3" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
-        <local:SelectableHintItem x:Name="tiny_inst"  HintItemImage="{StaticResource saxophone_slam_bw}" Grid.Row="3" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
-        <local:SelectableHintItem x:Name="tiny_move"   HintItemImage="{StaticResource ponytail_twirl_bw}" Grid.Row="3" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
-        <local:SelectableHintItem x:Name="tiny_barrel"  HintItemImage="{StaticResource mini_monkey_bw}" Grid.Row="3" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
-        <local:SelectableHintItem x:Name="tiny_pad"  HintItemImage="{StaticResource monkeyport_bw}" Grid.Row="3" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
+        <local:SelectableHintItem x:Name="tiny"  HintItemImage="{DynamicResource tiny_bw}"   Grid.Row="3" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TINY}"/>
+        <local:SelectableHintItem x:Name="tiny_gun"  HintItemImage="{DynamicResource feather_bow_bw}" Grid.Row="3" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FEATHER_BOW}"/>
+        <local:SelectableHintItem x:Name="tiny_inst"  HintItemImage="{DynamicResource saxophone_slam_bw}" Grid.Row="3" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SAXOPHONE_SLAM}"/>
+        <local:SelectableHintItem x:Name="tiny_move"   HintItemImage="{DynamicResource ponytail_twirl_bw}" Grid.Row="3" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PONYTAIL_TWIRL}"/>
+        <local:SelectableHintItem x:Name="tiny_barrel"  HintItemImage="{DynamicResource mini_monkey_bw}" Grid.Row="3" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MINI_MONKEY}"/>
+        <local:SelectableHintItem x:Name="tiny_pad"  HintItemImage="{DynamicResource monkeyport_bw}" Grid.Row="3" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MONKEYPORT}"/>
 
         <!-- Kong 5 -->
-        <local:SelectableHintItem x:Name="chunky"  HintItemImage="{StaticResource chunky_bw}"   Grid.Row="4" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHUNKY}"/>
-        <local:SelectableHintItem x:Name="chunky_gun"  HintItemImage="{StaticResource pineapple_launcher_bw}" Grid.Row="4" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
-        <local:SelectableHintItem x:Name="chunky_inst"  HintItemImage="{StaticResource triangle_trample_bw}" Grid.Row="4" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
-        <local:SelectableHintItem x:Name="chunky_move"   HintItemImage="{StaticResource primate_punch_bw}" Grid.Row="4" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
-        <local:SelectableHintItem x:Name="chunky_barrel"  HintItemImage="{StaticResource hunky_chunky_bw}" Grid.Row="4" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
-        <local:SelectableHintItem x:Name="chunky_pad"  HintItemImage="{StaticResource gorilla_gone_bw}" Grid.Row="4" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
+        <local:SelectableHintItem x:Name="chunky"  HintItemImage="{DynamicResource chunky_bw}"   Grid.Row="4" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CHUNKY}"/>
+        <local:SelectableHintItem x:Name="chunky_gun"  HintItemImage="{DynamicResource pineapple_launcher_bw}" Grid.Row="4" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PINEAPPLE_LAUNCHER}"/>
+        <local:SelectableHintItem x:Name="chunky_inst"  HintItemImage="{DynamicResource triangle_trample_bw}" Grid.Row="4" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.TRIANGLE_TRAMPLE}"/>
+        <local:SelectableHintItem x:Name="chunky_move"   HintItemImage="{DynamicResource primate_punch_bw}" Grid.Row="4" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PRIMATE_PUNCH}"/>
+        <local:SelectableHintItem x:Name="chunky_barrel"  HintItemImage="{DynamicResource hunky_chunky_bw}" Grid.Row="4" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HUNKY_CHUNKY}"/>
+        <local:SelectableHintItem x:Name="chunky_pad"  HintItemImage="{DynamicResource gorilla_gone_bw}" Grid.Row="4" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.GORILLA_GONE}"/>
 
         <!-- Keys-->
-        <local:SelectableHintItem x:Name="key_1"  HintItemImage="{StaticResource key_1_bw}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_1}"/>
-        <local:SelectableHintItem x:Name="key_2"  HintItemImage="{StaticResource key_2_bw}" Grid.Row="0" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_2}"/>
-        <local:SelectableHintItem x:Name="key_3"  HintItemImage="{StaticResource key_3_bw}" Grid.Row="0" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_3}"/>
-        <local:SelectableHintItem x:Name="key_4"  HintItemImage="{StaticResource key_4_bw}" Grid.Row="0" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_4}"/>
-        <local:SelectableHintItem x:Name="key_5"  HintItemImage="{StaticResource key_5_bw}" Grid.Row="1" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_5}"/>
-        <local:SelectableHintItem x:Name="key_6"  HintItemImage="{StaticResource key_6_bw}" Grid.Row="1" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_6}"/>
-        <local:SelectableHintItem x:Name="key_7"  HintItemImage="{StaticResource key_7_bw}" Grid.Row="1" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_7}"/>
-        <local:SelectableHintItem x:Name="key_8"  HintItemImage="{StaticResource key_8_bw}" Grid.Row="1" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_8}"/>
+        <local:SelectableHintItem x:Name="key_1"  HintItemImage="{DynamicResource key_1_bw}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_1}"/>
+        <local:SelectableHintItem x:Name="key_2"  HintItemImage="{DynamicResource key_2_bw}" Grid.Row="0" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_2}"/>
+        <local:SelectableHintItem x:Name="key_3"  HintItemImage="{DynamicResource key_3_bw}" Grid.Row="0" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_3}"/>
+        <local:SelectableHintItem x:Name="key_4"  HintItemImage="{DynamicResource key_4_bw}" Grid.Row="0" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_4}"/>
+        <local:SelectableHintItem x:Name="key_5"  HintItemImage="{DynamicResource key_5_bw}" Grid.Row="1" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_5}"/>
+        <local:SelectableHintItem x:Name="key_6"  HintItemImage="{DynamicResource key_6_bw}" Grid.Row="1" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_6}"/>
+        <local:SelectableHintItem x:Name="key_7"  HintItemImage="{DynamicResource key_7_bw}" Grid.Row="1" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_7}"/>
+        <local:SelectableHintItem x:Name="key_8"  HintItemImage="{DynamicResource key_8_bw}" Grid.Row="1" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KEY_8}"/>
 
         <!--Slams/Bean-->
-        <local:SelectableHintItem x:Name="progressive_slam_1"  HintItemImage="{StaticResource progressive_slam_1_bw}" Grid.Row="2" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
-        <local:SelectableHintItem x:Name="progressive_slam_2"  HintItemImage="{StaticResource progressive_slam_2_bw}"  Grid.Row="2" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
-        <local:SelectableHintItem x:Name="progressive_slam_3"  HintItemImage="{StaticResource progressive_slam_3_bw}" Grid.Row="2" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
-        <local:SelectableHintItem x:Name="bean"  HintItemImage="{StaticResource bean_bw}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
+        <local:SelectableHintItem x:Name="progressive_slam_1"  HintItemImage="{DynamicResource progressive_slam_1_bw}" Grid.Row="2" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_1}"/>
+        <local:SelectableHintItem x:Name="progressive_slam_2"  HintItemImage="{DynamicResource progressive_slam_2_bw}"  Grid.Row="2" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_2}"/>
+        <local:SelectableHintItem x:Name="progressive_slam_3"  HintItemImage="{DynamicResource progressive_slam_3_bw}" Grid.Row="2" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PROGRESSIVE_SLAM_3}"/>
+        <local:SelectableHintItem x:Name="bean"  HintItemImage="{DynamicResource bean_bw}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BEAN}"/>
 
         <!--Training Moves-->
-        <local:SelectableHintItem x:Name="diving"  HintItemImage="{StaticResource diving_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
-        <local:SelectableHintItem x:Name="orange_throwing"  HintItemImage="{StaticResource orange_throwing_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
-        <local:SelectableHintItem x:Name="barrel_throwing"  HintItemImage="{StaticResource barrel_throwing_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
-        <local:SelectableHintItem x:Name="vine_swinging"  HintItemImage="{StaticResource vine_swinging_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
-        <local:SelectableHintItem x:Name="climbing"  HintItemImage="{StaticResource climbing}" Grid.Row="4" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CLIMBING}"/>
+        <local:SelectableHintItem x:Name="diving"  HintItemImage="{DynamicResource diving_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DIVING}"/>
+        <local:SelectableHintItem x:Name="orange_throwing"  HintItemImage="{DynamicResource orange_throwing_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ORANGE_THROWING}"/>
+        <local:SelectableHintItem x:Name="barrel_throwing"  HintItemImage="{DynamicResource barrel_throwing_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.BARREL_THROWING}"/>
+        <local:SelectableHintItem x:Name="vine_swinging"  HintItemImage="{DynamicResource vine_swinging_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.VINE_SWINGING}"/>
+        <local:SelectableHintItem x:Name="climbing"  HintItemImage="{DynamicResource climbing}" Grid.Row="4" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CLIMBING}"/>
         
         <!--Sniper/Homing/Camera/Shockwave-->
-        <local:SelectableHintItem x:Name="sniper_scope"  HintItemImage="{StaticResource sniper_scope_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
-        <local:SelectableHintItem x:Name="homing_ammo"  HintItemImage="{StaticResource homing_ammo_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
-        <local:SelectableHintItem x:Name="fairy_camera"  HintItemImage="{StaticResource fairy_camera_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
-        <local:SelectableHintItem x:Name="shockwave"  HintItemImage="{StaticResource shockwave_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
+        <local:SelectableHintItem x:Name="sniper_scope"  HintItemImage="{DynamicResource sniper_scope_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIPER_SCOPE}"/>
+        <local:SelectableHintItem x:Name="homing_ammo"  HintItemImage="{DynamicResource homing_ammo_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HOMING_AMMO}"/>
+        <local:SelectableHintItem x:Name="fairy_camera"  HintItemImage="{DynamicResource fairy_camera_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FAIRY_CAMERA}"/>
+        <local:SelectableHintItem x:Name="shockwave"  HintItemImage="{DynamicResource shockwave_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SHOCKWAVE}"/>
 
         <!--Vials-->
-        <local:SelectableHintItem x:Name="kong_family"  HintItemImage="{StaticResource kong_family_bw}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KONG_FAMILY}"/>
-        <local:SelectableHintItem x:Name="potion_shared"  HintItemImage="{StaticResource potion_shared_bw}" Grid.Row="5" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_SHARED}"/>
-        <local:SelectableHintItem x:Name="potion_dk"  HintItemImage="{StaticResource potion_dk_bw}" Grid.Row="5" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DK}"/>
-        <local:SelectableHintItem x:Name="potion_diddy"  HintItemImage="{StaticResource potion_diddy_bw}" Grid.Row="5" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DIDDY}"/>
-        <local:SelectableHintItem x:Name="potion_lanky"  HintItemImage="{StaticResource potion_lanky_bw}" Grid.Row="5" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_LANKY}"/>
-        <local:SelectableHintItem x:Name="potion_tiny"  HintItemImage="{StaticResource potion_tiny_bw}" Grid.Row="5" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_TINY}"/>
-        <local:SelectableHintItem x:Name="potion_chunky"  HintItemImage="{StaticResource potion_chunky_bw}" Grid.Row="5" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_CHUNKY}"/>
+        <local:SelectableHintItem x:Name="kong_family"  HintItemImage="{DynamicResource kong_family_bw}" Grid.Row="5" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KONG_FAMILY}"/>
+        <local:SelectableHintItem x:Name="potion_shared"  HintItemImage="{DynamicResource potion_shared_bw}" Grid.Row="5" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_SHARED}"/>
+        <local:SelectableHintItem x:Name="potion_dk"  HintItemImage="{DynamicResource potion_dk_bw}" Grid.Row="5" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DK}"/>
+        <local:SelectableHintItem x:Name="potion_diddy"  HintItemImage="{DynamicResource potion_diddy_bw}" Grid.Row="5" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_DIDDY}"/>
+        <local:SelectableHintItem x:Name="potion_lanky"  HintItemImage="{DynamicResource potion_lanky_bw}" Grid.Row="5" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_LANKY}"/>
+        <local:SelectableHintItem x:Name="potion_tiny"  HintItemImage="{DynamicResource potion_tiny_bw}" Grid.Row="5" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_TINY}"/>
+        <local:SelectableHintItem x:Name="potion_chunky"  HintItemImage="{DynamicResource potion_chunky_bw}" Grid.Row="5" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.POTION_CHUNKY}"/>
 
-        <local:SelectableHintItem x:Name="unknown_vial"  HintItemImage="{StaticResource unknown_vial_bw}" Grid.Row="5" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.UNKNOWN_VIAL}"/>
-        <local:SelectableHintItem x:Name="unknown_key"  HintItemImage="{StaticResource unknown_key_bw}" Grid.Row="5" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.UNKNOWN_KEY}"/>
-        <local:SelectableHintItem x:Name="nintendo_coin"  HintItemImage="{StaticResource nintendo_coin_bw}" Grid.Row="5" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.NINTENDO_COIN}"/>
-        <local:SelectableHintItem x:Name="rareware_coin"  HintItemImage="{StaticResource rareware_coin_bw}" Grid.Row="5" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.RAREWARE_COIN}"/>
-        <local:SelectableHintItem x:Name="hint"  HintItemImage="{StaticResource hint_bw}" Grid.Row="5" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HINT}"/>
+        <local:SelectableHintItem x:Name="unknown_vial"  HintItemImage="{DynamicResource unknown_vial_bw}" Grid.Row="5" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static local:ItemName.UNKNOWN_VIAL}"/>
+        <local:SelectableHintItem x:Name="unknown_key"  HintItemImage="{DynamicResource unknown_key_bw}" Grid.Row="5" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static local:ItemName.UNKNOWN_KEY}"/>
+        <local:SelectableHintItem x:Name="nintendo_coin"  HintItemImage="{DynamicResource nintendo_coin_bw}" Grid.Row="5" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static local:ItemName.NINTENDO_COIN}"/>
+        <local:SelectableHintItem x:Name="rareware_coin"  HintItemImage="{DynamicResource rareware_coin_bw}" Grid.Row="5" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static local:ItemName.RAREWARE_COIN}"/>
+        <local:SelectableHintItem x:Name="hint"  HintItemImage="{DynamicResource hint_bw}" Grid.Row="5" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.HINT}"/>
         <!--Shopkeepers-->
-        <local:SelectableHintItem x:Name="cranky"  HintItemImage="{StaticResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>
-        <local:SelectableHintItem x:Name="candy"  HintItemImage="{StaticResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
-        <local:SelectableHintItem x:Name="funky"  HintItemImage="{StaticResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
-        <local:SelectableHintItem x:Name="snide"  HintItemImage="{StaticResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
+        <local:SelectableHintItem x:Name="cranky"  HintItemImage="{DynamicResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CRANKY}"/>
+        <local:SelectableHintItem x:Name="candy"  HintItemImage="{DynamicResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
+        <local:SelectableHintItem x:Name="funky"  HintItemImage="{DynamicResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
+        <local:SelectableHintItem x:Name="snide"  HintItemImage="{DynamicResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
         
         <!--Bosses-->
-        <local:SelectableHintItem x:Name="army"  HintItemImage="{StaticResource army}" Grid.Row="6" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ARMY}"/>
-        <local:SelectableHintItem x:Name="doga"  HintItemImage="{StaticResource doga}" Grid.Row="6" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DOGA}"/>
-        <local:SelectableHintItem x:Name="madjack"  HintItemImage="{StaticResource madjack}" Grid.Row="6" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MADJACK}"/>
-        <local:SelectableHintItem x:Name="pufftoss"  HintItemImage="{StaticResource pufftoss}" Grid.Row="6" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PUFFTOSS}"/>
-        <local:SelectableHintItem x:Name="doga2"  HintItemImage="{StaticResource doga2}" Grid.Row="6" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DOGA2}"/>
-        <local:SelectableHintItem x:Name="army2"  HintItemImage="{StaticResource army2}" Grid.Row="6" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ARMY2}"/>
-        <local:SelectableHintItem x:Name="kutout"  HintItemImage="{StaticResource kutout}" Grid.Row="6" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KUTOUT}"/>
+        <local:SelectableHintItem x:Name="army"  HintItemImage="{DynamicResource army}" Grid.Row="6" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ARMY}"/>
+        <local:SelectableHintItem x:Name="doga"  HintItemImage="{DynamicResource doga}" Grid.Row="6" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DOGA}"/>
+        <local:SelectableHintItem x:Name="madjack"  HintItemImage="{DynamicResource madjack}" Grid.Row="6" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.MADJACK}"/>
+        <local:SelectableHintItem x:Name="pufftoss"  HintItemImage="{DynamicResource pufftoss}" Grid.Row="6" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.PUFFTOSS}"/>
+        <local:SelectableHintItem x:Name="doga2"  HintItemImage="{DynamicResource doga2}" Grid.Row="6" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DOGA2}"/>
+        <local:SelectableHintItem x:Name="army2"  HintItemImage="{DynamicResource army2}" Grid.Row="6" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.ARMY2}"/>
+        <local:SelectableHintItem x:Name="kutout"  HintItemImage="{DynamicResource kutout}" Grid.Row="6" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.KUTOUT}"/>
         
         <Border  Cursor="Hand" MouseDown="TextBlock_MouseDown" Margin="5,18,5,5" CornerRadius="5" Grid.Row="7" Grid.RowSpan="2" Grid.ColumnSpan="13" Background="{StaticResource RegionImageBG }" BorderBrush="Black" BorderThickness="0.5">
         <TextBlock  Margin="0" Grid.Row="6" Grid.ColumnSpan="12" Text="Done" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
