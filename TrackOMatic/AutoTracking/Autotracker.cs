@@ -13,7 +13,7 @@ using System.Timers;
 
 namespace TrackOMatic
 {
-    public delegate bool ProcessNewItem(ItemName itemName, RegionName regionName, bool hint = false);
+    public delegate bool ProcessNewItem(ItemName itemName, RegionName regionName, bool hint = false, bool newRegion = false);
     public delegate void UpdateCollectible(ItemType collectibleType, int newTotal);
     public delegate void SetRegionLighting(RegionName region, bool lightUp);
     public delegate void SetShopkeepers(bool on);
@@ -46,6 +46,8 @@ namespace TrackOMatic
         private int timeout;
         private bool is64Bit = false;
         private bool spoilerLoaded = false;
+        private bool autosave = false;
+        private int previousMap;
         private static bool attaching = false;
         public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint)
         {
@@ -68,6 +70,7 @@ namespace TrackOMatic
             currentSongName = "";
             currentSongGame = "";
             timer.Start();
+            previousMap = -1;
         }
         private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
         {
@@ -115,6 +118,8 @@ namespace TrackOMatic
             currentSongName = "";
             RandomizerVersion = 0;
             currentSongGame = "";
+            autosave = false;
+            previousMap = -1;
         }
 
         public void ResetChecks()
@@ -210,8 +215,13 @@ namespace TrackOMatic
                         SetRegionLighting?.Invoke(CurrentRegion, false);
                     });
                 }
+                if(previousMap != -1 && area != previousMap)
+                {
+                    autosave = true;
+                }
                 previousRegion = CurrentRegion;
                 CurrentRegion = newRegion;
+                previousMap = area;
             }
         }
 
@@ -384,9 +394,10 @@ namespace TrackOMatic
             }
             if (TrackedAlready[check.ItemName]) return;
             bool success = false;
+            bool newRegion = (CurrentRegion != previousRegion && previousRegion != RegionName.UNKNOWN);
             Application.Current.Dispatcher.Invoke(() =>
             {
-                success = (bool)ProcessNewItem?.Invoke(check.ItemName, regionToUse);
+                success = (bool)ProcessNewItem?.Invoke(check.ItemName, regionToUse, false, autosave);
             });
             TrackedAlready[check.ItemName] = success;
         }
