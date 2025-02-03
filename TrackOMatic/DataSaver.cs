@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Timers;
+using System.Threading;
 
 namespace TrackOMatic
 {
@@ -16,36 +17,17 @@ namespace TrackOMatic
         private SavedProgress savedProgress;
         public MainWindow MainWindow { get; }
 
+        public bool WriteToFile { get; set; }
+
         public DataSaver(MainWindow mainWindow)
         {
             MainWindow = mainWindow;
             savedProgress = new SavedProgress();
         }
 
-        public void LoadProgress(object Sender, RoutedEventArgs e)
+        public void Reset()
         {
-            OpenFileDialog openFileDialog = new()
-            {
-                Filter = "json files (*.json)|*.json"
-            };
-
-            string lastFolderPath = Properties.Settings.Default.LastFolderPath;
-
-            if (!string.IsNullOrEmpty(lastFolderPath))
-            {
-                openFileDialog.InitialDirectory = lastFolderPath;
-            }
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string selectedFilePath = openFileDialog.FileName;
-                string folderPath = Path.GetDirectoryName(selectedFilePath);
-
-                Properties.Settings.Default.LastFolderPath = folderPath;
-                Properties.Settings.Default.Save();
-
-                ReadSavedDataFromFile(selectedFilePath);
-            }
+            savedProgress = new SavedProgress();
         }
 
         private void FindSavedHints()
@@ -60,7 +42,7 @@ namespace TrackOMatic
             }
         }
 
-        public void Save(string filePath = "autosave.json")
+        public void Save(string filePath = "autosave.json", bool writeToFile = true)
         {
             if (savedProgress == null) return;
             FindSavedHints();
@@ -69,7 +51,7 @@ namespace TrackOMatic
             savedProgress.HelmDoorImageIndexes = MainWindow.HelmDoorHints.GetImageIndexes();
             savedProgress.HelmDoorCounts = MainWindow.HelmDoorHints.GetItemCounts();
             var JSONString = JsonConvert.SerializeObject(savedProgress);
-            File.WriteAllText(filePath, JSONString);
+            if(writeToFile) File.WriteAllText(filePath, JSONString);
         }
 
         private Item FindMatchingItem(ItemName toFind)
@@ -95,6 +77,10 @@ namespace TrackOMatic
         private void ReadSavedProgress()
         {
             if (savedProgress == null) return;
+            if(savedProgress.spoilerPath != "" && File.Exists(savedProgress.spoilerPath))
+            {
+                MainWindow.ParseSpoiler(savedProgress.spoilerPath);
+            }
             foreach (var savedItemEntry in savedProgress.SavedItems)
             {
                 var savedItem = savedItemEntry.Value;
@@ -150,6 +136,12 @@ namespace TrackOMatic
             {
                 Console.WriteLine(e);
             }
+        }
+
+        public void setSpoilerPath(string newSpoilerPath)
+        {
+            if (savedProgress == null) return;
+            savedProgress.spoilerPath = newSpoilerPath;
         }
 
         /*

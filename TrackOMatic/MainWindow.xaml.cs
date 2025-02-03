@@ -88,7 +88,6 @@ namespace TrackOMatic
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
 
         private Timer SaveTimer;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -253,7 +252,7 @@ namespace TrackOMatic
             }
         }
 
-        public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false)
+        public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false, bool canAutosave = true)
         {
             if (regionName == RegionName.UNKNOWN) return false;
             if (!ITEM_NAME_TO_ITEM.ContainsKey(itemToProcess)) return false;
@@ -271,7 +270,7 @@ namespace TrackOMatic
             if (item.Parent == ItemGrid) return false;
             if (BroadcastView != null && !hint) BroadcastView.TurnItemOn(itemToProcess);
             DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.ItemImage.Opacity));
-            DataSaver.Save();
+            DataSaver.Save("autosave.json",canAutosave);
             return true;
         }
 
@@ -444,7 +443,7 @@ namespace TrackOMatic
             foreach (var entry in Regions) entry.Value.SetAsEmptySpoiler();
         }
 
-        private void ParseSpoiler(string fileName)
+        public void ParseSpoiler(string fileName)
         {
             SpoilerSettings = SpoilerParser.ParseSpoiler(fileName);
             foreach(var entry in SpoilerParser.StartingItems)
@@ -469,6 +468,7 @@ namespace TrackOMatic
                 {
                     Reset();
                     ParseSpoiler(files[0]);
+                    DataSaver.setSpoilerPath(files[0]);
                 }
             }
         }
@@ -494,6 +494,7 @@ namespace TrackOMatic
                 Properties.Settings.Default.Save();
                 Reset();
                 ParseSpoiler(selectedFilePath);
+                DataSaver.setSpoilerPath(selectedFilePath);
             }
         }
 
@@ -564,6 +565,7 @@ namespace TrackOMatic
             HintHelper.GenerateThresholds();
             SetSong("", "");
             Autotracker.Reset();
+            DataSaver.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)
         {
