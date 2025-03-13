@@ -450,10 +450,16 @@ namespace TrackOMatic
             {
                 if (BroadcastView != null) BroadcastView.TurnItemOn(entry.Key);
             }
-            Autotracker.SetStartingItems(SpoilerParser.StartingItems);
-            Autotracker.SetSpoilerLoaded(fileName);
+            if (!SpoilerSettings.Empty())
+            {
+                Autotracker.SetStartingItems(SpoilerParser.StartingItems);
+                Autotracker.SetSpoilerLoaded(fileName);
+            }
+            else
+            {
+                InitRegionsFromEmptySpoiler();
+            }
             foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
-            if (SpoilerSettings.Empty()) InitRegionsFromEmptySpoiler();
             if (BroadcastView != null) BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
             HitListHintManager.InitializeFromSpoiler(SpoilerParser.StartingItems, SpoilerParser.TrainingItems);
             foreach (var entry in ITEM_TO_BACKGROUND_IMAGE) entry.Key.InitHoverPoints();
