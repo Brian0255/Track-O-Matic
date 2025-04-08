@@ -25,7 +25,7 @@ namespace TrackOMatic
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(filePath);
             uint lowerBound = 0xDFD00000;
             uint upperBound = 0xE01F0000;
-            if(versionInfo.FileMajorPart >= 4)
+            if(versionInfo.FileMajorPart >= 4 && versionInfo.ProductPrivatePart > 5758)
             {
                 lowerBound = 0xFDD00000;
                 upperBound = 0xFE1FFFFF;
