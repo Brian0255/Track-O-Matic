@@ -45,7 +45,7 @@
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
-                <MenuItem Name="SongDisplayOption" Header="Song Display (4.0)" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Click="SongDisplayToggle"/>
+                <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Click="SongDisplayToggle"/>
                 <MenuItem Name="HelmInLevelOrder" Header='Helm in Level Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmInLevelOrder}" Click="HelmInLevelOrder_Click"/>
                 <MenuItem Name="CollectiblesDisplayOption" Header="Collectibles">
                     <MenuItem Name="TotalBPs" Header='Total Blueprints' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TotalBPs}" Click="TotalBPs_Click"/>
@@ -56,7 +56,7 @@
                     <MenuItem Name="HelmOrder" Header='Helm Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmOrder}" Click="KRoolOrder_Click"/>
                 </MenuItem>
                 <MenuItem Name="ProgHintOption" Header="Progressive Hints">
-                    <MenuItem Name="ProgHintShowAmount" Header='Show Amount for Next Hint Pack (4.0)' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ShowAmountForHints}"/>
+                    <MenuItem Name="ProgHintShowAmount" Header='Show Amount for Next Hint Pack' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ShowAmountForHints}"/>
                     <MenuItem Name="SetProgItemTypeAmount" Header='Set Item Type and Amount' StaysOpenOnClick="True" Click="SetProgHintTypeAmount"/>
                 </MenuItem>
             </MenuItem>
@@ -72,16 +72,16 @@
                 <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
                 <MenuItem Name="BroadcastCustomize" Header="Options">
                     <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastHelmKRool}" Click="BroadcastHelmKRoolToggle"/>
-                    <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers (4.0)" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastShopkeepers}" Click="BroadcastShopkeepersToggle"/>
-                    <MenuItem Name="BroadcastSongDisplay" Header="Song Display (4.0)" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastSongDisplay}" Click="BroadcastSongDisplayToggle"/>
+                    <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastShopkeepers}" Click="BroadcastShopkeepersToggle"/>
+                    <MenuItem Name="BroadcastSongDisplay" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastSongDisplay}" Click="BroadcastSongDisplayToggle"/>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Version 2.0.4" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 2.0.5" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition x:Name="HintsColumn" Width="2.25*"/>
+                <ColumnDefinition x:Name="HintsColumn" Width="1.43*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -707,12 +707,12 @@
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Name="ItemsSeperator" Width="1*" />
+                        <ColumnDefinition Name="ItemsSeparator" Width="1*" />
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Name="ShopkeeperColumn" Width="0*" />
+                        <ColumnDefinition Name="ShopkeeperColumn" Width="1*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Kong 1 -->
@@ -1003,7 +1003,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Viewbox HorizontalAlignment="Left"  VerticalAlignment="Center">
-                                <TextBlock x:Name="SongGame" Text="Waiting for DK64R 4.0 ROM to be loaded..." FontWeight="Light"  Foreground="White" FontFamily="Helvetica" VerticalAlignment="Center" FontSize="16" />
+                                <TextBlock x:Name="SongGame" Text="Waiting for DK64R ROM to be loaded..." FontWeight="Light"  Foreground="White" FontFamily="Helvetica" VerticalAlignment="Center" FontSize="16" />
                             </Viewbox>
                             <Viewbox HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center">
                                 <TextBlock x:Name="SongName" Text="" Foreground="White" FontFamily="Helvetica" FontWeight="Medium"  VerticalAlignment="Center" FontSize="16" />
@@ -1014,7 +1014,7 @@
             </Grid>
             <Grid Grid.Column="1" Margin="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Name="MultipathColumns" Width="3*"/>
+                    <ColumnDefinition Name="MultipathColumns" Width="2*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" Name="DirectItemHintGrid">
@@ -1034,54 +1034,40 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Name="DirectHintsThirdMain" Width="1*"/>
+                    <ColumnDefinition Name="DirectHintsThirdMain" Width="0*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Name="DirectHintsCol0" Grid.Column="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
-                        <RowDefinition Name="DirectHintsCol0LastRow" Height="0*"/>
+                        <RowDefinition Name="DirectHintsCol0LastRow" Height="1*"/>
                     </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="3" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
-                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="3" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
-                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="3" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
-
-                </Grid>
+                        <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="3" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
+                        <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="3" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
+                        <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="3" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
+                        <local:HintPanel Grid.Row="3" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="3" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
+                    </Grid>
                 <Grid Name="DirectHintsCol1" Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
-                        <RowDefinition Name="DirectHintsCol1LastRow" Height="0*"/>
+                        <RowDefinition Name="DirectHintsCol1LastRow" Height="1*"/>
                     </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="3" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
-                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="3" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
-                    <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="3" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
-                </Grid>
+                        <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="3" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
+                        <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="3" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
+                        <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="3" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
+                        <local:HintPanel Grid.Row="3" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="3" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
+                    </Grid>
                 <Grid Name="DirectHintsCol2" Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="3" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
-                    <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="3" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
-                        <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="HelmPanel" Margin="3" Heading="HELM" LineColor="#b580ff" RegionName="HIDEOUT_HELM">
-                            <local:HintPanel.Style>
-                                <Style TargetType="{x:Type local:HintPanel}">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="false">
-                                            <Setter Property="Visibility" Value="Hidden" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </local:HintPanel.Style>
-                        </local:HintPanel>
+                    
+                        
                     </Grid>
             </Grid>
             <Grid Grid.Column="0" Name="MultipathGrid">
@@ -1101,15 +1087,16 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Name="MultipathColumn2" Width="1*"/>
+                        <ColumnDefinition Name="MultipathColumn2" Width="0*"/>
                     </Grid.ColumnDefinitions>
                 <local:HintPanel HintType="PATH" x:Name="PathsPanel" Margin="3" Grid.Column="0" Heading="PATHS" LineColor="#dba512"  />
                     <Grid Name="MultipathColumn1" Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Name="MultipathColumn1Row0" Height="0"/>
+                            <RowDefinition Name="MultipathColumn1Row0" Height="1.6*"/>
                             <RowDefinition Height="1.25*"/>
                             <RowDefinition Height="3*"/>
                         </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" HintType="FOOLISH_REGION" x:Name="FoolishPanel" Margin="3" Heading="FOOLISH REGIONS" LineColor="#e02f2f"  />
                         <local:HintPanel Grid.Row="1" HintType="KONGS" x:Name="KongsPanel" Margin="3" Heading="KONGS" LineColor="#ff59e1"  />
                         <local:HintPanel Grid.Row="2" HintType="WAY_OF_THE_HOARD" x:Name="WotHPanel" Margin="3" Heading="WAY OF THE HOARD" LineColor="#2652ff"  />
                     </Grid>
@@ -1118,13 +1105,13 @@
                             <RowDefinition Height="5*"/>
                             <RowDefinition Height="3*"/>
                         </Grid.RowDefinitions>
-                        <local:HintPanel Grid.Row="0" HintType="FOOLISH_REGION" x:Name="FoolishPanel" Margin="3" Heading="FOOLISH REGIONS" LineColor="#e02f2f"  />
-                        <local:HintPanel Grid.Row="1" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="3" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
+                        
+                        
                     </Grid>
                 </Grid>
             <Grid Name="UnhintedColumn" Grid.Column="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Name="OptionalPotionsRow" Height="0*"/>
+                        <RowDefinition Name="OptionalPotionsRow" Height="2.54*"/>
                         <RowDefinition Height="5*"/>
                         <RowDefinition Height="2.6*"/>
                         <RowDefinition>
@@ -1140,6 +1127,22 @@
                             </RowDefinition.Style>
                         </RowDefinition>
                     </Grid.RowDefinitions>
+                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="HelmPanel" Margin="3" Heading="HELM" LineColor="#b580ff" RegionName="HIDEOUT_HELM">
+                        <local:HintPanel.Style>
+                            <Style TargetType="{x:Type local:HintPanel}">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="false">
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </local:HintPanel.Style>
+                    </local:HintPanel>
+                    <local:HintPanel Grid.Row="0" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="3" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
                     <local:HintPanel Grid.Row="1" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="3" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
                 <local:BLockerPanel x:Name="BLockerHints" Grid.Row="2" Margin="3" Heading="B. LOCKERS" LineColor="#F0F000"/>
                     <local:HelmDoorPanel x:Name="HelmDoorHints" Grid.Row="3" Margin="3" Heading="HELM DOORS" LineColor="#7d3cbd">
