@@ -618,7 +618,7 @@ namespace TrackOMatic
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
-            AutoUpdater.InstalledVersion = new Version("2.0.4");
+            AutoUpdater.InstalledVersion = new Version("2.0.5");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0) return;
@@ -644,7 +644,7 @@ namespace TrackOMatic
             if (currentlyOn == on) return;
             var separatorWidth = on ? 1.0 : 1.25;
             var shopkeeperColumnWidth = on ? 1.0 : 0;
-            ItemsSeperator.Width = new GridLength(separatorWidth, GridUnitType.Star);
+            ItemsSeparator.Width = new GridLength(separatorWidth, GridUnitType.Star);
             ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
         }
 
