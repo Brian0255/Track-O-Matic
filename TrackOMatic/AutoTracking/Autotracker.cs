@@ -234,13 +234,14 @@ namespace TrackOMatic
         {
             uint versionOffset = 0x7FFFF4;
             int version = ReadMemory(versionOffset, 8);
+            /* Unnecessary with 4.0 release
             if (version != RandomizerVersion)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     SetShopkeepers?.Invoke(version >= 4);
                 });
-            }
+            }*/
             RandomizerVersion = version;
         }
 
