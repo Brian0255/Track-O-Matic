@@ -47,6 +47,7 @@
                 <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
                 <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Click="SongDisplayToggle"/>
                 <MenuItem Name="HelmInLevelOrder" Header='Helm in Level Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmInLevelOrder}" Click="HelmInLevelOrder_Click"/>
+                <MenuItem Name="ColorBarrelPadMoves" Header="Colored Barrel &amp; Pad Moves" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ColoredBarrelPadMoves}" Click="ColoredBarrelPadMoves_Click"/>
                 <MenuItem Name="CollectiblesDisplayOption" Header="Collectibles">
                     <MenuItem Name="TotalBPs" Header='Total Blueprints' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TotalBPs}" Click="TotalBPs_Click"/>
                     <MenuItem Name="CompanyCoins" Header='Company Coins' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CompanyCoins}" Click="CompanyCoins_Click"/>
@@ -899,11 +900,11 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
                         <Image x:Name="KRoolLabel" Source="Images\dk64\krool.png" Grid.Column="0" Margin="-1"/>
-                        <local:ProgressiveItem  x:Name="KRoolKong1"  Opacity="1" Grid.Column="2" Margin="1" />
-                        <local:ProgressiveItem x:Name="KRoolKong2" Opacity="1"  Grid.Column="3" Margin="1" />
-                        <local:ProgressiveItem  x:Name="KRoolKong3"  Opacity="1" Grid.Column="4" Margin="1" />
-                        <local:ProgressiveItem x:Name="KRoolKong4" Opacity="1"  Grid.Column="5" Margin="1" />
-                        <local:ProgressiveItem  x:Name="KRoolKong5"  Opacity="1" Grid.Column="6" Margin="1" />
+                        <local:ProgressiveItem  x:Name="BossKong1"  Opacity="1" Grid.Column="2" Margin="1" />
+                        <local:ProgressiveItem x:Name="BossKong2" Opacity="1"  Grid.Column="3" Margin="1" />
+                        <local:ProgressiveItem  x:Name="BossKong3"  Opacity="1" Grid.Column="4" Margin="1" />
+                        <local:ProgressiveItem x:Name="BossKong4" Opacity="1"  Grid.Column="5" Margin="1" />
+                        <local:ProgressiveItem  x:Name="BossKong5"  Opacity="1" Grid.Column="6" Margin="1" />
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="8" Margin="0,-2,0,-2">

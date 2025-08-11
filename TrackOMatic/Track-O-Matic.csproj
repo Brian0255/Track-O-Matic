@@ -153,7 +153,6 @@
     <Compile Include="HintsUI\SelectableHintItem.xaml.cs">
       <DependentUpon>SelectableHintItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ItemBrightnessChanger.cs" />
     <Compile Include="Item.xaml.cs" />
     <Compile Include="ItemBackground.xaml.cs">
       <DependentUpon>ItemBackground.xaml</DependentUpon>
@@ -189,7 +188,15 @@
       <DependentUpon>HintPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="WatermarkTextBox.cs" />
+    <Page Include="ColoredBarrelPadImages.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="BroadcastView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BaseBarrelPadImages.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1293,6 +1300,28 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\bw\hint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dk64\chunkybarrel_c.png" />
+    <Resource Include="Images\dk64\chunkypad_c.png" />
+    <Resource Include="Images\dk64\diddybarrel_c.png" />
+    <Resource Include="Images\dk64\diddypad_c.png" />
+    <Resource Include="Images\dk64\dkbarrel_c.png" />
+    <Resource Include="Images\dk64\dkpad_c.png" />
+    <Resource Include="Images\dk64\lankybarrel_c.png" />
+    <Resource Include="Images\dk64\tinybarrel_c.png" />
+    <Resource Include="Images\dk64\tinypad_c.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bw\chunkybarrel_c.png" />
+    <Resource Include="Images\bw\chunkypad_c.png" />
+    <Resource Include="Images\bw\diddybarrel_c.png" />
+    <Resource Include="Images\bw\diddypad_c.png" />
+    <Resource Include="Images\bw\dkbarrel_c.png" />
+    <Resource Include="Images\bw\dkpad_c.png" />
+    <Resource Include="Images\bw\lankybarrel_c.png" />
+    <Resource Include="Images\bw\tinybarrel_c.png" />
+    <Resource Include="Images\bw\tinypad_c.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
