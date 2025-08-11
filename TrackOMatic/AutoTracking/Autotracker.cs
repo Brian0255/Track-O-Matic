@@ -49,6 +49,7 @@ namespace TrackOMatic
         private bool autosave = false;
         private int previousMap;
         private static bool attaching = false;
+        private uint addressBase;
         public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint)
         {
             CurrentRegion = RegionName.UNKNOWN;
@@ -71,6 +72,7 @@ namespace TrackOMatic
             currentSongGame = "";
             timer.Start();
             previousMap = -1;
+            addressBase = 0x00000000;
         }
         private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
         {
@@ -101,7 +103,7 @@ namespace TrackOMatic
             Checks = new();
             foreach (var offsetInfo in OffsetInfo.OFFSETS)
             {
-                Checks.Add(new AutotrackedCheck(offsetInfo.ItemName, offsetInfo.Offset, offsetInfo.TotalBits, offsetInfo.TargetValue, offsetInfo.Bitmask));
+                Checks.Add(new AutotrackedCheck(offsetInfo.ItemName, offsetInfo.Offset, offsetInfo.TotalBits, offsetInfo.Bitmask, offsetInfo.UsesCountStruct));
                 TrackedAlready[offsetInfo.ItemName] = false;
             }
         }
@@ -199,6 +201,13 @@ namespace TrackOMatic
             });
         }
 
+        private void UpdateAddressBase()
+        {
+            if (RandomizerVersion < 5.0) return;
+            uint countStructAddress = 0x7FFFB8;
+            addressBase = ReadPointer(countStructAddress);
+        }
+
         private void UpdateCurrentRegion()
         {
             uint offset = 0x76A0A8;
@@ -233,16 +242,13 @@ namespace TrackOMatic
         private void CheckVersion()
         {
             uint versionOffset = 0x7FFFF4;
-            int version = ReadMemory(versionOffset, 8);
-            /* Unnecessary with 4.0 release
-            if (version != RandomizerVersion)
+            RandomizerVersion = ReadMemory(versionOffset, 8);
+            var useNewOffsets = (RandomizerVersion >= 5);
+            if (useNewOffsets != OffsetInfo.useNewOffsets)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    SetShopkeepers?.Invoke(version >= 4);
-                });
-            }*/
-            RandomizerVersion = version;
+                OffsetInfo.useNewOffsets = useNewOffsets;
+                InitializeChecks();
+            }
         }
 
         private string ReadAscii(ref uint startAddress)
@@ -289,12 +295,11 @@ namespace TrackOMatic
             if (RandomizerVersion >= 4)
             {
                 uint songPointer = 0x7FFFF0;
-                int songAddr = ReadMemory(songPointer, 32);
+                uint songAddr = ReadPointer(songPointer);
                 if (songAddr == 0x00000000) return;
-                uint actualOffset = (uint)songAddr - 0x80000000;
-                songGame = ReadAscii(ref actualOffset);
-                actualOffset++;
-                songName = ReadAscii(ref actualOffset);
+                songGame = ReadAscii(ref songAddr);
+                songAddr++;
+                songName = ReadAscii(ref songAddr);
             }
             if(songName == "")
             {
@@ -327,36 +332,67 @@ namespace TrackOMatic
             if (!attached) return;
             if (!ProcessConnected()) return;
             CheckVersion();
+            UpdateAddressBase();
             UpdateCurrentRegion();
             UpdateCurrentSong();
             if (CurrentRegion == RegionName.UNKNOWN) return;
             ResetCollectibleAmounts();
+            ReadBlueprintsObtained();
             ReadMemoryForChecks();
             UpdateCollectibles();
             UpdateAmountToNextHint();
         }
 
+        //this is some silly math magic but I trust that it works
+        private int CountBits(int value)
+        {
+            int count = 0;
+            while (value != 0)
+            {
+                value &= (value - 1);
+                count++;
+            }
+            return count;
+        }
+
+        private void ReadBlueprintsObtained()
+        {
+            //To note, BP "turned in" flags still exist and subtract from these set totals after
+            if (RandomizerVersion < 5.0) return;
+            var blueprintKeys = new List<ItemType>() { 
+                ItemType.DONKEY_BLUEPRINT, ItemType.DIDDY_BLUEPRINT, ItemType.LANKY_BLUEPRINT, ItemType.TINY_BLUEPRINT, ItemType.CHUNKY_BLUEPRINT 
+            };
+            for(int i = 0; i < blueprintKeys.Count; i++)
+            {
+                var itemType = blueprintKeys[i];
+                var blueprintBitfield = ReadMemory((uint)(addressBase + i), 8);
+                CollectibleItemAmounts[itemType] = CountBits(blueprintBitfield);
+            }
+        }
         private void ReadMemoryForChecks()
         {
             foreach (var check in Checks)
             {
                 var checkInfo = ImportantCheckList.ITEMS[check.ItemName];
+                uint offset = 0x0000000;
+                if (check.UsesCountStruct) offset = addressBase;
                 var bitMask = check.Bitmask;
+                var isFlag = (bitMask != 0);
                 var isSlam = check.ItemName.ToString().Contains("PROGRESSIVE_SLAM");
                 if (isSlam) bitMask = 0xF;
                 //slams are weird, we instead will use the slam's bitmask as a direct value to check
-                var output = ReadMemory(check.Offset, check.TotalBits, bitMask);
-                var valid = (output == check.Bitmask) || (checkInfo.ItemType == ItemType.GOLDEN_BANANA);
+                var output = ReadMemory(offset + check.Offset, check.TotalBits, bitMask);
+                var valid = (output == check.Bitmask) || (bitMask == 0);
                 if (isSlam) valid = (output >= check.Bitmask);
                 if (!valid) continue;
                 var collectible = CollectibleItemAmounts.ContainsKey(checkInfo.ItemType) ||
                                   TURNED_BLUEPRINT_TO_COLLECTIBLE.ContainsKey(checkInfo.ItemType);
-                if(collectible) ProcessCollectible(output, checkInfo);
+                if(collectible) ProcessCollectible(output, checkInfo, isFlag);
                 else ProcessRegularItem(check);
             }
         }
 
-        private void ProcessCollectible(int output, ImportantCheck checkInfo)
+        private void ProcessCollectible(int output, ImportantCheck checkInfo, bool isFlag)
         {
             var toAdd = output;
             var itemTypeToUse = checkInfo.ItemType;
@@ -364,8 +400,8 @@ namespace TrackOMatic
             {
                 CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] = CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] + 1;
             }
-            //collectibles not gbs are flags, add 1 to their total instead of the bitmask
-            if (checkInfo.ItemType != ItemType.GOLDEN_BANANA)
+            //for flags, add 1 to their total instead of the bitmask
+            if (isFlag)
             {
                 toAdd = 1;
                 if (TURNED_BLUEPRINT_TO_COLLECTIBLE.ContainsKey(checkInfo.ItemType))
@@ -424,31 +460,13 @@ namespace TrackOMatic
                 });
             }
         }
-
-        private int ReadMemory(uint addr, int numOfBits, int bitmask = -1)
+        private int ReadMemory(uint addr, int numOfBits, int bitmask = 0)
         {
-            /* idk why this check even exists in the original code
-            if (!is64Bit)
-            {
-                switch (numOfBits)
-                {
-                    case 8:
-                        return Memory.ReadInt8(EmulatorProcess, startAddress + Memory.Int8AddrFix(addr)) & bitmask;
-                    case 16:
-                        return Memory.ReadInt16(EmulatorProcess, startAddress + Memory.Int16AddrFix(addr)) & bitmask;
-                    case 32:
-                        var stuff = Memory.ReadInt32(EmulatorProcess, startAddress + addr) & bitmask;
-                        return Memory.ReadInt32(EmulatorProcess, startAddress + addr) & bitmask;
-                    default:
-                        return 0;
-                }
-            }
-            */
             int toReturn;
             switch (numOfBits)
             {
                 case 8:
-                    toReturn = Memory.ReadInt8(EmulatorProcess, startAddress + Memory.Int8AddrFix(addr)) & bitmask;
+                    toReturn = Memory.ReadInt8(EmulatorProcess, startAddress + Memory.Int8AddrFix(addr));
                     break;
                 case 16:
                     toReturn = Memory.ReadInt16(EmulatorProcess, startAddress + Memory.Int16AddrFix(addr));
@@ -459,11 +477,18 @@ namespace TrackOMatic
                 default:
                     return 0;
             }
-            if (bitmask != -1)
+            if (bitmask != 0)
             {
                 toReturn &= bitmask;
             }
             return toReturn;
+        }
+        private uint ReadPointer(uint pointerAddr)
+        {
+            uint addr = (uint)ReadMemory(pointerAddr, 32);
+            var wrongFirstByte = ((uint)addr >> 24) != 0x80;
+            var blankAddr = (addr == 0);
+            return (blankAddr || wrongFirstByte) ? 0 : (addr & 0x00FFFFFF);
         }
 
         private bool ProcessConnected()
