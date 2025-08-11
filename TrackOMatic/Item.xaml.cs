@@ -1,14 +1,15 @@
-﻿using System.Windows;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO.Ports;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System;
 using System.Windows.Media.Imaging;
-using System.IO.Ports;
 
 namespace TrackOMatic
 {
@@ -21,10 +22,9 @@ namespace TrackOMatic
         public bool CanLeftClick { get; set; } = true;
         public bool AutoPlaced { get; set; } = false;
         private ItemName ItemName { get; set; }
-        public ItemBrightnessChanger ItemBrightnessChanger { get; set; }
 
         public static readonly DependencyProperty ItemImageProperty =
-        DependencyProperty.Register("ItemImage", typeof(Image), typeof(Item));
+        DependencyProperty.Register("ItemImage", typeof(ImageSource), typeof(Item));
 
         public static readonly DependencyProperty HoverTextProperty =
      DependencyProperty.Register(
@@ -53,11 +53,11 @@ namespace TrackOMatic
         {
             if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
             {
-                mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage.Source = ItemImage.Source;
+                //mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage = ItemImage;
             }
             if (mainWindow.ITEM_TO_DIRECT_HINT.ContainsKey(ItemName))
             {
-                mainWindow.ITEM_TO_DIRECT_HINT[ItemName].Image.Source = ItemImage.Source;
+                //mainWindow.ITEM_TO_DIRECT_HINT[ItemName].image.Source = ItemImage;
             }
         }
 
@@ -67,12 +67,12 @@ namespace TrackOMatic
         }
 
 
-        public Image ItemImage
+        public ImageSource ItemImage
         {
-            get { return (Image)GetValue(ItemImageProperty); }
+            get { return (ImageSource)GetValue(ItemImageProperty); }
             set {
                 SetValue(ItemImageProperty, value);
-                SyncImages();
+                //SyncImages();
             }
         }
 
@@ -117,7 +117,6 @@ namespace TrackOMatic
         {
             if (Tag == null) return;
             ItemName = (ItemName)Tag;
-            ItemBrightnessChanger = new ItemBrightnessChanger(ItemImage, ItemName);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -166,22 +165,25 @@ namespace TrackOMatic
                 adornedElement.ChangeOpacity(opacity);
                 Opacity = opacity;
                 IsHitTestVisible = false;
-                if (adornedElement.Content is StackPanel)
-                {
-                    var blah = (StackPanel)adornedElement.Content;
-                    imageSource = (blah.Children[0] as Image).Source;
-                    var brush = new ImageBrush();
-                    brush.ImageSource = imageSource;
-                    brush.Stretch = Stretch.UniformToFill;
-                }
-                else
-                {
-                    imageSource = ((adornedElement).ItemImage).Source;
-                }
+                imageSource = ((adornedElement).ItemImage);
                 CenterOffset = new Point(-renderRect.Width / 2, -renderRect.Height / 2);
             }
             protected override void OnRender(DrawingContext drawingContext)
             {
+                var adornedSize = AdornedElement.RenderSize;
+
+                double imgWidth = imageSource.Width;
+                double imgHeight = imageSource.Height;
+
+                double scale = Math.Min(adornedSize.Width / imgWidth, adornedSize.Height / imgHeight);
+
+                double drawWidth = imgWidth * scale;
+                double drawHeight = imgHeight * scale;
+
+                double offsetX = (adornedSize.Width - drawWidth) / 2;
+                double offsetY = (adornedSize.Height - drawHeight) / 2;
+
+                renderRect = new Rect(offsetX, offsetY, drawWidth, drawHeight);
                 drawingContext.DrawImage(imageSource, renderRect);
             }
         }
@@ -192,7 +194,7 @@ namespace TrackOMatic
             var itemName = (ItemName)Tag;
             var regionName = (Region == null) ? RegionName.UNKNOWN : Region.RegionName;
             bool autotracked = mainWindow.Autotracker.ItemWasTracked(itemName);
-            mainWindow.DataSaver.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, autotracked, ItemImage.Opacity));
+            mainWindow.DataSaver.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility, autotracked, Image.Opacity));
         }
 
         //Struct to use in the GetCursorPos function
@@ -228,12 +230,12 @@ namespace TrackOMatic
         {
             ItemName itemName = (ItemName)Tag;
             var resourceName = itemName.ToString().ToLower();
-            ItemImage = (Image)FindResource(resourceName);
+            ItemImage = (ImageSource)FindResource(resourceName);
         }
 
         public void ChangeOpacity(double newOpacity)
         {
-            ItemImage.Opacity = newOpacity;
+            Image.Opacity = newOpacity;
             mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].ChangeOpacity(newOpacity);
             if (mainWindow.ITEM_TO_DIRECT_HINT.ContainsKey(ItemName))
             {
@@ -241,17 +243,33 @@ namespace TrackOMatic
             }
         }
 
+        private void UpdateBackgroundItemKey(string newKey)
+        {
+            if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
+            {
+                var item = mainWindow.ITEM_TO_BACKGROUND_IMAGE[this];
+                item.SetResourceReference(ItemBackground.BackgroundItemImageProperty, newKey);
+            }
+            if (mainWindow.ITEM_TO_DIRECT_HINT.ContainsKey(ItemName))
+            {
+                var item = mainWindow.ITEM_TO_DIRECT_HINT[ItemName];
+                item.SetResourceReference(PathOrFoundItem.PathItemImageProperty, newKey);
+            }
+        }
+
         public void Brighten()
         {
-            ItemBrightnessChanger.Brighten();
-            ItemImage = ItemBrightnessChanger.ItemImage;
+            var key = ItemName.ToString().ToLower();
+            SetResourceReference(ItemImageProperty, key);
+            UpdateBackgroundItemKey(key);
             Brightened = true;
         }
 
         public void Darken()
         {
-            ItemBrightnessChanger.Darken();
-            ItemImage = ItemBrightnessChanger.ItemImage;
+            var key = (ItemName.ToString().ToLower() + "_bw");
+            SetResourceReference(ItemImageProperty, key);
+            UpdateBackgroundItemKey(key);
             if (mainWindow.BroadcastView != null) mainWindow.BroadcastView.TurnItemOff((ItemName)Tag);
             Brightened = false;
         }
@@ -259,8 +277,7 @@ namespace TrackOMatic
         public void DoDragDrop(bool rightButtonPressed) 
         { 
             ItemName itemName = (ItemName)Tag;
-            var resourceName = itemName.ToString().ToLower();
-            ItemImage = (Image) FindResource(resourceName);
+            Brighten();
             if (!rightButtonPressed && Tag != null)
             {
                 if (mainWindow.BroadcastView != null) mainWindow.BroadcastView.TurnItemOn((ItemName)Tag);
@@ -352,9 +369,7 @@ namespace TrackOMatic
                 ((RegionGrid)Parent).Handle_RegionGrid(this, false);
             }
             itemGrid.Children.Add(this);
-            var itemName = (ItemName)Tag;
-            var BWResourceName = itemName.ToString().ToLower() + "_bw";
-            ItemImage = (Image)FindResource(BWResourceName);
+            Darken();
             Brightened = false;
             SetBackgroundImageVisibility(Visibility.Hidden);
             Margin = new Thickness(0);
