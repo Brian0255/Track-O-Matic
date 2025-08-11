@@ -11,6 +11,9 @@ namespace TrackOMatic
         public List<string> HelmDoorCounts { get; set; }
         public List<SavedHint> SavedHints { get; }
         public string spoilerPath { get; set; }
+        public List<int> HelmKongs { get; set; }
+        public List<int> BossKongs { get; set; }
+        public List<int> LevelOrder { get; set; }
 
         public SavedProgress()
         {
