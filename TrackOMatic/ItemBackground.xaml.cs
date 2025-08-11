@@ -12,15 +12,14 @@ namespace TrackOMatic
 {
     public partial class ItemBackground : ContentControl, INotifyPropertyChanged
     {
-        public ItemBrightnessChanger ItemBrightnessChanger { get; private set; }
         public static readonly DependencyProperty BackgroundItemImageProperty =
-        DependencyProperty.Register("BackgroundItemImage", typeof(Image), typeof(ItemBackground));
+        DependencyProperty.Register("BackgroundItemImage", typeof(ImageSource), typeof(ItemBackground));
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
-        public Image BackgroundItemImage
+        public ImageSource BackgroundItemImage
         {
-            get { return (Image)GetValue(BackgroundItemImageProperty); }
+            get { return (ImageSource)GetValue(BackgroundItemImageProperty); }
             set { SetValue(BackgroundItemImageProperty, value); }
         }
 
@@ -41,7 +40,7 @@ namespace TrackOMatic
 
         public void ChangeOpacity(double newOpacity)
         {
-            BackgroundItemImage.Opacity = newOpacity;
+            Image.Opacity = newOpacity;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -88,7 +87,6 @@ namespace TrackOMatic
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (Tag == null) return;
-            ItemBrightnessChanger = new ItemBrightnessChanger(BackgroundItemImage, (ItemName) Tag);
         }
     }
 }

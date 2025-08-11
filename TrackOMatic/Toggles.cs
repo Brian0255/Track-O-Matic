@@ -176,6 +176,13 @@ namespace TrackOMatic
             Settings.Default.Save();
         }
 
+        private void ColoredBarrelPadMoves_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.ColoredBarrelPadMoves = ColorBarrelPadMoves.IsChecked;
+            Settings.Default.Save();
+            ((App)Application.Current).UpdatePadBarrelImages();
+        }
+
         private void HelmDoors_Click(object sender, RoutedEventArgs e)
         {
             Settings.Default.HelmDoors = HelmDoors.IsChecked;

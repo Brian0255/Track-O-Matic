@@ -98,10 +98,7 @@ namespace TrackOMatic
             var imageName = (color.ToString() + "_vial.png").ToLower();
             Item vialImage = new()
             {
-              ItemImage = new()
-              {
-                  Source = new BitmapImage(new Uri("Images/dk64/" + imageName, UriKind.Relative))
-              }
+              ItemImage = new BitmapImage(new Uri("Images/dk64/" + imageName, UriKind.Relative))
             };
             vialImage.SetRegion(Region);
             vialImage.Disable();
@@ -239,7 +236,7 @@ namespace TrackOMatic
             Panel itemGrid = item.Parent as Panel;
             if(itemGrid != null) itemGrid.Children.Remove(item);
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            if (mainWindow.BroadcastView != null && item.ItemImage.Opacity > 0.9 && brighten && item.Tag != null)
+            if (mainWindow.BroadcastView != null && item.Image.Opacity > 0.9 && brighten && item.Tag != null)
             {
                 mainWindow.BroadcastView.TurnItemOn((ItemName)item.Tag);
             }

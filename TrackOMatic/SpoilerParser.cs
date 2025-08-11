@@ -137,8 +137,7 @@ namespace TrackOMatic
                     MainWindow.Regions[region].RegionGrid.Add_Item(item);
                     //MainWindow.DataSaver.AddSavedItem(new SavedItem(itemName,  region, item.Star.Visibility, true, 1.0));
                     //MainWindow.DataSaver.Save();
-
-                    item.ItemImage = (Image)MainWindow.FindResource(itemName.ToString().ToLower());
+                    item.SetResourceReference(Item.ItemImageProperty,itemName.ToString().ToLower());
                 }
             }
         }
@@ -261,7 +260,7 @@ namespace TrackOMatic
             }
             if (Settings.Default.KRoolOrder)
             {
-                for (int i = 0; i < MainWindow.KroolKongs.Count; ++i)
+                for (int i = 0; i < MainWindow.BossKongs.Count; ++i)
                 {
                     if (i < info.krool_order.Count)
                     {
@@ -276,13 +275,13 @@ namespace TrackOMatic
                             imageName = JSONKeyMappings.KONGS[kroolIndex].ToString();
                         }
                         imageName = imageName.ToLower();
-                        MainWindow.KroolKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
-                        MainWindow.KroolKongs[i].Enabled = false;
-                        MainWindow.KroolKongs[i].Visibility = Visibility.Visible;
+                        MainWindow.BossKongs[i].SetImage(new BitmapImage(new Uri("Images/dk64/" + imageName + ".png", UriKind.Relative)));
+                        MainWindow.BossKongs[i].Enabled = false;
+                        MainWindow.BossKongs[i].Visibility = Visibility.Visible;
                     }
                     else
                     {
-                        MainWindow.KroolKongs[i].Visibility = Visibility.Hidden;
+                        MainWindow.BossKongs[i].Visibility = Visibility.Hidden;
                     }
                 }
             }

@@ -140,7 +140,7 @@ namespace TrackOMatic
                         mainWindow.ITEM_NAME_TO_ITEM[itemName].InitHoverPoints();
                     }
                     SetItemStar(itemName, item.Star.Visibility);
-                    if(item.Brightened && item.ItemImage.Opacity > 0.9)
+                    if(item.Brightened && item.Image.Opacity > 0.9)
                     {
                         TurnItemOn(itemName);
                     }
@@ -196,7 +196,7 @@ namespace TrackOMatic
             {
                 var item = KRoolKongs[i];
                 item.Enabled = false;
-                UpdateKRoolKong(i, mainWindow.KroolKongs[i].image.Source);
+                UpdateKRoolKong(i, mainWindow.BossKongs[i].image.Source);
             }
             for (int i = 0; i < HelmKongs.Count; ++i)
             {
@@ -391,7 +391,7 @@ namespace TrackOMatic
             ItemName secondItem = items[1];
             if (SharedMoves[firstItem]) imageIndex++;
             if (SharedMoves[secondItem]) imageIndex += 2;
-            itemBackground.BackgroundItemImage.Source = imageSources[imageIndex];
+            itemBackground.BackgroundItemImage = imageSources[imageIndex];
         }
 
         public void HandleSharedMoves()
@@ -404,7 +404,7 @@ namespace TrackOMatic
                     slamCount++;
                 }
             }
-            slam.BackgroundItemImage.Source = slamImages[slamCount];
+            slam.BackgroundItemImage = slamImages[slamCount];
             var homingScopeGroup = new List<ItemName> { ItemName.HOMING_AMMO, ItemName.SNIPER_SCOPE };
             var camShockwaveGroup = new List<ItemName> { ItemName.FAIRY_CAMERA, ItemName.SHOCKWAVE };
             CheckGroupedItem(homingScopeGroup, homingScopeImages, homingscope);
@@ -437,7 +437,10 @@ namespace TrackOMatic
                 return;
             }
             var match = GetMatchingItem(item);
-            if(match != null) match.ItemBrightnessChanger.Brighten();
+            if (match != null)
+            {
+                match.SetResourceReference(ItemBackground.BackgroundItemImageProperty, ((ItemName)match.Tag).ToString().ToLower());
+            }
         }
 
         public void TurnItemOff(ItemName item)
@@ -449,7 +452,10 @@ namespace TrackOMatic
                 return;
             }
             var match = GetMatchingItem(item);
-            if (match != null) match.ItemBrightnessChanger.Darken();
+            if (match != null)
+            {
+                match.SetResourceReference(ItemBackground.BackgroundItemImageProperty, ((ItemName)match.Tag).ToString().ToLower() + "_bw");
+            }
         }
 
         public void ActivateTooltip(ItemName item, string hoverText)

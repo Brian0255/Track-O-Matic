@@ -49,9 +49,9 @@ namespace TrackOMatic
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             if (mainWindow.BroadcastView == null) return;
-            if (mainWindow.KroolKongs.IndexOf(this) != -1)
+            if (mainWindow.BossKongs.IndexOf(this) != -1)
             {
-                mainWindow.BroadcastView.UpdateKRoolKong(mainWindow.KroolKongs.IndexOf(this), image.Source);
+                mainWindow.BroadcastView.UpdateKRoolKong(mainWindow.BossKongs.IndexOf(this), image.Source);
             }
             if (mainWindow.HelmKongs.IndexOf(this) != -1)
             {
@@ -94,6 +94,7 @@ namespace TrackOMatic
             itemSelector.ShowDialog();
             var index = itemSelector.SelectedImageIndex;
             if (index == -1) return;
+            ((MainWindow)(Application.Current.MainWindow)).DataSaver.Save();
             currentIndex = index;
             ReadCurrentIndex();
         }

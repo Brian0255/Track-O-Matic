@@ -48,7 +48,7 @@ namespace TrackOMatic
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
         public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
-        public List<ProgressiveItem> KroolKongs { get; private set; }
+        public List<ProgressiveItem> BossKongs { get; private set; }
         public List<ProgressiveItem> HelmKongs { get; private set; }
         public List<HintPanel> HintPanels { get; private set; }
 
@@ -98,10 +98,10 @@ namespace TrackOMatic
             {
                 progressiveItem.ImageSources = new() { ProgressiveKongSource };
             }
-            List<List<BitmapImage>> KRoolBosses = new() { ProgressiveKongSource, BossSource };
-            foreach (var progressiveItem in KroolKongs)
+            List<List<BitmapImage>> AllBosses = new() { ProgressiveKongSource, BossSource };
+            foreach (var progressiveItem in BossKongs)
             {
-                progressiveItem.ImageSources = KRoolBosses;
+                progressiveItem.ImageSources = AllBosses;
             }
 
             SpoilerParser = new(this);
@@ -171,7 +171,7 @@ namespace TrackOMatic
                 {ItemType.TOTAL_BLUEPRINTS, BlueprintsTotal }
             };
             Items = ItemGrid;
-            KroolKongs = new(){ KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
+            BossKongs = new(){ BossKong1, BossKong2, BossKong3, BossKong4, BossKong5 };
             HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
             foreach (var control in ItemGrid.Children)
             {
@@ -265,11 +265,10 @@ namespace TrackOMatic
             }
             if(!hint) item.ChangeOpacity(1.0);
             Regions[regionName].RegionGrid.Add_Item(item, false, !darken);
-            item.SyncImages();
             //should mean that there was no matching vial, item couldn't be placed as a result
             if (item.Parent == ItemGrid) return false;
             if (BroadcastView != null && !hint) BroadcastView.TurnItemOn(itemToProcess);
-            DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.ItemImage.Opacity));
+            DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.Image.Opacity));
             DataSaver.Save("autosave.json",canAutosave);
             return true;
         }
@@ -284,7 +283,6 @@ namespace TrackOMatic
 
             ResetWidthHeight();
         }
-
         private void Window_LocationChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.WindowY = RestoreBounds.Top;
@@ -565,7 +563,7 @@ namespace TrackOMatic
             HelmDoorHints.Reset();
             foreach (var item in HitListItems) item.Reset();
             foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
-            foreach (var progressiveImage in KroolKongs) progressiveImage.Reset();
+            foreach (var progressiveImage in BossKongs) progressiveImage.Reset();
             foreach (var progressiveImage in HelmKongs) progressiveImage.Reset();
             UpdateUIAmountToNextHint(0);
             HintHelper.GenerateThresholds();
@@ -611,6 +609,47 @@ namespace TrackOMatic
                 Reset();
                 DataSaver.ReadSavedDataFromFile(filePath);
             }
+        }
+        public void LoadLevelOrder(List<int> order)
+        {
+            for(int i = 0; i < order.Count; ++i)
+            {
+                Regions[Region.LOBBY_ORDER[i]].SetLevelOrderNumber(order[i]);
+            }
+        }
+        public List<int> GetLevelOrder()
+        {
+            var list = Region.LOBBY_ORDER.Select(r => Regions[r].LevelOrderNumber.GetNumber()).ToList();
+            return list;
+        }
+        private List<int> GetProgressiveIndices(List<ProgressiveItem> items)
+        {
+            return items.Select(i => i.GetIndex()).ToList();
+        }
+
+        public List<int> GetHelmKongs()
+        {
+            return GetProgressiveIndices(HelmKongs);
+        }
+        public List<int> GetBossKongs()
+        {
+            return GetProgressiveIndices(BossKongs);
+        }
+        private void LoadProgressiveIndices(List<int> indices, List<ProgressiveItem> modify)
+        {
+            for(int i = 0; i < modify.Count; ++i)
+            {
+                modify[i].SetIndex(indices[i]);
+            }
+        }
+        public void LoadHelmKongs(List<int> indices)
+        {
+            LoadProgressiveIndices(indices, HelmKongs);
+        }
+
+        public void LoadBossKongs(List<int> indices)
+        {
+            LoadProgressiveIndices(indices, BossKongs);
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
