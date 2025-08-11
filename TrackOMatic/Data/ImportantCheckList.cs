@@ -271,8 +271,6 @@ namespace TrackOMatic
         {ItemName.ISLES_BATTLE_CROWN_2, new ImportantCheck(ItemName.ISLES_BATTLE_CROWN_2, ItemType.BATTLE_CROWN) },
         {ItemName.HELM_BATTLE_CROWN, new ImportantCheck(ItemName.HELM_BATTLE_CROWN, ItemType.BATTLE_CROWN) },
 
-
-
         {ItemName.JAPES_FAIRY_1, new ImportantCheck(ItemName.JAPES_FAIRY_1, ItemType.FAIRY) },
         {ItemName.JAPES_FAIRY_2, new ImportantCheck(ItemName.JAPES_FAIRY_2, ItemType.FAIRY) },
 
@@ -301,8 +299,6 @@ namespace TrackOMatic
         {ItemName.ISLES_FAIRY_2, new ImportantCheck(ItemName.ISLES_FAIRY_2, ItemType.FAIRY) },
         {ItemName.ISLES_FAIRY_3, new ImportantCheck(ItemName.ISLES_FAIRY_3, ItemType.FAIRY) },
         {ItemName.ISLES_FAIRY_4, new ImportantCheck(ItemName.ISLES_FAIRY_4, ItemType.FAIRY) },
-
-
 
         {ItemName.RAINBOW_COIN_1, new ImportantCheck(ItemName.RAINBOW_COIN_1, ItemType.RAINBOW_COIN) },
         {ItemName.RAINBOW_COIN_2, new ImportantCheck(ItemName.RAINBOW_COIN_2, ItemType.RAINBOW_COIN) },
@@ -335,6 +331,18 @@ namespace TrackOMatic
         {ItemName.LANKY_ISLES_MEDAL, new ImportantCheck(ItemName.LANKY_ISLES_MEDAL, ItemType.BANANA_MEDAL)},
         {ItemName.TINY_ISLES_MEDAL, new ImportantCheck(ItemName.TINY_ISLES_MEDAL, ItemType.BANANA_MEDAL)},
         {ItemName.CHUNKY_ISLES_MEDAL, new ImportantCheck(ItemName.CHUNKY_ISLES_MEDAL, ItemType.BANANA_MEDAL)},
+
+        {ItemName.CROWN_TOTAL, new ImportantCheck(ItemName.CROWN_TOTAL, ItemType.BATTLE_CROWN) },
+        {ItemName.MEDAL_TOTAL, new ImportantCheck(ItemName.MEDAL_TOTAL, ItemType.BANANA_MEDAL) },
+        {ItemName.PEARL_TOTAL, new ImportantCheck(ItemName.PEARL_TOTAL, ItemType.PEARL) },
+        {ItemName.FAIRY_TOTAL, new ImportantCheck(ItemName.FAIRY_TOTAL, ItemType.FAIRY) },
+        {ItemName.RAINBOW_COIN_TOTAL, new ImportantCheck(ItemName.RAINBOW_COIN_TOTAL, ItemType.RAINBOW_COIN) },
+
+        {ItemName.DONKEY_BP_TOTAL, new ImportantCheck(ItemName.DONKEY_BP_TOTAL, ItemType.DONKEY_BLUEPRINT) },
+        {ItemName.DIDDY_BP_TOTAL, new ImportantCheck(ItemName.DIDDY_BP_TOTAL, ItemType.DIDDY_BLUEPRINT) },
+        {ItemName.LANKY_BP_TOTAL, new ImportantCheck(ItemName.LANKY_BP_TOTAL, ItemType.LANKY_BLUEPRINT) },
+        {ItemName.TINY_BP_TOTAL, new ImportantCheck(ItemName.TINY_BP_TOTAL, ItemType.TINY_BLUEPRINT) },
+        {ItemName.CHUNKY_BP_TOTAL, new ImportantCheck(ItemName.CHUNKY_BP_TOTAL, ItemType.CHUNKY_BLUEPRINT) },
        };
     }
 

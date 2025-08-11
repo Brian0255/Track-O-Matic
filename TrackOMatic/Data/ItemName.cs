@@ -362,6 +362,18 @@
 
         HINT,
 
+        CROWN_TOTAL,
+        MEDAL_TOTAL,
+        PEARL_TOTAL,
+        FAIRY_TOTAL,
+        RAINBOW_COIN_TOTAL,
+
+        DONKEY_BP_TOTAL,
+        DIDDY_BP_TOTAL,
+        LANKY_BP_TOTAL,
+        TINY_BP_TOTAL,
+        CHUNKY_BP_TOTAL,
+
         NONE
     }
 }
