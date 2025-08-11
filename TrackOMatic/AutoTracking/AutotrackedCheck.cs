@@ -4,18 +4,18 @@
     {
         public ItemName ItemName { get; }
         public uint Offset { get; }
-        public int TargetValue { get; }
         public int Bitmask { get; }
         public int TotalBits { get; }
+        public bool UsesCountStruct { get; }
         public bool Tracked { get; }
-        public AutotrackedCheck(ItemName itemName, uint offset, int totalBits, int targetValue, int bitmask)
+        public AutotrackedCheck(ItemName itemName, uint offset, int totalBits, int bitmask, bool usesCountStruct)
         {
             ItemName = itemName;
             Offset = offset;
             TotalBits = totalBits;
-            TargetValue = targetValue;
             Bitmask = bitmask;
             Tracked = false;
+            UsesCountStruct = usesCountStruct;
         }
     }
 
