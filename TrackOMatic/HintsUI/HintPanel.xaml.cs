@@ -143,7 +143,7 @@ namespace TrackOMatic
         }
 
         private void ApplyFilter()
-        {
+        {          
             var filteredHints = new List<HintInfo>();
             var rejectedHints = new List<HintInfo>();
             foreach(var child in HintList.Children)

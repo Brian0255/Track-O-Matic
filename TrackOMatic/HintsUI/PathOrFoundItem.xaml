@@ -16,7 +16,7 @@
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <Image x:Name="Image" Source="../images/dk64/k1.png"/>
+                <Image x:Name="image" Source="{Binding PathItemImage}"/>
             </Border>
             <Image x:Name="Checkmark" Source="../images/dk64/checkmark.png" Visibility="Hidden"/>
         </Grid>

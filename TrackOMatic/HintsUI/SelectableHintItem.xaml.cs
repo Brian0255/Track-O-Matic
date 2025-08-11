@@ -14,22 +14,20 @@ namespace TrackOMatic
     public partial class SelectableHintItem : ContentControl, INotifyPropertyChanged
     {
         public static readonly DependencyProperty HintItemImageProperty =
-        DependencyProperty.Register("HintItemImage", typeof(Image), typeof(SelectableHintItem));
+        DependencyProperty.Register("HintItemImage", typeof(ImageSource), typeof(SelectableHintItem));
         private ItemName ItemName { get; set; }
-        private ItemBrightnessChanger ItemBrightnessChanger { get; set; }
 
         private void HintItem_OnLoaded(object sender, RoutedEventArgs e)
         {
             ItemName = (ItemName)Tag;
-            ItemBrightnessChanger = new ItemBrightnessChanger(HintItemImage, ItemName);
             UpdateImageFromState();
         }
 
         public bool On { get; private set; } = false;
 
-        public Image HintItemImage
+        public ImageSource HintItemImage
         {
-            get { return (Image)GetValue(HintItemImageProperty); }
+            get { return (ImageSource)GetValue(HintItemImageProperty); }
             set { SetValue(HintItemImageProperty, value); }
         }
 
@@ -41,9 +39,8 @@ namespace TrackOMatic
 
         public void UpdateImageFromState()
         {
-            if (ItemBrightnessChanger == null) return;
-            if (On) ItemBrightnessChanger.Brighten();
-            else ItemBrightnessChanger.Darken();
+            if (On) SetResourceReference(HintItemImageProperty, ItemName.ToString().ToLower());
+            else SetResourceReference(HintItemImageProperty, ItemName.ToString().ToLower() + "_bw");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

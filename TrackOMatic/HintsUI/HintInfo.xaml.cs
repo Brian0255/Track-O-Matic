@@ -285,7 +285,7 @@ namespace TrackOMatic
                 var itemName = entry.Key;
                 if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName)) continue;
                 var matchingItem = mainWindow.ITEM_NAME_TO_ITEM[itemName];
-                if (matchingItem.ItemImage.Source.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
+                if (matchingItem.ItemImage.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
                 {
                     matchingItem.HandleItemReturn();
                 }

@@ -33,9 +33,9 @@
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <ContentPresenter x:Name="Image" Content="{Binding ItemImage}"/>
+                <Image x:Name="Image" Source="{Binding ItemImage}"/>
             </Border>
-            <ContentPresenter x:Name="Star" Content="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="0,0,4,4"/>
+            <Image x:Name="Star" Source="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="0,0,4,4"/>
         </Grid>
     </ContentControl.Content>
 

@@ -1,28 +1,41 @@
-﻿using System.Windows;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System;
 using System.Windows.Media.Imaging;
-using System.Windows.Forms;
 
 namespace TrackOMatic
 {
     public partial class PathOrFoundItem : ContentControl
     {
-        private ItemBrightnessChanger ItemBrightnessChanger;
         public bool IsChecked { get; set; }
         public ItemName ItemName { get; private set; }
         private HintItemList HintItemList;
+
+        public static readonly DependencyProperty PathItemImageProperty =
+        DependencyProperty.Register("PathItemImage", typeof(ImageSource), typeof(PathOrFoundItem));
+
+        public ImageSource PathItemImage
+        {
+            get { return (ImageSource)GetValue(PathItemImageProperty); }
+            set { SetValue(PathItemImageProperty, value); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public PathOrFoundItem(ItemName itemName, bool isChecked = false, HintItemList hintItemList = null)
         {
             InitializeComponent();
-            ItemBrightnessChanger = new ItemBrightnessChanger(Image, itemName);
-            ItemBrightnessChanger.Brighten();
+            SetResourceReference(PathItemImageProperty, itemName.ToString().ToLower());
             DataContext = this;
             IsChecked = isChecked;
             ItemName = itemName;
