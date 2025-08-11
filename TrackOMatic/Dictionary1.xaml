@@ -25,227 +25,217 @@
     <SolidColorBrush x:Key="HitListAvailable" Color="#35549c"/>
 
     <!-- question mark for unknown item-->
-    <Image x:Key="none" Source="Images\dk64\none.png" x:Shared="false" />
+    <BitmapImage x:Key="none" UriSource="Images/dk64/none.png" x:Shared="false" />
 
-    <Image x:Key="locked_region" Source="Images\dk64\locked_region.png" x:Shared="false" />
-    <Image x:Key="star_simple" Source="Images\dk64\star_simple.png" x:Shared="false" />
-    <Image x:Key="star_complex" Source="Images\dk64\star_complex.png" x:Shared="false" />
-    <Image x:Key="x" Source="Images\dk64\x.png" x:Shared="false" />
+    <BitmapImage x:Key="locked_region" UriSource="Images\dk64\locked_region.png" x:Shared="false" />
+    <BitmapImage x:Key="star_simple" UriSource="Images\dk64\star_simple.png" x:Shared="false" />
+    <BitmapImage x:Key="star_complex" UriSource="Images\dk64\star_complex.png" x:Shared="false" />
+    <BitmapImage x:Key="x" UriSource="Images\dk64\x.png" x:Shared="false" />
 
-    <Image x:Key="unknown_kong" Source="Images\dk64\unknown_kong.png" x:Shared="false" />
-    <Image x:Key="dk_isles" Source="Images\dk64\dk_isles.png" x:Shared="false" />
-    <Image x:Key="start" Source="Images\dk64\start.png" x:Shared="false" />
+    <BitmapImage x:Key="unknown_kong" UriSource="Images\dk64\unknown_kong.png" x:Shared="false" />
+    <BitmapImage x:Key="dk_isles" UriSource="Images\dk64\dk_isles.png" x:Shared="false" />
+    <BitmapImage x:Key="start" UriSource="Images\dk64\start.png" x:Shared="false" />
     
-    <Image x:Key="jungle_japes" Source="Images\dk64\jungle_japes.png" x:Shared="false" />
-    <Image x:Key="angry_aztec" Source="Images\dk64\angry_aztec.png" x:Shared="false" />
-    <Image x:Key="frantic_factory" Source="Images\dk64\frantic_factory.png" x:Shared="false" />
-    <Image x:Key="gloomy_galleon" Source="Images\dk64\gloomy_galleon.png" x:Shared="false" />
-    <Image x:Key="fungi_forest" Source="Images\dk64\fungi_forest.png" x:Shared="false" />
-    <Image x:Key="crystal_caves" Source="Images\dk64\crystal_caves.png" x:Shared="false" />
-    <Image x:Key="creepy_castle" Source="Images\dk64\creepy_castle.png" x:Shared="false" />
-    <Image x:Key="hideout_helm" Source="Images\dk64\hideout_helm.png" x:Shared="false" />
+    <BitmapImage x:Key="jungle_japes" UriSource="Images\dk64\jungle_japes.png" x:Shared="false" />
+    <BitmapImage x:Key="angry_aztec" UriSource="Images\dk64\angry_aztec.png" x:Shared="false" />
+    <BitmapImage x:Key="frantic_factory" UriSource="Images\dk64\frantic_factory.png" x:Shared="false" />
+    <BitmapImage x:Key="gloomy_galleon" UriSource="Images\dk64\gloomy_galleon.png" x:Shared="false" />
+    <BitmapImage x:Key="fungi_forest" UriSource="Images\dk64\fungi_forest.png" x:Shared="false" />
+    <BitmapImage x:Key="crystal_caves" UriSource="Images\dk64\crystal_caves.png" x:Shared="false" />
+    <BitmapImage x:Key="creepy_castle" UriSource="Images\dk64\creepy_castle.png" x:Shared="false" />
+    <BitmapImage x:Key="hideout_helm" UriSource="Images\dk64\hideout_helm.png" x:Shared="false" />
 
-    <Image x:Key="donkey_krool" Source="Images\dk64\krool-donkey.png"  x:Shared="false"/>
-    <Image x:Key="diddy_krool" Source="Images\dk64\krool-diddy.png"  x:Shared="false"/>
-    <Image x:Key="lanky_krool" Source="Images\dk64\krool-lanky.png"  x:Shared="false" />
-    <Image x:Key="tiny_krool" Source="Images\dk64\krool-tiny.png"  x:Shared="false" />
-    <Image x:Key="chunky_krool" Source="Images\dk64\krool-chunky.png"  x:Shared="false" />
+    <BitmapImage x:Key="donkey_krool" UriSource="Images\dk64\krool-donkey.png"  x:Shared="false"/>
+    <BitmapImage x:Key="diddy_krool" UriSource="Images\dk64\krool-diddy.png"  x:Shared="false"/>
+    <BitmapImage x:Key="lanky_krool" UriSource="Images\dk64\krool-lanky.png"  x:Shared="false" />
+    <BitmapImage x:Key="tiny_krool" UriSource="Images\dk64\krool-tiny.png"  x:Shared="false" />
+    <BitmapImage x:Key="chunky_krool" UriSource="Images\dk64\krool-chunky.png"  x:Shared="false" />
 
-    <Image x:Key="donkey" Source="Images\dk64\donkey.png"  x:Shared="false"/>
-    <Image x:Key="diddy" Source="Images\dk64\diddy.png"  x:Shared="false"/>
-    <Image x:Key="lanky" Source="Images\dk64\lanky.png"  x:Shared="false" />
-    <Image x:Key="tiny" Source="Images\dk64\tiny.png"  x:Shared="false" />
-    <Image x:Key="chunky" Source="Images\dk64\chunky.png"  x:Shared="false" />
+    <BitmapImage x:Key="donkey" UriSource="Images\dk64\donkey.png"  x:Shared="false"/>
+    <BitmapImage x:Key="diddy" UriSource="Images\dk64\diddy.png"  x:Shared="false"/>
+    <BitmapImage x:Key="lanky" UriSource="Images\dk64\lanky.png"  x:Shared="false" />
+    <BitmapImage x:Key="tiny" UriSource="Images\dk64\tiny.png"  x:Shared="false" />
+    <BitmapImage x:Key="chunky" UriSource="Images\dk64\chunky.png"  x:Shared="false" />
 
-    <Image x:Key="coconut_gun" Source="Images\dk64\dk_gun.png"  x:Shared="false" />
-    <Image x:Key="peanut_popguns" Source="Images\dk64\diddy_gun.png"  x:Shared="false"/>
-    <Image x:Key="grape_shooter" Source="Images\dk64\lanky_gun.png"  x:Shared="false" />
-    <Image x:Key="feather_bow" Source="Images\dk64\tiny_gun.png"  x:Shared="false" />
-    <Image x:Key="pineapple_launcher" Source="Images\dk64\chunky_gun.png"  x:Shared="false"/>
+    <BitmapImage x:Key="coconut_gun" UriSource="Images\dk64\dk_gun.png"  x:Shared="false" />
+    <BitmapImage x:Key="peanut_popguns" UriSource="Images\dk64\diddy_gun.png"  x:Shared="false"/>
+    <BitmapImage x:Key="grape_shooter" UriSource="Images\dk64\lanky_gun.png"  x:Shared="false" />
+    <BitmapImage x:Key="feather_bow" UriSource="Images\dk64\tiny_gun.png"  x:Shared="false"/>
+    <BitmapImage x:Key="pineapple_launcher" UriSource="Images\dk64\chunky_gun.png"  x:Shared="false"/>
 
-    <Image x:Key="bongo_blast" Source="Images\dk64\dk_inst.png"  x:Shared="false" />
-    <Image x:Key="guitar_gazump" Source="Images\dk64\diddy_inst.png"  x:Shared="false" />
-    <Image x:Key="trombone_tremor" Source="Images\dk64\lanky_inst.png"  x:Shared="false" />
-    <Image x:Key="saxophone_slam" Source="Images\dk64\tiny_inst.png"  x:Shared="false" />
-    <Image x:Key="triangle_trample" Source="Images\dk64\chunky_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="bongo_blast" UriSource="Images\dk64\dk_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="guitar_gazump" UriSource="Images\dk64\diddy_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="trombone_tremor" UriSource="Images\dk64\lanky_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="saxophone_slam" UriSource="Images\dk64\tiny_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="triangle_trample" UriSource="Images\dk64\chunky_inst.png"  x:Shared="false" />
 
-    <Image x:Key="gorilla_grab" Source="Images\dk64\dk_move.png"  x:Shared="false" />
-    <Image x:Key="chimpy_charge" Source="Images\dk64\diddy_move.png"  x:Shared="false" />
-    <Image x:Key="orangstand" Source="Images\dk64\lanky_move.png"  x:Shared="false" />
-    <Image x:Key="ponytail_twirl" Source="Images\dk64\tiny_move.png"  x:Shared="false" />
-    <Image x:Key="primate_punch" Source="Images\dk64\chunky_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="gorilla_grab" UriSource="Images\dk64\dk_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="chimpy_charge" UriSource="Images\dk64\diddy_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="orangstand" UriSource="Images\dk64\lanky_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="ponytail_twirl" UriSource="Images\dk64\tiny_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="primate_punch" UriSource="Images\dk64\chunky_move.png"  x:Shared="false" />
+    
+    <BitmapImage x:Key="baboon_balloon" UriSource="Images\dk64\lankypad.png"  x:Shared="false" />
 
-    <Image x:Key="strong_kong" Source="Images\dk64\dkbarrel.png"  x:Shared="false" />
-    <Image x:Key="rocketbarrel_boost" Source="Images\dk64\diddybarrel.png"  x:Shared="false" />
-    <Image x:Key="orangstand_sprint" Source="Images\dk64\lankybarrel.png"  x:Shared="false" />
-    <Image x:Key="mini_monkey" Source="Images\dk64\tinybarrel.png"  x:Shared="false" />
-    <Image x:Key="hunky_chunky" Source="Images\dk64\chunkybarrel.png"  x:Shared="false" />
+    <BitmapImage x:Key="key_1" UriSource="Images\dk64\k1.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_2" UriSource="Images\dk64\k2.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_3" UriSource="Images\dk64\k3.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_4" UriSource="Images\dk64\k4.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_5" UriSource="Images\dk64\k5.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_6" UriSource="Images\dk64\k6.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_7" UriSource="Images\dk64\k7.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_8" UriSource="Images\dk64\k8.png"  x:Shared="false"/>
 
-    <Image x:Key="baboon_blast" Source="Images\dk64\dkpad.png"  x:Shared="false" />
-    <Image x:Key="simian_spring" Source="Images\dk64\diddypad.png"  x:Shared="false" />
-    <Image x:Key="baboon_balloon" Source="Images\dk64\lankypad.png"  x:Shared="false" />
-    <Image x:Key="monkeyport" Source="Images\dk64\tinypad.png"  x:Shared="false" />
-    <Image x:Key="gorilla_gone" Source="Images\dk64\chunkypad.png"  x:Shared="false"/>
+    <BitmapImage x:Key="basic_key" UriSource="Images\dk64\key.png"  x:Shared="false"/>
 
-    <Image x:Key="key_1" Source="Images\dk64\k1.png"  x:Shared="false"/>
-    <Image x:Key="key_2" Source="Images\dk64\k2.png"  x:Shared="false"/>
-    <Image x:Key="key_3" Source="Images\dk64\k3.png"  x:Shared="false"/>
-    <Image x:Key="key_4" Source="Images\dk64\k4.png"  x:Shared="false"/>
-    <Image x:Key="key_5" Source="Images\dk64\k5.png"  x:Shared="false"/>
-    <Image x:Key="key_6" Source="Images\dk64\k6.png"  x:Shared="false"/>
-    <Image x:Key="key_7" Source="Images\dk64\k7.png"  x:Shared="false"/>
-    <Image x:Key="key_8" Source="Images\dk64\k8.png"  x:Shared="false"/>
+    <BitmapImage x:Key="unknown_vial" UriSource="Images\dk64\unknown_vial.png"  x:Shared="false"/>
+    <BitmapImage x:Key="unknown_key" UriSource="Images\dk64\unknown_key.png"  x:Shared="false"/>
 
-    <Image x:Key="basic_key" Source="Images\dk64\key.png"  x:Shared="false"/>
+    <BitmapImage x:Key="progressive_slam_1" UriSource="Images\dk64\progressive_slam.png"  x:Shared="false"/>
+    <BitmapImage x:Key="progressive_slam_2" UriSource="Images\dk64\progressive_slam.png"  x:Shared="false"/>
+    <BitmapImage x:Key="progressive_slam_3" UriSource="Images\dk64\progressive_slam.png"  x:Shared="false"/>
+    <BitmapImage x:Key="fairy_camera" UriSource="Images\dk64\fairy_camera.png"  x:Shared="false"/>
+    <BitmapImage x:Key="shockwave" UriSource="Images\dk64\shockwave.png"  x:Shared="false"/>
+    <BitmapImage x:Key="sniper_scope" UriSource="Images\dk64\sniper_scope.png"  x:Shared="false"/>
+    <BitmapImage x:Key="homing_ammo" UriSource="Images\dk64\homing_ammo.png"  x:Shared="false"/>
 
-    <Image x:Key="unknown_vial" Source="Images\dk64\unknown_vial.png"  x:Shared="false"/>
-    <Image x:Key="unknown_key" Source="Images\dk64\unknown_key.png"  x:Shared="false"/>
+    <BitmapImage x:Key="diving" UriSource="Images\dk64\diving.png"  x:Shared="false"/>
+    <BitmapImage x:Key="orange_throwing" UriSource="Images\dk64\orange_throwing.png"  x:Shared="false"/>
+    <BitmapImage x:Key="barrel_throwing" UriSource="Images\dk64\barrel_throwing.png"  x:Shared="false"/>
+    <BitmapImage x:Key="vine_swinging" UriSource="Images\dk64\vine_swinging.png"  x:Shared="false"/>
+    <BitmapImage x:Key="climbing" UriSource="Images\dk64\climbing.png"  x:Shared="false"/>
 
-    <Image x:Key="progressive_slam_1" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
-    <Image x:Key="progressive_slam_2" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
-    <Image x:Key="progressive_slam_3" Source="Images\dk64\progressive_slam.png"  x:Shared="false"/>
-    <Image x:Key="fairy_camera" Source="Images\dk64\fairy_camera.png"  x:Shared="false"/>
-    <Image x:Key="shockwave" Source="Images\dk64\shockwave.png"  x:Shared="false"/>
-    <Image x:Key="sniper_scope" Source="Images\dk64\sniper_scope.png"  x:Shared="false"/>
-    <Image x:Key="homing_ammo" Source="Images\dk64\homing_ammo.png"  x:Shared="false"/>
+    <BitmapImage x:Key="bean" UriSource="Images\dk64\bean.png"  x:Shared="false"/>
 
-    <Image x:Key="diving" Source="Images\dk64\diving.png"  x:Shared="false"/>
-    <Image x:Key="orange_throwing" Source="Images\dk64\orange_throwing.png"  x:Shared="false"/>
-    <Image x:Key="barrel_throwing" Source="Images\dk64\barrel_throwing.png"  x:Shared="false"/>
-    <Image x:Key="vine_swinging" Source="Images\dk64\vine_swinging.png"  x:Shared="false"/>
-    <Image x:Key="climbing" Source="Images\dk64\climbing.png"  x:Shared="false"/>
+    <BitmapImage x:Key="rareware_coin" UriSource="Images\dk64\rareware_coin.png"  x:Shared="false"/>
+    <BitmapImage x:Key="nintendo_coin" UriSource="Images\dk64\nintendo_coin.png"  x:Shared="false"/>
 
-    <Image x:Key="bean" Source="Images\dk64\bean.png"  x:Shared="false"/>
+    <BitmapImage x:Key="pearl" UriSource="Images\dk64\pearl.png"  x:Shared="false"/>
 
-    <Image x:Key="rareware_coin" Source="Images\dk64\rareware_coin.png"  x:Shared="false"/>
-    <Image x:Key="nintendo_coin" Source="Images\dk64\nintendo_coin.png"  x:Shared="false"/>
+    <BitmapImage x:Key="potion_dk" UriSource="Images\dk64\yellow_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_diddy" UriSource="Images\dk64\red_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_lanky" UriSource="Images\dk64\blue_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_tiny" UriSource="Images\dk64\purple_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_chunky" UriSource="Images\dk64\green_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_shared" UriSource="Images\dk64\clear_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="kong_family" UriSource="Images\dk64\tag_barrel.png" x:Shared="false"/>
 
-    <Image x:Key="pearl" Source="Images\dk64\pearl.png"  x:Shared="false"/>
+    <BitmapImage x:Key="cranky" UriSource="Images\dk64\cranky.png" x:Shared="false"/>
+    <BitmapImage x:Key="candy" UriSource="Images\dk64\candy.png" x:Shared="false"/>
+    <BitmapImage x:Key="funky" UriSource="Images\dk64\funky.png" x:Shared="false"/>
+    <BitmapImage x:Key="snide" UriSource="Images\dk64\snide.png" x:Shared="false"/>
 
-    <Image x:Key="potion_dk" Source="Images\dk64\yellow_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_diddy" Source="Images\dk64\red_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_lanky" Source="Images\dk64\blue_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_tiny" Source="Images\dk64\purple_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_chunky" Source="Images\dk64\green_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_shared" Source="Images\dk64\clear_vial.png" x:Shared="false"/>
-    <Image x:Key="kong_family" Source="Images\dk64\tag_barrel.png" x:Shared="false"/>
+    <BitmapImage x:Key="army" UriSource="Images\dk64\army.png" x:Shared="false"/>
+    <BitmapImage x:Key="army2" UriSource="Images\dk64\army2.png" x:Shared="false"/>
+    <BitmapImage x:Key="doga" UriSource="Images\dk64\doga.png" x:Shared="false"/>
+    <BitmapImage x:Key="doga2" UriSource="Images\dk64\doga2.png" x:Shared="false"/>
+    <BitmapImage x:Key="pufftoss" UriSource="Images\dk64\pufftoss.png" x:Shared="false"/>
+    <BitmapImage x:Key="madjack" UriSource="Images\dk64\madjack.png" x:Shared="false"/>
+    <BitmapImage x:Key="kutout" UriSource="Images\dk64\kutout.png" x:Shared="false"/>
 
-    <Image x:Key="cranky" Source="Images\dk64\cranky.png" x:Shared="false"/>
-    <Image x:Key="candy" Source="Images\dk64\candy.png" x:Shared="false"/>
-    <Image x:Key="funky" Source="Images\dk64\funky.png" x:Shared="false"/>
-    <Image x:Key="snide" Source="Images\dk64\snide.png" x:Shared="false"/>
-
-    <Image x:Key="army" Source="Images\dk64\army.png" x:Shared="false"/>
-    <Image x:Key="army2" Source="Images\dk64\army2.png" x:Shared="false"/>
-    <Image x:Key="doga" Source="Images\dk64\doga.png" x:Shared="false"/>
-    <Image x:Key="doga2" Source="Images\dk64\doga2.png" x:Shared="false"/>
-    <Image x:Key="pufftoss" Source="Images\dk64\pufftoss.png" x:Shared="false"/>
-    <Image x:Key="madjack" Source="Images\dk64\madjack.png" x:Shared="false"/>
-    <Image x:Key="kutout" Source="Images\dk64\kutout.png" x:Shared="false"/>
-
-    <Image x:Key="hint" Source="Images\dk64\hint.png" x:Shared="false"/>
+    <BitmapImage x:Key="hint" UriSource="Images\dk64\hint.png" x:Shared="false"/>
 
     <!--Black&White-->
-    <Image x:Key="potion_dk_bw" Source="Images\bw\yellow_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_diddy_bw" Source="Images\bw\red_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_lanky_bw" Source="Images\bw\blue_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_tiny_bw" Source="Images\bw\purple_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_chunky_bw" Source="Images\bw\green_vial.png" x:Shared="false"/>
-    <Image x:Key="potion_shared_bw" Source="Images\bw\clear_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_dk_bw" UriSource="Images\bw\yellow_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_diddy_bw" UriSource="Images\bw\red_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_lanky_bw" UriSource="Images\bw\blue_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_tiny_bw" UriSource="Images\bw\purple_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_chunky_bw" UriSource="Images\bw\green_vial.png" x:Shared="false"/>
+    <BitmapImage x:Key="potion_shared_bw" UriSource="Images\bw\clear_vial.png" x:Shared="false"/>
     
-    <Image x:Key="donkey_krool_bw" Source="Images\bw\krool-donkey.png"  x:Shared="false"/>
-    <Image x:Key="diddy_krool_bw" Source="Images\bw\krool-diddy.png"  x:Shared="false"/>
-    <Image x:Key="lanky_krool_bw" Source="Images\bw\krool-lanky.png"  x:Shared="false" />
-    <Image x:Key="tiny_krool_bw" Source="Images\bw\krool-tiny.png"  x:Shared="false" />
-    <Image x:Key="chunky_krool_bw" Source="Images\bw\krool-chunky.png"  x:Shared="false" />
+    <BitmapImage x:Key="donkey_krool_bw" UriSource="Images\bw\krool-donkey.png"  x:Shared="false"/>
+    <BitmapImage x:Key="diddy_krool_bw" UriSource="Images\bw\krool-diddy.png"  x:Shared="false"/>
+    <BitmapImage x:Key="lanky_krool_bw" UriSource="Images\bw\krool-lanky.png"  x:Shared="false" />
+    <BitmapImage x:Key="tiny_krool_bw" UriSource="Images\bw\krool-tiny.png"  x:Shared="false" />
+    <BitmapImage x:Key="chunky_krool_bw" UriSource="Images\bw\krool-chunky.png"  x:Shared="false" />
     
-    <Image x:Key="donkey_bw" Source="Images\bw\donkey.png"  x:Shared="false"/>
-    <Image x:Key="diddy_bw" Source="Images\bw\diddy.png"  x:Shared="false"/>
-    <Image x:Key="lanky_bw" Source="Images\bw\lanky.png"  x:Shared="false" />
-    <Image x:Key="tiny_bw" Source="Images\bw\tiny.png"  x:Shared="false" />
-    <Image x:Key="chunky_bw" Source="Images\bw\chunky.png"  x:Shared="false" />
+    <BitmapImage x:Key="donkey_bw" UriSource="Images\bw\donkey.png"  x:Shared="false"/>
+    <BitmapImage x:Key="diddy_bw" UriSource="Images\bw\diddy.png"  x:Shared="false"/>
+    <BitmapImage x:Key="lanky_bw" UriSource="Images\bw\lanky.png"  x:Shared="false" />
+    <BitmapImage x:Key="tiny_bw" UriSource="Images\bw\tiny.png"  x:Shared="false" />
+    <BitmapImage x:Key="chunky_bw" UriSource="Images\bw\chunky.png"  x:Shared="false" />
 
-    <Image x:Key="coconut_gun_bw" Source="Images\bw\dk_gun.png"  x:Shared="false" />
-    <Image x:Key="peanut_popguns_bw" Source="Images\bw\diddy_gun.png"  x:Shared="false"/>
-    <Image x:Key="grape_shooter_bw" Source="Images\bw\lanky_gun.png"  x:Shared="false" />
-    <Image x:Key="feather_bow_bw" Source="Images\bw\tiny_gun.png"  x:Shared="false" />
-    <Image x:Key="pineapple_launcher_bw" Source="Images\bw\chunky_gun.png"  x:Shared="false"/>
+    <BitmapImage x:Key="coconut_gun_bw" UriSource="Images\bw\dk_gun.png"  x:Shared="false" />
+    <BitmapImage x:Key="peanut_popguns_bw" UriSource="Images\bw\diddy_gun.png"  x:Shared="false"/>
+    <BitmapImage x:Key="grape_shooter_bw" UriSource="Images\bw\lanky_gun.png"  x:Shared="false" />
+    <BitmapImage x:Key="feather_bow_bw" UriSource="Images\bw\tiny_gun.png"  x:Shared="false" />
+    <BitmapImage x:Key="pineapple_launcher_bw" UriSource="Images\bw\chunky_gun.png"  x:Shared="false"/>
 
-    <Image x:Key="bongo_blast_bw" Source="Images\bw\dk_inst.png"  x:Shared="false" />
-    <Image x:Key="guitar_gazump_bw" Source="Images\bw\diddy_inst.png"  x:Shared="false" />
-    <Image x:Key="trombone_tremor_bw" Source="Images\bw\lanky_inst.png"  x:Shared="false" />
-    <Image x:Key="saxophone_slam_bw" Source="Images\bw\tiny_inst.png"  x:Shared="false" />
-    <Image x:Key="triangle_trample_bw" Source="Images\bw\chunky_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="bongo_blast_bw" UriSource="Images\bw\dk_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="guitar_gazump_bw" UriSource="Images\bw\diddy_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="trombone_tremor_bw" UriSource="Images\bw\lanky_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="saxophone_slam_bw" UriSource="Images\bw\tiny_inst.png"  x:Shared="false" />
+    <BitmapImage x:Key="triangle_trample_bw" UriSource="Images\bw\chunky_inst.png"  x:Shared="false" />
 
-    <Image x:Key="gorilla_grab_bw" Source="Images\bw\dk_move.png"  x:Shared="false" />
-    <Image x:Key="chimpy_charge_bw" Source="Images\bw\diddy_move.png"  x:Shared="false" />
-    <Image x:Key="orangstand_bw" Source="Images\bw\lanky_move.png"  x:Shared="false" />
-    <Image x:Key="ponytail_twirl_bw" Source="Images\bw\tiny_move.png"  x:Shared="false" />
-    <Image x:Key="primate_punch_bw" Source="Images\bw\chunky_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="gorilla_grab_bw" UriSource="Images\bw\dk_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="chimpy_charge_bw" UriSource="Images\bw\diddy_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="orangstand_bw" UriSource="Images\bw\lanky_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="ponytail_twirl_bw" UriSource="Images\bw\tiny_move.png"  x:Shared="false" />
+    <BitmapImage x:Key="primate_punch_bw" UriSource="Images\bw\chunky_move.png"  x:Shared="false" />
 
-    <Image x:Key="strong_kong_bw" Source="Images\bw\dkbarrel.png"  x:Shared="false" />
-    <Image x:Key="rocketbarrel_boost_bw" Source="Images\bw\diddybarrel.png"  x:Shared="false" />
-    <Image x:Key="orangstand_sprint_bw" Source="Images\bw\lankybarrel.png"  x:Shared="false" />
-    <Image x:Key="mini_monkey_bw" Source="Images\bw\tinybarrel.png"  x:Shared="false" />
-    <Image x:Key="hunky_chunky_bw" Source="Images\bw\chunkybarrel.png"  x:Shared="false" />
+    <BitmapImage x:Key="strong_kong_bw" UriSource="Images\bw\dkbarrel.png"  x:Shared="false" />
+    <BitmapImage x:Key="rocketbarrel_boost_bw" UriSource="Images\bw\diddybarrel.png"  x:Shared="false" />
+    <BitmapImage x:Key="orangstand_sprint_bw" UriSource="Images\bw\lankybarrel.png"  x:Shared="false" />
+    <BitmapImage x:Key="mini_monkey_bw" UriSource="Images\bw\tinybarrel.png"  x:Shared="false" />
+    <BitmapImage x:Key="hunky_chunky_bw" UriSource="Images\bw\chunkybarrel.png"  x:Shared="false" />
 
-    <Image x:Key="baboon_blast_bw" Source="Images\bw\dkpad.png"  x:Shared="false" />
-    <Image x:Key="simian_spring_bw" Source="Images\bw\diddypad.png"  x:Shared="false" />
-    <Image x:Key="baboon_balloon_bw" Source="Images\bw\lankypad.png"  x:Shared="false" />
-    <Image x:Key="monkeyport_bw" Source="Images\bw\tinypad.png"  x:Shared="false" />
-    <Image x:Key="gorilla_gone_bw" Source="Images\bw\chunkypad.png"  x:Shared="false"/>
+    <BitmapImage x:Key="baboon_blast_bw" UriSource="Images\bw\dkpad.png"  x:Shared="false" />
+    <BitmapImage x:Key="simian_spring_bw" UriSource="Images\bw\diddypad.png"  x:Shared="false" />
+    <BitmapImage x:Key="baboon_balloon_bw" UriSource="Images\bw\lankypad.png"  x:Shared="false" />
+    <BitmapImage x:Key="monkeyport_bw" UriSource="Images\bw\tinypad.png"  x:Shared="false" />
+    <BitmapImage x:Key="gorilla_gone_bw" UriSource="Images\bw\chunkypad.png"  x:Shared="false"/>
 
-    <Image x:Key="key_1_bw" Source="Images\bw\k1.png"  x:Shared="false"/>
-    <Image x:Key="key_2_bw" Source="Images\bw\k2.png"  x:Shared="false"/>
-    <Image x:Key="key_3_bw" Source="Images\bw\k3.png"  x:Shared="false"/>
-    <Image x:Key="key_4_bw" Source="Images\bw\k4.png"  x:Shared="false"/>
-    <Image x:Key="key_5_bw" Source="Images\bw\k5.png"  x:Shared="false"/>
-    <Image x:Key="key_6_bw" Source="Images\bw\k6.png"  x:Shared="false"/>
-    <Image x:Key="key_7_bw" Source="Images\bw\k7.png"  x:Shared="false"/>
-    <Image x:Key="key_8_bw" Source="Images\bw\k8.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_1_bw" UriSource="Images\bw\k1.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_2_bw" UriSource="Images\bw\k2.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_3_bw" UriSource="Images\bw\k3.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_4_bw" UriSource="Images\bw\k4.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_5_bw" UriSource="Images\bw\k5.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_6_bw" UriSource="Images\bw\k6.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_7_bw" UriSource="Images\bw\k7.png"  x:Shared="false"/>
+    <BitmapImage x:Key="key_8_bw" UriSource="Images\bw\k8.png"  x:Shared="false"/>
 
-    <Image x:Key="basic_key_bw" Source="Images\bw\key.png"  x:Shared="false"/>
+    <BitmapImage x:Key="basic_key_bw" UriSource="Images\bw\key.png"  x:Shared="false"/>
     
-    <Image x:Key="unknown_vial_bw" Source="Images\bw\unknown_vial.png"  x:Shared="false"/>
-    <Image x:Key="unknown_key_bw" Source="Images\bw\unknown_key.png"  x:Shared="false"/>
+    <BitmapImage x:Key="unknown_vial_bw" UriSource="Images\bw\unknown_vial.png"  x:Shared="false"/>
+    <BitmapImage x:Key="unknown_key_bw" UriSource="Images\bw\unknown_key.png"  x:Shared="false"/>
 
-    <Image x:Key="progressive_slam_1_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
-    <Image x:Key="progressive_slam_2_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
-    <Image x:Key="progressive_slam_3_bw" Source="Images\bw\progressive_slam.png"  x:Shared="false"/>
-    <Image x:Key="fairy_camera_bw" Source="Images\bw\film.png"  x:Shared="false"/>
-    <Image x:Key="shockwave_bw" Source="Images\bw\shockwave.png"  x:Shared="false"/>
-    <Image x:Key="sniper_scope_bw" Source="Images\bw\sniper_scope.png"  x:Shared="false"/>
-    <Image x:Key="homing_ammo_bw" Source="Images\bw\homing_ammo.png"  x:Shared="false"/>
+    <BitmapImage x:Key="progressive_slam_1_bw" UriSource="Images\bw\progressive_slam.png"  x:Shared="false"/>
+    <BitmapImage x:Key="progressive_slam_2_bw" UriSource="Images\bw\progressive_slam.png"  x:Shared="false"/>
+    <BitmapImage x:Key="progressive_slam_3_bw" UriSource="Images\bw\progressive_slam.png"  x:Shared="false"/>
+    <BitmapImage x:Key="fairy_camera_bw" UriSource="Images\bw\film.png"  x:Shared="false"/>
+    <BitmapImage x:Key="shockwave_bw" UriSource="Images\bw\shockwave.png"  x:Shared="false"/>
+    <BitmapImage x:Key="sniper_scope_bw" UriSource="Images\bw\sniper_scope.png"  x:Shared="false"/>
+    <BitmapImage x:Key="homing_ammo_bw" UriSource="Images\bw\homing_ammo.png"  x:Shared="false"/>
 
-    <Image x:Key="diving_bw" Source="Images\bw\diving.png"  x:Shared="false"/>
-    <Image x:Key="orange_throwing_bw" Source="Images\bw\orange_throwing.png"  x:Shared="false"/>
-    <Image x:Key="barrel_throwing_bw" Source="Images\bw\barrel_throwing.png"  x:Shared="false"/>
-    <Image x:Key="vine_swinging_bw" Source="Images\bw\vine_swinging.png"  x:Shared="false"/>
-    <Image x:Key="climbing_bw" Source="Images\bw\climbing.png"  x:Shared="false"/>
+    <BitmapImage x:Key="diving_bw" UriSource="Images\bw\diving.png"  x:Shared="false"/>
+    <BitmapImage x:Key="orange_throwing_bw" UriSource="Images\bw\orange_throwing.png"  x:Shared="false"/>
+    <BitmapImage x:Key="barrel_throwing_bw" UriSource="Images\bw\barrel_throwing.png"  x:Shared="false"/>
+    <BitmapImage x:Key="vine_swinging_bw" UriSource="Images\bw\vine_swinging.png"  x:Shared="false"/>
+    <BitmapImage x:Key="climbing_bw" UriSource="Images\bw\climbing.png"  x:Shared="false"/>
 
-    <Image x:Key="bean_bw" Source="Images\bw\bean.png"  x:Shared="false"/>
+    <BitmapImage x:Key="bean_bw" UriSource="Images\bw\bean.png"  x:Shared="false"/>
     
-    <Image x:Key="rareware_coin_bw" Source="Images\bw\rareware_coin.png"  x:Shared="false"/>
-    <Image x:Key="nintendo_coin_bw" Source="Images\bw\nintendo_coin.png"  x:Shared="false"/>
+    <BitmapImage x:Key="rareware_coin_bw" UriSource="Images\bw\rareware_coin.png"  x:Shared="false"/>
+    <BitmapImage x:Key="nintendo_coin_bw" UriSource="Images\bw\nintendo_coin.png"  x:Shared="false"/>
     
-    <Image x:Key="kong_family_bw" Source="Images\bw\tag_barrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="kong_family_bw" UriSource="Images\bw\tag_barrel.png"  x:Shared="false"/>
 
-    <Image x:Key="cranky_bw" Source="Images\bw\cranky.png" x:Shared="false"/>
-    <Image x:Key="candy_bw" Source="Images\bw\candy.png" x:Shared="false"/>
-    <Image x:Key="funky_bw" Source="Images\bw\funky.png" x:Shared="false"/>
-    <Image x:Key="snide_bw" Source="Images\bw\snide.png" x:Shared="false"/>
+    <BitmapImage x:Key="cranky_bw" UriSource="Images\bw\cranky.png" x:Shared="false"/>
+    <BitmapImage x:Key="candy_bw" UriSource="Images\bw\candy.png" x:Shared="false"/>
+    <BitmapImage x:Key="funky_bw" UriSource="Images\bw\funky.png" x:Shared="false"/>
+    <BitmapImage x:Key="snide_bw" UriSource="Images\bw\snide.png" x:Shared="false"/>
 
-    <Image x:Key="army_bw" Source="Images\bw\army.png" x:Shared="false"/>
-    <Image x:Key="army2_bw" Source="Images\bw\army2.png" x:Shared="false"/>
-    <Image x:Key="doga_bw" Source="Images\bw\doga.png" x:Shared="false"/>
-    <Image x:Key="doga2_bw" Source="Images\bw\doga2.png" x:Shared="false"/>
-    <Image x:Key="pufftoss_bw" Source="Images\bw\pufftoss.png" x:Shared="false"/>
-    <Image x:Key="madjack_bw" Source="Images\bw\madjack.png" x:Shared="false"/>
-    <Image x:Key="kutout_bw" Source="Images\bw\kutout.png" x:Shared="false"/>
+    <BitmapImage x:Key="army_bw" UriSource="Images\bw\army.png" x:Shared="false"/>
+    <BitmapImage x:Key="army2_bw" UriSource="Images\bw\army2.png" x:Shared="false"/>
+    <BitmapImage x:Key="doga_bw" UriSource="Images\bw\doga.png" x:Shared="false"/>
+    <BitmapImage x:Key="doga2_bw" UriSource="Images\bw\doga2.png" x:Shared="false"/>
+    <BitmapImage x:Key="pufftoss_bw" UriSource="Images\bw\pufftoss.png" x:Shared="false"/>
+    <BitmapImage x:Key="madjack_bw" UriSource="Images\bw\madjack.png" x:Shared="false"/>
+    <BitmapImage x:Key="kutout_bw" UriSource="Images\bw\kutout.png" x:Shared="false"/>
 
-    <Image x:Key="homing_scope_bw" Source="Images\bw\homingscope.png" x:Shared="false"/>
-    <Image x:Key="camera_shockwave_bw" Source="Images\bw\filmwave.png" x:Shared="false"/>
+    <BitmapImage x:Key="homing_scope_bw" UriSource="Images\bw\homingscope.png" x:Shared="false"/>
+    <BitmapImage x:Key="camera_shockwave_bw" UriSource="Images\bw\filmwave.png" x:Shared="false"/>
 
-    <Image x:Key="hint_bw" Source="Images\bw\hint.png" x:Shared="false"/>
+    <BitmapImage x:Key="hint_bw" UriSource="Images\bw\hint.png" x:Shared="false"/>
 
 </ResourceDictionary>
