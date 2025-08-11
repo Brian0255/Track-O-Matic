@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:TrackOMatic">
+
+    <BitmapImage x:Key="strong_kong" UriSource="Images\dk64\dkbarrel_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="rocketbarrel_boost" UriSource="Images\dk64\diddybarrel_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="orangstand_sprint" UriSource="Images\dk64\lankybarrel_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="mini_monkey" UriSource="Images\dk64\tinybarrel_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="hunky_chunky" UriSource="Images\dk64\chunkybarrel_c.png"  x:Shared="false"/>
+
+    <BitmapImage x:Key="baboon_blast" UriSource="Images\dk64\dkpad_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="simian_spring" UriSource="Images\dk64\diddypad_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="monkeyport" UriSource="Images\dk64\tinypad_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="gorilla_gone" UriSource="Images\dk64\chunkypad_c.png" />
+
+    <!--Black&White-->
+    <BitmapImage x:Key="strong_kong_bw" UriSource="Images\bw\dkbarrel_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="rocketbarrel_boost_bw" UriSource="Images\bw\diddybarrel_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="orangstand_sprint_bw" UriSource="Images\bw\lankybarrel_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="mini_monkey_bw" UriSource="Images\bw\tinybarrel_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="hunky_chunky_bw" UriSource="Images\bw\chunkybarrel_c.png"  x:Shared="false"/>
+
+    <BitmapImage x:Key="baboon_blast_bw" UriSource="Images\bw\dkpad_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="simian_spring_bw" UriSource="Images\bw\diddypad_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="monkeyport_bw" UriSource="Images\bw\tinypad_c.png"  x:Shared="false"/>
+    <BitmapImage x:Key="gorilla_gone_bw" UriSource="Images\bw\chunkypad_c.png" />
+</ResourceDictionary>

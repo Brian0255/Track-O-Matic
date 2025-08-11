@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using TrackOMatic.Properties;
 
 namespace TrackOMatic
 {
@@ -25,6 +26,27 @@ namespace TrackOMatic
 
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            UpdatePadBarrelImages();
+        }
+
+        public void UpdatePadBarrelImages()
+        {
+            var dicts = Resources.MergedDictionaries;
+            dicts.Clear();
+            dicts.Add(new ResourceDictionary
+            {
+                Source = new Uri("Dictionary1.xaml", UriKind.Relative)
+            });
+            var path = Settings.Default.ColoredBarrelPadMoves ? "ColoredBarrelPadImages.xaml" : "BaseBarrelPadImages.xaml";
+            dicts.Add(new ResourceDictionary
+            {
+                Source = new Uri(path, UriKind.Relative)
+            });
         }
     }
 }

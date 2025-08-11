@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:TrackOMatic">
+
+    <BitmapImage x:Key="strong_kong" UriSource="Images\dk64\dkbarrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="rocketbarrel_boost" UriSource="Images\dk64\diddybarrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="orangstand_sprint" UriSource="Images\dk64\lankybarrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="mini_monkey" UriSource="Images\dk64\tinybarrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="hunky_chunky" UriSource="Images\dk64\chunkybarrel.png"  x:Shared="false"/>
+
+    <BitmapImage x:Key="baboon_blast" UriSource="Images\dk64\dkpad.png"  x:Shared="false"/>
+    <BitmapImage x:Key="simian_spring" UriSource="Images\dk64\diddypad.png"  x:Shared="false"/>
+    <BitmapImage x:Key="monkeyport" UriSource="Images\dk64\tinypad.png"  x:Shared="false"/>
+    <BitmapImage x:Key="gorilla_gone" UriSource="Images\dk64\chunkypad.png" />
+
+    <!--Black&White-->
+    <BitmapImage x:Key="strong_kong_bw" UriSource="Images\bw\dkbarrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="rocketbarrel_boost_bw" UriSource="Images\bw\diddybarrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="orangstand_sprint_bw" UriSource="Images\bw\lankybarrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="mini_monkey_bw" UriSource="Images\bw\tinybarrel.png"  x:Shared="false"/>
+    <BitmapImage x:Key="hunky_chunky_bw" UriSource="Images\bw\chunkybarrel.png"  x:Shared="false"/>
+
+    <BitmapImage x:Key="baboon_blast_bw" UriSource="Images\bw\dkpad.png"  x:Shared="false"/>
+    <BitmapImage x:Key="simian_spring_bw" UriSource="Images\bw\diddypad.png"  x:Shared="false"/>
+    <BitmapImage x:Key="monkeyport_bw" UriSource="Images\bw\tinypad.png"  x:Shared="false"/>
+    <BitmapImage x:Key="gorilla_gone_bw" UriSource="Images\bw\chunkypad.png" />
+</ResourceDictionary>
