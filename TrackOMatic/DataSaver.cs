@@ -50,6 +50,9 @@ namespace TrackOMatic
             savedProgress.BLockerImageIndexes = MainWindow.BLockerHints.GetImageIndexes();
             savedProgress.HelmDoorImageIndexes = MainWindow.HelmDoorHints.GetImageIndexes();
             savedProgress.HelmDoorCounts = MainWindow.HelmDoorHints.GetItemCounts();
+            savedProgress.HelmKongs = MainWindow.GetHelmKongs();
+            savedProgress.BossKongs = MainWindow.GetBossKongs();
+            savedProgress.LevelOrder = MainWindow.GetLevelOrder();
             var JSONString = JsonConvert.SerializeObject(savedProgress);
             if(writeToFile) File.WriteAllText(filePath, JSONString);
         }
@@ -109,6 +112,9 @@ namespace TrackOMatic
             MainWindow.BLockerHints.LoadSavedImageIndexes(savedProgress.BLockerImageIndexes);
             MainWindow.HelmDoorHints.LoadSavedHelmDoorCounts(savedProgress.HelmDoorCounts);
             MainWindow.HelmDoorHints.LoadSavedImageIndexes(savedProgress.HelmDoorImageIndexes);
+            if(savedProgress.HelmKongs != null) MainWindow.LoadHelmKongs(savedProgress.HelmKongs);
+            if (savedProgress.BossKongs != null) MainWindow.LoadBossKongs(savedProgress.BossKongs);
+            if (savedProgress.LevelOrder != null) MainWindow.LoadLevelOrder(savedProgress.LevelOrder);
         }
 
         public void AddSavedItem(SavedItem savedItem)

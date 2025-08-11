@@ -50,6 +50,11 @@ namespace TrackOMatic
             UpdateLabel();
         }
 
+        public int GetNumber()
+        {
+            return currentNumber;
+        }
+
         private void LevelOrder_LeftPress(object sender, RoutedEventArgs e)
         {
             if (RegionName == RegionName.HIDEOUT_HELM && currentNumber == 8 && !Settings.Default.HelmInLevelOrder) return;
