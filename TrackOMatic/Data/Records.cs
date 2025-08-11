@@ -6,7 +6,7 @@ namespace TrackOMatic
 {
     public record GameVerificationInfo(uint TargetAddress, int TotalBits, uint TargetValue);
     public record AttachedProcessInfo(Process Process, ulong StartAddress);
-    public record OffsetInfoEntry(ItemName ItemName, uint Offset, int TotalBits, int Bitmask = -1, int TargetValue = 0);
+    public record OffsetInfoEntry(ItemName ItemName, uint Offset, int TotalBits, int Bitmask = 0, bool UsesCountStruct = false);
     public record HintTypeSettings(
         Visibility PathItemsVisible, 
         Visibility FoundItemVisible, 
