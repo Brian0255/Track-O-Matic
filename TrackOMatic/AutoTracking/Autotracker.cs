@@ -38,6 +38,7 @@ namespace TrackOMatic
         public string currentSongName { get; private set; }
         private SavedProgress savedProgress;
         public int RandomizerVersion { get; private set; }
+        public int RandomizerSubVersion { get; private set; }
 
         private Dictionary<ItemName, RegionName> trackedItemLocations;
         private System.Timers.Timer timer;
@@ -119,6 +120,7 @@ namespace TrackOMatic
             CurrentRegion = RegionName.UNKNOWN;
             currentSongName = "";
             RandomizerVersion = 0;
+            RandomizerSubVersion = 0;
             currentSongGame = "";
             autosave = false;
             previousMap = -1;
@@ -239,10 +241,14 @@ namespace TrackOMatic
             foreach (var key in CollectibleItemAmounts.Keys.ToList()) CollectibleItemAmounts[key] = 0;
         }
 
+        private void UpdateVersion()
+        {
+            RandomizerVersion = ReadMemory(0x7FFFF4, 8);
+            RandomizerSubVersion = ReadMemory(0x7FFFF5, 8);
+        }
+
         private void CheckVersion()
         {
-            uint versionOffset = 0x7FFFF4;
-            RandomizerVersion = ReadMemory(versionOffset, 8);
             var useNewOffsets = (RandomizerVersion >= 5);
             if (useNewOffsets != OffsetInfo.useNewOffsets)
             {
@@ -331,6 +337,7 @@ namespace TrackOMatic
             AttachIfNecessary();
             if (!attached) return;
             if (!ProcessConnected()) return;
+            UpdateVersion();
             CheckVersion();
             UpdateAddressBase();
             UpdateCurrentRegion();
@@ -355,9 +362,15 @@ namespace TrackOMatic
             return count;
         }
 
+        private bool IsOldBlueprintSystem()
+        {
+            return ((RandomizerVersion < 5.0) || (RandomizerVersion == 5.0 && RandomizerSubVersion == 0));
+        }
+
         private void ReadBlueprintsObtained()
         {
             //To note, BP "turned in" flags still exist and subtract from these set totals after
+            CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] = 0;
             if (RandomizerVersion < 5.0) return;
             var blueprintKeys = new List<ItemType>() { 
                 ItemType.DONKEY_BLUEPRINT, ItemType.DIDDY_BLUEPRINT, ItemType.LANKY_BLUEPRINT, ItemType.TINY_BLUEPRINT, ItemType.CHUNKY_BLUEPRINT 
@@ -365,8 +378,15 @@ namespace TrackOMatic
             for(int i = 0; i < blueprintKeys.Count; i++)
             {
                 var itemType = blueprintKeys[i];
-                var blueprintBitfield = ReadMemory((uint)(addressBase + i), 8);
-                CollectibleItemAmounts[itemType] = CountBits(blueprintBitfield);
+                var kongBlueprints = ReadMemory((uint)(addressBase + i), 8);
+                kongBlueprints = IsOldBlueprintSystem() ? CountBits(kongBlueprints) : kongBlueprints;
+                CollectibleItemAmounts[itemType] = kongBlueprints;
+                CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] = CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] + kongBlueprints;
+                if (!IsOldBlueprintSystem())
+                {
+                    var turnedInBPs = ReadMemory((uint)(addressBase + 0x19 + i),8);
+                    CollectibleItemAmounts[itemType] = CollectibleItemAmounts[itemType] - turnedInBPs;
+                }
             }
         }
         private void ReadMemoryForChecks()
@@ -404,7 +424,7 @@ namespace TrackOMatic
             if (isFlag)
             {
                 toAdd = 1;
-                if (TURNED_BLUEPRINT_TO_COLLECTIBLE.ContainsKey(checkInfo.ItemType))
+                if (TURNED_BLUEPRINT_TO_COLLECTIBLE.ContainsKey(checkInfo.ItemType) && IsOldBlueprintSystem())
                 {
                     //adjust correctly if the user has turned in any blueprints
                     itemTypeToUse = TURNED_BLUEPRINT_TO_COLLECTIBLE[itemTypeToUse];
