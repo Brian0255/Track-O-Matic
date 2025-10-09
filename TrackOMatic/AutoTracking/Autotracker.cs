@@ -99,13 +99,16 @@ namespace TrackOMatic
             {ItemType.TINY_BLUEPRINT_TURNED, ItemType.TINY_BLUEPRINT },
             {ItemType.CHUNKY_BLUEPRINT_TURNED, ItemType.CHUNKY_BLUEPRINT }
         };
-        private void InitializeChecks()
+        private void InitializeChecks(bool resetTrackedItems = true)
         {
             Checks = new();
             foreach (var offsetInfo in OffsetInfo.OFFSETS)
             {
                 Checks.Add(new AutotrackedCheck(offsetInfo.ItemName, offsetInfo.Offset, offsetInfo.TotalBits, offsetInfo.Bitmask, offsetInfo.UsesCountStruct));
-                TrackedAlready[offsetInfo.ItemName] = false;
+                if (resetTrackedItems)
+                {
+                    TrackedAlready[offsetInfo.ItemName] = false;
+                }
             }
         }
 
@@ -253,7 +256,7 @@ namespace TrackOMatic
             if (useNewOffsets != OffsetInfo.useNewOffsets)
             {
                 OffsetInfo.useNewOffsets = useNewOffsets;
-                InitializeChecks();
+                InitializeChecks(false);
             }
         }
 
