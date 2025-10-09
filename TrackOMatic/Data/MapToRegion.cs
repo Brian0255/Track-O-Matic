@@ -11,7 +11,7 @@ namespace TrackOMatic
         public static readonly Dictionary<int, RegionName> MAP = new()
         {
             //only including addresses that we want tracked
-            //(shoutouts to dk64 randomizer for having this info in the repository)
+            //referenced from DK64 Randomizer: base-hack/include/common_enums.h
 
             {0x002, RegionName.FRANTIC_FACTORY },
             {0x004, RegionName.JUNGLE_JAPES },
@@ -22,6 +22,8 @@ namespace TrackOMatic
             {0x00C, RegionName.JUNGLE_JAPES },
             {0x00D, RegionName.JUNGLE_JAPES},
             {0x00E, RegionName.ANGRY_AZTEC },
+            //snide's shop, for snide rewards
+            {0x00F, RegionName.DK_ISLES },
             {0x010, RegionName.ANGRY_AZTEC },
             {0x011, RegionName.HIDEOUT_HELM },
             {0x013, RegionName.ANGRY_AZTEC },
