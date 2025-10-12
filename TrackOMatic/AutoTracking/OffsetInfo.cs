@@ -398,7 +398,7 @@ namespace TrackOMatic
             new OffsetInfoEntry(ItemName.ORANGE_THROWING, 0x18, 8, 64, true),
             new OffsetInfoEntry(ItemName.BARREL_THROWING, 0x18, 8, 32, true),
             new OffsetInfoEntry(ItemName.VINE_SWINGING, 0x18, 8, 16, true),
-            new OffsetInfoEntry(ItemName.CLIMBING, 0x7ECEFA,8,128),
+            new OffsetInfoEntry(ItemName.CLIMBING, 0x7ECEFB,8,128),
 
             new OffsetInfoEntry(ItemName.HOMING_AMMO, 0x7FC9B0,8,2),
             new OffsetInfoEntry(ItemName.SNIPER_SCOPE, 0x7FC9B0,8,4),
