@@ -10,7 +10,7 @@ env:
   SOLUTION_FILE: Track-O-Matic.sln
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
@@ -32,6 +32,23 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Executable
+          name: Windows Executable
           path: |
             **/bin/Release/*
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '4.8'
+      - name: Restore packages
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
+      - name: Build solution
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration ${{ env.CONFIGURATION }} --runtime linux-x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Linux-Binaries
+          path: '**/bin/${{ env.CONFIGURATION }}/net*/linux-x64/*'
