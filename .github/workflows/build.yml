@@ -1,0 +1,37 @@
+name: Build Visual Studio Project
+
+on:
+  push:
+    branches:
+      - build
+  workflow_dispatch:
+
+env:
+  SOLUTION_FILE: Track-O-Matic.sln
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.2.0
+
+      - name: Restore packages
+        run: nuget restore ${{ env.SOLUTION_FILE }}
+
+      - name: Build solution
+        run: msbuild ${{ env.SOLUTION_FILE }} /p:Configuration=Release /p:Platform="Any CPU"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Executable
+          path: |
+            **/bin/Release/*
