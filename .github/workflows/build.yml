@@ -86,7 +86,6 @@ jobs:
           git push origin $VERSION
           ls
           ls dist/windows
-          ls dist/linux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Github Release
@@ -97,7 +96,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           files: |
-            './dist/windows/**'
-            './dist/linux/**'
+            dist/windows/**
+            dist/linux/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
