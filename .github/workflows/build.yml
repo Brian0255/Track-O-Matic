@@ -104,7 +104,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           files: |
-            dist/windows/**
-            dist/linux/**
+            dist/windows/windows.zip
+            dist/linux/linux.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
