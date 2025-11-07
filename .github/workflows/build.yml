@@ -31,11 +31,11 @@ jobs:
       - name: Build solution
         run: msbuild ${{ env.SOLUTION_FILE }} /p:Configuration=Release /p:Platform="Any CPU" /p:OutDir=dist/windows/
 
-      - name: Upload build artifactsthe
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: 'Windows Executable'
-          path: ./dist/windows
+          name: Windows Executable
+          path: dist/windows
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -51,8 +51,8 @@ jobs:
         run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --runtime linux-x64 --output dist/linux/
       - uses: actions/upload-artifact@v4
         with:
-          name: 'Linux Executable'
-          path: ./dist/linux
+          name: Linux Executable
+          path: dist/linux
   release:
     needs: [build-windows, build-linux]
     if: always()  
@@ -66,15 +66,15 @@ jobs:
         id: windows_built
         uses: actions/download-artifact@v4
         with:
-          name: 'Windows Executable'
-          path: ./dist/windows
+          name: Windows Executable
+          path: dist/windows
         continue-on-error: true
       - name: Download Linux built
         id: linux_built
         uses: actions/download-artifact@v4
         with:
-          name: 'Linux Executable'
-          path: ./dist/linux
+          name: Linux Executable
+          path: dist/linux
         continue-on-error: true
       - name: Generate tag
         run: |
