@@ -34,7 +34,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Windows Executable
+          name: 'Windows Executable'
           path: ./dist/windows
   build-linux:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
         run: dotnet build ${{ env.SOLUTION_FILE }} --configuration release --runtime linux-x64
       - uses: actions/upload-artifact@v4
         with:
-          name: Linux-Binaries
+          name: 'Linux Executable'
           path: ./dist/linux
   release:
     needs: [build-windows, build-linux]
@@ -66,14 +66,14 @@ jobs:
         id: windows_built
         uses: actions/download-artifact@v4
         with:
-          name: Windows Executable
+          name: 'Windows Executable'
           path: ./dist/windows
         continue-on-error: true
       - name: Download Linux built
         id: linux_built
         uses: actions/download-artifact@v4
         with:
-          name: Linux Executable
+          name: 'Linux Executable'
           path: ./dist/linux
         continue-on-error: true
       - name: Generate tag
