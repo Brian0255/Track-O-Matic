@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.3
@@ -48,7 +50,7 @@ jobs:
       - name: Restore packages
         run: dotnet restore ${{ env.SOLUTION_FILE }}
       - name: Build solution
-        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration ${{ env.CONFIGURATION }} --runtime linux-x64
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration release --runtime linux-x64
       - uses: actions/upload-artifact@v4
         with:
           name: Linux-Binaries
@@ -64,6 +66,10 @@ jobs:
       - name: Generate tag
         run: |
           VERSION="v$(date +'%Y.%m.%d.%H%M')"   # e.g. v2025.11.06.2019
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $VERSION
+          git push origin $VERSION
           git tag $VERSION
           git push origin $VERSION
         env:
