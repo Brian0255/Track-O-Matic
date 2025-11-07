@@ -84,6 +84,7 @@ jobs:
           git config user.email "github-actions@github.com"
           git tag $VERSION
           git push origin $VERSION
+          ls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Github Release
