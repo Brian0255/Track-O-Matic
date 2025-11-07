@@ -18,8 +18,6 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.3
@@ -56,16 +54,27 @@ jobs:
           name: Linux-Binaries
           path: '**/bin/linux-x64/*'
   release:
-    needs: build-windows
+    needs: [build-windows, build-linux]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download Windows built
+        uses: actions/download-artifact@v4
         with:
           name: Windows Executable
-          path: ./dist
+          path: ./dist/windows
+      - name: Download Linux built
+        uses: actions/download-artifact@v4
+        with:
+          name: Linux Executable
+          path: ./dist/linux
       - name: Generate tag
         run: |
           VERSION="v$(date +'%Y.%m.%d.%H%M')"   # e.g. v2025.11.06.2019
+          echo "TAG=$VERSION" >> $GITHUB_ENV
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git tag $VERSION
@@ -75,7 +84,9 @@ jobs:
       - name: Create Github Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          files: './dist/Release/*'
+          tag_name: ${{ env.TAG }}
+          files: |
+            './dist/windows/*'
+            './dist/linux/*'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
