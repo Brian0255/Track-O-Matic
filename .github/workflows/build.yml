@@ -84,8 +84,16 @@ jobs:
           git config user.email "github-actions@github.com"
           git tag $VERSION
           git push origin $VERSION
-          ls
-          ls dist/windows
+          if [ -d "dist/windows" ] && [ "$(ls -A dist/windows)" ]; then
+            zip -r windows.zip dist/windows || true
+          else
+            echo "No Windows executable found."
+          fi
+          if [ -d "dist/linux" ] && [ "$(ls -A dist/linux)" ]; then
+            tar -czf linux.tar.gz dist/linux || true
+          else
+            echo "No Linux binary found.
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Github Release
