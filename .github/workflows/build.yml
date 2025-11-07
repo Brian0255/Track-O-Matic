@@ -92,7 +92,7 @@ jobs:
           if [ -d "dist/linux" ] && [ "$(ls -A dist/linux)" ]; then
             tar -czf linux.tar.gz dist/linux || true
           else
-            echo "No Linux binary found.
+            echo "No Linux binary found."
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
