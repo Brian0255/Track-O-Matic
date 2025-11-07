@@ -1,9 +1,11 @@
-name: Build Visual Studio Project
+name: Build Visual Studio Project & Release
 
 on:
   push:
     branches:
       - build
+    tags:
+      - 'auto'
   workflow_dispatch:
 
 env:
@@ -33,8 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Windows Executable
-          path: |
-            **/bin/Release/*
+          path: '**/bin/Release/*'
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +44,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '4.8'
+          dotnet-version: '6.0'
       - name: Restore packages
         run: dotnet restore ${{ env.SOLUTION_FILE }}
       - name: Build solution
@@ -51,4 +52,18 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: Linux-Binaries
-          path: '**/bin/${{ env.CONFIGURATION }}/net*/linux-x64/*'
+          path: '**/bin/linux-x64/*'
+  release:
+    needs: build-windows
+    run-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+        name: Windows Executable
+        path: ./dist
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: './dist/Release/*'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
