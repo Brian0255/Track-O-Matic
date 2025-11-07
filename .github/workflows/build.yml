@@ -55,12 +55,12 @@ jobs:
           path: '**/bin/linux-x64/*'
   release:
     needs: build-windows
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
-        name: Windows Executable
-        path: ./dist
+          name: Windows Executable
+          path: ./dist
       - name: Create Github Release
         uses: softprops/action-gh-release@v1
         with:
