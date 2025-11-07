@@ -29,13 +29,13 @@ jobs:
         run: nuget restore ${{ env.SOLUTION_FILE }}
 
       - name: Build solution
-        run: msbuild ${{ env.SOLUTION_FILE }} /p:Configuration=Release /p:Platform="Any CPU" /p:OutDir=dist/windows/
+        run: msbuild ${{ env.SOLUTION_FILE }} /p:Configuration=Release /p:Platform="Any CPU" /p:OutDir=${{ github.workspace }}\dist\windows\
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Windows Executable
-          path: dist/windows
+          path: dist/windows/**
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -48,11 +48,11 @@ jobs:
       - name: Restore packages
         run: dotnet restore ${{ env.SOLUTION_FILE }}
       - name: Build solution
-        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --runtime linux-x64 --output dist/linux/
+        run: dotnet publish ${{ env.SOLUTION_FILE }} --configuration Release --runtime linux-x64 --output dist/linux/
       - uses: actions/upload-artifact@v4
         with:
           name: Linux Executable
-          path: dist/linux
+          path: dist/linux/**
   release:
     needs: [build-windows, build-linux]
     if: always()  
@@ -94,7 +94,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           files: |
-            './dist/windows/*'
-            './dist/linux/*'
+            './dist/windows/**'
+            './dist/linux/**'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
