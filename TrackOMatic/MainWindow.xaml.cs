@@ -87,6 +87,7 @@ namespace TrackOMatic
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
 
+        private EntranceTrackerWindow entranceTrackerWindow;
         private Timer SaveTimer;
         public MainWindow()
         {
@@ -110,6 +111,33 @@ namespace TrackOMatic
             Reset();
             AdjustBasedOnCompactMode();
             UpdateProgHintImage();
+            
+            // Initialize entrance tracker window
+            entranceTrackerWindow = new EntranceTrackerWindow();
+            
+            // Subscribe to settings changes for entrance tracker
+            Settings.Default.PropertyChanged += Settings_PropertyChanged;
+            
+            // Show entrance tracker if setting is enabled
+            if (Settings.Default.EntranceTracker)
+            {
+                entranceTrackerWindow.Show();
+            }
+        }
+
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.Default.EntranceTracker))
+            {
+                if (Settings.Default.EntranceTracker)
+                {
+                    entranceTrackerWindow.Show();
+                }
+                else
+                {
+                    entranceTrackerWindow.Hide();
+                }
+            }
         }
 
         private void UpdateHintDisplayToggles()
@@ -570,6 +598,8 @@ namespace TrackOMatic
             SetSong("", "");
             Autotracker.Reset();
             DataSaver.Reset();
+            if (entranceTrackerWindow?.EntranceTrackerControl != null) 
+                entranceTrackerWindow.EntranceTrackerControl.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)
         {
@@ -674,6 +704,10 @@ namespace TrackOMatic
             if(BroadcastView != null)
             {
                 BroadcastView.Close();
+            }
+            if(entranceTrackerWindow != null)
+            {
+                entranceTrackerWindow.Close();
             }
         }
 

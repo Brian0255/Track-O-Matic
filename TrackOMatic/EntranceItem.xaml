@@ -1,0 +1,122 @@
+<UserControl x:Class="TrackOMatic.EntranceItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrackOMatic"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="800">
+    <Border Background="{StaticResource RegionImageBG}" 
+            BorderBrush="{StaticResource BaseBG}" 
+            BorderThickness="1" 
+            CornerRadius="3" 
+            Margin="2">
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Source Entrance Name -->
+            <TextBlock x:Name="EntranceName" 
+                      Grid.Column="0" 
+                      Text="Entrance" 
+                      VerticalAlignment="Center"
+                      Foreground="White"
+                      FontSize="13"
+                      TextWrapping="Wrap"
+                      Margin="0,0,5,0"/>
+
+            <!-- Arrow -->
+            <TextBlock Grid.Column="1" 
+                      Text=" → " 
+                      VerticalAlignment="Center"
+                      Foreground="#FFD700"
+                      FontSize="16"
+                      FontWeight="Bold"
+                      Margin="5,0"/>
+
+            <!-- Destination TextBox with Autocomplete -->
+            <Grid Grid.Column="2">
+                <TextBox x:Name="DestinationTextBox" 
+                        VerticalAlignment="Center"
+                        Background="{StaticResource VeryDark}"
+                        Foreground="White"
+                        BorderBrush="{StaticResource BaseBG}"
+                        BorderThickness="1"
+                        Padding="5,3"
+                        FontSize="13"
+                        TextWrapping="Wrap"
+                        AcceptsReturn="False"
+                        MinHeight="25"
+                        MaxHeight="80"
+                        VerticalScrollBarVisibility="Auto"
+                        TextChanged="DestinationTextBox_TextChanged"
+                        PreviewKeyDown="DestinationTextBox_PreviewKeyDown"
+                        LostFocus="DestinationTextBox_LostFocus"/>
+                
+                <!-- Autocomplete Popup -->
+                <Popup x:Name="AutocompletePopup" 
+                       PlacementTarget="{Binding ElementName=DestinationTextBox}"
+                       Placement="Bottom"
+                       StaysOpen="False"
+                       AllowsTransparency="True"
+                       Closed="AutocompletePopup_Closed">
+                    <Border Background="{StaticResource VeryDark}"
+                            BorderBrush="{StaticResource BaseBG}"
+                            BorderThickness="1"
+                            MaxHeight="200">
+                        <ListBox x:Name="AutocompleteListBox"
+                                Background="{StaticResource VeryDark}"
+                                Foreground="White"
+                                BorderThickness="0"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                SelectionChanged="AutocompleteListBox_SelectionChanged"
+                                PreviewKeyDown="AutocompleteListBox_PreviewKeyDown">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Background" Value="{StaticResource VeryDark}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Padding" Value="5,3"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource RegionImageBG}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource BaseBG}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
+                </Popup>
+            </Grid>
+
+            <!-- Clear Button -->
+            <Button x:Name="ClearButton" 
+                   Grid.Column="3" 
+                   Content="✕" 
+                   Width="25" 
+                   Height="25"
+                   Margin="5,0,0,0"
+                   Background="{StaticResource VeryDark}"
+                   Foreground="#FF6B6B"
+                   BorderBrush="{StaticResource BaseBG}"
+                   BorderThickness="1"
+                   FontWeight="Bold"
+                   FontSize="14"
+                   Click="ClearButton_Click"
+                   ToolTip="Clear destination"/>
+        </Grid>
+    </Border>
+</UserControl>
