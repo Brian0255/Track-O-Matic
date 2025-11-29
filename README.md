@@ -15,6 +15,8 @@
 5. If you're using spoiler hints, drag the spoiler log that you downloaded onto the tracker. Alternatively, you can click File -> Open Spoiler Log and select it.
 6. That's it! You're all set for that seed. If you want to do another one, make sure you click "Reset Tracker" after loading a new ROM.
 
+**FOR LINUX USERS:** These instructions should work if you run the portable version of ![Rosalie's Mupen GUI](https://github.com/Rosalie241/RMG/releases/latest) along with the tracker in Wine.
+
 ## User Controls
 - Left clicking an item in the bottom area will allow you to drag it to a region. If the item is in a region, left clicking will put it back to the bottom.
 - Middle clicking an item, scrolling your wheel OR shift clicking it will **star** it. A starred item will subtract 1 from a region's required check total (if you have that on), so this is very useful when you want to note things that are logically needed.
