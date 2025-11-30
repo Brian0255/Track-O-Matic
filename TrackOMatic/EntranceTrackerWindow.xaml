@@ -1,0 +1,14 @@
+<Window x:Class="TrackOMatic.EntranceTrackerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:TrackOMatic"
+        Title="Entrance Randomizer Tracker" 
+        Height="600" 
+        Width="500"
+        Background="{StaticResource RegionBG}"
+        WindowStyle="ToolWindow"
+        ResizeMode="CanResizeWithGrip"
+        ShowInTaskbar="True"
+        Topmost="True">
+    <local:EntranceTracker x:Name="EntranceTrackerControl"/>
+</Window>
