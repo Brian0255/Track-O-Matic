@@ -156,7 +156,7 @@ namespace TrackOMatic
             var parentProcessName = GetParentProcessName(target);
 
             if (parentProcessName != null && parentProcessName == "parallel-launcher") {
-                processInfo = RunRetroarchScan(target, gameVerificationInfo, addressDLL, 0x845000, 0xD56000, 16, isMupen);
+                processInfo = RunRetroarchScan(target, gameVerificationInfo, addressDLL, 0x1400000, 0x1800000, 16, isMupen);
             }
             else { 
                 //forcibly set isMupen to false even if it isn't just because retroarch is jank or something
