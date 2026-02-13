@@ -198,5 +198,11 @@ namespace TrackOMatic
             dialog.ShowDialog();
             UpdateProgHintImage();
         }
+
+        private void EntranceTrackerToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.EntranceTracker = EntranceTrackerOption.IsChecked;
+            Settings.Default.Save();
+        }
     }
 }

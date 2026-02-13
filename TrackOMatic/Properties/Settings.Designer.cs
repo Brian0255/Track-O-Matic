@@ -394,5 +394,17 @@ namespace TrackOMatic.Properties {
                 this["ColoredBarrelPadMoves"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EntranceTracker {
+            get {
+                return ((bool)(this["EntranceTracker"]));
+            }
+            set {
+                this["EntranceTracker"] = value;
+            }
+        }
     }
 }
