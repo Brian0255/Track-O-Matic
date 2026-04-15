@@ -6,7 +6,7 @@
              xmlns:properties="clr-namespace:TrackOMatic.Properties"
              xmlns:local="clr-namespace:TrackOMatic"
              mc:Ignorable="d" 
-             Height="160" Width="280" Topmost ="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}"
+             Height="160" Width="240" Topmost ="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}"
     Title="Set Progressive Hint Settings"
         ResizeMode="NoResize"
         Background="{StaticResource RegionBG}">
@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*" />
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="0*" />
         </Grid.ColumnDefinitions>
         <ComboBox Margin="6" Padding="6,5,0,0" Name="itemDropdown" Grid.Row="1" Grid.Column="0"
                   SelectedItem="{Binding SelectedItemType, Mode=TwoWay}"
@@ -26,8 +26,8 @@
                   VerticalAlignment="stretch"
                   FontSize="14" FontFamily="Helvetica"/>
         <TextBlock Margin="0,5,0,0" Grid.Row="0"  Text="Item Type" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBlock Margin="0,5,0,0" Grid.Row="0" Grid.Column="1" Text="Cap" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBox Padding="2,4,0,0" Name="HintCapText" PreviewTextInput="HintCap_PreviewTextInput" Margin="6" Grid.Row="1" Grid.Column="1" Text="{Binding HintCap}" FontFamily="Helvetica" FontSize="14" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <!--TextBlock Margin="0,5,0,0" Grid.Row="0" Grid.Column="1" Text="Cap" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center"/-->
+        <!--TextBox Padding="2,4,0,0" Name="HintCapText" PreviewTextInput="HintCap_PreviewTextInput" Margin="6" Grid.Row="1" Grid.Column="1" Text="{Binding HintCap}" FontFamily="Helvetica" FontSize="14" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/-->
         <Border  Cursor="Hand" MouseDown="Border_MouseDown" Margin="5" CornerRadius="5" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="13" Background="{StaticResource RegionImageBG }" BorderBrush="Black" BorderThickness="0.5">
         <TextBlock  Margin="0" Grid.Row="2" Text="Done" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Border>

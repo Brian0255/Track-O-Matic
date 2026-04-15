@@ -58,7 +58,7 @@
                 </MenuItem>
                 <MenuItem Name="ProgHintOption" Header="Progressive Hints">
                     <MenuItem Name="ProgHintShowAmount" Header='Show Amount for Next Hint Pack' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ShowAmountForHints}"/>
-                    <MenuItem Name="SetProgItemTypeAmount" Header='Set Item Type and Amount' StaysOpenOnClick="True" Click="SetProgHintTypeAmount"/>
+                    <!--MenuItem Name="SetProgItemType" Header='Set Item Type' StaysOpenOnClick="True" Click="SetProgHintType"/-->
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Hint Display" Focusable="False">
@@ -637,14 +637,13 @@
                             </Style>
                         </Grid.Style>
                         <Image Source="images/dk64/wrinkly.png" Panel.ZIndex="2" x:Name="image" Stretch="Uniform"  Grid.RowSpan="2" Margin="-2,3,3,3" Grid.ColumnSpan="2"
-                            RenderOptions.ClearTypeHint="Enabled"
-                            MouseDown="SetProgHintTypeAmount">
+                            RenderOptions.ClearTypeHint="Enabled">
                             <Image.Effect>
                                 <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                             </Image.Effect>
                         </Image>
 
-                        <Grid  Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,0" MouseDown="SetProgHintTypeAmount">
+                        <Grid  Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1.5*"/>
                                 <ColumnDefinition Name="ProgHintNumberColumn" Width="2*"/>

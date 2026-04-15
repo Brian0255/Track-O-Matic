@@ -19,6 +19,7 @@ namespace TrackOMatic
     public delegate void SetShopkeepers(bool on);
     public delegate void SetSong(string songGame, string songName);
     public delegate void UpdateUIAmountToNextHint(int amountToNextHint);
+    public delegate void UpdateProgHintImage(ItemType itemType);
     public class Autotracker
     {
         public ProcessNewItem ProcessNewItem { get; set; }
@@ -27,6 +28,7 @@ namespace TrackOMatic
         public SetShopkeepers SetShopkeepers { get; set; }
         public SetSong SetSong{ get; set; }
         public UpdateUIAmountToNextHint UpdateUIAmountToNextHint { get; set; }
+        public UpdateProgHintImage UpdateProgHintImage { get; set; }
         public Process EmulatorProcess { get; private set; }
         public List<AutotrackedCheck> Checks;
         public Dictionary<ItemName, bool> TrackedAlready;
@@ -51,7 +53,8 @@ namespace TrackOMatic
         private int previousMap;
         private static bool attaching = false;
         private uint addressBase;
-        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint)
+        private ItemType progHintItem;
+        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint, UpdateProgHintImage updateProgHintImage)
         {
             CurrentRegion = RegionName.UNKNOWN;
             previousRegion = RegionName.UNKNOWN;
@@ -68,6 +71,7 @@ namespace TrackOMatic
             SetRegionLighting = setRegionLightingCallback;
             SetShopkeepers = setShopkeepersCallback;
             UpdateUIAmountToNextHint = updateUIAmountToNextHint;
+            UpdateProgHintImage = updateProgHintImage;
             SetSong = setSong;
             currentSongName = "";
             currentSongGame = "";
@@ -187,20 +191,58 @@ namespace TrackOMatic
             };
             return total;
         }
+        private int GetAmountToNextHintPack(int totalItems)
+        {
+            uint startAddress = 0x7FF898;
+            for(int i = 0; i < 10; ++i)
+            {
+                var threshold = ReadMemory((uint)(startAddress + (i * 2)), 16);
+                if (totalItems < threshold)
+                {
+                    return (threshold - totalItems);
+                }
+            }
+            return 0;
+        }
+
+        private void UpdateProgHintItem()
+        {
+            var ToItemType = new Dictionary<int, ItemType>()
+            {
+                {3, ItemType.GOLDEN_BANANA },
+                {4, ItemType.TOTAL_BLUEPRINTS },
+                {5, ItemType.FAIRY },
+                {6, ItemType.KEY },
+                {7, ItemType.BATTLE_CROWN },
+                {9, ItemType.BANANA_MEDAL },
+                {11, ItemType.PEARL },
+                {12, ItemType.RAINBOW_COIN },
+                {15, ItemType.COLORED_BANANA }
+            };
+            var hintItem = ReadMemory(0x7FF8C3, 8);
+            if (!ToItemType.ContainsKey(hintItem)){
+                hintItem = 3; //default to GBs
+            }
+            var itemType = ToItemType[hintItem];
+            if(progHintItem == itemType) { return; }
+            progHintItem = itemType;
+            Application.Current.Dispatcher.Invoke(() => {
+                UpdateProgHintImage?.Invoke(itemType);
+            });
+        }
 
         public void UpdateAmountToNextHint()
         {
-            var hintItem = (ItemType)Properties.Settings.Default.ProgressiveHintItem;
             int totalItems = 0;
-            if (hintItem == ItemType.COLORED_BANANA)
+            if (progHintItem == ItemType.COLORED_BANANA)
             {
                 totalItems = GetTotalCBs();
             }
-            else if (CollectibleItemAmounts.ContainsKey(hintItem))
+            else if (CollectibleItemAmounts.ContainsKey(progHintItem))
             {
-                totalItems = CollectibleItemAmounts[hintItem];
+                totalItems = CollectibleItemAmounts[progHintItem];
             }
-            var amount = HintHelper.GetAmountToNextHint(totalItems);
+            var amount = GetAmountToNextHintPack(totalItems);
             Application.Current.Dispatcher.Invoke(() => {
                 UpdateUIAmountToNextHint?.Invoke(amount);
             });
@@ -350,6 +392,7 @@ namespace TrackOMatic
             ReadBlueprintsObtained();
             ReadMemoryForChecks();
             UpdateCollectibles();
+            UpdateProgHintItem();
             UpdateAmountToNextHint();
         }
 

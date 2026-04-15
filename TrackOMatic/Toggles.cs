@@ -189,7 +189,8 @@ namespace TrackOMatic
             Settings.Default.Save();
         }
 
-        private void SetProgHintTypeAmount(object sender, RoutedEventArgs e)
+        /*
+        private void SetProgHintType(object sender, RoutedEventArgs e)
         {
             var dialog = new ProgHintDialog();
             var mousePosition = Mouse.GetPosition(this);
@@ -197,6 +198,6 @@ namespace TrackOMatic
             UIUtils.MoveWindowAndEnsureVisibile(dialog, mousePosition.X - dialog.Width/2, mousePosition.Y-dialog.Height/2);
             dialog.ShowDialog();
             UpdateProgHintImage();
-        }
+        }*/
     }
 }

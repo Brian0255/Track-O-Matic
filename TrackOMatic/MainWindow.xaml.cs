@@ -109,7 +109,6 @@ namespace TrackOMatic
             HitListHintManager = new(this);
             Reset();
             AdjustBasedOnCompactMode();
-            UpdateProgHintImage();
         }
 
         private void UpdateHintDisplayToggles()
@@ -213,7 +212,7 @@ namespace TrackOMatic
             UnhintedPanel
 
             };
-            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong, UpdateUIAmountToNextHint);
+            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong, UpdateUIAmountToNextHint, UpdateProgHintImage);
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
             SaveTimer.Start();
@@ -506,9 +505,8 @@ namespace TrackOMatic
         {
         }
 
-        public void UpdateProgHintImage()
+        public void UpdateProgHintImage(ItemType itemType)
         {
-            var itemType = (ItemType)Settings.Default.ProgressiveHintItem;
             Dictionary<ItemType, string> itemTypeToImageString = new()
             {
                 {ItemType.GOLDEN_BANANA, "Images/dk64/gb.png" },
