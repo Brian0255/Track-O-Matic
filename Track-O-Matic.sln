@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Track-O-Matic", "DK64PointsTracker\Track-O-Matic.csproj", "{91260922-9FBA-4508-9593-430514E34A2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Track-O-Matic", "TrackOMatic\Track-O-Matic.csproj", "{91260922-9FBA-4508-9593-430514E34A2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
