@@ -1,8 +1,7 @@
 using System;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
+using System.Windows.Media;
 
 namespace TrackOMatic
 {
@@ -14,29 +13,32 @@ namespace TrackOMatic
             Grid.SetRow(element, row);
         }
 
-        public static float GetDpiScale()
+        /// <summary>
+        /// Gets the DPI scale factor for the given visual element.
+        /// DPI scaling represents the ratio of current DPI to the standard 96 DPI baseline.
+        /// </summary>
+        /// <param name="visual">The visual element used to determine the DPI context. Cannot be null.</param>
+        /// <returns>The DPI scale factor (1.0 = 96 DPI, 2.0 = 192 DPI, etc.)</returns>
+        /// <remarks>This method needs refactoring for Linux/cross platform support when we get there.</remarks>
+        public static double GetDpiScale(Visual visual)
         {
-            Form form = new Form();
-            Graphics g = form.CreateGraphics();
-            float defaultDpi = 96.0f;
-            float dpi = defaultDpi; // default DPI is 96
+            if (visual == null)
+                throw new ArgumentNullException(nameof(visual));
 
-            try
+            var presentationSource = PresentationSource.FromVisual(visual);
+            if (presentationSource?.CompositionTarget != null)
             {
-                dpi = g.DpiX;
-            }
-            finally
-            {
-                g.Dispose();
+                // M11 represents the X-axis scale factor in the transformation matrix
+                return presentationSource.CompositionTarget.TransformToDevice.M11;
             }
 
-            form.Dispose();
-            return dpi / defaultDpi;
+            // Fallback to default if visual tree is not yet initialized
+            return 1.0;
         }
 
         public static void MoveWindowAndEnsureVisibile(Window window, double x, double y)
         {
-            float dpiScale = GetDpiScale();
+            double dpiScale = GetDpiScale(window);
             var currentScreen = System.Windows.Forms.Screen.FromPoint(System.Windows.Forms.Cursor.Position);
             double windowScaledWidth = window.Width * dpiScale;
             double windowScaledHeight = window.Height * dpiScale;

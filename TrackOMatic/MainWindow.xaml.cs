@@ -11,15 +11,7 @@ using System.Linq;
 using System.Timers;
 using TrackOMatic.Properties;
 using AutoUpdaterDotNET;
-using Xceed.Wpf.AvalonDock.Controls;
 
-namespace ClassLibrary
-{
-    public record Class(string Str)
-    {
-        internal int Int { get; init; }
-    }
-}
 namespace System.Runtime.CompilerServices
 {
     using System.ComponentModel;
@@ -579,7 +571,7 @@ namespace TrackOMatic
             var saveDialog = new SaveFileDialog
             {
                 RestoreDirectory = false,
-                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                InitialDirectory = AppContext.BaseDirectory,
                 Title = "Save Data",
                 Filter = "JSON Files (*.json)|*.json"
             };
@@ -596,7 +588,7 @@ namespace TrackOMatic
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 RestoreDirectory = false,
-                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                InitialDirectory = AppContext.BaseDirectory,
                 Title = "Load Data",
                 Filter = "JSON Files (*.json)|*.json"
             };
