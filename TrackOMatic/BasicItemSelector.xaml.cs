@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,10 +26,10 @@ namespace TrackOMatic
             images = new();
             InitializeComponent();
             DataContext = this;
-            for(int i = 0; i < toAdd.Count; ++i)
+            for (int i = 0; i < toAdd.Count; ++i)
             {
                 var row = toAdd[i];
-                for(int j = 0; j < row.Count; ++j)
+                for (int j = 0; j < row.Count; ++j)
                 {
                     var border = new Border
                     {
@@ -48,7 +48,7 @@ namespace TrackOMatic
                     border.Effect = shadow;
                     RenderOptions.SetBitmapScalingMode(border, BitmapScalingMode.Fant);
                     RenderOptions.SetClearTypeHint(border, ClearTypeHint.Enabled);
-                    
+
                     var imageSource = toAdd[i][j];
                     Image image = new()
                     {

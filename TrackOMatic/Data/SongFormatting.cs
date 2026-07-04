@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -81,7 +81,7 @@ namespace TrackOMatic
             }
             var words = songString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var copy = words.ToList();
-            for(int i = 0; i < copy.Count; ++i)
+            for (int i = 0; i < copy.Count; ++i)
             {
                 var word = copy[i];
                 if (SINGLE_WORD_REPLACEMENTS.ContainsKey(word))

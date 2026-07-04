@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -53,7 +53,11 @@ namespace TrackOMatic
         {
             InitializeComponent();
             DataContext = this;
-            if (!isSavedHint) Location.Loaded += (sender, e) => Location.Focus();
+            if (!isSavedHint)
+            {
+                Location.Loaded += (sender, e) => Location.Focus();
+            }
+
             HintTypeSettings = HintTypeSettingsList.SETTINGS[hintType];
             OnPropertyChanged(nameof(HintTypeSettings));
             SuggestionBox.ItemsSource = new List<string>(HintData.SortedRegions);
@@ -104,17 +108,18 @@ namespace TrackOMatic
                     var listBoxItem = (ListBoxItem)SuggestionBox
                     .ItemContainerGenerator
                     .ContainerFromItem(SuggestionBox.SelectedItem);
-                    if (listBoxItem != null) { listBoxItem.Focus(); }
+                    if (listBoxItem != null)
+                    { listBoxItem.Focus(); }
                 }));
             }
         }
 
         private void CheckForShortcuts(List<string> matches)
         {
-            var directHintExclusions = new List<string>() { "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss","Bought" };
+            var directHintExclusions = new List<string>() { "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss", "Bought" };
             var exclude = directHintExclusions;
             var JSONKey = "Kong Hint Shorthand";
-            if(hintShortcutInfo != null)
+            if (hintShortcutInfo != null)
             {
                 JSONKey = hintShortcutInfo.JSONShortcutsKey;
                 exclude = new();
@@ -123,7 +128,11 @@ namespace TrackOMatic
             foreach (var entry in HintData.UserShortcuts[JSONKey])
             {
                 var toAdd = entry.Value;
-                if (JSONKey == "Kong Hint Shorthand") toAdd = textInfo.ToTitleCase(toAdd.ToLower());
+                if (JSONKey == "Kong Hint Shorthand")
+                {
+                    toAdd = textInfo.ToTitleCase(toAdd.ToLower());
+                }
+
                 var shortcut = entry.Key;
                 if (shortcut.ToLower().Contains(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
                 {
@@ -158,7 +167,11 @@ namespace TrackOMatic
 
         private void Location_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!DoSuggestions) return;
+            if (!DoSuggestions)
+            {
+                return;
+            }
+
             SetUpSuggestions();
             BottomRow.IsOpen = Location.Text != "" && (SuggestionBox.Items.Count > 0) && HintTypeSettings.HintSuggestion != HintSuggestion.NONE;
             SavedHint.LocationText = Location.Text;
@@ -167,22 +180,37 @@ namespace TrackOMatic
         private bool TryProcessKongHint()
         {
             var hintWordList = Location.Text.Split(' ');
-            if (hintWordList.Length != 3) return false;
-            if (HintData.UserShortcuts["Kong Hint Shorthand"] == null) return false;
+            if (hintWordList.Length != 3)
+            {
+                return false;
+            }
+
+            if (HintData.UserShortcuts["Kong Hint Shorthand"] == null)
+            {
+                return false;
+            }
+
             var shorthands = HintData.UserShortcuts["Kong Hint Shorthand"];
             for (int i = 0; i < hintWordList.Length; ++i)
             {
                 hintWordList[i] = hintWordList[i].ToLower();
-                if (!shorthands.ContainsKey(hintWordList[i])) return false;
+                if (!shorthands.ContainsKey(hintWordList[i]))
+                {
+                    return false;
+                }
             }
             var foundKongString = shorthands[hintWordList[0]];
-            if(!Enum.TryParse(foundKongString, out ItemName kongThatIsFound)) return false;
+            if (!Enum.TryParse(foundKongString, out ItemName kongThatIsFound))
+            {
+                return false;
+            }
+
             var textInfo = new CultureInfo("en-US", false).TextInfo;
             var region = shorthands[hintWordList[2]];
             var thingThatFinds = shorthands[hintWordList[1]];
             thingThatFinds = textInfo.ToTitleCase(thingThatFinds.ToLower());
             var newText = thingThatFinds + " in " + region;
-            if(thingThatFinds == "Boss")
+            if (thingThatFinds == "Boss")
             {
                 newText = region + " Boss Defeated";
             }
@@ -277,11 +305,19 @@ namespace TrackOMatic
         public void OnRemove()
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            if (HintType != HintType.DIRECT_ITEM_HINT) return;
-            foreach(var entry in RightItems.SelectedItems)
+            if (HintType != HintType.DIRECT_ITEM_HINT)
+            {
+                return;
+            }
+
+            foreach (var entry in RightItems.SelectedItems)
             {
                 var itemName = entry.Key;
-                if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName)) continue;
+                if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName))
+                {
+                    continue;
+                }
+
                 var matchingItem = mainWindow.ITEM_NAME_TO_ITEM[itemName];
                 if (matchingItem.ItemImage.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
                 {

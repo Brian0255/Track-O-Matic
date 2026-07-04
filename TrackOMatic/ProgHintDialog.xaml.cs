@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,7 +56,7 @@ namespace TrackOMatic
             SelectedItemType = ItemTypeToPlural[itemType];
             var itemTypes = new ItemType[] { ItemType.GOLDEN_BANANA, ItemType.TOTAL_BLUEPRINTS, ItemType.KEY, ItemType.BANANA_MEDAL, ItemType.BATTLE_CROWN, ItemType.FAIRY, ItemType.RAINBOW_COIN, ItemType.PEARL, ItemType.COLORED_BANANA };
             var stringTypes = new List<string>();
-            foreach(var item in itemTypes)
+            foreach (var item in itemTypes)
             {
                 stringTypes.Add(ItemTypeToPlural[item]);
             }

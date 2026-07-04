@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace TrackOMatic
         public UpdateCollectible UpdateCollectible { get; set; }
         public SetRegionLighting SetRegionLighting { get; set; }
         public SetShopkeepers SetShopkeepers { get; set; }
-        public SetSong SetSong{ get; set; }
+        public SetSong SetSong { get; set; }
         public UpdateUIAmountToNextHint UpdateUIAmountToNextHint { get; set; }
         public UpdateProgHintImage UpdateProgHintImage { get; set; }
         public Process EmulatorProcess { get; private set; }
@@ -121,7 +121,8 @@ namespace TrackOMatic
             spoilerLoaded = false;
             attached = false;
             InitializeChecks();
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 SetRegionLighting?.Invoke(CurrentRegion, false);
             });
             CurrentRegion = RegionName.UNKNOWN;
@@ -153,10 +154,18 @@ namespace TrackOMatic
 
         private void AttachIfNecessary()
         {
-            if (attached) return;
+            if (attached)
+            {
+                return;
+            }
+
             var verificationInfo = new GameVerificationInfo(0x759290, 32, 0x52414D42);
             var attachedProcessInfo = AttachToEmulator.Attach(verificationInfo);
-            if (attachedProcessInfo == null) return;
+            if (attachedProcessInfo == null)
+            {
+                return;
+            }
+
             attached = true;
             startAddress = attachedProcessInfo.StartAddress;
             EmulatorProcess = attachedProcessInfo.Process;
@@ -180,21 +189,21 @@ namespace TrackOMatic
             {
                 uint world_start = (uint)(world_cb_offset_donkey + (diff_between_kongs * kong));
                 uint tns_start = world_start + 0x1C;
-                for(int world = 0; world < 16; world += 2)
+                for (int world = 0; world < 16; world += 2)
                 {
                     total += ReadMemory((uint)(world_start + world), 16);
                 }
-                for (int tns_count = 0; tns_count < 16; tns_count +=2)
+                for (int tns_count = 0; tns_count < 16; tns_count += 2)
                 {
                     total += ReadMemory((uint)(tns_start + tns_count), 16);
                 }
-            };
+            }
             return total;
         }
         private int GetAmountToNextHintPack(int totalItems)
         {
             uint startAddress = 0x7FF898;
-            for(int i = 0; i < 10; ++i)
+            for (int i = 0; i < 10; ++i)
             {
                 var threshold = ReadMemory((uint)(startAddress + (i * 2)), 16);
                 if (totalItems < threshold)
@@ -220,13 +229,18 @@ namespace TrackOMatic
                 {15, ItemType.COLORED_BANANA }
             };
             var hintItem = ReadMemory(0x7FF8C3, 8);
-            if (!ToItemType.ContainsKey(hintItem)){
+            if (!ToItemType.ContainsKey(hintItem))
+            {
                 hintItem = 3; //default to GBs
             }
             var itemType = ToItemType[hintItem];
-            if(progHintItem == itemType) { return; }
+            if (progHintItem == itemType)
+            {
+                return;
+            }
             progHintItem = itemType;
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 UpdateProgHintImage?.Invoke(itemType);
             });
         }
@@ -243,14 +257,19 @@ namespace TrackOMatic
                 totalItems = CollectibleItemAmounts[progHintItem];
             }
             var amount = GetAmountToNextHintPack(totalItems);
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 UpdateUIAmountToNextHint?.Invoke(amount);
             });
         }
 
         private void UpdateAddressBase()
         {
-            if (RandomizerVersion < 5.0) return;
+            if (RandomizerVersion < 5.0)
+            {
+                return;
+            }
+
             uint countStructAddress = 0x7FFFB8;
             addressBase = ReadPointer(countStructAddress);
         }
@@ -262,16 +281,18 @@ namespace TrackOMatic
             if (MapToRegion.MAP.ContainsKey(area))
             {
                 RegionName newRegion = MapToRegion.MAP[area];
-                if(newRegion != CurrentRegion)
+                if (newRegion != CurrentRegion)
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
                         SetRegionLighting?.Invoke(newRegion, true);
                     });
-                    Application.Current.Dispatcher.Invoke(() => {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
                         SetRegionLighting?.Invoke(CurrentRegion, false);
                     });
                 }
-                if(previousMap != -1 && area != previousMap)
+                if (previousMap != -1 && area != previousMap)
                 {
                     autosave = true;
                 }
@@ -283,7 +304,10 @@ namespace TrackOMatic
 
         private void ResetCollectibleAmounts()
         {
-            foreach (var key in CollectibleItemAmounts.Keys.ToList()) CollectibleItemAmounts[key] = 0;
+            foreach (var key in CollectibleItemAmounts.Keys.ToList())
+            {
+                CollectibleItemAmounts[key] = 0;
+            }
         }
 
         private void UpdateVersion()
@@ -305,11 +329,19 @@ namespace TrackOMatic
         private string ReadAscii(ref uint startAddress)
         {
             List<byte> ascii = new();
-            while(ascii.Count < 50)
+            while (ascii.Count < 50)
             {
                 byte next = (byte)ReadMemory(startAddress, 8);
-                if (next > 127) return "";
-                if (next == 0x00) break;
+                if (next > 127)
+                {
+                    return "";
+                }
+
+                if (next == 0x00)
+                {
+                    break;
+                }
+
                 ascii.Add(next);
                 ++startAddress;
             }
@@ -347,12 +379,16 @@ namespace TrackOMatic
             {
                 uint songPointer = 0x7FFFF0;
                 uint songAddr = ReadPointer(songPointer);
-                if (songAddr == 0x00000000) return;
+                if (songAddr == 0x00000000)
+                {
+                    return;
+                }
+
                 songGame = ReadAscii(ref songAddr);
                 songAddr++;
                 songName = ReadAscii(ref songAddr);
             }
-            if(songName == "")
+            if (songName == "")
             {
                 songName = songGame;
                 songGame = "Donkey Kong 64";
@@ -377,17 +413,32 @@ namespace TrackOMatic
 
         private void Autotrack()
         {
-            if (!Properties.Settings.Default.Autotracking) return;
+            if (!Properties.Settings.Default.Autotracking)
+            {
+                return;
+            }
             //if (!spoilerLoaded) return;
             AttachIfNecessary();
-            if (!attached) return;
-            if (!ProcessConnected()) return;
+            if (!attached)
+            {
+                return;
+            }
+
+            if (!ProcessConnected())
+            {
+                return;
+            }
+
             UpdateVersion();
             CheckVersion();
             UpdateAddressBase();
             UpdateCurrentRegion();
             UpdateCurrentSong();
-            if (CurrentRegion == RegionName.UNKNOWN) return;
+            if (CurrentRegion == RegionName.UNKNOWN)
+            {
+                return;
+            }
+
             ResetCollectibleAmounts();
             ReadBlueprintsObtained();
             ReadMemoryForChecks();
@@ -417,11 +468,15 @@ namespace TrackOMatic
         {
             //To note, BP "turned in" flags still exist and subtract from these set totals after
             CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] = 0;
-            if (RandomizerVersion < 5.0) return;
-            var blueprintKeys = new List<ItemType>() { 
-                ItemType.DONKEY_BLUEPRINT, ItemType.DIDDY_BLUEPRINT, ItemType.LANKY_BLUEPRINT, ItemType.TINY_BLUEPRINT, ItemType.CHUNKY_BLUEPRINT 
+            if (RandomizerVersion < 5.0)
+            {
+                return;
+            }
+
+            var blueprintKeys = new List<ItemType>() {
+                ItemType.DONKEY_BLUEPRINT, ItemType.DIDDY_BLUEPRINT, ItemType.LANKY_BLUEPRINT, ItemType.TINY_BLUEPRINT, ItemType.CHUNKY_BLUEPRINT
             };
-            for(int i = 0; i < blueprintKeys.Count; i++)
+            for (int i = 0; i < blueprintKeys.Count; i++)
             {
                 var itemType = blueprintKeys[i];
                 var kongBlueprints = ReadMemory((uint)(addressBase + i), 8);
@@ -430,7 +485,7 @@ namespace TrackOMatic
                 CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] = CollectibleItemAmounts[ItemType.TOTAL_BLUEPRINTS] + kongBlueprints;
                 if (!IsOldBlueprintSystem())
                 {
-                    var turnedInBPs = ReadMemory((uint)(addressBase + 0x19 + i),8);
+                    var turnedInBPs = ReadMemory((uint)(addressBase + 0x19 + i), 8);
                     CollectibleItemAmounts[itemType] = CollectibleItemAmounts[itemType] - turnedInBPs;
                 }
             }
@@ -441,20 +496,41 @@ namespace TrackOMatic
             {
                 var checkInfo = ImportantCheckList.ITEMS[check.ItemName];
                 uint offset = 0x0000000;
-                if (check.UsesCountStruct) offset = addressBase;
+                if (check.UsesCountStruct)
+                {
+                    offset = addressBase;
+                }
+
                 var bitMask = check.Bitmask;
                 var isFlag = (bitMask != 0);
                 var isSlam = check.ItemName.ToString().Contains("PROGRESSIVE_SLAM");
-                if (isSlam) bitMask = 0xF;
+                if (isSlam)
+                {
+                    bitMask = 0xF;
+                }
                 //slams are weird, we instead will use the slam's bitmask as a direct value to check
                 var output = ReadMemory(offset + check.Offset, check.TotalBits, bitMask);
                 var valid = (output == check.Bitmask) || (bitMask == 0);
-                if (isSlam) valid = (output >= check.Bitmask);
-                if (!valid) continue;
+                if (isSlam)
+                {
+                    valid = (output >= check.Bitmask);
+                }
+
+                if (!valid)
+                {
+                    continue;
+                }
+
                 var collectible = CollectibleItemAmounts.ContainsKey(checkInfo.ItemType) ||
                                   TURNED_BLUEPRINT_TO_COLLECTIBLE.ContainsKey(checkInfo.ItemType);
-                if(collectible) ProcessCollectible(output, checkInfo, isFlag);
-                else ProcessRegularItem(check);
+                if (collectible)
+                {
+                    ProcessCollectible(output, checkInfo, isFlag);
+                }
+                else
+                {
+                    ProcessRegularItem(check);
+                }
             }
         }
 
@@ -482,10 +558,14 @@ namespace TrackOMatic
 
         private void ProcessRegularItem(AutotrackedCheck check)
         {
-            if (CurrentRegion == RegionName.START) return;
+            if (CurrentRegion == RegionName.START)
+            {
+                return;
+            }
+
             var regionToUse = CurrentRegion;
             //when player initially loads in from menu, put the items in the star area
-            if(CurrentRegion == RegionName.DK_ISLES && previousRegion == RegionName.START && !spoilerLoaded)
+            if (CurrentRegion == RegionName.DK_ISLES && previousRegion == RegionName.START && !spoilerLoaded)
             {
                 regionToUse = RegionName.START;
             }
@@ -495,7 +575,11 @@ namespace TrackOMatic
                 TrackedAlready[check.ItemName] = true;
                 return;
             }
-            if (TrackedAlready[check.ItemName]) return;
+            if (TrackedAlready[check.ItemName])
+            {
+                return;
+            }
+
             bool success = false;
             bool newRegion = (CurrentRegion != previousRegion && previousRegion != RegionName.UNKNOWN);
             Application.Current.Dispatcher.Invoke(() =>
@@ -517,7 +601,11 @@ namespace TrackOMatic
 
         private void UpdateCollectibles()
         {
-            if (Application.Current == null) return;
+            if (Application.Current == null)
+            {
+                return;
+            }
+
             foreach (var entry in CollectibleItemAmounts.ToList())
             {
                 Application.Current.Dispatcher.Invoke(() =>

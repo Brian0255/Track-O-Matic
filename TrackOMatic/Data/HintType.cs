@@ -1,7 +1,7 @@
-﻿namespace TrackOMatic
+namespace TrackOMatic
 {
-    public enum HintType 
-    { 
+    public enum HintType
+    {
         PATH,
         WAY_OF_THE_HOARD,
         FOOLISH_REGION,

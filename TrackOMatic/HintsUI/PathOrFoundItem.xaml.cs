@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -51,7 +51,11 @@ namespace TrackOMatic
 
         public void Toggle()
         {
-            if (ItemName == ItemName.NONE) return;
+            if (ItemName == ItemName.NONE)
+            {
+                return;
+            }
+
             IsChecked = !IsChecked;
             UpdateCheckmark();
         }

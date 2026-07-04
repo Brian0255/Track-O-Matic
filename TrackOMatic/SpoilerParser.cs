@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,32 +31,48 @@ namespace TrackOMatic
 
         private string CheckForSlam(string itemString)
         {
-            if (itemString != "Progressive Slam") return itemString;
+            if (itemString != "Progressive Slam")
+            {
+                return itemString;
+            }
+
             slamCount++;
             itemString += " " + slamCount;
             return itemString;
         }
         private bool ValidItemAndRegionString(string regionString, string itemString)
         {
-            if (!JSONKeyMappings.ITEM_MAP.ContainsKey(itemString)) return false;
-            if (!JSONKeyMappings.REGION_MAP.ContainsKey(regionString)) return false;
+            if (!JSONKeyMappings.ITEM_MAP.ContainsKey(itemString))
+            {
+                return false;
+            }
+
+            if (!JSONKeyMappings.REGION_MAP.ContainsKey(regionString))
+            {
+                return false;
+            }
+
             return true;
         }
         private void CheckForTrainingItem(string itemString, ItemName itemName)
         {
-            if(itemString.Contains("Training Barrel") || itemString.Contains("Pre-Given Move"))
+            if (itemString.Contains("Training Barrel") || itemString.Contains("Pre-Given Move"))
             {
                 TrainingItems[itemName] = RegionName.DK_ISLES;
             }
         }
         private void ReadSpecialItemRegion(Dictionary<string, string> region)
         {
-            foreach(var entry in region)
+            foreach (var entry in region)
             {
                 var itemLocation = entry.Key;
                 var itemString = entry.Value;
                 itemString = CheckForSlam(itemString);
-                if (!ValidItemAndRegionString(itemLocation, itemString)) continue;
+                if (!ValidItemAndRegionString(itemLocation, itemString))
+                {
+                    continue;
+                }
+
                 var regionName = JSONKeyMappings.REGION_MAP[itemLocation];
                 var itemName = JSONKeyMappings.ITEM_MAP[itemString];
                 MainWindow.ITEM_NAME_TO_REGION[itemName] = regionName;
@@ -65,17 +81,25 @@ namespace TrackOMatic
 
         private void ReadShops(Dictionary<string, string> shopRegion)
         {
-            foreach(var entry in shopRegion)
+            foreach (var entry in shopRegion)
             {
                 var fullShopName = entry.Key;
                 var itemString = entry.Value;
                 itemString = CheckForSlam(itemString);
                 var pricePattern = @"^(.*)\s+\(";
                 Match match = Regex.Match(itemString, pricePattern);
-                if (!match.Success) continue;
+                if (!match.Success)
+                {
+                    continue;
+                }
+
                 var itemWithoutPrice = match.Groups[1].Value;
                 var shortenedShopName = fullShopName.Split(' ')[0];
-                if (!JSONKeyMappings.ITEM_MAP.ContainsKey(itemWithoutPrice)) continue;
+                if (!JSONKeyMappings.ITEM_MAP.ContainsKey(itemWithoutPrice))
+                {
+                    continue;
+                }
+
                 var itemName = JSONKeyMappings.ITEM_MAP[itemWithoutPrice];
                 MainWindow.ITEM_NAME_TO_REGION[itemName] = JSONKeyMappings.SHORTENED_SHOP_TO_REGION[shortenedShopName];
             }
@@ -83,12 +107,16 @@ namespace TrackOMatic
 
         private void ReadStandardRegion(string regionString, Dictionary<string, string> itemList)
         {
-            foreach(var entry in itemList)
+            foreach (var entry in itemList)
             {
                 var itemLocation = entry.Key;
                 var itemString = entry.Value;
                 itemString = CheckForSlam(itemString);
-                if (!ValidItemAndRegionString(regionString, itemString)) continue;
+                if (!ValidItemAndRegionString(regionString, itemString))
+                {
+                    continue;
+                }
+
                 var regionName = JSONKeyMappings.REGION_MAP[regionString];
                 var itemName = JSONKeyMappings.ITEM_MAP[itemString];
                 CheckForTrainingItem(itemLocation, itemName);
@@ -98,15 +126,19 @@ namespace TrackOMatic
 
         private void ReadItems(dynamic JSONObject)
         {
-            if (JSONObject["Items"] == null) return;
+            if (JSONObject["Items"] == null)
+            {
+                return;
+            }
+
             var items = JSONObject["Items"].ToObject<Dictionary<string, Dictionary<string, string>>>();
-            foreach(var entry in items)
+            foreach (var entry in items)
             {
                 var itemArea = entry.Key;
                 var itemList = entry.Value;
                 switch (itemArea)
                 {
-                    case "Shops": 
+                    case "Shops":
                         ReadShops(itemList);
                         break;
                     case "Special":
@@ -125,8 +157,10 @@ namespace TrackOMatic
             var childElements = new List<Item>(MainWindow.Items.Children.Count);
             foreach (UIElement child in MainWindow.Items.Children)
             {
-                if(child is Item item)
-                childElements.Add(item);
+                if (child is Item item)
+                {
+                    childElements.Add(item);
+                }
             }
             var sortedElements = childElements.OrderBy(child => (ItemName)child.Tag).ToList();
             foreach (var item in sortedElements)
@@ -138,7 +172,7 @@ namespace TrackOMatic
                     MainWindow.Regions[region].RegionGrid.Add_Item(item);
                     //MainWindow.DataSaver.AddSavedItem(new SavedItem(itemName,  region, item.Star.Visibility, true, 1.0));
                     //MainWindow.DataSaver.Save();
-                    item.SetResourceReference(Item.ItemImageProperty,itemName.ToString().ToLower());
+                    item.SetResourceReference(Item.ItemImageProperty, itemName.ToString().ToLower());
                 }
             }
         }
@@ -147,7 +181,7 @@ namespace TrackOMatic
         {
             List<string> possibleGoals = Enum.GetValues(typeof(HitListGoal)).Cast<HitListGoal>().Select(e => e.ToString()).ToList();
             possibleGoals.Shuffle(RNGSeed);
-            for(int i = 0; i < MainWindow.HitListItems.Count; ++i)
+            for (int i = 0; i < MainWindow.HitListItems.Count; ++i)
             {
                 var imagePath = "Images/dk64/" + possibleGoals[i].ToLower() + ".png";
                 var newImage = new BitmapImage(new Uri(imagePath, UriKind.Relative));
@@ -155,7 +189,8 @@ namespace TrackOMatic
             }
         }
 
-        private class RegionSpoilerInfo {
+        private class RegionSpoilerInfo
+        {
             public string level_name { get; }
             public int level_order { get; }
             public List<string> vial_colors { get; }
@@ -201,10 +236,10 @@ namespace TrackOMatic
         private void ReadStartingMoves(List<string> starting_moves, RegionName regionToPlace = RegionName.START)
         {
             var slams = 0;
-            for(int i = 0; i < starting_moves.Count; ++i)
+            for (int i = 0; i < starting_moves.Count; ++i)
             {
                 var itemString = starting_moves[i];
-                if(itemString == "Progressive Slam")
+                if (itemString == "Progressive Slam")
                 {
                     slams++;
                     itemString = itemString + " " + slams.ToString();
@@ -220,8 +255,16 @@ namespace TrackOMatic
         {
             StartingInfo info = System.Text.Json.JsonSerializer.Deserialize<StartingInfo>(JSONString);
             ReadKongsAndKeys(info);
-            if (info.starting_moves != null) ReadStartingMoves(info.starting_moves);
-            if (info.starting_moves_not_hintable != null) ReadStartingMoves(info.starting_moves_not_hintable, RegionName.UNHINTABLE_MOVES);
+            if (info.starting_moves != null)
+            {
+                ReadStartingMoves(info.starting_moves);
+            }
+
+            if (info.starting_moves_not_hintable != null)
+            {
+                ReadStartingMoves(info.starting_moves_not_hintable, RegionName.UNHINTABLE_MOVES);
+            }
+
             MainWindow.Regions[RegionName.START].AddRequiredCheckTotal(info.starting_moves_woth_count);
             ReadStartingItemsIntoUI();
             ReadHelmAndKRoolOrder(info);
@@ -284,13 +327,13 @@ namespace TrackOMatic
 
         private void ReadLevelOrder(StartingInfo info)
         {
-            for(int i = 0; i < Region.LOBBY_ORDER.Count; ++i)
+            for (int i = 0; i < Region.LOBBY_ORDER.Count; ++i)
             {
                 var levelOrderNumber = (info.level_order == null || i >= info.level_order.Count) ? 0 : info.level_order[i];
                 var newLevelOrderNumber = (info.level_order == null || i >= info.level_order.Count) ? 0 : (i + 1);
                 var toChange = (info.level_order == null || i >= info.level_order.Count) ? Region.LOBBY_ORDER[i] : Region.LOBBY_ORDER[levelOrderNumber];
                 MainWindow.Regions[toChange].SetLevelOrderNumber(newLevelOrderNumber);
-                if(info.level_order != null && info.level_order.Count == 7)
+                if (info.level_order != null && info.level_order.Count == 7)
                 {
                     MainWindow.Regions[RegionName.HIDEOUT_HELM].SetLevelOrderNumber(8);
                 }
@@ -298,12 +341,12 @@ namespace TrackOMatic
         }
         private void ReadPointSpread(string JSONString)
         {
-            var pointPairs = JsonConvert.DeserializeObject <Dictionary<string, int>>(JSONString);
+            var pointPairs = JsonConvert.DeserializeObject<Dictionary<string, int>>(JSONString);
             if (!pointPairs.ContainsKey("fairy_moves"))
             {
                 pointPairs["fairy_moves"] = pointPairs["training_moves"];
             }
-            foreach(var pair in pointPairs)
+            foreach (var pair in pointPairs)
             {
                 var name = pair.Key;
                 var pointValue = pair.Value;
@@ -321,11 +364,18 @@ namespace TrackOMatic
         }
         private void CheckIfShopkeepersAreOn(dynamic JSONObject)
         {
-            if (JSONObject["Item Pool"] == null) return;
+            if (JSONObject["Item Pool"] == null)
+            {
+                return;
+            }
             //first version of randomizer with this key is 4.0 so we don't need to check if version >= 4.0
             //if (JSONObject["Randomizer Version"] == null) return;
-            List<string> items = JSONObject["Item Pool"].ToObject < List<string> >();
-            if (items.Contains("Cranky") || items.Contains("Candy") || items.Contains("Funky") || items.Contains("Snide")) return;
+            List<string> items = JSONObject["Item Pool"].ToObject<List<string>>();
+            if (items.Contains("Cranky") || items.Contains("Candy") || items.Contains("Funky") || items.Contains("Snide"))
+            {
+                return;
+            }
+
             StartingItems.Add(ItemName.CRANKY, RegionName.START);
             StartingItems.Add(ItemName.CANDY, RegionName.START);
             StartingItems.Add(ItemName.FUNKY, RegionName.START);
@@ -342,18 +392,22 @@ namespace TrackOMatic
 
             foreach (var regionEntry in regionInfo)
             {
-                if(regionEntry.Key == "starting_info")
+                if (regionEntry.Key == "starting_info")
                 {
                     ReadStartingInfo(regionEntry.Value);
                     continue;
                 }
-                else if(regionEntry.Key == "point_spread")
+                else if (regionEntry.Key == "point_spread")
                 {
                     ReadPointSpread(regionEntry.Value);
                     continue;
                 }
                 RegionSpoilerInfo info = System.Text.Json.JsonSerializer.Deserialize<RegionSpoilerInfo>(regionEntry.Value);
-                if (!JSONKeyMappings.REGION_MAP.ContainsKey(info.level_name)) continue;
+                if (!JSONKeyMappings.REGION_MAP.ContainsKey(info.level_name))
+                {
+                    continue;
+                }
+
                 settings ??= SetUpSettings(info);
                 RegionName regionName = JSONKeyMappings.REGION_MAP[info.level_name];
                 MainWindow.Regions[regionName].AddPoints(info.points);
@@ -378,7 +432,10 @@ namespace TrackOMatic
         private void ProcessVials(List<string> vial_colors, RegionGrid grid)
         {
             vial_colors.Sort((a, b) => JSONKeyMappings.VIAL_MAP[a] - JSONKeyMappings.VIAL_MAP[b]);
-            foreach (var vial in vial_colors) grid.AddInitialVial(JSONKeyMappings.VIAL_MAP[vial]);
+            foreach (var vial in vial_colors)
+            {
+                grid.AddInitialVial(JSONKeyMappings.VIAL_MAP[vial]);
+            }
         }
 
         private SpoilerSettings SetUpSettings(RegionSpoilerInfo info)
@@ -402,7 +459,11 @@ namespace TrackOMatic
         private void ReadSettings(dynamic JSONObject)
         {
             var settingsDict = JSONObject["Settings"].ToObject<Dictionary<string, object>>();
-            if (settingsDict["Shockwave Shuffle"] == null) return;
+            if (settingsDict["Shockwave Shuffle"] == null)
+            {
+                return;
+            }
+
             var shockwaveShuffle = (string)settingsDict["Shockwave Shuffle"];
             if (shockwaveShuffle == "start_with")
             {
@@ -421,7 +482,11 @@ namespace TrackOMatic
             string json = reader.ReadToEnd();
 
             dynamic JSONObject = JsonConvert.DeserializeObject(json);
-            if (JSONObject["Settings"] != null) ReadSettings(JSONObject);
+            if (JSONObject["Settings"] != null)
+            {
+                ReadSettings(JSONObject);
+            }
+
             if (JSONObject["Spoiler Hints Data"] != null)
             {
                 spoilerSettings = ParseRegions(JSONObject);
@@ -431,7 +496,11 @@ namespace TrackOMatic
                 MainWindow.InitRegionsFromEmptySpoiler();
             }
             //ReadItems(JSONObject);
-            foreach (var entry in ImportantCheckList.ITEMS) entry.Value.InitPointValue();
+            foreach (var entry in ImportantCheckList.ITEMS)
+            {
+                entry.Value.InitPointValue();
+            }
+
             if (Properties.Settings.Default.HitList)
             {
                 //the chef has decreed a touch of salt to nearly eliminate the chances of a repeat hash

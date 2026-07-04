@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Security.Cryptography;
@@ -57,7 +57,11 @@ namespace TrackOMatic
 
         private void LevelOrder_LeftPress(object sender, RoutedEventArgs e)
         {
-            if (RegionName == RegionName.HIDEOUT_HELM && currentNumber == 8 && !Settings.Default.HelmInLevelOrder) return;
+            if (RegionName == RegionName.HIDEOUT_HELM && currentNumber == 8 && !Settings.Default.HelmInLevelOrder)
+            {
+                return;
+            }
+
             int max = (Settings.Default.HelmInLevelOrder) ? 8 : 7;
             currentNumber = (currentNumber + 1) % (max + 1);
             UpdateLabel();
@@ -65,7 +69,11 @@ namespace TrackOMatic
 
         private void LevelOrder_RightPress(object sender, RoutedEventArgs e)
         {
-            if (RegionName == RegionName.HIDEOUT_HELM && currentNumber == 8 && !Settings.Default.HelmInLevelOrder) return;
+            if (RegionName == RegionName.HIDEOUT_HELM && currentNumber == 8 && !Settings.Default.HelmInLevelOrder)
+            {
+                return;
+            }
+
             int max = (Settings.Default.HelmInLevelOrder) ? 8 : 7;
             currentNumber = (currentNumber + (max)) % (max + 1);
             UpdateLabel();
@@ -73,7 +81,11 @@ namespace TrackOMatic
 
         private void LevelOrder_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (disabled) return;
+            if (disabled)
+            {
+                return;
+            }
+
             if (e.Delta > 0)
             {
                 LevelOrder_LeftPress(sender, e);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,7 +56,11 @@ namespace TrackOMatic
             {
                 var mult = (height - 0.5) * 0.25;
                 var rows = Region.ImagePointsGrid.RowDefinitions;
-                if (height == 1) mult = 1;
+                if (height == 1)
+                {
+                    mult = 1;
+                }
+
                 rows[1].Height = new GridLength(.75 * mult, GridUnitType.Star);
                 rows[2].Height = new GridLength(.25 * mult, GridUnitType.Star);
                 rows[3].Height = new GridLength(.75 * mult, GridUnitType.Star);
@@ -77,7 +81,9 @@ namespace TrackOMatic
         {
             int gridremainder = 0;
             if (Children.Count % 5 != 0)
+            {
                 gridremainder = 1;
+            }
 
             int gridnum = Math.Max((Children.Count / 5) + gridremainder, 1);
 
@@ -85,7 +91,11 @@ namespace TrackOMatic
 
             double height = (1 + ((Children.Count - 1) / 5)) / 2.0;
             //if (Region.RegionName == RegionName.START) height = 1;
-            if (Children.Count <= 5) height = 1;
+            if (Children.Count <= 5)
+            {
+                height = 1;
+            }
+
             height = 1;
             var outerOuterGrid = ((Parent as Grid).Parent as Grid);
             int row = (int)Parent.GetValue(Grid.RowProperty);
@@ -98,7 +108,7 @@ namespace TrackOMatic
             var imageName = (color.ToString() + "_vial.png").ToLower();
             Item vialImage = new()
             {
-              ItemImage = new BitmapImage(new Uri("Images/dk64/" + imageName, UriKind.Relative))
+                ItemImage = new BitmapImage(new Uri("Images/dk64/" + imageName, UriKind.Relative))
             };
             vialImage.SetRegion(Region);
             vialImage.Disable();
@@ -107,15 +117,22 @@ namespace TrackOMatic
             Vials[color].Add(vialImage);
             VialItems.Add(vialImage);
             Children.Add(vialImage);
-            if (Region.RegionName == RegionName.UNHINTABLE_MOVES) return;
+            if (Region.RegionName == RegionName.UNHINTABLE_MOVES)
+            {
+                return;
+            }
+
             AdjustSpacing();
         }
 
         public void ResetVials()
         {
-            foreach(var vialItem in VialItems)
+            foreach (var vialItem in VialItems)
             {
-                if (vialItem.Parent != null) Children.Remove(vialItem);
+                if (vialItem.Parent != null)
+                {
+                    Children.Remove(vialItem);
+                }
             }
             VialItems = new();
             Vials = new();
@@ -124,8 +141,16 @@ namespace TrackOMatic
 
         private bool ValidInsertionPoint(int index, Item vial, bool userPlacing)
         {
-            if (vial.Parent != null) return true;
-            if(index < 0 || index > Children.Count - 1) return false;
+            if (vial.Parent != null)
+            {
+                return true;
+            }
+
+            if (index < 0 || index > Children.Count - 1)
+            {
+                return false;
+            }
+
             if (Children[index] is Item item)
             {
                 //niche case where 
@@ -156,7 +181,11 @@ namespace TrackOMatic
                 foreach (var vial in vials)
                 {
                     int index = VialItems.IndexOf(vial);
-                    if (!ValidInsertionPoint(index, vial, userPlacing)) continue;
+                    if (!ValidInsertionPoint(index, vial, userPlacing))
+                    {
+                        continue;
+                    }
+
                     if (button.Star.Visibility == Visibility.Visible || vial.Star.Visibility == Visibility.Visible)
                     {
                         button.SetStarVisibility(Visibility.Visible);
@@ -171,8 +200,12 @@ namespace TrackOMatic
 
         private void RemoveWithVialCheck(Item button)
         {
-            if (button.Tag == null) return;
-            if(VialItems.Count() == 0)
+            if (button.Tag == null)
+            {
+                return;
+            }
+
+            if (VialItems.Count() == 0)
             {
                 Children.Remove(button);
                 return;
@@ -195,7 +228,7 @@ namespace TrackOMatic
             button.Margin = new Thickness(1);
             ImportantCheck check = null;
             ItemName item;
-            if(button.Tag != null)
+            if (button.Tag != null)
             {
                 item = (ItemName)button.Tag;
                 check = ImportantCheckList.ITEMS[item];
@@ -205,8 +238,15 @@ namespace TrackOMatic
                 button.SetRegion(Region);
                 AddWithVialCheck(button, userPlacing);
                 Region.AddCheck(check);
-                if (brighten) button.Brighten();
-                else button.Darken();
+                if (brighten)
+                {
+                    button.Brighten();
+                }
+                else
+                {
+                    button.Darken();
+                }
+
                 button.SetBackgroundImageVisibility(Visibility.Visible);
             }
             else
@@ -216,7 +256,11 @@ namespace TrackOMatic
                 Region.RemoveCheck(check);
             }
             button.Region = Region;
-            if(Region.RegionName != RegionName.UNHINTABLE_MOVES) AdjustSpacing();
+            if (Region.RegionName != RegionName.UNHINTABLE_MOVES)
+            {
+                AdjustSpacing();
+            }
+
             Region.UpdateRequiredChecksTotal();
         }
 
@@ -226,7 +270,10 @@ namespace TrackOMatic
             if (e.Data.GetDataPresent(typeof(Item)))
             {
                 Item item = e.Data.GetData(typeof(Item)) as Item;
-                if(item.Parent is Grid) Add_Item(item);
+                if (item.Parent is Grid)
+                {
+                    Add_Item(item);
+                }
             }
         }
 
@@ -234,14 +281,21 @@ namespace TrackOMatic
         {
             // move item to region
             Panel itemGrid = item.Parent as Panel;
-            if(itemGrid != null) itemGrid.Children.Remove(item);
+            if (itemGrid != null)
+            {
+                itemGrid.Children.Remove(item);
+            }
+
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             if (mainWindow.BroadcastView != null && item.Image.Opacity > 0.9 && brighten && item.Tag != null)
             {
                 mainWindow.BroadcastView.TurnItemOn((ItemName)item.Tag);
             }
             Handle_RegionGrid(item, true, userPlacing, brighten);
-            if (item.Parent == null) item.HandleItemReturn();
+            if (item.Parent == null)
+            {
+                item.HandleItemReturn();
+            }
             else
             {
                 item.MouseMove -= item.Item_MouseMove;

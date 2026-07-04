@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -24,7 +24,7 @@ namespace TrackOMatic
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(filePath);
             uint lowerBound = 0xDFD00000;
             uint upperBound = 0xE01F0000;
-            if(versionInfo.FileMajorPart >= 4 && versionInfo.ProductPrivatePart > 5758)
+            if (versionInfo.FileMajorPart >= 4 && versionInfo.ProductPrivatePart > 5758)
             {
                 lowerBound = 0xFDD00000;
                 upperBound = 0xFE1FFFFF;
@@ -43,7 +43,7 @@ namespace TrackOMatic
 
         private static AttachedProcessInfo AttachToBizhawk(Process target, GameVerificationInfo verificationInfo)
         {
-           Int64 addressDLL = 0;
+            Int64 addressDLL = 0;
             foreach (ProcessModule mo in target.Modules)
             {
                 if (mo.ModuleName.ToLower() == "mupen64plus.dll")
@@ -53,14 +53,17 @@ namespace TrackOMatic
                 }
             }
 
-            if (addressDLL == 0) addressDLL = 2024407040;
+            if (addressDLL == 0)
+            {
+                addressDLL = 2024407040;
+            }
 
             for (uint potentialOffset = 0x5A000; potentialOffset < 0x5658DF; potentialOffset += 16)
             {
                 var addressToCheck = (uint)(potentialOffset + verificationInfo.TargetAddress);
                 if (Memory.ReadInt16(target, addressToCheck) == verificationInfo.TargetValue)
                 {
-                    return new AttachedProcessInfo(target, (uint)(addressDLL +  potentialOffset));
+                    return new AttachedProcessInfo(target, (uint)(addressDLL + potentialOffset));
                 }
             }
 
@@ -80,7 +83,10 @@ namespace TrackOMatic
                 }
             }
 
-            if (addressDLL == 0) return null;
+            if (addressDLL == 0)
+            {
+                return null;
+            }
 
             for (uint potOff = 0x29C15D8; potOff < 0x2FC15D8; potOff += 16)
             {
@@ -150,14 +156,19 @@ namespace TrackOMatic
             }
 
             AttachedProcessInfo processInfo;
-            if (addressDLL == 0) return null;
+            if (addressDLL == 0)
+            {
+                return null;
+            }
 
             var parentProcessName = GetParentProcessName(target);
 
-            if (parentProcessName != null && parentProcessName == "parallel-launcher") {
+            if (parentProcessName != null && parentProcessName == "parallel-launcher")
+            {
                 processInfo = RunRetroarchScan(target, gameVerificationInfo, addressDLL, 0x1400000, 0x1800000, 16, isMupen);
             }
-            else { 
+            else
+            {
                 //forcibly set isMupen to false even if it isn't just because retroarch is jank or something
                 processInfo = RunRetroarchScan(target, gameVerificationInfo, addressDLL, 0x000000, 0xFFFFFF, 4, false);
             }

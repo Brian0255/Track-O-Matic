@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -63,30 +63,53 @@ namespace TrackOMatic
 
         public void ItemBackground_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!Interactible) return;
+            if (!Interactible)
+            {
+                return;
+            }
+
             var shiftClicked = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
-            if (e.MiddleButton == MouseButtonState.Pressed) ToggleStar();
-            else if (e.LeftButton == MouseButtonState.Pressed && shiftClicked) ToggleStar();
+            if (e.MiddleButton == MouseButtonState.Pressed)
+            {
+                ToggleStar();
+            }
+            else if (e.LeftButton == MouseButtonState.Pressed && shiftClicked)
+            {
+                ToggleStar();
+            }
             else if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var item = mainWindow.BACKGROUND_IMAGE_TO_ITEM[this];
                 if (item.Parent != mainWindow.ItemGrid)
                 {
                     item.HandleItemReturn();
-                    if(item.Region != null && item.Region.RegionName != RegionName.UNHINTABLE_MOVES) item.DoDragDrop(e.RightButton == MouseButtonState.Pressed);
+                    if (item.Region != null && item.Region.RegionName != RegionName.UNHINTABLE_MOVES)
+                    {
+                        item.DoDragDrop(e.RightButton == MouseButtonState.Pressed);
+                    }
                 }
             }
         }
 
         public void ItemBackground_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (!Interactible) return;
-            if (e.Delta != 0) ToggleStar();
+            if (!Interactible)
+            {
+                return;
+            }
+
+            if (e.Delta != 0)
+            {
+                ToggleStar();
+            }
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (Tag == null) return;
+            if (Tag == null)
+            {
+                return;
+            }
         }
     }
 }

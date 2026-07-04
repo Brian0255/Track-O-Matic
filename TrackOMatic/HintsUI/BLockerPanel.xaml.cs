@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -46,9 +46,9 @@ namespace TrackOMatic
         {
             InitializeComponent();
             DataContext = this;
-            foreach(var child in MainGrid.Children)
+            foreach (var child in MainGrid.Children)
             {
-                if(child is BLockerHint hint)
+                if (child is BLockerHint hint)
                 {
                     RegionToBLockerHint[hint.RegionName] = hint;
                 }
@@ -66,16 +66,16 @@ namespace TrackOMatic
 
         public void LoadSavedGBCounts(Dictionary<RegionName, string> GBCounts)
         {
-            foreach(var entry in GBCounts)
+            foreach (var entry in GBCounts)
             {
                 RegionToBLockerHint[entry.Key].GBCount.Text = entry.Value;
             }
         }
 
-        public Dictionary<RegionName,string> GetGBCounts()
+        public Dictionary<RegionName, string> GetGBCounts()
         {
-            var GBCounts = new Dictionary<RegionName,string>();
-            foreach(var entry in RegionToBLockerHint)
+            var GBCounts = new Dictionary<RegionName, string>();
+            foreach (var entry in RegionToBLockerHint)
             {
                 GBCounts[entry.Key] = entry.Value.GBCount.Text;
             }
@@ -84,7 +84,7 @@ namespace TrackOMatic
 
         public void LoadSavedImageIndexes(Dictionary<RegionName, int> imageIndexes)
         {
-            foreach(var entry in imageIndexes)
+            foreach (var entry in imageIndexes)
             {
                 RegionToBLockerHint[entry.Key].GB.SetIndex(entry.Value);
             }
@@ -102,13 +102,25 @@ namespace TrackOMatic
 
         public void LoadBLockerInfo(List<BLockerInfo> blockerInfo)
         {
-            if (blockerInfo == null) return;
+            if (blockerInfo == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < blockerInfo.Count; i++)
             {
                 var blocker = blockerInfo[i];
                 var regionName = Region.LOBBY_ORDER[i];
-                if (!RegionToBLockerHint.TryGetValue(regionName, out var hint)) continue;
-                if (!JSONKeyMappings.SPOILER_BARRIER_TO_BARRIER_ITEM.ContainsKey(blocker.item)) continue;
+                if (!RegionToBLockerHint.TryGetValue(regionName, out var hint))
+                {
+                    continue;
+                }
+
+                if (!JSONKeyMappings.SPOILER_BARRIER_TO_BARRIER_ITEM.ContainsKey(blocker.item))
+                {
+                    continue;
+                }
+
                 var adjusted_index = (int)JSONKeyMappings.SPOILER_BARRIER_TO_BARRIER_ITEM[blocker.item];
                 hint.GB.SetIndex(adjusted_index);
                 hint.GBCount.Text = blocker.cost.ToString();

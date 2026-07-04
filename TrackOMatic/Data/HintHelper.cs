@@ -26,7 +26,7 @@ namespace TrackOMatic
         {
             hintCap = Properties.Settings.Default.ProgressiveHintCap;
             thresholds = new();
-            for(int i = 0; i < 33; i += 4)
+            for (int i = 0; i < 33; i += 4)
             {
                 thresholds.Add(GetHintRequirement(i));
             }
@@ -35,9 +35,12 @@ namespace TrackOMatic
 
         public static int GetAmountToNextHint(int totalItems)
         {
-            foreach(var threshold in thresholds)
+            foreach (var threshold in thresholds)
             {
-                if (totalItems < threshold) return (threshold - totalItems);
+                if (totalItems < threshold)
+                {
+                    return (threshold - totalItems);
+                }
             }
             return 0;
         }

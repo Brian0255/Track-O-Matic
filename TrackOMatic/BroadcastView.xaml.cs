@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,7 +104,7 @@ namespace TrackOMatic
             {
                 MainKongMoves.Children, TrainingMovesGrid.Children, CollectiblesGrid.Children, ShopkeepersGrid.Children
             };
-            foreach (var itemGrid in itemGrids) 
+            foreach (var itemGrid in itemGrids)
             {
                 foreach (var control in itemGrid)
                 {
@@ -115,7 +115,7 @@ namespace TrackOMatic
                     }
                 }
             }
-            foreach(var key in keys)
+            foreach (var key in keys)
             {
                 ItemName itemName = (ItemName)key.Tag;
                 ItemMap[itemName] = key;
@@ -125,11 +125,11 @@ namespace TrackOMatic
         public void InitializeFromItems(Dictionary<ItemName, Item> items)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            foreach(var entry in items)
+            foreach (var entry in items)
             {
                 var itemName = entry.Key;
                 var item = entry.Value;
-                if(itemName == ItemName.KEY_6)
+                if (itemName == ItemName.KEY_6)
                 {
                     Console.WriteLine("???");
                 }
@@ -140,7 +140,7 @@ namespace TrackOMatic
                         mainWindow.ITEM_NAME_TO_ITEM[itemName].InitHoverPoints();
                     }
                     SetItemStar(itemName, item.Star.Visibility);
-                    if(item.Brightened && item.Image.Opacity > 0.9)
+                    if (item.Brightened && item.Image.Opacity > 0.9)
                     {
                         TurnItemOn(itemName);
                     }
@@ -192,7 +192,7 @@ namespace TrackOMatic
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             KRoolKongs = new() { KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
             HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
-            for(int i =0; i < KRoolKongs.Count;++i)
+            for (int i = 0; i < KRoolKongs.Count; ++i)
             {
                 var item = KRoolKongs[i];
                 item.Enabled = false;
@@ -220,13 +220,17 @@ namespace TrackOMatic
 
         public void UpdateCollectible(ItemType itemType, int newAmount)
         {
-            if (!Collectibles.ContainsKey(itemType)) return;
+            if (!Collectibles.ContainsKey(itemType))
+            {
+                return;
+            }
+
             Collectibles[itemType].SetAmount(newAmount);
         }
 
         private void ClearLevelLabels()
         {
-            foreach(var image in LevelNames)
+            foreach (var image in LevelNames)
             {
                 image.Source = new BitmapImage(new Uri("Images/dk64/unknown.png", UriKind.Relative));
             }
@@ -239,11 +243,11 @@ namespace TrackOMatic
         public void Reset()
         {
             ClearLevelLabels();
-            foreach(var entry in Collectibles)
+            foreach (var entry in Collectibles)
             {
                 entry.Value.SetAmount(0);
             }
-            foreach(var key in SharedMoves.Keys.ToList())
+            foreach (var key in SharedMoves.Keys.ToList())
             {
                 SharedMoves[key] = false;
             }
@@ -255,7 +259,7 @@ namespace TrackOMatic
             {
                 LevelNumbers[key] = -1;
             }
-            foreach(var label in PointLabels)
+            foreach (var label in PointLabels)
             {
                 label.Text = "";
             }
@@ -266,7 +270,7 @@ namespace TrackOMatic
         public void ProcessSpoilerSettings(SpoilerSettings settings)
         {
             var width = settings.PointsEnabled ? 315 : 345;
-            foreach(var label in PointLabels)
+            foreach (var label in PointLabels)
             {
                 label.Visibility = (settings.PointsEnabled) ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -277,15 +281,15 @@ namespace TrackOMatic
         public void AdjustWindowSize()
         {
             var baseHeight = 394;
-            if(ShopkeepersRow.Height.Value > 0)
+            if (ShopkeepersRow.Height.Value > 0)
             {
                 baseHeight += 47;
             }
-            if(song_display.Height.Value > 0)
+            if (song_display.Height.Value > 0)
             {
                 baseHeight += 50;
             }
-            if(HelmKRool.Height.Value > 0)
+            if (HelmKRool.Height.Value > 0)
             {
                 baseHeight += 47;
             }
@@ -305,18 +309,22 @@ namespace TrackOMatic
             var mainItemsHeight = on ? 336 : 290;
             var climbingColumnWidth = on ? 0 : 0;
             ShopkeepersRow.Height = new GridLength(shopkeeperHeight, GridUnitType.Star);
-            MainItemsRow.Height = new GridLength(mainItemsHeight,GridUnitType.Pixel);
+            MainItemsRow.Height = new GridLength(mainItemsHeight, GridUnitType.Pixel);
             ClimbingColumn.Width = new GridLength(climbingColumnWidth, GridUnitType.Star);
             AdjustWindowSize();
         }
         private void UpdateLevelNumbers()
         {
             ClearLevelLabels();
-            foreach(var entry in LevelNumbers)
+            foreach (var entry in LevelNumbers)
             {
                 var region = entry.Key;
                 var levelNumber = entry.Value;
-                if (levelNumber <= -1) continue;
+                if (levelNumber <= -1)
+                {
+                    continue;
+                }
+
                 var matchingImage = LevelNames[levelNumber];
                 var imagePath = "Images/dk64/" + region.ToString().ToLower() + "_label.png";
                 matchingImage.Source = new BitmapImage(new Uri(imagePath, UriKind.Relative));
@@ -332,12 +340,19 @@ namespace TrackOMatic
         {
             var levelIndex = -1;
             //if (region == RegionName.HIDEOUT_HELM) levelIndex = 7;
-            if (region == RegionName.DK_ISLES) levelIndex = 8;
-            else if(LevelNumbers.ContainsKey(region))
+            if (region == RegionName.DK_ISLES)
+            {
+                levelIndex = 8;
+            }
+            else if (LevelNumbers.ContainsKey(region))
             {
                 levelIndex = LevelNumbers[region];
             }
-            if (levelIndex == -1) return;
+            if (levelIndex == -1)
+            {
+                return;
+            }
+
             PointLabels[levelIndex].Text = points.ToString();
             PointLabels[levelIndex].SetResourceReference(TextBlock.ForegroundProperty, foregroundResource);
         }
@@ -357,12 +372,12 @@ namespace TrackOMatic
                 {camerashockwave, new(){ItemName.FAIRY_CAMERA, ItemName.SHOCKWAVE} },
                 {slam, new(){ItemName.PROGRESSIVE_SLAM_1, ItemName.PROGRESSIVE_SLAM_2, ItemName.PROGRESSIVE_SLAM_3, } },
             };
-            foreach(var entry in groupings)
+            foreach (var entry in groupings)
             {
                 var items = entry.Value;
                 var image = entry.Key;
                 image.SetStarVisibility(Visibility.Collapsed);
-                foreach(var item in items)
+                foreach (var item in items)
                 {
                     if (StarredSharedMoves[item])
                     {
@@ -381,7 +396,10 @@ namespace TrackOMatic
                 return;
             }
             var match = GetMatchingItem(item);
-            if (match != null) match.SetStarVisibility(visibility);
+            if (match != null)
+            {
+                match.SetStarVisibility(visibility);
+            }
         }
 
         private void CheckGroupedItem(List<ItemName> items, List<BitmapImage> imageSources, ItemBackground itemBackground)
@@ -389,17 +407,25 @@ namespace TrackOMatic
             int imageIndex = 0;
             ItemName firstItem = items[0];
             ItemName secondItem = items[1];
-            if (SharedMoves[firstItem]) imageIndex++;
-            if (SharedMoves[secondItem]) imageIndex += 2;
+            if (SharedMoves[firstItem])
+            {
+                imageIndex++;
+            }
+
+            if (SharedMoves[secondItem])
+            {
+                imageIndex += 2;
+            }
+
             itemBackground.BackgroundItemImage = imageSources[imageIndex];
         }
 
         public void HandleSharedMoves()
         {
             int slamCount = 0;
-            foreach(var entry in SharedMoves)
+            foreach (var entry in SharedMoves)
             {
-                if(entry.Key.ToString().Contains("PROGRESSIVE_SLAM") && entry.Value == true)
+                if (entry.Key.ToString().Contains("PROGRESSIVE_SLAM") && entry.Value == true)
                 {
                     slamCount++;
                 }
@@ -418,13 +444,25 @@ namespace TrackOMatic
             {
                 return (ItemBackground)FindName(item.ToString().ToLower());
             }
-            if(item == ItemName.PROGRESSIVE_SLAM_1 || item == ItemName.PROGRESSIVE_SLAM_2 || item == ItemName.PROGRESSIVE_SLAM_3)
+            if (item == ItemName.PROGRESSIVE_SLAM_1 || item == ItemName.PROGRESSIVE_SLAM_2 || item == ItemName.PROGRESSIVE_SLAM_3)
             {
                 return slam;
             }
-            if (item == ItemName.SNIPER_SCOPE || item == ItemName.HOMING_AMMO) return homingscope;
-            if (item == ItemName.FAIRY_CAMERA || item == ItemName.SHOCKWAVE) return camerashockwave;
-            if (ItemMap.ContainsKey(item)) return ItemMap[item];
+            if (item == ItemName.SNIPER_SCOPE || item == ItemName.HOMING_AMMO)
+            {
+                return homingscope;
+            }
+
+            if (item == ItemName.FAIRY_CAMERA || item == ItemName.SHOCKWAVE)
+            {
+                return camerashockwave;
+            }
+
+            if (ItemMap.ContainsKey(item))
+            {
+                return ItemMap[item];
+            }
+
             return null;
         }
 
@@ -461,7 +499,11 @@ namespace TrackOMatic
         public void ActivateTooltip(ItemName item, string hoverText)
         {
             var match = GetMatchingItem(item);
-            if (match == null) return;
+            if (match == null)
+            {
+                return;
+            }
+
             match.ToolTip.Content = hoverText;
             match.ToolTip.Visibility = Visibility.Visible;
         }
@@ -469,13 +511,17 @@ namespace TrackOMatic
         public void DisableTooltip(ItemName item)
         {
             var match = GetMatchingItem(item);
-            if (match == null) return;
+            if (match == null)
+            {
+                return;
+            }
+
             match.ToolTip.Visibility = Visibility.Collapsed;
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-           
+
         }
     }
 }

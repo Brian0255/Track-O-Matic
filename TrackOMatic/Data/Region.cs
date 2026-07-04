@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,12 +13,12 @@ namespace TrackOMatic
     {
         public static readonly List<RegionName> LOBBY_ORDER = new()
         {
-            RegionName.JUNGLE_JAPES, 
-            RegionName.ANGRY_AZTEC, 
-            RegionName.FRANTIC_FACTORY, 
-            RegionName.GLOOMY_GALLEON, 
-            RegionName.FUNGI_FOREST, 
-            RegionName.CRYSTAL_CAVES, 
+            RegionName.JUNGLE_JAPES,
+            RegionName.ANGRY_AZTEC,
+            RegionName.FRANTIC_FACTORY,
+            RegionName.GLOOMY_GALLEON,
+            RegionName.FUNGI_FOREST,
+            RegionName.CRYSTAL_CAVES,
             RegionName.CREEPY_CASTLE,
             RegionName.HIDEOUT_HELM
         };
@@ -76,7 +76,11 @@ namespace TrackOMatic
             BottomLabel = bottomLabel;
             TopLabel = topLabel;
             LevelOrderNumber = levelOrderNumber;
-            if(LevelOrderNumber != null) LevelOrderNumber.SetRegion(regionName);
+            if (LevelOrderNumber != null)
+            {
+                LevelOrderNumber.SetRegion(regionName);
+            }
+
             CurrentChecks = new();
             RegionGrid.Region = this;
             ResetLabels();
@@ -85,25 +89,36 @@ namespace TrackOMatic
         //Should only be called when the spoiler log is being read, to initialize the point total
         public void AddCheck(ImportantCheck check)
         {
-            if (check == null) return;
+            if (check == null)
+            {
+                return;
+            }
+
             CurrentChecks[check] = true;
             UpdatePoints();
         }
 
         public void UpdateRequiredChecksTotal()
         {
-            if (!SpoilerLoaded) return;
+            if (!SpoilerLoaded)
+            {
+                return;
+            }
+
             int total = 0;
             foreach (var control in RegionGrid.Children)
             {
-                if(control is Item item)
+                if (control is Item item)
                 {
                     total += (item.Star.Visibility == Visibility.Visible) ? 1 : 0;
                 }
             }
             var toDisplay = Math.Max(requiredChecks - total, 0);
             var label = SpoilerSettingToLabel["RequiredChecks"];
-            if(label != null) label.Text = toDisplay.ToString();
+            if (label != null)
+            {
+                label.Text = toDisplay.ToString();
+            }
         }
 
         public void Reset()
@@ -117,45 +132,65 @@ namespace TrackOMatic
             //put them into a list first to avoid the "cant remove while enumerating" 
             var elements = new List<Item>(RegionGrid.Children.Count);
 
-            foreach(var control in RegionGrid.Children)
+            foreach (var control in RegionGrid.Children)
             {
                 elements.Add(control as Item);
             }
-            foreach(var item in elements)
+            foreach (var item in elements)
             {
-                if (item.Tag == null) continue;
+                if (item.Tag == null)
+                {
+                    continue;
+                }
+
                 item.HandleItemReturn();
             }
             RegionGrid.ResetVials();
             ResetLabels();
-            if(LevelOrderNumber != null) LevelOrderNumber.Reset();
+            if (LevelOrderNumber != null)
+            {
+                LevelOrderNumber.Reset();
+            }
+
             SetAsEmptySpoiler();
         }
 
         public void RemoveCheck(ImportantCheck check)
         {
-            if (check == null) return;
+            if (check == null)
+            {
+                return;
+            }
+
             CurrentChecks.Remove(check);
             UpdatePoints();
         }
 
         public void UpdatePoints()
         {
-            if (SpoilerSettings == null || !SpoilerSettings.PointsEnabled) return;
+            if (SpoilerSettings == null || !SpoilerSettings.PointsEnabled)
+            {
+                return;
+            }
+
             CurrentPoints = 0;
-            foreach(var entry in CurrentChecks)
+            foreach (var entry in CurrentChecks)
             {
                 var check = entry.Key;
                 CurrentPoints += check.PointValue;
             }
-            RemainingPoints = Math.Max(0,TotalPoints - CurrentPoints);
+            RemainingPoints = Math.Max(0, TotalPoints - CurrentPoints);
             var pointsLabel = SpoilerSettingToLabel["PointsLabel"];
-            if(pointsLabel == null) return;
+            if (pointsLabel == null)
+            {
+                return;
+            }
+
             pointsLabel.Text = (SpoilerLoaded) ? RemainingPoints.ToString() : "?";
             var resource = (CurrentPoints >= TotalPoints && SpoilerLoaded) ? "RegionComplete" : "RegionInProgress";
             pointsLabel.SetResourceReference(TextBlock.ForegroundProperty, resource);
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            if(mainWindow.BroadcastView != null)
+            if (mainWindow.BroadcastView != null)
             {
                 mainWindow.BroadcastView.UpdateRegionPoints(RegionName, RemainingPoints, resource);
             }
@@ -178,7 +213,11 @@ namespace TrackOMatic
 
         private void ConfigureLabelsFromSettings()
         {
-            if (SpoilerSettings == null) return;
+            if (SpoilerSettings == null)
+            {
+                return;
+            }
+
             if (SpoilerSettings.PointsEnabled)
             {
                 SpoilerSettingToLabel["PointsLabel"] = BottomLabel;
@@ -196,37 +235,69 @@ namespace TrackOMatic
             {
                 SpoilerSettingToLabel["PointsLabel"].Visibility = (SpoilerSettings.PointsEnabled && RegionName != RegionName.START) ? Visibility.Visible : Visibility.Hidden;
             }
-            if (SpoilerSettingToLabel["RequiredChecks"] != null) 
+            if (SpoilerSettingToLabel["RequiredChecks"] != null)
             {
                 SpoilerSettingToLabel["RequiredChecks"].Visibility = (SpoilerSettings.WOTHEnabled) ? Visibility.Visible : Visibility.Hidden;
             }
-            if (RegionName == RegionName.UNHINTABLE_MOVES) return;
+            if (RegionName == RegionName.UNHINTABLE_MOVES)
+            {
+                return;
+            }
+
             int columnSpan = (SpoilerSettings.PointsEnabled || SpoilerSettings.WOTHEnabled) ? 2 : 4;
-            if (RegionName == RegionName.START) columnSpan = 3;
+            if (RegionName == RegionName.START)
+            {
+                columnSpan = 3;
+            }
+
             Grid.SetColumnSpan(RegionButton, columnSpan);
         }
 
         public void SetSpoilerAsLoaded()
         {
             SpoilerLoaded = true;
-            if(RegionButton != null) Grid.SetColumnSpan(RegionButton, 4);
+            if (RegionButton != null)
+            {
+                Grid.SetColumnSpan(RegionButton, 4);
+            }
+
             ConfigureLabelsFromSettings();
             UpdatePoints();
             UpdateRequiredChecksTotal();
         }
-        
+
         public void SetLevelOrderNumber(int number)
         {
-            if (LevelOrderNumber == null) return;
+            if (LevelOrderNumber == null)
+            {
+                return;
+            }
+
             LevelOrderNumber.SetNumber(number);
         }
 
         public void SetAsEmptySpoiler()
         {
-            if (RegionName == RegionName.UNHINTABLE_MOVES) return;
-            if(BottomLabel != null) BottomLabel.Visibility = Visibility.Collapsed;
-            if(TopLabel != null) TopLabel.Visibility = Visibility.Collapsed;
-            if (RegionName == RegionName.START) return;
+            if (RegionName == RegionName.UNHINTABLE_MOVES)
+            {
+                return;
+            }
+
+            if (BottomLabel != null)
+            {
+                BottomLabel.Visibility = Visibility.Collapsed;
+            }
+
+            if (TopLabel != null)
+            {
+                TopLabel.Visibility = Visibility.Collapsed;
+            }
+
+            if (RegionName == RegionName.START)
+            {
+                return;
+            }
+
             Grid.SetColumnSpan(RegionButton, 3);
         }
     }

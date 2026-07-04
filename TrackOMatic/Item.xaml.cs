@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
@@ -70,7 +70,8 @@ namespace TrackOMatic
         public ImageSource ItemImage
         {
             get { return (ImageSource)GetValue(ItemImageProperty); }
-            set {
+            set
+            {
                 SetValue(ItemImageProperty, value);
                 //SyncImages();
             }
@@ -92,14 +93,14 @@ namespace TrackOMatic
             var itemName = (ItemName)Tag;
             var matchingCheck = ImportantCheckList.ITEMS[itemName];
             HoverText = matchingCheck.PointValue.ToString() + " points";
-            if(matchingCheck.PointValue == 1)
+            if (matchingCheck.PointValue == 1)
             {
                 HoverText = HoverText.Substring(0, HoverText.Length - 1);
             }
             ToolTip.Visibility = Visibility.Visible;
             matchingBackground.ToolTip.Visibility = Visibility.Visible;
             matchingBackground.ToolTip.Content = HoverText;
-            if(mainWindow.BroadcastView != null && Tag != null)
+            if (mainWindow.BroadcastView != null && Tag != null)
             {
                 mainWindow.BroadcastView.ActivateTooltip((ItemName)Tag, HoverText);
             }
@@ -115,7 +116,11 @@ namespace TrackOMatic
 
         private void Item_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (Tag == null) return;
+            if (Tag == null)
+            {
+                return;
+            }
+
             ItemName = (ItemName)Tag;
         }
 
@@ -127,14 +132,20 @@ namespace TrackOMatic
 
         public void SetStarVisibility(Visibility newVisibility)
         {
-            if(mainWindow.BroadcastView != null && Tag != null)
+            if (mainWindow.BroadcastView != null && Tag != null)
             {
-                mainWindow.BroadcastView.SetItemStar((ItemName) Tag, newVisibility);
+                mainWindow.BroadcastView.SetItemStar((ItemName)Tag, newVisibility);
             }
             Star.Visibility = newVisibility;
             if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
+            {
                 mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].SetStarVisibility(newVisibility);
-            if (Region != null) Region.UpdateRequiredChecksTotal();
+            }
+
+            if (Region != null)
+            {
+                Region.UpdateRequiredChecksTotal();
+            }
         }
 
         public void SetRegion(Region newRegion)
@@ -190,7 +201,11 @@ namespace TrackOMatic
 
         private void PerformSave()
         {
-            if (Tag == null) return;
+            if (Tag == null)
+            {
+                return;
+            }
+
             var itemName = (ItemName)Tag;
             var regionName = (Region == null) ? RegionName.UNKNOWN : Region.RegionName;
             bool autotracked = mainWindow.Autotracker.ItemWasTracked(itemName);
@@ -204,11 +219,13 @@ namespace TrackOMatic
             public int Y;
             public PInPoint(int x, int y)
             {
-                X = x; Y = y;
+                X = x;
+                Y = y;
             }
             public PInPoint(double x, double y)
             {
-                X = (int)x; Y = (int)y;
+                X = (int)x;
+                Y = (int)y;
             }
             public Point GetPoint(double xOffset = 0, double yOffet = 0)
             {
@@ -270,21 +287,28 @@ namespace TrackOMatic
             var key = (ItemName.ToString().ToLower() + "_bw");
             SetResourceReference(ItemImageProperty, key);
             UpdateBackgroundItemKey(key);
-            if (mainWindow.BroadcastView != null) mainWindow.BroadcastView.TurnItemOff((ItemName)Tag);
+            if (mainWindow.BroadcastView != null)
+            {
+                mainWindow.BroadcastView.TurnItemOff((ItemName)Tag);
+            }
+
             Brightened = false;
         }
 
-        public void DoDragDrop(bool rightButtonPressed) 
-        { 
+        public void DoDragDrop(bool rightButtonPressed)
+        {
             ItemName itemName = (ItemName)Tag;
             Brighten();
             if (!rightButtonPressed && Tag != null)
             {
-                if (mainWindow.BroadcastView != null) mainWindow.BroadcastView.TurnItemOn((ItemName)Tag);
+                if (mainWindow.BroadcastView != null)
+                {
+                    mainWindow.BroadcastView.TurnItemOn((ItemName)Tag);
+                }
             }
             var opacity = (rightButtonPressed) ? 0.375 : 1.0;
             Opacity = 1.0;
-             var adLayer = AdornerLayer.GetAdornerLayer(this);
+            var adLayer = AdornerLayer.GetAdornerLayer(this);
             myAdornment = new ItemAdorner(this, opacity);
             adLayer.Add(myAdornment);
             var parent = Parent;
@@ -293,11 +317,23 @@ namespace TrackOMatic
 
             pressed = false;
 
-            if (Parent == parent) Darken();
-            else Brighten();
+            if (Parent == parent)
+            {
+                Darken();
+            }
+            else
+            {
+                Brighten();
+            }
 
-            if (Parent == parent) ChangeOpacity(1.0);
-            else ChangeOpacity(opacity);
+            if (Parent == parent)
+            {
+                ChangeOpacity(1.0);
+            }
+            else
+            {
+                ChangeOpacity(opacity);
+            }
 
             PerformSave();
             adLayer.Remove(myAdornment);
@@ -305,7 +341,10 @@ namespace TrackOMatic
 
         public void Item_MouseMove(object sender, MouseEventArgs e)
         {
-            if (pressed && Interactible) DoDragDrop(e.RightButton == MouseButtonState.Pressed);
+            if (pressed && Interactible)
+            {
+                DoDragDrop(e.RightButton == MouseButtonState.Pressed);
+            }
         }
 
         public void ToggleStar()
@@ -325,8 +364,15 @@ namespace TrackOMatic
             pressed = (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed && Interactible);
             var shiftClicked = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
             //shift clicking should not start any drag/drop operation
-            if (shiftClicked) pressed = false;
-            if (e.LeftButton == MouseButtonState.Pressed && shiftClicked) ToggleStar();
+            if (shiftClicked)
+            {
+                pressed = false;
+            }
+
+            if (e.LeftButton == MouseButtonState.Pressed && shiftClicked)
+            {
+                ToggleStar();
+            }
         }
 
         private void CheckMiddleClick(object sender, MouseEventArgs e)
@@ -339,14 +385,17 @@ namespace TrackOMatic
 
         public void Item_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.Delta != 0) ToggleStar();
+            if (e.Delta != 0)
+            {
+                ToggleStar();
+            }
         }
 
         public void Item_Return(object sender, MouseEventArgs e)
         {
             CheckMiddleClick(sender, e);
             var shiftClicked = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
-            if(e.LeftButton == MouseButtonState.Pressed && shiftClicked)
+            if (e.LeftButton == MouseButtonState.Pressed && shiftClicked)
             {
                 ToggleStar();
                 return;
@@ -360,7 +409,11 @@ namespace TrackOMatic
 
         public void HandleItemReturn()
         {
-            if (!Interactible) return;
+            if (!Interactible)
+            {
+                return;
+            }
+
             Image.Opacity = 1.0;
             var itemGrid = MainWindow.Items;
             if (Parent != null)
@@ -389,7 +442,11 @@ namespace TrackOMatic
 
         private void Item_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
-            if (!Interactible) return;
+            if (!Interactible)
+            {
+                return;
+            }
+
             GetCursorPos(ref pointRef);
             Point relPos = PointFromScreen(pointRef.GetPoint(myAdornment.CenterOffset));
             myAdornment.Arrange(new Rect(relPos, myAdornment.DesiredSize));

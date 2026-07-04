@@ -23,7 +23,9 @@ namespace TrackOMatic
         public static double GetDpiScale(Visual visual)
         {
             if (visual == null)
+            {
                 throw new ArgumentNullException(nameof(visual));
+            }
 
             var presentationSource = PresentationSource.FromVisual(visual);
             if (presentationSource?.CompositionTarget != null)

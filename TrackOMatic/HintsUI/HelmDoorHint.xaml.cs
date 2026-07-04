@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 
 namespace TrackOMatic
 {
-    public partial class HelmDoorHint  : UserControl
+    public partial class HelmDoorHint : UserControl
     {
         public static readonly DependencyProperty LabelTextProperty = DependencyProperty.Register("LabelText", typeof(string), typeof(HelmDoorHint));
 
@@ -49,7 +49,7 @@ namespace TrackOMatic
                 }
             };
             DoorItem.ImageSources = BLockerSources;
-    }
+        }
 
     }
 }

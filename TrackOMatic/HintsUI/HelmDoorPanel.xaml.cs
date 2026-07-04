@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -47,9 +47,9 @@ namespace TrackOMatic
             InitializeComponent();
             DataContext = this;
             hints = new();
-            foreach(var child in MainGrid.Children)
+            foreach (var child in MainGrid.Children)
             {
-                if(child is HelmDoorHint hint)
+                if (child is HelmDoorHint hint)
                 {
                     hints.Add(hint);
                 }
@@ -60,7 +60,7 @@ namespace TrackOMatic
         {
             foreach (var element in MainGrid.Children)
             {
-                if(element is HelmDoorHint hint)
+                if (element is HelmDoorHint hint)
                 {
                     hint.ItemCount.Text = "?";
                     hint.DoorItem.SetIndex(0);
@@ -70,7 +70,7 @@ namespace TrackOMatic
 
         public void LoadSavedHelmDoorCounts(List<string> ItemCounts)
         {
-            for(int i = 0; i < ItemCounts.Count; ++i)
+            for (int i = 0; i < ItemCounts.Count; ++i)
             {
                 hints[i].ItemCount.Text = ItemCounts[i];
             }
@@ -79,7 +79,7 @@ namespace TrackOMatic
         public List<string> GetItemCounts()
         {
             var list = new List<string>();
-            foreach(var entry in hints)
+            foreach (var entry in hints)
             {
                 list.Add(entry.ItemCount.Text);
             }
