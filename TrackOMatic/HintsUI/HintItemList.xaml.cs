@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -76,23 +76,42 @@ namespace TrackOMatic
             UpdateCheckmarks(dialog);
             SelectedItems = dialog.SelectedItems;
             ProcessSelectedItems();
-            if (HintInfo != null) HintInfo.UpdateSelectedItems();
+            if (HintInfo != null)
+            {
+                HintInfo.UpdateSelectedItems();
+            }
         }
 
         public void UpdateCheckmark(ItemName itemName, bool isChecked)
         {
-            if (!SelectedItems.ContainsKey(itemName)) return;
+            if (!SelectedItems.ContainsKey(itemName))
+            {
+                return;
+            }
+
             SelectedItems[itemName] = isChecked;
-            if (HintInfo != null) HintInfo.UpdateSelectedItems();
+            if (HintInfo != null)
+            {
+                HintInfo.UpdateSelectedItems();
+            }
         }
 
         public void Image_MouseDown(object sender, MouseEventArgs e)
         {
             var image = (PathOrFoundItem)sender;
             var shiftClicked = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
-            if (e.LeftButton == MouseButtonState.Pressed && shiftClicked) image.Toggle();
-            else if (e.LeftButton == MouseButtonState.Pressed) OpenItemSelectionDialog();
-            else if (e.MiddleButton == MouseButtonState.Pressed) image.Toggle();
+            if (e.LeftButton == MouseButtonState.Pressed && shiftClicked)
+            {
+                image.Toggle();
+            }
+            else if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                OpenItemSelectionDialog();
+            }
+            else if (e.MiddleButton == MouseButtonState.Pressed)
+            {
+                image.Toggle();
+            }
         }
 
         public void AddNewImageToPanel(ItemName itemName, bool isChecked, UniformGrid row)
@@ -140,17 +159,20 @@ namespace TrackOMatic
                 sortedItemList.Add(ItemName.NONE);
                 checkmarkedItems.Add(false);
             }
-            for(int i = 0; i < sortedItemList.Count; ++i)
+            for (int i = 0; i < sortedItemList.Count; ++i)
             {
                 var row = ItemPanel;
-                if(BottomRowHeight != new GridLength(0) && sortedItemList.Count > 2 && i > (sortedItemList.Count-1)/2 )
+                if (BottomRowHeight != new GridLength(0) && sortedItemList.Count > 2 && i > (sortedItemList.Count - 1) / 2)
                 {
                     row = ItemPanel2;
                 }
                 AddNewImageToPanel(sortedItemList[i], checkmarkedItems[i], row);
             }
             ItemPanel.EndInit();
-            if(OnItemsSelected != null) OnItemsSelected?.Invoke();
+            if (OnItemsSelected != null)
+            {
+                OnItemsSelected?.Invoke();
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using TrackOMatic.Properties;
 namespace TrackOMatic
 {
     public partial class HintPanel : UserControl
-    { 
+    {
 
         public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register("Heading", typeof(string), typeof(HintPanel));
         public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register("LineColor", typeof(Color), typeof(HintPanel));
@@ -22,7 +22,7 @@ namespace TrackOMatic
 
 
         public List<ItemName> ItemsToFilterBy { get; private set; } = new();
-    
+
         public string Heading
         {
             get { return (string)GetValue(HeadingProperty); }
@@ -63,7 +63,7 @@ namespace TrackOMatic
 
         public void Reset()
         {
-            foreach (var child in HintList.Children.OfType<HintInfo>().ToList()) 
+            foreach (var child in HintList.Children.OfType<HintInfo>().ToList())
             {
                 HintList.Children.Remove(child);
             }
@@ -107,7 +107,10 @@ namespace TrackOMatic
             List<SavedHint> hints = new();
             foreach (var hint in HintList.Children)
             {
-                if (hint is HintInfo hintInfo) hints.Add(hintInfo.SavedHint);
+                if (hint is HintInfo hintInfo)
+                {
+                    hints.Add(hintInfo.SavedHint);
+                }
             }
             return hints;
         }
@@ -125,7 +128,7 @@ namespace TrackOMatic
         {
             var addNewHint = HintList.Children[HintList.Children.Count - 1];
             HintList.Children.Clear();
-            foreach(var hint in hints)
+            foreach (var hint in hints)
             {
                 HintList.Children.Add(hint);
             }
@@ -135,7 +138,7 @@ namespace TrackOMatic
         private void UpdateFilterImage()
         {
             var source = "../Images/dk64/filter_empty.png";
-            if(ItemsToFilterBy.Count > 0)
+            if (ItemsToFilterBy.Count > 0)
             {
                 source = "../Images/dk64/filter_on.png";
             }
@@ -143,15 +146,16 @@ namespace TrackOMatic
         }
 
         private void ApplyFilter()
-        {          
+        {
             var filteredHints = new List<HintInfo>();
             var rejectedHints = new List<HintInfo>();
-            foreach(var child in HintList.Children)
+            foreach (var child in HintList.Children)
             {
-                if(child is HintInfo hintInfo)
+                if (child is HintInfo hintInfo)
                 {
                     var selectedItems = hintInfo.ItemsOnPath.SelectedItems;
-                    if (ItemsToFilterBy.All(filterItem => selectedItems.ContainsKey(filterItem))){
+                    if (ItemsToFilterBy.All(filterItem => selectedItems.ContainsKey(filterItem)))
+                    {
                         filteredHints.Add(hintInfo);
                     }
                     else
@@ -174,7 +178,11 @@ namespace TrackOMatic
 
         private void OnPathItemsSelected()
         {
-            if(Settings.Default.AutoSortPathHints) Sort();
+            if (Settings.Default.AutoSortPathHints)
+            {
+                Sort();
+            }
+
             ApplyFilter();
         }
 

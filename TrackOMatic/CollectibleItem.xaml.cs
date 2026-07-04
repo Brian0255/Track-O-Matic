@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -91,7 +91,7 @@ namespace TrackOMatic
                 {
                     text = value;
                     SetValue(TextProperty, value);
-                    if(value == 0)
+                    if (value == 0)
                     {
                         //NumberGrid.Visibility = Visibility.Hidden;
                         Darken();
@@ -116,15 +116,18 @@ namespace TrackOMatic
             //kinda janky way to update broadcast correctly on user input
             var window = (MainWindow)Application.Current.MainWindow;
             ItemType collectibleType = 0;
-            foreach(var entry in window.Collectibles)
+            foreach (var entry in window.Collectibles)
             {
-                if(entry.Value == this)
+                if (entry.Value == this)
                 {
                     collectibleType = entry.Key;
                     break;
                 }
             }
-            if (window.BroadcastView != null) window.BroadcastView.UpdateCollectible(collectibleType, Text);
+            if (window.BroadcastView != null)
+            {
+                window.BroadcastView.UpdateCollectible(collectibleType, Text);
+            }
         }
 
         public void SetAmount(int newAmount)
@@ -140,7 +143,11 @@ namespace TrackOMatic
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Settings.Default.Autotracking || !Interactible) return;
+            if (Settings.Default.Autotracking || !Interactible)
+            {
+                return;
+            }
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Text++;
@@ -150,7 +157,11 @@ namespace TrackOMatic
 
         private void Image_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Settings.Default.Autotracking || !Interactible) return;
+            if (Settings.Default.Autotracking || !Interactible)
+            {
+                return;
+            }
+
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 Text = Math.Max(Text - 1, 0);

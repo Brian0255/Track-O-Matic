@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -115,7 +115,7 @@ namespace TrackOMatic
 
         private void BroadcastToggle(object sender, RoutedEventArgs e)
         {
-            if(BroadcastView != null)
+            if (BroadcastView != null)
             {
                 BroadcastView.Close();
                 BroadcastView = null;
@@ -133,7 +133,11 @@ namespace TrackOMatic
             foreach (var entry in Regions)
             {
                 var region = entry.Value;
-                if (region.LevelOrderNumber != null) region.LevelOrderNumber.UpdateLabel();
+                if (region.LevelOrderNumber != null)
+                {
+                    region.LevelOrderNumber.UpdateLabel();
+                }
+
                 region.UpdatePoints();
             }
             BroadcastView.ProcessSpoilerSettings(SpoilerSettings);

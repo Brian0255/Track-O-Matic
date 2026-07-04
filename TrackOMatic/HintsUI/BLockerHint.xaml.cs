@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -18,7 +18,7 @@ using TrackOMatic.Data;
 
 namespace TrackOMatic
 {
-    public partial class BLockerHint  : UserControl
+    public partial class BLockerHint : UserControl
     {
         public static readonly DependencyProperty RegionNameProperty = DependencyProperty.Register("RegionName", typeof(RegionName), typeof(BLockerHint));
         public RegionName RegionName

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,9 +33,9 @@ namespace TrackOMatic
         private void FindSavedHints()
         {
             savedProgress.SavedHints.Clear();
-            foreach(var hintPanel in MainWindow.HintPanels)
+            foreach (var hintPanel in MainWindow.HintPanels)
             {
-                foreach(var hint in hintPanel.GetSavedHints())
+                foreach (var hint in hintPanel.GetSavedHints())
                 {
                     savedProgress.SavedHints.Add(hint);
                 }
@@ -44,7 +44,11 @@ namespace TrackOMatic
 
         public void Save(string filePath = "autosave.json", bool writeToFile = true)
         {
-            if (savedProgress == null) return;
+            if (savedProgress == null)
+            {
+                return;
+            }
+
             FindSavedHints();
             savedProgress.SavedGBCounts = MainWindow.BLockerHints.GetGBCounts();
             savedProgress.BLockerImageIndexes = MainWindow.BLockerHints.GetImageIndexes();
@@ -54,15 +58,21 @@ namespace TrackOMatic
             savedProgress.BossKongs = MainWindow.GetBossKongs();
             savedProgress.LevelOrder = MainWindow.GetLevelOrder();
             var JSONString = JsonConvert.SerializeObject(savedProgress);
-            if(writeToFile) File.WriteAllText(filePath, JSONString);
+            if (writeToFile)
+            {
+                File.WriteAllText(filePath, JSONString);
+            }
         }
 
         private Item FindMatchingItem(ItemName toFind)
         {
-            foreach(var item in MainWindow.DraggableItems)
+            foreach (var item in MainWindow.DraggableItems)
             {
                 var itemName = (ItemName)item.Tag;
-                if (itemName == toFind) return item;
+                if (itemName == toFind)
+                {
+                    return item;
+                }
             }
             return null;
         }
@@ -70,7 +80,11 @@ namespace TrackOMatic
         //if the user turns autotracking off we need to remark the items as not autotracked in the saved data
         public void TurnOffAutotrackingField()
         {
-            if(savedProgress == null) return;
+            if (savedProgress == null)
+            {
+                return;
+            }
+
             foreach (var savedItemEntry in savedProgress.SavedItems)
             {
                 savedItemEntry.Value.Autotracked = false;
@@ -79,8 +93,12 @@ namespace TrackOMatic
 
         private void ReadSavedProgress()
         {
-            if (savedProgress == null) return;
-            if(savedProgress.spoilerPath != "" && File.Exists(savedProgress.spoilerPath))
+            if (savedProgress == null)
+            {
+                return;
+            }
+
+            if (savedProgress.spoilerPath != "" && File.Exists(savedProgress.spoilerPath))
             {
                 MainWindow.ParseSpoiler(savedProgress.spoilerPath);
             }
@@ -92,7 +110,11 @@ namespace TrackOMatic
                 Item matchingItem = FindMatchingItem(savedItem.ItemName);
                 matchingItem.SetStarVisibility(savedItem.Starred);
                 matchingItem.ChangeOpacity(savedItem.Opacity);
-                if(savedItem.Autotracked) MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
+                if (savedItem.Autotracked)
+                {
+                    MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
+                }
+
                 if (savedItem.Region != RegionName.UNKNOWN && !savedItem.Hinted)
                 {
                     MainWindow.Regions[region].RegionGrid.Add_Item(matchingItem, !savedItem.Autotracked, !savedItem.Hinted);
@@ -112,25 +134,47 @@ namespace TrackOMatic
             MainWindow.BLockerHints.LoadSavedImageIndexes(savedProgress.BLockerImageIndexes);
             MainWindow.HelmDoorHints.LoadSavedHelmDoorCounts(savedProgress.HelmDoorCounts);
             MainWindow.HelmDoorHints.LoadSavedImageIndexes(savedProgress.HelmDoorImageIndexes);
-            if(savedProgress.HelmKongs != null) MainWindow.LoadHelmKongs(savedProgress.HelmKongs);
-            if (savedProgress.BossKongs != null) MainWindow.LoadBossKongs(savedProgress.BossKongs);
-            if (savedProgress.LevelOrder != null) MainWindow.LoadLevelOrder(savedProgress.LevelOrder);
+            if (savedProgress.HelmKongs != null)
+            {
+                MainWindow.LoadHelmKongs(savedProgress.HelmKongs);
+            }
+
+            if (savedProgress.BossKongs != null)
+            {
+                MainWindow.LoadBossKongs(savedProgress.BossKongs);
+            }
+
+            if (savedProgress.LevelOrder != null)
+            {
+                MainWindow.LoadLevelOrder(savedProgress.LevelOrder);
+            }
         }
 
         public void AddSavedItem(SavedItem savedItem)
         {
-            if (savedItem == null || savedProgress == null) return;
+            if (savedItem == null || savedProgress == null)
+            {
+                return;
+            }
+
             var itemName = savedItem.ItemName;
             if (savedProgress.SavedItems.ContainsKey(itemName))
             {
                 savedProgress.SavedItems[itemName] = savedItem;
             }
-            else savedProgress.SavedItems.Add(itemName, savedItem);
+            else
+            {
+                savedProgress.SavedItems.Add(itemName, savedItem);
+            }
         }
 
         public void ReadSavedDataFromFile(string filePath)
         {
-            if (!File.Exists(filePath)) return;
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
             try
             {
                 var jsonString = File.ReadAllText(filePath);
@@ -146,7 +190,11 @@ namespace TrackOMatic
 
         public void setSpoilerPath(string newSpoilerPath)
         {
-            if (savedProgress == null) return;
+            if (savedProgress == null)
+            {
+                return;
+            }
+
             savedProgress.spoilerPath = newSpoilerPath;
         }
 

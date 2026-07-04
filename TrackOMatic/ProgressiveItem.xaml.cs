@@ -27,10 +27,11 @@ namespace TrackOMatic
         public List<List<BitmapImage>> ImageSources
         {
             get { return (List<List<BitmapImage>>)GetValue(ImageSourcesProperty); }
-            set 
+            set
             {
                 SetValue(ImageSourcesProperty, value);
-                if(value.Count > 0 && value[0].Count > 0){
+                if (value.Count > 0 && value[0].Count > 0)
+                {
                     SetImage(value[0][0]);
                 }
                 images = value.SelectMany(list => list).ToList();
@@ -47,7 +48,11 @@ namespace TrackOMatic
         private void UpdateBroadcastView()
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            if (mainWindow.BroadcastView == null) return;
+            if (mainWindow.BroadcastView == null)
+            {
+                return;
+            }
+
             if (mainWindow.BossKongs.IndexOf(this) != -1)
             {
                 mainWindow.BroadcastView.UpdateKRoolKong(mainWindow.BossKongs.IndexOf(this), image.Source);
@@ -85,14 +90,22 @@ namespace TrackOMatic
 
         private void ImageButton_LeftPress(object sender, RoutedEventArgs e)
         {
-            if (!Enabled || ImageSources.Count == 0) return;
+            if (!Enabled || ImageSources.Count == 0)
+            {
+                return;
+            }
+
             var itemSelector = new BasicItemSelector(ImageSources);
             var mousePosition = Mouse.GetPosition(this);
             mousePosition = PointToScreen(mousePosition);
             UIUtils.MoveWindowAndEnsureVisibile(itemSelector, mousePosition.X - itemSelector.Width / 2, mousePosition.Y - itemSelector.Height);
             itemSelector.ShowDialog();
             var index = itemSelector.SelectedImageIndex;
-            if (index == -1) return;
+            if (index == -1)
+            {
+                return;
+            }
+
             ((MainWindow)(Application.Current.MainWindow)).DataSaver.Save();
             currentIndex = index;
             ReadCurrentIndex();
@@ -100,12 +113,16 @@ namespace TrackOMatic
 
         private void ImageButton_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (!Enabled) return;
-            if(e.Delta > 0)
+            if (!Enabled)
+            {
+                return;
+            }
+
+            if (e.Delta > 0)
             {
                 currentIndex = (currentIndex + 1) % images.Count;
             }
-            else if(e.Delta < 0)
+            else if (e.Delta < 0)
             {
                 currentIndex = (currentIndex + images.Count - 1) % images.Count;
             }

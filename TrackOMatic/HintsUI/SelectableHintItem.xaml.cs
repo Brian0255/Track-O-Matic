@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -39,8 +39,14 @@ namespace TrackOMatic
 
         public void UpdateImageFromState()
         {
-            if (On) SetResourceReference(HintItemImageProperty, ItemName.ToString().ToLower());
-            else SetResourceReference(HintItemImageProperty, ItemName.ToString().ToLower() + "_bw");
+            if (On)
+            {
+                SetResourceReference(HintItemImageProperty, ItemName.ToString().ToLower());
+            }
+            else
+            {
+                SetResourceReference(HintItemImageProperty, ItemName.ToString().ToLower() + "_bw");
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -69,12 +75,18 @@ namespace TrackOMatic
 
         public void SelectableHintItem_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed) ToggleState();
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                ToggleState();
+            }
         }
 
         public void SelectableHintItem_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.Delta != 0) ToggleState();
+            if (e.Delta != 0)
+            {
+                ToggleState();
+            }
         }
     }
 }

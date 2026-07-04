@@ -1,4 +1,4 @@
-﻿namespace TrackOMatic
+namespace TrackOMatic
 {
     public enum ItemName
     {
@@ -95,7 +95,7 @@
 
         NINTENDO_COIN,
         RAREWARE_COIN,
-        
+
         DONKEY_JAPES_GBS,
         DONKEY_AZTEC_GBS,
         DONKEY_FACTORY_GBS,

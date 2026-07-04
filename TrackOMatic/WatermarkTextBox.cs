@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -30,7 +30,11 @@ namespace TrackOMatic
 
         public void Reset()
         {
-            if(IsFocused) FocusManager.SetFocusedElement(FocusManager.GetFocusScope(this), null);
+            if (IsFocused)
+            {
+                FocusManager.SetFocusedElement(FocusManager.GetFocusScope(this), null);
+            }
+
             ApplyWatermark();
         }
 

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -69,7 +69,11 @@ namespace TrackOMatic
         private static void InitUserShortcuts()
         {
             var userShortcutsFile = "shortcuts.json";
-            if (!File.Exists(userShortcutsFile)) CreateUserShortcuts();
+            if (!File.Exists(userShortcutsFile))
+            {
+                CreateUserShortcuts();
+            }
+
             using StreamReader reader = new(userShortcutsFile);
             string json = reader.ReadToEnd();
             UserShortcuts = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
@@ -125,7 +129,11 @@ namespace TrackOMatic
                 {
                     var moveString = info.ItemName.ToString();
                     var textinfo = new CultureInfo("en-US", false).TextInfo;
-                    if (moveString.Contains("PROGRESSIVE_SLAM")) moveString = "PROGRESSIVE_SLAM";
+                    if (moveString.Contains("PROGRESSIVE_SLAM"))
+                    {
+                        moveString = "PROGRESSIVE_SLAM";
+                    }
+
                     moveString = moveString.Replace("_", " ");
                     moveString = textinfo.ToTitleCase(moveString.ToLower());
                     if (!SortedMoves.Contains(moveString))
@@ -149,20 +157,28 @@ namespace TrackOMatic
 
         public static void InitDirectItemHintList()
         {
-            foreach(var hintRegion in SortedRegions)
+            foreach (var hintRegion in SortedRegions)
             {
                 var words = hintRegion.Split(' ');
                 var firstWord = words[0].ToLower();
-                if (firstWord == "troff") continue;
+                if (firstWord == "troff")
+                {
+                    continue;
+                }
                 //ignore something like "Aztec Colored Bananas" because that is only foolish hint relevant
-                if (words.Length > 1 && words[1].ToLower() == "colored") continue;
+                if (words.Length > 1 && words[1].ToLower() == "colored")
+                {
+                    continue;
+                }
+
                 RegionName region = RegionName.DK_ISLES;
                 var shortenedName = hintRegion;
                 if (SHORTENED_REGION_NAME_TO_REGION.ContainsKey(firstWord))
                 {
                     region = SHORTENED_REGION_NAME_TO_REGION[firstWord];
                     shortenedName = hintRegion.Substring(firstWord.Length).TrimStart();
-                };
+                }
+                ;
                 REGIONS_WITHOUT_LEVEL_NAME[region].Add(shortenedName);
             }
             foreach (var key in REGIONS_WITHOUT_LEVEL_NAME.Keys.ToList())
@@ -173,9 +189,9 @@ namespace TrackOMatic
                 regionList.Sort();
                 REGIONS_WITHOUT_LEVEL_NAME[key] = regionList;
             }
-            foreach(var entry in REGIONS_WITHOUT_LEVEL_NAME)
+            foreach (var entry in REGIONS_WITHOUT_LEVEL_NAME)
             {
-            
+
             }
         }
 

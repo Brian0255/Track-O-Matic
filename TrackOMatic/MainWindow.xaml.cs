@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -116,7 +116,10 @@ namespace TrackOMatic
             {
                 if (control is ItemBackground button)
                 {
-                    if ((ItemName)button.Tag == (ItemName)item.Tag) return button;
+                    if ((ItemName)button.Tag == (ItemName)item.Tag)
+                    {
+                        return button;
+                    }
                 }
             }
 
@@ -143,9 +146,9 @@ namespace TrackOMatic
 
                 {RegionName.UNHINTABLE_MOVES, new Region(RegionName.UNHINTABLE_MOVES, UnhintableMovesRegion, UnhintableMovesImagePointsGrid, null, UnhintableMovesRegionGrid) }
             };
-            HitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10};
+            HitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10 };
             Collectibles = new()
-            { 
+            {
                 {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
                 {ItemType.DIDDY_BLUEPRINT, DiddyBPs },
                 {ItemType.LANKY_BLUEPRINT, LankyBPs },
@@ -162,7 +165,7 @@ namespace TrackOMatic
                 {ItemType.TOTAL_BLUEPRINTS, BlueprintsTotal }
             };
             Items = ItemGrid;
-            BossKongs = new(){ BossKong1, BossKong2, BossKong3, BossKong4, BossKong5 };
+            BossKongs = new() { BossKong1, BossKong2, BossKong3, BossKong4, BossKong5 };
             HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
             foreach (var control in ItemGrid.Children)
             {
@@ -186,7 +189,7 @@ namespace TrackOMatic
             }
 
 
-            HintPanels = new() { 
+            HintPanels = new() {
             IslesPanel,
             FactoryPanel,
             CavesPanel,
@@ -214,7 +217,11 @@ namespace TrackOMatic
         public void SetRegionLighting(RegionName regionName, bool lightUp)
         {
             string resource = (lightUp) ? "RegionBGLitUp" : "RegionBG";
-            if (!Regions.ContainsKey(regionName)) return;
+            if (!Regions.ContainsKey(regionName))
+            {
+                return;
+            }
+
             var region = Regions[regionName];
             region.MainUIGrid.SetResourceReference(Panel.BackgroundProperty, resource);
             region.RegionGrid.SetResourceReference(Panel.BackgroundProperty, resource);
@@ -239,14 +246,25 @@ namespace TrackOMatic
             if (Collectibles.ContainsKey(collectibleType))
             {
                 Collectibles[collectibleType].SetAmount(newTotal);
-                if (BroadcastView != null) BroadcastView.UpdateCollectible(collectibleType, newTotal);
+                if (BroadcastView != null)
+                {
+                    BroadcastView.UpdateCollectible(collectibleType, newTotal);
+                }
             }
         }
 
         public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false, bool canAutosave = true)
         {
-            if (regionName == RegionName.UNKNOWN) return false;
-            if (!ITEM_NAME_TO_ITEM.ContainsKey(itemToProcess)) return false;
+            if (regionName == RegionName.UNKNOWN)
+            {
+                return false;
+            }
+
+            if (!ITEM_NAME_TO_ITEM.ContainsKey(itemToProcess))
+            {
+                return false;
+            }
+
             var item = ITEM_NAME_TO_ITEM[itemToProcess];
             bool darken = hint && item.Parent == ItemGrid;
             if (item.Parent != ItemGrid)
@@ -254,13 +272,25 @@ namespace TrackOMatic
                 var parent = (RegionGrid)item.Parent;
                 parent.Handle_RegionGrid(item, false);
             }
-            if(!hint) item.ChangeOpacity(1.0);
+            if (!hint)
+            {
+                item.ChangeOpacity(1.0);
+            }
+
             Regions[regionName].RegionGrid.Add_Item(item, false, !darken);
             //should mean that there was no matching vial, item couldn't be placed as a result
-            if (item.Parent == ItemGrid) return false;
-            if (BroadcastView != null && !hint) BroadcastView.TurnItemOn(itemToProcess);
+            if (item.Parent == ItemGrid)
+            {
+                return false;
+            }
+
+            if (BroadcastView != null && !hint)
+            {
+                BroadcastView.TurnItemOn(itemToProcess);
+            }
+
             DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.Image.Opacity));
-            DataSaver.Save("autosave.json",canAutosave);
+            DataSaver.Save("autosave.json", canAutosave);
             return true;
         }
 
@@ -287,7 +317,7 @@ namespace TrackOMatic
         private void ResetWidthHeight()
         {
             double newWidth = 580;
-            if(Settings.Default.HintDisplay != "Off")
+            if (Settings.Default.HintDisplay != "Off")
             {
                 newWidth = (Settings.Default.CompactMode) ? 1392.0 : 1800.0;
             }
@@ -376,7 +406,11 @@ namespace TrackOMatic
         {
             var isActuallyOn = (MultipathColumns.Width.Value == 2 && MultipathColumns.Width.IsStar);
             var on = Settings.Default.CompactMode;
-            if (on == isActuallyOn) return;
+            if (on == isActuallyOn)
+            {
+                return;
+            }
+
             var totalColumns = on ? 2 : 3;
             MultipathColumns.Width = new GridLength(totalColumns, GridUnitType.Star);
             double newRatio = on ? 1.43 : 2.15;
@@ -397,14 +431,14 @@ namespace TrackOMatic
 
         public void SetSong(string songGame, string songName)
         {
-            if(songName == "")
+            if (songName == "")
             {
                 songGame = "";
                 songName = "Waiting for a 4.0 ROM...";
             }
             SongGame.Text = songGame;
             SongName.Text = songName;
-            if(BroadcastView != null)
+            if (BroadcastView != null)
             {
                 BroadcastView.UpdateSongInfo(songGame, songName);
             }
@@ -429,15 +463,21 @@ namespace TrackOMatic
 
         public void InitRegionsFromEmptySpoiler()
         {
-            foreach (var entry in Regions) entry.Value.SetAsEmptySpoiler();
+            foreach (var entry in Regions)
+            {
+                entry.Value.SetAsEmptySpoiler();
+            }
         }
 
         public void ParseSpoiler(string fileName)
         {
             SpoilerSettings = SpoilerParser.ParseSpoiler(fileName);
-            foreach(var entry in SpoilerParser.StartingItems)
+            foreach (var entry in SpoilerParser.StartingItems)
             {
-                if (BroadcastView != null) BroadcastView.TurnItemOn(entry.Key);
+                if (BroadcastView != null)
+                {
+                    BroadcastView.TurnItemOn(entry.Key);
+                }
             }
             if (!SpoilerSettings.Empty())
             {
@@ -448,10 +488,21 @@ namespace TrackOMatic
             {
                 InitRegionsFromEmptySpoiler();
             }
-            foreach (var entry in Regions) entry.Value.SetSpoilerAsLoaded();
-            if (BroadcastView != null) BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
+            foreach (var entry in Regions)
+            {
+                entry.Value.SetSpoilerAsLoaded();
+            }
+
+            if (BroadcastView != null)
+            {
+                BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
+            }
+
             HitListHintManager.InitializeFromSpoiler(SpoilerParser.StartingItems, SpoilerParser.TrainingItems);
-            foreach (var entry in ITEM_TO_BACKGROUND_IMAGE) entry.Key.InitHoverPoints();
+            foreach (var entry in ITEM_TO_BACKGROUND_IMAGE)
+            {
+                entry.Key.InitHoverPoints();
+            }
         }
 
         private void DropFile(object sender, DragEventArgs e)
@@ -511,17 +562,21 @@ namespace TrackOMatic
                 {ItemType.PEARL, "Images/dk64/pearl.png" },
                 {ItemType.COLORED_BANANA, "Images/dk64/colored_bananas.png" }
             };
-           ItemsToNextHintImage.Source = new BitmapImage(new Uri(itemTypeToImageString[itemType], UriKind.Relative));
+            ItemsToNextHintImage.Source = new BitmapImage(new Uri(itemTypeToImageString[itemType], UriKind.Relative));
         }
 
         public void UpdateUIAmountToNextHint(int newAmount)
         {
-           ItemsToNextHint.Text = newAmount.ToString();
+            ItemsToNextHint.Text = newAmount.ToString();
         }
 
         public void Reset()
         {
-            if (BroadcastView != null) BroadcastView.Reset();
+            if (BroadcastView != null)
+            {
+                BroadcastView.Reset();
+            }
+
             TotalGBs = 0;
             SpoilerLoaded = false;
             ITEM_NAME_TO_REGION.Clear();
@@ -533,7 +588,7 @@ namespace TrackOMatic
                 var region = entry.Value;
                 region.Reset();
                 region.SetLevelOrderNumber(0);
-                if(entry.Key == RegionName.HIDEOUT_HELM && !Settings.Default.HelmInLevelOrder)
+                if (entry.Key == RegionName.HIDEOUT_HELM && !Settings.Default.HelmInLevelOrder)
                 {
                     region.SetLevelOrderNumber(8);
                 }
@@ -545,16 +600,32 @@ namespace TrackOMatic
                 item.ChangeOpacity(1.0);
                 item.InitHoverPoints();
             }
-            foreach(var hintPanel in HintPanels)
+            foreach (var hintPanel in HintPanels)
             {
                 hintPanel.Reset();
             }
             BLockerHints.Reset();
             HelmDoorHints.Reset();
-            foreach (var item in HitListItems) item.Reset();
-            foreach (var key in Collectibles.Keys.ToList()) Collectibles[key].SetAmount(0);
-            foreach (var progressiveImage in BossKongs) progressiveImage.Reset();
-            foreach (var progressiveImage in HelmKongs) progressiveImage.Reset();
+            foreach (var item in HitListItems)
+            {
+                item.Reset();
+            }
+
+            foreach (var key in Collectibles.Keys.ToList())
+            {
+                Collectibles[key].SetAmount(0);
+            }
+
+            foreach (var progressiveImage in BossKongs)
+            {
+                progressiveImage.Reset();
+            }
+
+            foreach (var progressiveImage in HelmKongs)
+            {
+                progressiveImage.Reset();
+            }
+
             UpdateUIAmountToNextHint(0);
             HintHelper.GenerateThresholds();
             SetSong("", "");
@@ -602,7 +673,7 @@ namespace TrackOMatic
         }
         public void LoadLevelOrder(List<int> order)
         {
-            for(int i = 0; i < order.Count; ++i)
+            for (int i = 0; i < order.Count; ++i)
             {
                 Regions[Region.LOBBY_ORDER[i]].SetLevelOrderNumber(order[i]);
             }
@@ -627,7 +698,7 @@ namespace TrackOMatic
         }
         private void LoadProgressiveIndices(List<int> indices, List<ProgressiveItem> modify)
         {
-            for(int i = 0; i < modify.Count; ++i)
+            for (int i = 0; i < modify.Count; ++i)
             {
                 modify[i].SetIndex(indices[i]);
             }
@@ -650,7 +721,11 @@ namespace TrackOMatic
             AutoUpdater.InstalledVersion = new Version("2.1.8");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
-            if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0) return;
+            if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0)
+            {
+                return;
+            }
+
             Width = Settings.Default.DesiredWidth;
             Height = Settings.Default.DesiredHeight;
         }
@@ -661,7 +736,7 @@ namespace TrackOMatic
             Settings.Default.DesiredHeight = Height;
             Settings.Default.Save();
             DataSaver.Save();
-            if(BroadcastView != null)
+            if (BroadcastView != null)
             {
                 BroadcastView.Close();
             }
@@ -670,7 +745,11 @@ namespace TrackOMatic
         public void SetShopkeepers(bool on)
         {
             var currentlyOn = ShopkeeperColumn.Width.Value > 0;
-            if (currentlyOn == on) return;
+            if (currentlyOn == on)
+            {
+                return;
+            }
+
             var separatorWidth = on ? 1.0 : 1.25;
             var shopkeeperColumnWidth = on ? 1.0 : 0;
             ItemsSeparator.Width = new GridLength(separatorWidth, GridUnitType.Star);
@@ -680,10 +759,10 @@ namespace TrackOMatic
         private void FormatCollectibles()
         {
             int startColumn = 18;
-            for(int i = CollectiblesGrid.Children.Count-1; i >= 0; --i)
+            for (int i = CollectiblesGrid.Children.Count - 1; i >= 0; --i)
             {
                 var element = CollectiblesGrid.Children[i];
-                if(element is CollectibleItem collectible && collectible.Visibility == Visibility.Visible)
+                if (element is CollectibleItem collectible && collectible.Visibility == Visibility.Visible)
                 {
                     Grid.SetColumn(collectible, startColumn);
                     startColumn -= 2;

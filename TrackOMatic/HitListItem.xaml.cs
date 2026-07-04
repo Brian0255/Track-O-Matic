@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
@@ -60,11 +60,11 @@ namespace TrackOMatic
 
         private void HitListItem_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if(e.Delta > 0)
+            if (e.Delta > 0)
             {
                 IncreaseIndex();
             }
-            else if(e.Delta < 0)
+            else if (e.Delta < 0)
             {
                 DecreaseIndex();
             }
