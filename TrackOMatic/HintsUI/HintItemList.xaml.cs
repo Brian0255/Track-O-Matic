@@ -71,7 +71,7 @@ namespace TrackOMatic
 
             var mousePosition = Mouse.GetPosition(this);
             mousePosition = PointToScreen(mousePosition);
-            UIUtils.MoveWindowAndEnsureVisibile(dialog, mousePosition.X - 20, mousePosition.Y - 10);
+            UIUtils.MoveWindowAndEnsureVisible(dialog, mousePosition.X - 20, mousePosition.Y - 10);
             dialog.ShowDialog();
             UpdateCheckmarks(dialog);
             SelectedItems = dialog.SelectedItems;

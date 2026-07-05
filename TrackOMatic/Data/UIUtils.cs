@@ -38,7 +38,7 @@ namespace TrackOMatic
             return 1.0;
         }
 
-        public static void MoveWindowAndEnsureVisibile(Window window, double x, double y)
+        public static void MoveWindowAndEnsureVisible(Window window, double x, double y)
         {
             // If the window hasn't been initialized yet (no PresentationSource), defer positioning
             // until SourceInitialized fires. This ensures GetDpiScale() has accurate DPI information.
