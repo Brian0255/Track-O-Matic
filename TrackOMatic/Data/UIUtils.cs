@@ -46,11 +46,11 @@ namespace TrackOMatic
             {
                 void handler(object? s, EventArgs e)
                 {
-                    window.SourceInitialized -= (EventHandler)handler;
+                    window.SourceInitialized -= handler;
                     PositionWindowOnScreen(window, x, y);
                 }
 
-                window.SourceInitialized += (EventHandler)handler;
+                window.SourceInitialized += handler;
             }
             else
             {
