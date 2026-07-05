@@ -5,6 +5,8 @@ using System.Text;
 using System.Timers;
 using System.Windows;
 
+using Timer = System.Timers.Timer;
+
 namespace TrackOMatic
 {
     public delegate bool ProcessNewItem(ItemName itemName, RegionName regionName, bool hint = false, bool newRegion = false);
@@ -23,21 +25,20 @@ namespace TrackOMatic
         public SetSong SetSong { get; set; }
         public UpdateUIAmountToNextHint UpdateUIAmountToNextHint { get; set; }
         public UpdateProgHintImage UpdateProgHintImage { get; set; }
-        public Process EmulatorProcess { get; private set; }
+        public Process? EmulatorProcess { get; private set; }
         public List<AutotrackedCheck> Checks;
         public Dictionary<ItemName, bool> TrackedAlready;
         public Dictionary<ItemName, RegionName> StartingItems { get; private set; }
-        public GameVerificationInfo GameVerificationInfo { get; private set; }
+        public GameVerificationInfo? GameVerificationInfo { get; private set; }
         public RegionName CurrentRegion { get; private set; }
         private RegionName previousRegion;
         public string currentSongGame { get; private set; }
         public string currentSongName { get; private set; }
-        private SavedProgress savedProgress;
         public int RandomizerVersion { get; private set; }
         public int RandomizerSubVersion { get; private set; }
 
         private Dictionary<ItemName, RegionName> trackedItemLocations;
-        private System.Timers.Timer timer;
+        private Timer timer;
         private bool attached = false;
         private ulong startAddress;
         private int timeout;
@@ -56,7 +57,7 @@ namespace TrackOMatic
             StartingItems = new();
             TrackedAlready = new();
             InitializeChecks();
-            timer = new System.Timers.Timer(1000);
+            timer = new Timer(1000);
             timer.AutoReset = false;
             timer.Elapsed += TimerHandler;
             trackedItemLocations = new();
@@ -578,7 +579,7 @@ namespace TrackOMatic
             bool newRegion = (CurrentRegion != previousRegion && previousRegion != RegionName.UNKNOWN);
             Application.Current.Dispatcher.Invoke(() =>
             {
-                success = (bool)ProcessNewItem?.Invoke(check.ItemName, regionToUse, false, autosave);
+                success = ProcessNewItem.Invoke(check.ItemName, regionToUse, false, autosave);
             });
             TrackedAlready[check.ItemName] = success;
         }
@@ -610,6 +611,10 @@ namespace TrackOMatic
         }
         private int ReadMemory(uint addr, int numOfBits, int bitmask = 0)
         {
+            if (EmulatorProcess == null)
+            {
+                return 0;
+            }
             int toReturn;
             switch (numOfBits)
             {
@@ -634,13 +639,17 @@ namespace TrackOMatic
         private uint ReadPointer(uint pointerAddr)
         {
             uint addr = (uint)ReadMemory(pointerAddr, 32);
-            var wrongFirstByte = ((uint)addr >> 24) != 0x80;
+            var wrongFirstByte = (addr >> 24) != 0x80;
             var blankAddr = (addr == 0);
             return (blankAddr || wrongFirstByte) ? 0 : (addr & 0x00FFFFFF);
         }
 
         private bool ProcessConnected()
         {
+            if (GameVerificationInfo == null)
+            {
+                return false;
+            }
             if (ReadMemory(GameVerificationInfo.TargetAddress, GameVerificationInfo.TotalBits) == GameVerificationInfo.TargetValue)
             {
                 timeout = 0;

@@ -9,8 +9,8 @@ namespace TrackOMatic
     /// </summary>
     public partial class ProgHintDialog : Window
     {
-        private string selectedItemType;
-        private string hintCap;
+        private string selectedItemType = "";
+        private string hintCap = "";
         private readonly Dictionary<ItemType, string> ItemTypeToPlural = new()
         {
             {ItemType.GOLDEN_BANANA, "Golden Bananas" },
@@ -51,7 +51,7 @@ namespace TrackOMatic
             HintCap = Properties.Settings.Default.ProgressiveHintCap.ToString();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
         {
@@ -60,7 +60,7 @@ namespace TrackOMatic
 
         public ItemType GetActualItemType()
         {
-            var actualItem = (ItemType)PluralToItemType[SelectedItemType];
+            var actualItem = PluralToItemType[SelectedItemType];
             return actualItem;
         }
 
@@ -73,7 +73,7 @@ namespace TrackOMatic
                 {
                     selectedItemType = value;
                     OnPropertyChanged(nameof(SelectedItemType));
-                    var actualItem = (ItemType)PluralToItemType[SelectedItemType];
+                    var actualItem = PluralToItemType[SelectedItemType];
                     Properties.Settings.Default.ProgressiveHintItem = (int)actualItem;
                     Properties.Settings.Default.Save();
                 }

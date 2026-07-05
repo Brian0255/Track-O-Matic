@@ -27,7 +27,6 @@ namespace TrackOMatic
             set { SetValue(HintTypeProperty, value); }
         }
 
-        public List<int> ItemImageIndexes { get; private set; }
         private List<HelmDoorHint> hints;
         public HelmDoorPanel()
         {

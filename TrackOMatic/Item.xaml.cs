@@ -11,7 +11,7 @@ namespace TrackOMatic
 {
     public partial class Item : ContentControl, INotifyPropertyChanged
     {
-        public Region Region { get; set; }
+        public Region? Region { get; set; }
 
         public bool Brightened { get; private set; } = false;
 
@@ -120,8 +120,8 @@ namespace TrackOMatic
             ItemName = (ItemName)Tag;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -144,7 +144,7 @@ namespace TrackOMatic
             }
         }
 
-        public void SetRegion(Region newRegion)
+        public void SetRegion(Region? newRegion)
         {
             Region = newRegion;
         }
@@ -236,7 +236,7 @@ namespace TrackOMatic
         [DllImport("user32.dll")]
         static extern void GetCursorPos(ref PInPoint p);
 
-        private ItemAdorner myAdornment;
+        private ItemAdorner? myAdornment;
         private PInPoint pointRef = new PInPoint();
 
         private void ResetImage()
@@ -412,10 +412,9 @@ namespace TrackOMatic
 
             Image.Opacity = 1.0;
             var itemGrid = MainWindow.Items;
-            if (Parent != null)
+            if (Parent != null && Parent is RegionGrid parent)
             {
-                RegionGrid parent = Parent as RegionGrid;
-                ((RegionGrid)Parent).Handle_RegionGrid(this, false);
+                parent.Handle_RegionGrid(this, false);
             }
             itemGrid.Children.Add(this);
             Darken();
@@ -438,7 +437,7 @@ namespace TrackOMatic
 
         private void Item_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
-            if (!Interactible)
+            if (!Interactible || myAdornment == null)
             {
                 return;
             }

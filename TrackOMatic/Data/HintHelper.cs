@@ -2,7 +2,7 @@ namespace TrackOMatic
 {
     public static class HintHelper
     {
-        private static List<int> thresholds;
+        private static List<int> thresholds = [];
         private static int hintCap;
         private static readonly double EXPONENT = 1.7;
         private static readonly double OFFSET_DIVISOR = 15;
@@ -41,7 +41,5 @@ namespace TrackOMatic
             }
             return 0;
         }
-
-        static HintHelper() { }
     }
 }

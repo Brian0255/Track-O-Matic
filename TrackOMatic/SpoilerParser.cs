@@ -247,7 +247,11 @@ namespace TrackOMatic
 
         private void ReadStartingInfo(string JSONString)
         {
-            StartingInfo info = System.Text.Json.JsonSerializer.Deserialize<StartingInfo>(JSONString);
+            StartingInfo? info = System.Text.Json.JsonSerializer.Deserialize<StartingInfo>(JSONString);
+            if (info == null)
+            {
+                return;
+            }
             ReadKongsAndKeys(info);
             if (info.starting_moves != null)
             {
@@ -335,7 +339,7 @@ namespace TrackOMatic
         }
         private void ReadPointSpread(string JSONString)
         {
-            var pointPairs = JsonConvert.DeserializeObject<Dictionary<string, int>>(JSONString);
+            var pointPairs = JsonConvert.DeserializeObject<Dictionary<string, int>>(JSONString) ?? [];
             if (!pointPairs.ContainsKey("fairy_moves"))
             {
                 pointPairs["fairy_moves"] = pointPairs["training_moves"];
@@ -375,10 +379,10 @@ namespace TrackOMatic
             StartingItems.Add(ItemName.FUNKY, RegionName.START);
             StartingItems.Add(ItemName.SNIDE, RegionName.START);
         }
-        public SpoilerSettings ParseRegions(dynamic JSONObject)
+        public SpoilerSettings? ParseRegions(dynamic JSONObject)
         {
             var regionInfo = JSONObject["Spoiler Hints Data"].ToObject<Dictionary<string, string>>();
-            SpoilerSettings settings = null;
+            SpoilerSettings? settings = null;
 
             List<string> Isles_Vials = new();
 
@@ -472,36 +476,59 @@ namespace TrackOMatic
             StartingItems = new();
             TrainingItems = new();
             slamCount = 0;
-            using StreamReader reader = new(fileName);
-            string json = reader.ReadToEnd();
+            try
+            {
+                using StreamReader reader = new(fileName);
+                string json = reader.ReadToEnd();
 
-            dynamic JSONObject = JsonConvert.DeserializeObject(json);
-            if (JSONObject["Settings"] != null)
-            {
-                ReadSettings(JSONObject);
-            }
+                dynamic? JSONObject = JsonConvert.DeserializeObject(json);
+                if (JSONObject == null)
+                {
+                    MainWindow.InitRegionsFromEmptySpoiler();
+                    return spoilerSettings;
+                }
+                if (JSONObject["Settings"] != null)
+                {
+                    ReadSettings(JSONObject);
+                }
 
-            if (JSONObject["Spoiler Hints Data"] != null)
-            {
-                spoilerSettings = ParseRegions(JSONObject);
+                if (JSONObject["Spoiler Hints Data"] != null)
+                {
+                    spoilerSettings = ParseRegions(JSONObject);
+                }
+                else
+                {
+                    MainWindow.InitRegionsFromEmptySpoiler();
+                }
+                //ReadItems(JSONObject);
+                foreach (var entry in ImportantCheckList.ITEMS)
+                {
+                    entry.Value.InitPointValue();
+                }
+
+                if (Settings.Default.HitList)
+                {
+                    //the chef has decreed a touch of salt to nearly eliminate the chances of a repeat hash
+                    string salt = JSONObject["Settings"]["Seed"].ToObject<string>();
+                    string dataToHash = JsonConvert.SerializeObject(JSONObject["Spoiler Hints Data"]);
+                    GenerateHitListSeed(dataToHash, salt);
+                    GenerateHitList();
+                }
             }
-            else
+            catch (FileNotFoundException)
             {
+                Console.WriteLine($"Spoiler file not found: {fileName}");
                 MainWindow.InitRegionsFromEmptySpoiler();
             }
-            //ReadItems(JSONObject);
-            foreach (var entry in ImportantCheckList.ITEMS)
+            catch (JsonException ex)
             {
-                entry.Value.InitPointValue();
+                Console.WriteLine($"Invalid JSON in spoiler file: {ex.Message}");
+                MainWindow.InitRegionsFromEmptySpoiler();
             }
-
-            if (Properties.Settings.Default.HitList)
+            catch (IOException ex)
             {
-                //the chef has decreed a touch of salt to nearly eliminate the chances of a repeat hash
-                string salt = JSONObject["Settings"]["Seed"].ToObject<string>();
-                string dataToHash = JsonConvert.SerializeObject(JSONObject["Spoiler Hints Data"]);
-                GenerateHitListSeed(dataToHash, salt);
-                GenerateHitList();
+                Console.WriteLine($"Error reading spoiler file: {ex.Message}");
+                MainWindow.InitRegionsFromEmptySpoiler();
             }
             return spoilerSettings;
         }

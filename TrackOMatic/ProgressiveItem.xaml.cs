@@ -12,7 +12,7 @@ namespace TrackOMatic
 
         public bool Enabled { get; set; } = true;
         private int currentIndex;
-        private List<BitmapImage> images;
+        private List<BitmapImage> images = [];
 
         public int GetIndex()
         {

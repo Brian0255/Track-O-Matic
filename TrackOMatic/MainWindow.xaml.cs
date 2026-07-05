@@ -35,28 +35,27 @@ namespace TrackOMatic
     public partial class MainWindow : Window
     {
         public int TotalGBs { get; private set; }
-        public Button SelectedButton { get; }
-        public BroadcastView BroadcastView { get; private set; }
-        public Dictionary<RegionName, Region> Regions { get; private set; }
-        public Dictionary<ItemType, CollectibleItem> Collectibles { get; private set; }
+        public BroadcastView? BroadcastView { get; private set; }
+        public Dictionary<RegionName, Region> Regions { get; private set; } = null!;
+        public Dictionary<ItemType, CollectibleItem> Collectibles { get; private set; } = null!;
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
         public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
         public List<ProgressiveItem> BossKongs { get; private set; }
         public List<ProgressiveItem> HelmKongs { get; private set; }
-        public List<HintPanel> HintPanels { get; private set; }
+        public List<HintPanel> HintPanels { get; private set; } = null!;
 
         public List<Item> DraggableItems { get; private set; } = new();
-        public List<HitListItem> HitListItems { get; private set; }
+        public List<HitListItem> HitListItems { get; private set; } = null!;
 
         public int collected;
-        public Autotracker Autotracker { get; private set; }
+        public Autotracker Autotracker { get; private set; } = null!;
         public bool SpoilerLoaded { get; private set; }
-        public static Grid Items { get; private set; }
+        public static Grid Items { get; private set; } = null!;
         public SpoilerParser SpoilerParser { get; private set; }
         public DataSaver DataSaver { get; private set; }
         public HitListHintManager HitListHintManager { get; private set; }
-        public SpoilerSettings SpoilerSettings { get; private set; }
+        public SpoilerSettings SpoilerSettings { get; private set; } = null!;
 
         private List<BitmapImage> ProgressiveKongSource = new()
         {
@@ -81,19 +80,20 @@ namespace TrackOMatic
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
 
-        private Timer SaveTimer;
+        // Timer to save the data every minute. This is properly initialized, but the compiler is finicky.
+        private Timer SaveTimer = null!;
         public MainWindow()
         {
             InitializeComponent();
             HintData.Init();
             InitOptions();
             InitData();
-            foreach (var progressiveItem in HelmKongs)
+            foreach (var progressiveItem in HelmKongs!)
             {
                 progressiveItem.ImageSources = new() { ProgressiveKongSource };
             }
             List<List<BitmapImage>> AllBosses = new() { ProgressiveKongSource, BossSource };
-            foreach (var progressiveItem in BossKongs)
+            foreach (var progressiveItem in BossKongs!)
             {
                 progressiveItem.ImageSources = AllBosses;
             }
@@ -112,7 +112,7 @@ namespace TrackOMatic
             hintDisplayDirect.IsChecked = (Settings.Default.HintDisplay == "Direct Item Hints");
         }
 
-        private ItemBackground FindMatchingBackgroundImage(Item item)
+        private ItemBackground? FindMatchingBackgroundImage(Item item)
         {
             foreach (var control in Items.Children)
             {
@@ -145,7 +145,7 @@ namespace TrackOMatic
                 { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7ImagePointsGrid, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, Level7Order) },
 
                 { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HelmImagePointsGrid, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel, Level8Order) },
-
+                // Special region that's not displayed for the user, but is where all the unhintable moves are stored.
                 {RegionName.UNHINTABLE_MOVES, new Region(RegionName.UNHINTABLE_MOVES, UnhintableMovesRegion, UnhintableMovesImagePointsGrid, null, UnhintableMovesRegionGrid) }
             };
             HitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10 };
@@ -191,24 +191,23 @@ namespace TrackOMatic
             }
 
 
-            HintPanels = new() {
-            IslesPanel,
-            FactoryPanel,
-            CavesPanel,
-            JapesPanel,
-            GalleonPanel,
-            CastlePanel,
-            AztecPanel,
-            ForestPanel,
-            HelmPanel,
-            PathsPanel,
-            KongsPanel,
-            WotHPanel,
-            FoolishPanel,
-            PotionCountsPanel,
-            UnhintedPanel
-
-            };
+            HintPanels = [
+                IslesPanel,
+                FactoryPanel,
+                CavesPanel,
+                JapesPanel,
+                GalleonPanel,
+                CastlePanel,
+                AztecPanel,
+                ForestPanel,
+                HelmPanel,
+                PathsPanel,
+                KongsPanel,
+                WotHPanel,
+                FoolishPanel,
+                PotionCountsPanel,
+                UnhintedPanel
+            ];
             Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong, UpdateUIAmountToNextHint, UpdateProgHintImage);
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
@@ -682,7 +681,7 @@ namespace TrackOMatic
         }
         public List<int> GetLevelOrder()
         {
-            var list = Region.LOBBY_ORDER.Select(r => Regions[r].LevelOrderNumber.GetNumber()).ToList();
+            var list = Region.LOBBY_ORDER.Select(r => Regions[r].LevelOrderNumber!.GetNumber()).ToList();
             return list;
         }
         private List<int> GetProgressiveIndices(List<ProgressiveItem> items)

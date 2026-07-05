@@ -7,9 +7,9 @@ namespace TrackOMatic
         public MainWindow MainWindow { get; }
         private int NextHintBarrier = 5;
         private int CurrentIndex = 0;
-        private List<ItemName> ItemsToPullFrom;
-        private Dictionary<ItemName, RegionName> StartingItems;
-        private Dictionary<ItemName, RegionName> TrainingItems;
+        private List<ItemName> ItemsToPullFrom = [];
+        private Dictionary<ItemName, RegionName> StartingItems = [];
+        private Dictionary<ItemName, RegionName> TrainingItems = [];
         private bool SpoilerLoaded = false;
 
         public HitListHintManager(MainWindow mainWindow)

@@ -46,10 +46,10 @@ namespace TrackOMatic
             {"hideout", RegionName.HIDEOUT_HELM },
         };
 
-        public static Dictionary<string, Dictionary<string, string>> UserShortcuts { get; private set; }
-        public static List<string> SortedRegions { get; private set; }
-        public static List<string> SortedMoves { get; private set; }
-        public static List<string> SortedChecks { get; private set; }
+        public static Dictionary<string, Dictionary<string, string>>? UserShortcuts { get; private set; }
+        public static List<string> SortedRegions { get; private set; } = null!;
+        public static List<string> SortedMoves { get; private set; } = null!;
+        public static List<string> SortedChecks { get; private set; } = null!;
         private static void CreateUserShortcuts()
         {
             var defaultShortcutsResource = "TrackOMatic.default_shortcuts.json";
@@ -70,7 +70,14 @@ namespace TrackOMatic
 
             using StreamReader reader = new(userShortcutsFile);
             string json = reader.ReadToEnd();
-            UserShortcuts = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
+            UserShortcuts = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json) ??
+                throw new InvalidOperationException("Failed to deserialize user shortcuts. The shortcuts.json file may be corrupted.");
+
+            if (!UserShortcuts.ContainsKey("Hint Regions"))
+            {
+                throw new InvalidOperationException("The shortcuts.json file is missing the 'Hint Regions' key.");
+            }
+
             foreach (var entry in UserShortcuts["Hint Regions"].ToList())
             {
                 if (Enum.TryParse(entry.Value, out HintRegion region))
@@ -142,7 +149,7 @@ namespace TrackOMatic
         private static void InitSortedChecks()
         {
             SortedChecks = new();
-            foreach (var entry in UserShortcuts["Item Locations"])
+            foreach (var entry in UserShortcuts!["Item Locations"])
             {
                 SortedChecks.Add(entry.Value);
             }
@@ -196,10 +203,6 @@ namespace TrackOMatic
             InitSortedMoves();
             InitSortedChecks();
             InitDirectItemHintList();
-        }
-
-        static HintData()
-        {
         }
     }
 }

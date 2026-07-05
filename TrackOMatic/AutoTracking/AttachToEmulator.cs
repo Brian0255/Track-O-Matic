@@ -5,17 +5,20 @@ namespace TrackOMatic
 {
     public static class AttachToEmulator
     {
-        private static Process FindProcess(string name)
+        private static Process? FindProcess(string name)
         {
             Process target;
             try
             {
                 target = Process.GetProcessesByName(name)[0];
             }
-            catch (Exception) { return null; }
+            catch (Exception)
+            {
+                return null;
+            }
             return target;
         }
-        private static AttachedProcessInfo AttachToProject64(Process target, GameVerificationInfo verificationInfo)
+        private static AttachedProcessInfo? AttachToProject64(Process target, GameVerificationInfo verificationInfo)
         {
             string filePath = target.MainModule.FileName;
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(filePath);
@@ -38,7 +41,7 @@ namespace TrackOMatic
         }
 
 
-        private static AttachedProcessInfo AttachToBizhawk(Process target, GameVerificationInfo verificationInfo)
+        private static AttachedProcessInfo? AttachToBizhawk(Process target, GameVerificationInfo verificationInfo)
         {
             Int64 addressDLL = 0;
             foreach (ProcessModule mo in target.Modules)
@@ -68,7 +71,7 @@ namespace TrackOMatic
         }
 
 
-        private static AttachedProcessInfo AttachToRMG(Process target, GameVerificationInfo gameVerificationInfo)
+        private static AttachedProcessInfo? AttachToRMG(Process target, GameVerificationInfo gameVerificationInfo)
         {
             ulong addressDLL = 0;
             foreach (ProcessModule mo in target.Modules)
@@ -112,7 +115,7 @@ namespace TrackOMatic
             return parent.ProcessName;
         }
 
-        private static AttachedProcessInfo RunRetroarchScan(Process target, GameVerificationInfo gameVerificationInfo, ulong addressDLL, uint lowerBound, uint upperBound, uint step, bool isMupen)
+        private static AttachedProcessInfo? RunRetroarchScan(Process target, GameVerificationInfo gameVerificationInfo, ulong addressDLL, uint lowerBound, uint upperBound, uint step, bool isMupen)
         {
             for (uint potOff = lowerBound; potOff < upperBound; potOff += step)
             {
@@ -133,7 +136,7 @@ namespace TrackOMatic
             return null;
         }
 
-        private static AttachedProcessInfo AttachToRetroarch(Process target, GameVerificationInfo gameVerificationInfo)
+        private static AttachedProcessInfo? AttachToRetroarch(Process target, GameVerificationInfo gameVerificationInfo)
         {
             ulong addressDLL = 0;
             bool isMupen = false;
@@ -152,7 +155,7 @@ namespace TrackOMatic
                 }
             }
 
-            AttachedProcessInfo processInfo;
+            AttachedProcessInfo? processInfo;
             if (addressDLL == 0)
             {
                 return null;
@@ -172,9 +175,9 @@ namespace TrackOMatic
 
             return processInfo;
         }
-        public static AttachedProcessInfo Attach(GameVerificationInfo verificationInfo)
+        public static AttachedProcessInfo? Attach(GameVerificationInfo verificationInfo)
         {
-            var emu_to_function_call = new Dictionary<string, Func<Process, GameVerificationInfo, AttachedProcessInfo>>()
+            var emu_to_function_call = new Dictionary<string, Func<Process, GameVerificationInfo, AttachedProcessInfo?>>()
             {
                 {"project64", AttachToProject64 },
                 {"rmg", AttachToRMG },

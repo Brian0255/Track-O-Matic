@@ -10,9 +10,13 @@ namespace TrackOMatic
     /// </summary>
     public partial class RegionGrid : UniformGrid
     {
-        public Region Region;
-        public Dictionary<VialColor, List<Item>> Vials;
+        public Region? Region;
         public List<Item> VialItems = new();
+
+        /// <summary>
+        /// Gets the list of vials for each color, plus specialty ones like Keys and Kongs for some spoiler modes.
+        /// </summary>
+        public Dictionary<VialColor, List<Item>> Vials { get; private set; } = new();
 
         public void InitializeVials()
         {
@@ -40,6 +44,10 @@ namespace TrackOMatic
 
         private void PerformTheJankiestResizing(double height)
         {
+            if (Region == null)
+            {
+                return;
+            }
             if (Region.ImagePointsGrid.RowDefinitions.Count > 3)
             {
                 var mult = (height - 0.5) * 0.25;
@@ -85,10 +93,13 @@ namespace TrackOMatic
             }
 
             height = 1;
-            var outerOuterGrid = ((Parent as Grid).Parent as Grid);
-            int row = (int)Parent.GetValue(Grid.RowProperty);
-            outerOuterGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
-            PerformTheJankiestResizing(height);
+
+            if (Parent is Grid parentGrid && parentGrid.Parent is Grid outerOuterGrid)
+            {
+                int row = (int)Parent.GetValue(Grid.RowProperty);
+                outerOuterGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
+                PerformTheJankiestResizing(height);
+            }
         }
 
         public void AddInitialVial(VialColor color)
@@ -105,7 +116,7 @@ namespace TrackOMatic
             Vials[color].Add(vialImage);
             VialItems.Add(vialImage);
             Children.Add(vialImage);
-            if (Region.RegionName == RegionName.UNHINTABLE_MOVES)
+            if (Region?.RegionName == RegionName.UNHINTABLE_MOVES)
             {
                 return;
             }
@@ -214,7 +225,7 @@ namespace TrackOMatic
         public void Handle_RegionGrid(Item button, bool add, bool userPlacing = true, bool brighten = true)
         {
             button.Margin = new Thickness(1);
-            ImportantCheck check = null;
+            ImportantCheck? check = null;
             ItemName item;
             if (button.Tag != null)
             {
@@ -225,7 +236,7 @@ namespace TrackOMatic
             {
                 button.SetRegion(Region);
                 AddWithVialCheck(button, userPlacing);
-                Region.AddCheck(check);
+                Region?.AddCheck(check);
                 if (brighten)
                 {
                     button.Brighten();
@@ -241,35 +252,29 @@ namespace TrackOMatic
             {
                 RemoveWithVialCheck(button);
                 button.ClearRegion();
-                Region.RemoveCheck(check);
+                Region?.RemoveCheck(check);
             }
             button.Region = Region;
-            if (Region.RegionName != RegionName.UNHINTABLE_MOVES)
+            if (Region?.RegionName != RegionName.UNHINTABLE_MOVES)
             {
                 AdjustSpacing();
             }
 
-            Region.UpdateRequiredChecksTotal();
+            Region?.UpdateRequiredChecksTotal();
         }
 
-        private void Item_Drop(Object sender, DragEventArgs e)
+        private void Item_Drop(object sender, DragEventArgs e)
         {
-            MainWindow window = ((MainWindow)Application.Current.MainWindow);
-            if (e.Data.GetDataPresent(typeof(Item)))
+            if (e.Data.GetData(typeof(Item)) is Item item && item.Parent is Grid)
             {
-                Item item = e.Data.GetData(typeof(Item)) as Item;
-                if (item.Parent is Grid)
-                {
-                    Add_Item(item);
-                }
+                Add_Item(item);
             }
         }
 
         public void Add_Item(Item item, bool userPlacing = true, bool brighten = true)
         {
             // move item to region
-            Panel itemGrid = item.Parent as Panel;
-            if (itemGrid != null)
+            if (item.Parent is Panel itemGrid)
             {
                 itemGrid.Children.Remove(item);
             }

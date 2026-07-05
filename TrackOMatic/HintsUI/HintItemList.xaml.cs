@@ -8,7 +8,7 @@ namespace TrackOMatic
     public delegate void ItemsSelectedHandler();
     public partial class HintItemList : UserControl
     {
-        public ItemsSelectedHandler OnItemsSelected { get; set; }
+        public ItemsSelectedHandler? OnItemsSelected { get; set; }
         private List<ItemName> sortedItemList = new();
         private List<bool> checkmarkedItems = new();
         public Dictionary<ItemName, bool> SelectedItems { get; set; } = new();
@@ -41,7 +41,7 @@ namespace TrackOMatic
         }
 
         public double[] SelectionDialogPosition { get; set; } = { 0, 0 };
-        public HintInfo HintInfo { get; set; }
+        public HintInfo? HintInfo { get; set; }
         public HintItemList()
         {
             InitializeComponent();
