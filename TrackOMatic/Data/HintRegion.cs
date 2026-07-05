@@ -1,10 +1,3 @@
-using System.CodeDom;
-using System.Collections.Generic;
-using System;
-using System.Globalization;
-using Newtonsoft.Json;
-using System.IO;
-
 namespace TrackOMatic
 {
     public enum HintRegion

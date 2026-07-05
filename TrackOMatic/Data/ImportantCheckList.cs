@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Windows.Controls.Primitives;
-
 namespace TrackOMatic
 {
     public static class ImportantCheckList

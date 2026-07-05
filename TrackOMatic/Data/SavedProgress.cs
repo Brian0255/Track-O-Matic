@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace TrackOMatic
 {
     public class SavedProgress

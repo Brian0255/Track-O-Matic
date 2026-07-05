@@ -1,16 +1,18 @@
-using System;
-using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.IO;
-using Microsoft.Win32;
-using System.ComponentModel;
-using System.Linq;
-using System.Timers;
-using TrackOMatic.Properties;
+
 using AutoUpdaterDotNET;
+
+using Microsoft.Win32;
+
+using TrackOMatic.Properties;
+
+using Timer = System.Timers.Timer;
 
 namespace System.Runtime.CompilerServices
 {
