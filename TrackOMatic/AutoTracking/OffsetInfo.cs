@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Windows.Documents;
-
 namespace TrackOMatic
 {
     public static class OffsetInfo

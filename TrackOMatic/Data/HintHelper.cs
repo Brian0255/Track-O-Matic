@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace TrackOMatic
 {
     public static class HintHelper

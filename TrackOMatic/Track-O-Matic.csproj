@@ -15,7 +15,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>12.0</LangVersion>
     <Nullable>disable</Nullable>
-    <ImplicitUsings>disable</ImplicitUsings>
+    <ImplicitUsings>enable</ImplicitUsings>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     

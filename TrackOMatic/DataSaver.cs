@@ -1,14 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using System.IO;
-using Microsoft.Win32;
-using System.Linq;
 using Newtonsoft.Json;
-using System.Timers;
-using System.Threading;
+
+using System.IO;
 
 namespace TrackOMatic
 {

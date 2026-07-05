@@ -1,14 +1,7 @@
-using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media.Imaging;
-using System.Linq;
-using System.Windows.Data;
+
 using TrackOMatic.Properties;
-using System.ComponentModel;
-using System.Windows.Input;
-using System.Collections.Generic;
 
 namespace TrackOMatic
 {
