@@ -38,7 +38,28 @@ namespace TrackOMatic
             return 1.0;
         }
 
-        public static void MoveWindowAndEnsureVisibile(Window window, double x, double y)
+        public static void MoveWindowAndEnsureVisible(Window window, double x, double y)
+        {
+            // If the window hasn't been initialized yet (no PresentationSource), defer positioning
+            // until SourceInitialized fires. This ensures GetDpiScale() has accurate DPI information.
+            if (PresentationSource.FromVisual(window) == null)
+            {
+                void handler(object? s, EventArgs e)
+                {
+                    window.SourceInitialized -= handler;
+                    PositionWindowOnScreen(window, x, y);
+                }
+
+                window.SourceInitialized += handler;
+            }
+            else
+            {
+                // Window is already initialized, position immediately
+                PositionWindowOnScreen(window, x, y);
+            }
+        }
+
+        private static void PositionWindowOnScreen(Window window, double x, double y)
         {
             double dpiScale = GetDpiScale(window);
             var currentScreen = System.Windows.Forms.Screen.FromPoint(System.Windows.Forms.Cursor.Position);

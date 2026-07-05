@@ -199,7 +199,7 @@ namespace TrackOMatic
             var dialog = new ProgHintDialog();
             var mousePosition = Mouse.GetPosition(this);
             mousePosition = PointToScreen(mousePosition);
-            UIUtils.MoveWindowAndEnsureVisibile(dialog, mousePosition.X - dialog.Width/2, mousePosition.Y-dialog.Height/2);
+            UIUtils.MoveWindowAndEnsureVisible(dialog, mousePosition.X - dialog.Width/2, mousePosition.Y-dialog.Height/2);
             dialog.ShowDialog();
             UpdateProgHintImage();
         }*/

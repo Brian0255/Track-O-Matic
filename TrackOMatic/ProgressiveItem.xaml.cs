@@ -98,7 +98,7 @@ namespace TrackOMatic
             var itemSelector = new BasicItemSelector(ImageSources);
             var mousePosition = Mouse.GetPosition(this);
             mousePosition = PointToScreen(mousePosition);
-            UIUtils.MoveWindowAndEnsureVisibile(itemSelector, mousePosition.X - itemSelector.Width / 2, mousePosition.Y - itemSelector.Height);
+            UIUtils.MoveWindowAndEnsureVisible(itemSelector, mousePosition.X - itemSelector.Width / 2, mousePosition.Y - itemSelector.Height);
             itemSelector.ShowDialog();
             var index = itemSelector.SelectedImageIndex;
             if (index == -1)
