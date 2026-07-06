@@ -114,7 +114,7 @@ namespace TrackOMatic
         public void AddNewImageToPanel(ItemName itemName, bool isChecked, UniformGrid row)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            var newItem = new PathOrFoundItem(itemName, isChecked, this);
+            var newItem = new PathOrFoundItem(itemName, this, isChecked);
             var validItem = mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName);
             if (HintInfo != null && HintInfo.HintType == HintType.DIRECT_ITEM_HINT && validItem)
             {

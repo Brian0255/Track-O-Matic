@@ -10,7 +10,7 @@ namespace TrackOMatic
     {
         public bool IsChecked { get; set; }
         public ItemName ItemName { get; private set; }
-        private HintItemList? HintItemList;
+        private HintItemList HintItemList { get; init; }
 
         public static readonly DependencyProperty PathItemImageProperty =
         DependencyProperty.Register("PathItemImage", typeof(ImageSource), typeof(PathOrFoundItem));
@@ -26,7 +26,7 @@ namespace TrackOMatic
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public PathOrFoundItem(ItemName itemName, bool isChecked = false, HintItemList? hintItemList = null)
+        public PathOrFoundItem(ItemName itemName, HintItemList hintItemList, bool isChecked = false)
         {
             InitializeComponent();
             SetResourceReference(PathItemImageProperty, itemName.ToString().ToLower());
@@ -40,7 +40,7 @@ namespace TrackOMatic
         private void UpdateCheckmark()
         {
             Checkmark.Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden;
-            HintItemList?.UpdateCheckmark(ItemName, IsChecked);
+            HintItemList.UpdateCheckmark(ItemName, IsChecked);
         }
 
         public void Toggle()

@@ -116,7 +116,7 @@ namespace TrackOMatic
                 exclude = new();
             }
             var textInfo = new CultureInfo("en-US", false).TextInfo;
-            foreach (var entry in HintData.UserShortcuts![JSONKey])
+            foreach (var entry in HintData.UserShortcuts[JSONKey])
             {
                 var toAdd = entry.Value;
                 if (JSONKey == "Kong Hint Shorthand")
@@ -176,7 +176,7 @@ namespace TrackOMatic
                 return false;
             }
 
-            if (HintData.UserShortcuts?["Kong Hint Shorthand"] == null)
+            if (!HintData.UserShortcuts.ContainsKey("Kong Hint Shorthand"))
             {
                 return false;
             }
