@@ -17,9 +17,6 @@
     <Setting Name="LastFolderPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="HitList" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="HintDisplay" Type="System.String" Scope="User">
       <Value Profile="(Default)">Multipath Hints</Value>
     </Setting>
