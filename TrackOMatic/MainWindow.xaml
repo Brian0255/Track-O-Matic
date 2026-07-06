@@ -1,4 +1,4 @@
-﻿<Window x:Class="TrackOMatic.MainWindow"
+<Window x:Class="TrackOMatic.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -44,7 +44,6 @@
             <MenuItem Header="Toggles" Focusable="False">
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
-                <MenuItem Name="HitListOption" Header="HitList" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Click="HitListToggle"/>
                 <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Click="SongDisplayToggle"/>
                 <MenuItem Name="HelmInLevelOrder" Header='Helm in Level Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmInLevelOrder}" Click="HelmInLevelOrder_Click"/>
                 <MenuItem Name="ColorBarrelPadMoves" Header="Colored Barrel &amp; Pad Moves" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ColoredBarrelPadMoves}" Click="ColoredBarrelPadMoves_Click"/>
@@ -93,76 +92,13 @@
                     <RowDefinition Height=".4*"/>
                     <RowDefinition Height="14"/>
                     <RowDefinition Height=".1*"/>
-                    <RowDefinition>
-                        <RowDefinition.Style>
-                            <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value="14" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="True">
-                                        <Setter Property="Height" Value="14" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="False">
-                                        <Setter Property="Height" Value="0*" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RowDefinition.Style>
-                    </RowDefinition>
-                    <RowDefinition>
-                        <RowDefinition.Style>
-                            <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value=".3*" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="True">
-                                        <Setter Property="Height" Value=".35*" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="false">
-                                        <Setter Property="Height" Value="0*" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RowDefinition.Style>
-                    </RowDefinition>
-
-                    <RowDefinition>
-                        <RowDefinition.Style>
-                            <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value=".015*" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="True">
-                                        <Setter Property="Height" Value=".015*" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="False">
-                                        <Setter Property="Height" Value="0*" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RowDefinition.Style>
-                    </RowDefinition>
+                    <RowDefinition Height="14"/>
                     <!--RowDefinition Height=".32*"/-->
                     <RowDefinition>
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value=".01*" />
+                                <Setter Property="Height" Value="100" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="True">
-                                        <Setter Property="Height" Value=".01*"  />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="False">
-                                        <Setter Property="Height" Value="0"  />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RowDefinition.Style>
-                    </RowDefinition>
-                    <RowDefinition>
-                        <RowDefinition.Style>
-                            <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value=".12*" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="True">
-                                        <Setter Property="Height" Value=".12*"  />
-                                    </DataTrigger>
                                     <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="False">
                                         <Setter Property="Height" Value="0"  />
                                     </DataTrigger>
@@ -183,7 +119,7 @@
                 <Grid Grid.Row="7">
                     <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
                 </Grid>
-                <Grid Grid.Row="10">
+                <Grid Grid.Row="8">
                     <!--Rectangle Fill="{StaticResource BaseBG}" /-->
                 </Grid>
                 <Grid Grid.Row="0"  Background="{StaticResource BaseBG}">
@@ -906,63 +842,7 @@
                         <local:ProgressiveItem  x:Name="BossKong5"  Opacity="1" Grid.Column="6" Margin="1" />
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="8" Margin="0,-2,0,-2">
-                    <Grid.Style>
-                        <Style TargetType="{x:Type Grid}">
-                            <Setter Property="Visibility" Value="Visible" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HitList}" Value="false">
-                                    <Setter Property="Visibility" Value="Hidden" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Grid.Style>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.05*"/>
-                        <ColumnDefinition Width="4*"/>
-                        <ColumnDefinition Width="0.4*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Name="GoalsLabel" Margin="0,0,22,0" Grid.Column="0" FontSize="28" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{DynamicResource DK64Font}" Text="GOALS" />
-                    <Grid Grid.Column="1" >
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                            </Grid.ColumnDefinitions>
-                            <local:HitListItem x:Name="Goal1" Grid.Column="0"/>
-                            <local:HitListItem x:Name="Goal2" Grid.Column="1"/>
-                            <local:HitListItem x:Name="Goal3" Grid.Column="2"/>
-                            <local:HitListItem x:Name="Goal4" Grid.Column="3"/>
-                            <local:HitListItem x:Name="Goal5" Grid.Column="4"/>
-
-                        </Grid>
-                        <Grid Grid.Row="1" >
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                            </Grid.ColumnDefinitions>
-                            <local:HitListItem x:Name="Goal6" Grid.Column="0"/>
-                            <local:HitListItem x:Name="Goal7" Grid.Column="1"/>
-                            <local:HitListItem x:Name="Goal8" Grid.Column="2"/>
-                            <local:HitListItem x:Name="Goal9" Grid.Column="3"/>
-                            <local:HitListItem x:Name="Goal10" Grid.Column="4"/>
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Grid Background="Transparent" Grid.Row="11" Margin="3,-2,-1,3" >
+                <Grid Background="Transparent" Grid.Row="9" Margin="3,-2,-1,3" >
                     <Grid.Style>
                         <Style TargetType="{x:Type Grid}">
                             <Setter Property="Visibility" Value="Visible" />
@@ -977,9 +857,9 @@
                         </Style>
                     </Grid.Style>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height=".2*"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height=".2*"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="10"/>
                     </Grid.RowDefinitions>
 
                     <Border Grid.Row="0" Grid.RowSpan="3" CornerRadius="4" BorderThickness="1" BorderBrush="{StaticResource BaseBG}" Background="{StaticResource RegionImageBG}">
@@ -991,9 +871,9 @@
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height=".12*"/>
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height=".12*"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="10"/>
                             </Grid.RowDefinitions>
                             <Image x:Name="Headphones" Grid.Row="1" Source="Images\dk64\headphones.png" Grid.Column="0" Margin="0" Panel.ZIndex="2" Opacity="1" HorizontalAlignment="Center"/>
                         </Grid>
@@ -1002,12 +882,8 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Viewbox HorizontalAlignment="Left"  VerticalAlignment="Center">
-                                <TextBlock x:Name="SongGame" Text="Waiting for DK64R ROM to be loaded..." FontWeight="Light"  Foreground="White" FontFamily="Helvetica" VerticalAlignment="Center" FontSize="16" />
-                            </Viewbox>
-                            <Viewbox HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center">
-                                <TextBlock x:Name="SongName" Text="" Foreground="White" FontFamily="Helvetica" FontWeight="Medium"  VerticalAlignment="Center" FontSize="16" />
-                            </Viewbox>
+                            <TextBlock x:Name="SongGame" Text="Waiting for DK64R ROM to be loaded..." FontWeight="Light"  Foreground="White" FontFamily="Helvetica" VerticalAlignment="Center" FontSize="28" HorizontalAlignment="Left" />
+                            <TextBlock x:Name="SongName" Text="" Foreground="White" FontFamily="Helvetica" FontWeight="Normal"  VerticalAlignment="Center" FontSize="28" Grid.Row="1" HorizontalAlignment="Left" />
                         </Grid>
                     </Grid>
                 </Grid>

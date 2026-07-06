@@ -171,18 +171,6 @@ namespace TrackOMatic
             }
         }
 
-        private void GenerateHitList()
-        {
-            List<string> possibleGoals = Enum.GetValues(typeof(HitListGoal)).Cast<HitListGoal>().Select(e => e.ToString()).ToList();
-            possibleGoals.Shuffle(RNGSeed);
-            for (int i = 0; i < MainWindow.HitListItems.Count; ++i)
-            {
-                var imagePath = "Images/dk64/" + possibleGoals[i].ToLower() + ".png";
-                var newImage = new BitmapImage(new Uri(imagePath, UriKind.Relative));
-                MainWindow.HitListItems[i].SetImage(newImage);
-            }
-        }
-
         private class RegionSpoilerInfo
         {
             public string level_name { get; }
@@ -446,14 +434,6 @@ namespace TrackOMatic
             return settings;
         }
 
-        private void GenerateHitListSeed(string jsonString, string salt)
-        {
-            var toHash = jsonString + salt;
-            using SHA256 sha256 = SHA256.Create();
-            byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(toHash));
-            RNGSeed = BitConverter.ToInt32(hashBytes, 0);
-        }
-
         private void ReadSettings(dynamic JSONObject)
         {
             var settingsDict = JSONObject["Settings"].ToObject<Dictionary<string, object>>();
@@ -505,15 +485,6 @@ namespace TrackOMatic
                 {
                     entry.Value.InitPointValue();
                 }
-
-                if (Settings.Default.HitList)
-                {
-                    //the chef has decreed a touch of salt to nearly eliminate the chances of a repeat hash
-                    string salt = JSONObject["Settings"]["Seed"].ToObject<string>();
-                    string dataToHash = JsonConvert.SerializeObject(JSONObject["Spoiler Hints Data"]);
-                    GenerateHitListSeed(dataToHash, salt);
-                    GenerateHitList();
-                }
             }
             catch (FileNotFoundException)
             {
@@ -530,6 +501,7 @@ namespace TrackOMatic
                 Console.WriteLine($"Error reading spoiler file: {ex.Message}");
                 MainWindow.InitRegionsFromEmptySpoiler();
             }
+
             return spoilerSettings;
         }
     }
