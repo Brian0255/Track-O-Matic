@@ -7,7 +7,7 @@ namespace TrackOMatic
 {
     public partial class MainWindow : Window
     {
-        private void TopMostToggle(object sender, RoutedEventArgs e)
+        private void TopMostToggle(object? sender, RoutedEventArgs? e)
         {
             Settings.Default.TopMost = TopMostOption.IsChecked;
             Topmost = TopMostOption.IsChecked;
@@ -72,8 +72,8 @@ namespace TrackOMatic
 
         private void HintDisplayToggle(object sender, RoutedEventArgs e)
         {
-            var button = (sender as RadioButton);
-            Settings.Default.HintDisplay = button.Content.ToString();
+            var button = sender as RadioButton;
+            Settings.Default.HintDisplay = button?.Content.ToString();
             bool compactModeOn = Settings.Default.CompactMode;
             var newRatio = compactModeOn ? 1.43 : 2.15;
             if (Settings.Default.HintDisplay == "Multipath Hints")

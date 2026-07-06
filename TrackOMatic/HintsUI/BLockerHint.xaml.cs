@@ -15,7 +15,7 @@ namespace TrackOMatic
             set { SetValue(RegionNameProperty, value); }
         }
 
-        public static BitmapImage? GetBarrierItemImage(BarrierItems item) =>
+        public static BitmapImage GetBarrierItemImage(BarrierItems item) =>
             item switch
             {
                 BarrierItems.GOLDEN_BANANA => MakeImage("gb.png"),
@@ -27,7 +27,7 @@ namespace TrackOMatic
                 BarrierItems.FAIRY => MakeImage("fairy.png"),
                 BarrierItems.COMPANY_COIN => MakeImage("ninrarecoin.png"),
                 BarrierItems.BEAN => MakeImage("bean.png"),
-                _ => null
+                _ => throw new ArgumentException($"Unknown barrier item: {item}")
             };
 
         private static BitmapImage MakeImage(string filename) =>

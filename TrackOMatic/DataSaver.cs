@@ -56,7 +56,7 @@ namespace TrackOMatic
             }
         }
 
-        private Item FindMatchingItem(ItemName toFind)
+        private Item? FindMatchingItem(ItemName toFind)
         {
             foreach (var item in MainWindow.DraggableItems)
             {
@@ -99,7 +99,11 @@ namespace TrackOMatic
                 var savedItem = savedItemEntry.Value;
                 var region = savedItem.Region;
                 bool autoPlace = (savedItem.Autotracked || savedItem.Hinted);
-                Item matchingItem = FindMatchingItem(savedItem.ItemName);
+                Item? matchingItem = FindMatchingItem(savedItem.ItemName);
+                if (matchingItem == null)
+                {
+                    continue;
+                }
                 matchingItem.SetStarVisibility(savedItem.Starred);
                 matchingItem.ChangeOpacity(savedItem.Opacity);
                 if (savedItem.Autotracked)
@@ -170,7 +174,11 @@ namespace TrackOMatic
             try
             {
                 var jsonString = File.ReadAllText(filePath);
-                SavedProgress savedData = JsonConvert.DeserializeObject<SavedProgress>(jsonString);
+                SavedProgress? savedData = JsonConvert.DeserializeObject<SavedProgress>(jsonString);
+                if (savedData == null)
+                {
+                    return;
+                }
                 savedProgress = savedData;
                 ReadSavedProgress();
             }

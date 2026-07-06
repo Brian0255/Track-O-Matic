@@ -18,7 +18,7 @@ namespace TrackOMatic
             {HintSuggestion.CHECK, new HintShortcutInfo("Item Locations", HintData.SortedChecks) },
             {HintSuggestion.MOVE, new HintShortcutInfo("Moves", HintData.SortedMoves) },
         };
-        private HintShortcutInfo hintShortcutInfo;
+        private HintShortcutInfo? hintShortcutInfo;
 
         public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
         public HintTypeSettings HintTypeSettings
@@ -34,8 +34,8 @@ namespace TrackOMatic
 
         public SavedHint SavedHint { get; private set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -176,7 +176,7 @@ namespace TrackOMatic
                 return false;
             }
 
-            if (HintData.UserShortcuts["Kong Hint Shorthand"] == null)
+            if (!HintData.UserShortcuts.ContainsKey("Kong Hint Shorthand"))
             {
                 return false;
             }

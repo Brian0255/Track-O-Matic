@@ -425,7 +425,7 @@ namespace TrackOMatic
             CheckGroupedItem(camShockwaveGroup, camShockwaveImages, camerashockwave);
         }
 
-        private ItemBackground GetMatchingItem(ItemName item)
+        private ItemBackground? GetMatchingItem(ItemName item)
         {
             var name = item.ToString();
             if (name.StartsWith("KEY"))

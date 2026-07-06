@@ -46,10 +46,22 @@ namespace TrackOMatic
             {"hideout", RegionName.HIDEOUT_HELM },
         };
 
-        public static Dictionary<string, Dictionary<string, string>> UserShortcuts { get; private set; }
-        public static List<string> SortedRegions { get; private set; }
-        public static List<string> SortedMoves { get; private set; }
-        public static List<string> SortedChecks { get; private set; }
+        public static Dictionary<string, Dictionary<string, string>> UserShortcuts { get; private set; } = null!;
+        public static List<string> SortedRegions { get; private set; } = null!;
+        public static List<string> SortedMoves { get; private set; } = null!;
+        public static List<string> SortedChecks { get; private set; } = null!;
+
+        private static Dictionary<string, Dictionary<string, string>> LoadDefaultShortcuts()
+        {
+            var defaultShortcutsResource = "TrackOMatic.default_shortcuts.json";
+            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(defaultShortcutsResource)
+                ?? throw new InvalidOperationException("Unable to load default shortcuts resource.");
+            using StreamReader reader = new(stream);
+            string json = reader.ReadToEnd();
+            return JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json)
+                ?? throw new InvalidOperationException("Default shortcuts resource could not be deserialized.");
+        }
+
         private static void CreateUserShortcuts()
         {
             var defaultShortcutsResource = "TrackOMatic.default_shortcuts.json";
@@ -60,17 +72,37 @@ namespace TrackOMatic
                 stream.CopyTo(fileStream);
             }
         }
+
         private static void InitUserShortcuts()
         {
             var userShortcutsFile = "shortcuts.json";
-            if (!File.Exists(userShortcutsFile))
+
+            try
             {
-                CreateUserShortcuts();
+                if (!File.Exists(userShortcutsFile))
+                {
+                    CreateUserShortcuts();
+                }
+
+                using StreamReader reader = new(userShortcutsFile);
+                string json = reader.ReadToEnd();
+                var deserialized = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
+
+                if (deserialized == null || !deserialized.ContainsKey("Hint Regions"))
+                {
+                    UserShortcuts = LoadDefaultShortcuts();
+                }
+                else
+                {
+                    UserShortcuts = deserialized;
+                }
+            }
+            catch
+            {
+                // If any error occurs loading user shortcuts, fall back to defaults
+                UserShortcuts = LoadDefaultShortcuts();
             }
 
-            using StreamReader reader = new(userShortcutsFile);
-            string json = reader.ReadToEnd();
-            UserShortcuts = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
             foreach (var entry in UserShortcuts["Hint Regions"].ToList())
             {
                 if (Enum.TryParse(entry.Value, out HintRegion region))
@@ -196,10 +228,6 @@ namespace TrackOMatic
             InitSortedMoves();
             InitSortedChecks();
             InitDirectItemHintList();
-        }
-
-        static HintData()
-        {
         }
     }
 }
