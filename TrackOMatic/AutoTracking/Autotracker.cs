@@ -400,7 +400,7 @@ namespace TrackOMatic
             currentSongName = songName;
         }
 
-        private void TimerHandler(object sender, ElapsedEventArgs e)
+        private void TimerHandler(object? sender, ElapsedEventArgs e)
         {
             Autotrack();
             timer.Start();

@@ -65,7 +65,7 @@ namespace TrackOMatic
         private static void CreateUserShortcuts()
         {
             var defaultShortcutsResource = "TrackOMatic.default_shortcuts.json";
-            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(defaultShortcutsResource);
+            using Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(defaultShortcutsResource);
             if (stream != null)
             {
                 using FileStream fileStream = File.Create("shortcuts.json");
