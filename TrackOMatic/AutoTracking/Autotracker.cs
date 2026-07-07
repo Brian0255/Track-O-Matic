@@ -5,9 +5,12 @@ using System.Text;
 using System.Timers;
 using System.Windows;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Helpers;
+
 using Timer = System.Timers.Timer;
 
-namespace TrackOMatic
+namespace TrackOMatic.AutoTracking
 {
     public delegate bool ProcessNewItem(ItemName itemName, RegionName regionName, bool hint = false, bool newRegion = false);
     public delegate void UpdateCollectible(ItemType collectibleType, int newTotal);
@@ -400,7 +403,7 @@ namespace TrackOMatic
             currentSongName = songName;
         }
 
-        private void TimerHandler(object sender, ElapsedEventArgs e)
+        private void TimerHandler(object? sender, ElapsedEventArgs e)
         {
             Autotrack();
             timer.Start();

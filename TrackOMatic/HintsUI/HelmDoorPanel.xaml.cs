@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using TrackOMatic.Logic.Enums;
+
 namespace TrackOMatic
 {
     public partial class HelmDoorPanel : UserControl

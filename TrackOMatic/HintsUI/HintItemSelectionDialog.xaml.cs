@@ -1,6 +1,8 @@
 using System.Windows;
 using System.Windows.Input;
 
+using TrackOMatic.Logic.Enums;
+
 namespace TrackOMatic
 {
     /// <summary>

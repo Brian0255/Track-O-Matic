@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using TrackOMatic.Logic.Enums;
 using TrackOMatic.Properties;
 
 namespace TrackOMatic

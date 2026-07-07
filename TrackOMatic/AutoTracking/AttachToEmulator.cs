@@ -1,8 +1,10 @@
 using System.Diagnostics;
 using System.Management;
 
-namespace TrackOMatic
+namespace TrackOMatic.AutoTracking
 {
+    public record AttachedProcessInfo(Process Process, ulong StartAddress);
+
     public static class AttachToEmulator
     {
         private static Process? FindProcess(string name)
@@ -20,6 +22,10 @@ namespace TrackOMatic
         }
         private static AttachedProcessInfo? AttachToProject64(Process target, GameVerificationInfo verificationInfo)
         {
+            if (target.MainModule == null)
+            {
+                return null;
+            }
             string filePath = target.MainModule.FileName;
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(filePath);
             uint lowerBound = 0xDFD00000;

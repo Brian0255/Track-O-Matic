@@ -2,6 +2,10 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Helpers;
+using TrackOMatic.Properties;
+
 namespace TrackOMatic
 {
     /// <summary>
@@ -110,7 +114,7 @@ namespace TrackOMatic
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            HintHelper.GenerateThresholds();
+            HintHelper.GenerateThresholds(Settings.Default.ProgressiveHintCap);
         }
     }
 }

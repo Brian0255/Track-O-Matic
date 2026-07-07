@@ -10,22 +10,12 @@ using AutoUpdaterDotNET;
 
 using Microsoft.Win32;
 
+using TrackOMatic.AutoTracking;
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Helpers;
 using TrackOMatic.Properties;
 
 using Timer = System.Timers.Timer;
-
-namespace System.Runtime.CompilerServices
-{
-    using System.ComponentModel;
-    /// <summary>
-    /// Reserved to be used by the compiler for tracking metadata.
-    /// This class should not be used by developers in source code.
-    /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    internal static class IsExternalInit
-    {
-    }
-}
 
 namespace TrackOMatic
 {
@@ -232,7 +222,7 @@ namespace TrackOMatic
             }
         }
 
-        private void OnTimerSave(object sender, ElapsedEventArgs e)
+        private void OnTimerSave(object? sender, ElapsedEventArgs e)
         {
             //probably don't need this
             //DataSaver.Save();
@@ -530,7 +520,7 @@ namespace TrackOMatic
             if (openFileDialog.ShowDialog() == true)
             {
                 string selectedFilePath = openFileDialog.FileName;
-                string folderPath = Path.GetDirectoryName(selectedFilePath);
+                string folderPath = Path.GetDirectoryName(selectedFilePath) ?? "";
 
                 Properties.Settings.Default.LastFolderPath = folderPath;
                 Properties.Settings.Default.Save();
@@ -619,7 +609,7 @@ namespace TrackOMatic
             }
 
             UpdateUIAmountToNextHint(0);
-            HintHelper.GenerateThresholds();
+            var thresholds = HintHelper.GenerateThresholds(Settings.Default.ProgressiveHintCap);
             SetSong("", "");
             Autotracker.Reset();
             DataSaver.Reset();
@@ -762,7 +752,7 @@ namespace TrackOMatic
             }
         }
 
-        private void BroadcastClosed(object sender, EventArgs e)
+        private void BroadcastClosed(object? sender, EventArgs e)
         {
             BroadcastOption.IsChecked = false;
             BroadcastView = null;

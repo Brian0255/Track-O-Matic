@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using TrackOMatic.Logic.Enums;
 using TrackOMatic.Properties;
 
 namespace TrackOMatic

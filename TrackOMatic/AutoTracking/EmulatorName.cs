@@ -1,4 +1,4 @@
-namespace TrackOMatic
+namespace TrackOMatic.AutoTracking
 {
     public enum EmulatorName
     {

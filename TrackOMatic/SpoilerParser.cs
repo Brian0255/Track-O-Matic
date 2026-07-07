@@ -1,12 +1,12 @@
 using Newtonsoft.Json;
 
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Helpers;
+using TrackOMatic.Logic.Models;
 using TrackOMatic.Properties;
 
 namespace TrackOMatic

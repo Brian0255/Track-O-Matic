@@ -1,6 +1,6 @@
 using Humanizer;
 
-namespace TrackOMatic
+namespace TrackOMatic.Logic.Helpers
 {
     public class SongFormatting
     {

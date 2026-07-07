@@ -1,5 +1,7 @@
 using System.Windows;
 
+using TrackOMatic.Logic.Enums;
+
 namespace TrackOMatic
 {
     public class SavedItem

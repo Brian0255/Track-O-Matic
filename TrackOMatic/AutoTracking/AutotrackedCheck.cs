@@ -1,4 +1,6 @@
-namespace TrackOMatic
+using TrackOMatic.Logic.Enums;
+
+namespace TrackOMatic.AutoTracking
 {
     public class AutotrackedCheck
     {

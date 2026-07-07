@@ -1,6 +1,6 @@
-using TrackOMatic.Data;
+using TrackOMatic.Logic.Enums;
 
-namespace TrackOMatic
+namespace TrackOMatic.Logic.Helpers
 {
     public static class JSONKeyMappings
     {

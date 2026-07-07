@@ -4,6 +4,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Helpers;
 using TrackOMatic.Properties;
 
 namespace TrackOMatic
@@ -46,8 +48,8 @@ namespace TrackOMatic
         public void OnLoaded(object sender, RoutedEventArgs e)
         {
             var hintSettings = HintTypeSettingsList.SETTINGS[HintType];
-            SortButton.Visibility = hintSettings.HintSorterVisibility;
-            FilterButton.Visibility = hintSettings.HintSorterVisibility;
+            SortButton.Visibility = hintSettings.HintSorterVisibility ? Visibility.Visible : Visibility.Collapsed;
+            FilterButton.Visibility = hintSettings.HintSorterVisibility ? Visibility.Visible : Visibility.Collapsed;
         }
         public HintPanel()
         {

@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
-using TrackOMatic.Data;
+using TrackOMatic.Logic.Enums;
 
 namespace TrackOMatic
 {
