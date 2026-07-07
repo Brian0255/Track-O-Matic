@@ -27,13 +27,6 @@ namespace TrackOMatic
             AdjustBasedOnCompactMode();
         }
 
-        private void HitListToggle(object sender, RoutedEventArgs e)
-        {
-            Settings.Default.HitList = HitListOption.IsChecked;
-            ResetWidthHeight();
-            Settings.Default.Save();
-        }
-
         private void SongDisplayToggle(object sender, RoutedEventArgs e)
         {
             Settings.Default.SongDisplay = SongDisplayOption.IsChecked;

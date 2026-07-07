@@ -46,7 +46,6 @@ namespace TrackOMatic
         public List<HintPanel> HintPanels { get; private set; } = null!;
 
         public List<Item> DraggableItems { get; private set; } = new();
-        public List<HitListItem> HitListItems { get; private set; } = null!;
 
         public int collected;
         public Autotracker Autotracker { get; private set; } = null!;
@@ -54,7 +53,6 @@ namespace TrackOMatic
         public static Grid Items { get; private set; } = null!;
         public SpoilerParser SpoilerParser { get; private set; }
         public DataSaver DataSaver { get; private set; }
-        public HitListHintManager HitListHintManager { get; private set; }
         public SpoilerSettings SpoilerSettings { get; private set; } = null!;
 
         private List<BitmapImage> ProgressiveKongSource = new()
@@ -100,7 +98,6 @@ namespace TrackOMatic
 
             SpoilerParser = new(this);
             DataSaver = new(this);
-            HitListHintManager = new(this);
             Reset();
             AdjustBasedOnCompactMode();
         }
@@ -148,7 +145,6 @@ namespace TrackOMatic
                 // Special region that's not displayed for the user, but is where all the unhintable moves are stored.
                 {RegionName.UNHINTABLE_MOVES, new Region(RegionName.UNHINTABLE_MOVES, UnhintableMovesRegion, UnhintableMovesImagePointsGrid, null, UnhintableMovesRegionGrid) }
             };
-            HitListItems = new() { Goal1, Goal2, Goal3, Goal4, Goal5, Goal6, Goal7, Goal8, Goal9, Goal10 };
             Collectibles = new()
             {
                 {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
@@ -323,7 +319,7 @@ namespace TrackOMatic
                 newWidth = (Settings.Default.CompactMode) ? 1392.0 : 1800.0;
             }
             Width = newWidth;
-            Height = (Settings.Default.HitList) ? 980 : 820;
+            Height = 820;
             if (Settings.Default.HintDisplay == "Multipath Hints")
             {
                 MultipathGrid.Visibility = Visibility.Visible;
@@ -499,7 +495,6 @@ namespace TrackOMatic
                 BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
             }
 
-            HitListHintManager.InitializeFromSpoiler(SpoilerParser.StartingItems, SpoilerParser.TrainingItems);
             foreach (var entry in ITEM_TO_BACKGROUND_IMAGE)
             {
                 entry.Key.InitHoverPoints();
@@ -607,10 +602,6 @@ namespace TrackOMatic
             }
             BLockerHints.Reset();
             HelmDoorHints.Reset();
-            foreach (var item in HitListItems)
-            {
-                item.Reset();
-            }
 
             foreach (var key in Collectibles.Keys.ToList())
             {
