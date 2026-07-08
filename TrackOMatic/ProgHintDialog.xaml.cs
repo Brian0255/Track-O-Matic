@@ -3,8 +3,6 @@ using System.Windows;
 using System.Windows.Input;
 
 using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Helpers;
-using TrackOMatic.Properties;
 
 namespace TrackOMatic
 {
@@ -110,11 +108,6 @@ namespace TrackOMatic
         private void HintCap_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !char.IsDigit(e.Text, 0);
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            HintHelper.GenerateThresholds(Settings.Default.ProgressiveHintCap);
         }
     }
 }

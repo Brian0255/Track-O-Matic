@@ -609,7 +609,6 @@ namespace TrackOMatic
             }
 
             UpdateUIAmountToNextHint(0);
-            var thresholds = HintHelper.GenerateThresholds(Settings.Default.ProgressiveHintCap);
             SetSong("", "");
             Autotracker.Reset();
             DataSaver.Reset();
