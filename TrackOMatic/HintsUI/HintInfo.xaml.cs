@@ -271,24 +271,32 @@ namespace TrackOMatic
                 // Execute the code only when the visual tree is fully loaded
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
+                    // Only proceed if ItemsOnPath is visible and connected to the visual tree
+                    if (ItemsOnPath.Visibility != Visibility.Collapsed && ItemsOnPath.ItemPanel != null)
+                    {
+                        Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
 
-                    Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
+                        // Get the DPI scaling factor
+                        PresentationSource? presentationSource = PresentationSource.FromVisual(ItemsOnPath.ItemPanel);
+                        if (presentationSource != null)
+                        {
+                            Matrix matrix = presentationSource.CompositionTarget.TransformToDevice;
+                            double dpiX = matrix.M11;
+                            double dpiY = matrix.M22;
 
-                    // Get the DPI scaling factor
-                    Matrix matrix = PresentationSource.FromVisual(ItemsOnPath.ItemPanel).CompositionTarget.TransformToDevice;
-                    double dpiX = matrix.M11;
-                    double dpiY = matrix.M22;
+                            // Adjust position for DPI scaling
+                            position = new Point(position.X / dpiX, position.Y / dpiY);
+                        }
 
-                    // Adjust position for DPI scaling
-                    position = new Point(position.X / dpiX, position.Y / dpiY);
-
-                    double[] selectionDialogPosition = { position.X - 10, position.Y };
-                    ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
-                    RightItems.SelectionDialogPosition = selectionDialogPosition;
+                        double[] selectionDialogPosition = { position.X - 10, position.Y };
+                        ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
+                        RightItems.SelectionDialogPosition = selectionDialogPosition;
+                    }
                 }
                 ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
             }
         }
+
         private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
