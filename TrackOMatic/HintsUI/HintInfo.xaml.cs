@@ -266,35 +266,33 @@ namespace TrackOMatic
 
         private void HintInfoWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ItemsOnPath != null && RightItems != null)
+            // Wait for the visual tree to be fully connected before accessing presentation source
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                // Execute the code only when the visual tree is fully loaded
-                Dispatcher.BeginInvoke(new Action(() =>
+                // Only proceed if ItemsOnPath is visible and connected to the visual tree
+                if (ItemsOnPath?.Visibility == Visibility.Collapsed || ItemsOnPath?.ItemPanel == null)
                 {
-                    // Only proceed if ItemsOnPath is visible and connected to the visual tree
-                    if (ItemsOnPath.Visibility != Visibility.Collapsed && ItemsOnPath.ItemPanel != null)
-                    {
-                        Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
-
-                        // Get the DPI scaling factor
-                        PresentationSource? presentationSource = PresentationSource.FromVisual(ItemsOnPath.ItemPanel);
-                        if (presentationSource != null)
-                        {
-                            Matrix matrix = presentationSource.CompositionTarget.TransformToDevice;
-                            double dpiX = matrix.M11;
-                            double dpiY = matrix.M22;
-
-                            // Adjust position for DPI scaling
-                            position = new Point(position.X / dpiX, position.Y / dpiY);
-                        }
-
-                        double[] selectionDialogPosition = { position.X - 10, position.Y };
-                        ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
-                        RightItems.SelectionDialogPosition = selectionDialogPosition;
-                    }
+                    return;
                 }
-                ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
-            }
+
+                Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
+
+                // Get the DPI scaling factor
+                PresentationSource? presentationSource = PresentationSource.FromVisual(ItemsOnPath.ItemPanel);
+                if (presentationSource != null)
+                {
+                    Matrix matrix = presentationSource.CompositionTarget.TransformToDevice;
+                    double dpiX = matrix.M11;
+                    double dpiY = matrix.M22;
+
+                    // Adjust position for DPI scaling
+                    position = new Point(position.X / dpiX, position.Y / dpiY);
+                }
+
+                double[] selectionDialogPosition = { position.X - 10, position.Y };
+                ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
+                RightItems.SelectionDialogPosition = selectionDialogPosition;
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
