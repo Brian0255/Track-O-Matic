@@ -56,7 +56,7 @@ namespace TrackOMatic
             SavedHint = new SavedHint(panelName, Location.Text, PotionCount.Text, new(), new());
             ItemsOnPath.HintInfo = this;
             RightItems.HintInfo = this;
-            if (HintTypeSettings.PathItemsVisible != Visibility.Visible)
+            if (!HintTypeSettings.PathItemsVisible)
             {
                 RightItems.BottomRow.Height = new GridLength(0);
             }
@@ -224,7 +224,7 @@ namespace TrackOMatic
             }
             BottomRow.IsOpen = false;
 
-            if (HintTypeSettings.PathItemsVisible == Visibility.Visible && !UserInitialized)
+            if (HintTypeSettings.PathItemsVisible && !UserInitialized)
             {
                 ItemsOnPath.OpenItemSelectionDialog();
                 UserInitialized = true;

@@ -46,8 +46,8 @@ namespace TrackOMatic
         public void OnLoaded(object sender, RoutedEventArgs e)
         {
             var hintSettings = HintTypeSettingsList.SETTINGS[HintType];
-            SortButton.Visibility = hintSettings.HintSorterVisibility;
-            FilterButton.Visibility = hintSettings.HintSorterVisibility;
+            SortButton.Visibility = hintSettings.HintSorterVisibility ? Visibility.Visible : Visibility.Collapsed;
+            FilterButton.Visibility = hintSettings.HintSorterVisibility ? Visibility.Visible : Visibility.Collapsed;
         }
         public HintPanel()
         {
