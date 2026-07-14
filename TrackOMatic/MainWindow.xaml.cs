@@ -286,7 +286,7 @@ namespace TrackOMatic
                 BroadcastView.TurnItemOn(itemToProcess);
             }
 
-            DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.Image.Opacity));
+            DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility.ToItemVisibility(), true, item.Image.Opacity));
             DataSaver.Save("autosave.json", canAutosave);
             return true;
         }
