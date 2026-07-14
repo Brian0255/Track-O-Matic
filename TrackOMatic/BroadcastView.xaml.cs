@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
 using TrackOMatic.Properties;
 
 namespace TrackOMatic

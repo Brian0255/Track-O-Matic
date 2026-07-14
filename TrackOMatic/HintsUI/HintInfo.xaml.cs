@@ -6,20 +6,24 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
+using TrackOMatic.Logic.Models.Hints;
+
 namespace TrackOMatic
 {
     public partial class HintInfo : UserControl, INotifyPropertyChanged
     {
         private bool UserInitialized = false;
         private MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-        private Dictionary<HintSuggestion, HintSuggestionConfig> suggestionToShortcutInfo = new()
+        private Dictionary<HintSuggestion, HintSuggestionConfig> SuggestionToShortcutInfo { get; } = new()
         {
-            {HintSuggestion.REGION, new HintSuggestionConfig(new(){"Hint Regions" }, HintRegion.All) },
-            {HintSuggestion.CHECK, new HintSuggestionConfig(new(){"Item Locations" }, HintLocation.All) },
-            {HintSuggestion.MOVE, new HintSuggestionConfig(new(){"Moves" }, HintMove.All) },
-            {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(new() {"Hint Regions","Moves"}, HintRegion.All.Concat(HintMove.All).ToList()) }
+            {HintSuggestion.REGION, new HintSuggestionConfig(["Hint Regions"], HintRegion.All) },
+            {HintSuggestion.CHECK, new HintSuggestionConfig(["Item Locations"], HintLocation.All) },
+            {HintSuggestion.MOVE, new HintSuggestionConfig(["Moves"], HintMove.All) },
+            {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions","Moves"], HintRegion.All.Concat(HintMove.All).ToList()) }
         };
-        private HintSuggestionConfig? hintSuggestionConfig;
+        private HintSuggestionConfig? HintSuggestionConfig { get; init; }
 
         public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
         public HintTypeSettings HintTypeSettings
@@ -60,9 +64,9 @@ namespace TrackOMatic
             {
                 RightItems.BottomRow.Height = new GridLength(0);
             }
-            if (suggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
+            if (SuggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
             {
-                hintSuggestionConfig = suggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
+                HintSuggestionConfig = SuggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
             }
             RegionName = regionName;
         }
@@ -99,8 +103,7 @@ namespace TrackOMatic
                     var listBoxItem = (ListBoxItem)SuggestionBox
                     .ItemContainerGenerator
                     .ContainerFromItem(SuggestionBox.SelectedItem);
-                    if (listBoxItem != null)
-                    { listBoxItem.Focus(); }
+                    listBoxItem?.Focus();
                 }));
             }
         }
@@ -110,9 +113,9 @@ namespace TrackOMatic
             var directHintExclusions = new List<string>() { "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss", "Bought" };
             var exclude = directHintExclusions;
             var JSONKeys = new List<string>() { "Kong Hint Shorthand" };
-            if (hintSuggestionConfig != null)
+            if (HintSuggestionConfig != null)
             {
-                JSONKeys = hintSuggestionConfig.JSONShortcutKeys;
+                JSONKeys = HintSuggestionConfig.JSONShortcutKeys;
                 exclude = new();
             }
             var textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -155,10 +158,10 @@ namespace TrackOMatic
                 sortBy = HintData.REGIONS_WITHOUT_LEVEL_NAME[RegionName];
                 filteredItems = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
             }
-            else if (hintSuggestionConfig != null)
+            else if (HintSuggestionConfig != null)
             {
                 var input = Location.Text.ToLower();
-                filteredItems = hintSuggestionConfig.DefaultSuggestions
+                filteredItems = HintSuggestionConfig.DefaultSuggestions
                     .Where(loc => (loc.FullName.ToLower().Contains(input)
                                || loc.ShortName.ToLower().Contains(input))
                                && (include_enemies || loc.HintGroup != HintGroup.ENEMY))
@@ -356,7 +359,7 @@ namespace TrackOMatic
                 RoutedEvent = MouseDownEvent,
                 Source = this
             };
-            this.RaiseEvent(args);
+            RaiseEvent(args);
             e.Handled = true;
         }
     }

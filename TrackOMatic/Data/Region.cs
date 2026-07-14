@@ -2,6 +2,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
+
 namespace TrackOMatic
 {
     public class Region

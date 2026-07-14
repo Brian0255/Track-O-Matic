@@ -7,6 +7,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
+
 namespace TrackOMatic
 {
     public partial class Item : ContentControl, INotifyPropertyChanged

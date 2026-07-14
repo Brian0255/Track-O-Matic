@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Management;
 
+using TrackOMatic.Logic.Models.Autotracking;
+
 namespace TrackOMatic
 {
     public static class AttachToEmulator

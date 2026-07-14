@@ -10,6 +10,8 @@ using AutoUpdaterDotNET;
 
 using Microsoft.Win32;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
 using TrackOMatic.Properties;
 
 using Timer = System.Timers.Timer;

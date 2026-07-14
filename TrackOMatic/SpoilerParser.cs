@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
 using TrackOMatic.Properties;
 
 namespace TrackOMatic
@@ -36,12 +38,12 @@ namespace TrackOMatic
         }
         private bool ValidItemAndRegionString(string regionString, string itemString)
         {
-            if (!JSONKeyMappings.ITEM_MAP.ContainsKey(itemString))
+            if (!SpoilerParserMappings.ITEM_MAP.ContainsKey(itemString))
             {
                 return false;
             }
 
-            if (!JSONKeyMappings.REGION_MAP.ContainsKey(regionString))
+            if (!SpoilerParserMappings.REGION_MAP.ContainsKey(regionString))
             {
                 return false;
             }
@@ -67,8 +69,8 @@ namespace TrackOMatic
                     continue;
                 }
 
-                var regionName = JSONKeyMappings.REGION_MAP[itemLocation];
-                var itemName = JSONKeyMappings.ITEM_MAP[itemString];
+                var regionName = SpoilerParserMappings.REGION_MAP[itemLocation];
+                var itemName = SpoilerParserMappings.ITEM_MAP[itemString];
                 MainWindow.ITEM_NAME_TO_REGION[itemName] = regionName;
             }
         }
@@ -89,13 +91,13 @@ namespace TrackOMatic
 
                 var itemWithoutPrice = match.Groups[1].Value;
                 var shortenedShopName = fullShopName.Split(' ')[0];
-                if (!JSONKeyMappings.ITEM_MAP.ContainsKey(itemWithoutPrice))
+                if (!SpoilerParserMappings.ITEM_MAP.ContainsKey(itemWithoutPrice))
                 {
                     continue;
                 }
 
-                var itemName = JSONKeyMappings.ITEM_MAP[itemWithoutPrice];
-                MainWindow.ITEM_NAME_TO_REGION[itemName] = JSONKeyMappings.SHORTENED_SHOP_TO_REGION[shortenedShopName];
+                var itemName = SpoilerParserMappings.ITEM_MAP[itemWithoutPrice];
+                MainWindow.ITEM_NAME_TO_REGION[itemName] = SpoilerParserMappings.SHORTENED_SHOP_TO_REGION[shortenedShopName];
             }
         }
 
@@ -111,8 +113,8 @@ namespace TrackOMatic
                     continue;
                 }
 
-                var regionName = JSONKeyMappings.REGION_MAP[regionString];
-                var itemName = JSONKeyMappings.ITEM_MAP[itemString];
+                var regionName = SpoilerParserMappings.REGION_MAP[regionString];
+                var itemName = SpoilerParserMappings.ITEM_MAP[itemString];
                 CheckForTrainingItem(itemLocation, itemName);
                 MainWindow.ITEM_NAME_TO_REGION[itemName] = regionName;
             }
@@ -226,9 +228,9 @@ namespace TrackOMatic
                     slams++;
                     itemString = itemString + " " + slams.ToString();
                 }
-                if (JSONKeyMappings.RANDO_NAME_TO_ITEM_NAME.ContainsKey(itemString))
+                if (SpoilerParserMappings.RANDO_NAME_TO_ITEM_NAME.ContainsKey(itemString))
                 {
-                    StartingItems[JSONKeyMappings.RANDO_NAME_TO_ITEM_NAME[itemString]] = regionToPlace;
+                    StartingItems[SpoilerParserMappings.RANDO_NAME_TO_ITEM_NAME[itemString]] = regionToPlace;
                 }
             }
         }
@@ -262,12 +264,12 @@ namespace TrackOMatic
         {
             foreach (var kongIndex in info.starting_kongs)
             {
-                var kongItem = JSONKeyMappings.KONGS[kongIndex];
+                var kongItem = SpoilerParserMappings.KONGS[kongIndex];
                 StartingItems.Add(kongItem, RegionName.UNHINTABLE_MOVES);
             }
             foreach (var keyString in info.starting_keys)
             {
-                var key = JSONKeyMappings.ITEM_MAP[keyString];
+                var key = SpoilerParserMappings.ITEM_MAP[keyString];
                 StartingItems.Add(key, RegionName.UNHINTABLE_MOVES);
             }
         }
@@ -298,7 +300,7 @@ namespace TrackOMatic
                     if (i < info.krool_order.Count)
                     {
                         int kroolIndex = info.krool_order[i];
-                        var index = (int)JSONKeyMappings.KROOL_MAP_TO_IMAGE_INDEX[kroolIndex];
+                        var index = (int)SpoilerParserMappings.KROOL_MAP_TO_IMAGE_INDEX[kroolIndex];
                         MainWindow.BossKongs[i].SetIndex(index);
                         MainWindow.BossKongs[i].Enabled = false;
                         MainWindow.BossKongs[i].Visibility = Visibility.Visible;
@@ -336,14 +338,14 @@ namespace TrackOMatic
             {
                 var name = pair.Key;
                 var pointValue = pair.Value;
-                if (JSONKeyMappings.POINT_NAME_TO_GROUP.ContainsKey(name))
+                if (SpoilerParserMappings.POINT_NAME_TO_GROUP.ContainsKey(name))
                 {
-                    var itemType = JSONKeyMappings.POINT_NAME_TO_GROUP[name];
+                    var itemType = SpoilerParserMappings.POINT_NAME_TO_GROUP[name];
                     PointValues.GroupedValues[itemType] = pointValue;
                 }
-                else if (JSONKeyMappings.POINT_NAME_TO_SPECIFIC_VALUE.ContainsKey(name))
+                else if (SpoilerParserMappings.POINT_NAME_TO_SPECIFIC_VALUE.ContainsKey(name))
                 {
-                    var itemName = JSONKeyMappings.POINT_NAME_TO_SPECIFIC_VALUE[name];
+                    var itemName = SpoilerParserMappings.POINT_NAME_TO_SPECIFIC_VALUE[name];
                     PointValues.SpecificValues[itemName] = pointValue;
                 }
             }
@@ -389,13 +391,13 @@ namespace TrackOMatic
                     continue;
                 }
                 RegionSpoilerInfo info = System.Text.Json.JsonSerializer.Deserialize<RegionSpoilerInfo>(regionEntry.Value);
-                if (!JSONKeyMappings.REGION_MAP.ContainsKey(info.level_name))
+                if (!SpoilerParserMappings.REGION_MAP.ContainsKey(info.level_name))
                 {
                     continue;
                 }
 
                 settings ??= SetUpSettings(info);
-                RegionName regionName = JSONKeyMappings.REGION_MAP[info.level_name];
+                RegionName regionName = SpoilerParserMappings.REGION_MAP[info.level_name];
                 MainWindow.Regions[regionName].AddPoints(info.points);
                 MainWindow.Regions[regionName].AddRequiredCheckTotal(info.woth_count);
                 MainWindow.Regions[regionName].SpoilerSettings = settings;
@@ -417,10 +419,10 @@ namespace TrackOMatic
 
         private void ProcessVials(List<string> vial_colors, RegionGrid grid)
         {
-            vial_colors.Sort((a, b) => JSONKeyMappings.VIAL_MAP[a] - JSONKeyMappings.VIAL_MAP[b]);
+            vial_colors.Sort((a, b) => SpoilerParserMappings.VIAL_MAP[a] - SpoilerParserMappings.VIAL_MAP[b]);
             foreach (var vial in vial_colors)
             {
-                grid.AddInitialVial(JSONKeyMappings.VIAL_MAP[vial]);
+                grid.AddInitialVial(SpoilerParserMappings.VIAL_MAP[vial]);
             }
         }
 

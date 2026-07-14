@@ -2,9 +2,13 @@ using Humanizer;
 
 namespace TrackOMatic
 {
+    /// <summary>
+    /// This class allows for formatting song strings from DK 64 Rando to a consistent format.
+    /// </summary>
+    /// <remarks>This is a potential DI service candidate.</remarks>
     public class SongFormatting
     {
-        public static readonly Dictionary<string, string> SINGLE_WORD_REPLACEMENTS = new()
+        private static Dictionary<string, string> SINGLE_WORD_REPLACEMENTS { get; } = new()
         {
             {"ii","II" },
             {"iii","III" },
@@ -60,7 +64,7 @@ namespace TrackOMatic
             {"gsc","GSC" },
         };
 
-        public static readonly Dictionary<string, string> ENTIRE_NAME_REPLACEMENTS = new()
+        private static Dictionary<string, string> ENTIRE_NAME_REPLACEMENTS { get; } = new()
         {
             {"live a live","Live A Live" },
             {"nights into dreams...","NiGHTS into Dreams..." },
@@ -74,7 +78,7 @@ namespace TrackOMatic
             {
                 return ENTIRE_NAME_REPLACEMENTS[songString];
             }
-            var words = songString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var words = songString.Split([' '], StringSplitOptions.RemoveEmptyEntries);
             var copy = words.ToList();
             for (int i = 0; i < copy.Count; ++i)
             {
