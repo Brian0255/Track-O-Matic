@@ -7,16 +7,15 @@ namespace TrackOMatic
     {
         private static Process? FindProcess(string name)
         {
-            Process target;
             try
             {
-                target = Process.GetProcessesByName(name)[0];
+                var processes = Process.GetProcessesByName(name);
+                return processes?.FirstOrDefault();
             }
             catch (Exception)
             {
                 return null;
             }
-            return target;
         }
         private static AttachedProcessInfo? AttachToProject64(Process target, GameVerificationInfo verificationInfo)
         {
