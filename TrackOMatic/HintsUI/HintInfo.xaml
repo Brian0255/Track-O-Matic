@@ -1,12 +1,17 @@
-﻿<UserControl x:Name="HintInfoWindow" x:Class="TrackOMatic.HintInfo"
+<UserControl x:Name="HintInfoWindow" x:Class="TrackOMatic.HintInfo"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TrackOMatic"
-                xmlns:wpf="http://wpfcontrols.com/"
+             xmlns:converters="clr-namespace:TrackOMatic.Converters"
+             xmlns:wpf="http://wpfcontrols.com/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="200">
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+    </UserControl.Resources>
     <Border x:Name="border" Background="{StaticResource RegionBG}" CornerRadius="0" Padding="4,3,3,3" BorderBrush="Black" BorderThickness=".5">
         <Grid x:Name="yes"> 
             <Grid.RowDefinitions>
@@ -16,7 +21,7 @@
                         <Style TargetType="RowDefinition">
                             <Setter Property="Height" Value="*"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}" Value="Hidden">
+                                <DataTrigger Binding="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}" Value="false">
                                     <Setter Property="Height" Value="0" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -27,10 +32,10 @@
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}" Value="Hidden">
+                        <DataTrigger Binding="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}" Value="false">
                             <Setter Property="Height" Value="23"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}" Value="Visible">
+                        <DataTrigger Binding="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}" Value="true">
                             <Setter Property="Height" Value="46"/>
                         </DataTrigger>
                     </Style.Triggers>
@@ -41,10 +46,10 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <TextBox ContextMenu="{x:Null}" Margin="1,0,0,0" TextChanged="Location_TextChanged" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}"/>
-            <TextBox ContextMenu="{x:Null}" x:Name="PotionCount" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="PotionCount_PreviewKeyDown" Margin="0,0,3,0"  Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility}"/>
+            <TextBox ContextMenu="{x:Null}" x:Name="PotionCount" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="PotionCount_PreviewKeyDown" Margin="0,0,3,0"  Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"/>
 
-            <local:HintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="RightItems" BottomRowHeight="*" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible}"/>
-            <local:HintItemList Margin="1,0,0,0" Loaded="HintInfoWindow_Loaded" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible}"/>
+            <local:HintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="RightItems" BottomRowHeight="*" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
+            <local:HintItemList Margin="1,0,0,0" Loaded="HintInfoWindow_Loaded" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
             <Popup Grid.Row="1" x:Name="BottomRow" Height="120" Width="250" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}">
             <ListBox MouseDoubleClick="SuggestionBox_MouseDoubleClick" Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" x:Name="SuggestionBox"  KeyDown="SuggestionBox_KeyDown"/>
             </Popup>

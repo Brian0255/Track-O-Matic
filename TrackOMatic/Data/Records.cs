@@ -7,12 +7,12 @@ namespace TrackOMatic
     public record AttachedProcessInfo(Process Process, ulong StartAddress);
     public record OffsetInfoEntry(ItemName ItemName, uint Offset, int TotalBits, int Bitmask = 0, bool UsesCountStruct = false);
     public record HintTypeSettings(
-        Visibility PathItemsVisible,
-        Visibility FoundItemVisible,
+        bool PathItemsVisible,
+        bool FoundItemVisible,
         HintSuggestion HintSuggestion,
         bool PromptForFoundItem = false,
-        Visibility PotionCountVisibility = Visibility.Collapsed,
-        Visibility HintSorterVisibility = Visibility.Collapsed);
+        bool PotionCountVisibility = false,
+        bool HintSorterVisibility = false);
     public record HintShortcutInfo(string JSONShortcutsKey, List<string> DefaultSortedList);
     public record BLockerInfo(int item, int cost);
 }
