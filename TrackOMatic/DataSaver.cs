@@ -104,7 +104,7 @@ namespace TrackOMatic
                 {
                     continue;
                 }
-                matchingItem.SetStarVisibility(savedItem.Starred);
+                matchingItem.SetStarVisibility(savedItem.Starred.ToWpfVisibility());
                 matchingItem.ChangeOpacity(savedItem.Opacity);
                 if (savedItem.Autotracked)
                 {

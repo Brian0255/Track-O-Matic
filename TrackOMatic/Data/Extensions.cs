@@ -17,5 +17,27 @@ namespace TrackOMatic
                 list[n] = value;
             }
         }
+
+        public static ItemVisibilityState ToItemVisibility(this System.Windows.Visibility visibility)
+        {
+            return visibility switch
+            {
+                System.Windows.Visibility.Visible => ItemVisibilityState.Visible,
+                System.Windows.Visibility.Hidden => ItemVisibilityState.Hidden,
+                System.Windows.Visibility.Collapsed => ItemVisibilityState.Collapsed,
+                _ => throw new ArgumentOutOfRangeException(nameof(visibility), visibility, null)
+            };
+        }
+
+        public static System.Windows.Visibility ToWpfVisibility(this ItemVisibilityState visibility)
+        {
+            return visibility switch
+            {
+                ItemVisibilityState.Visible => System.Windows.Visibility.Visible,
+                ItemVisibilityState.Hidden => System.Windows.Visibility.Hidden,
+                ItemVisibilityState.Collapsed => System.Windows.Visibility.Collapsed,
+                _ => throw new ArgumentOutOfRangeException(nameof(visibility), visibility, null)
+            };
+        }
     }
 }
