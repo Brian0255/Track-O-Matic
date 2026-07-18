@@ -20,6 +20,10 @@ namespace TrackOMatic
         }
         private static AttachedProcessInfo? AttachToProject64(Process target, GameVerificationInfo verificationInfo)
         {
+            if (target.MainModule == null)
+            {
+                return null;
+            }
             string filePath = target.MainModule.FileName;
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(filePath);
             uint lowerBound = 0xDFD00000;
