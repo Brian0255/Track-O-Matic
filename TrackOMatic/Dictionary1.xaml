@@ -83,17 +83,7 @@
     <BitmapImage x:Key="ponytail_twirl" UriSource="Images/dk64/tiny_move.png"  x:Shared="false" />
     <BitmapImage x:Key="primate_punch" UriSource="Images/dk64/chunky_move.png"  x:Shared="false" />
 
-    <BitmapImage x:Key="strong_kong" UriSource="Images/dk64/dkbarrel.png"  x:Shared="false" />
-    <BitmapImage x:Key="rocketbarrel_boost" UriSource="Images/dk64/diddybarrel.png"  x:Shared="false" />
-    <BitmapImage x:Key="orangstand_sprint" UriSource="Images/dk64/lankybarrel.png"  x:Shared="false" />
-    <BitmapImage x:Key="mini_monkey" UriSource="Images/dk64/tinybarrel.png"  x:Shared="false" />
-    <BitmapImage x:Key="hunky_chunky" UriSource="Images/dk64/chunkybarrel.png"  x:Shared="false" />
-
-    <BitmapImage x:Key="baboon_blast" UriSource="Images/dk64/dkpad.png"  x:Shared="false" />
-    <BitmapImage x:Key="simian_spring" UriSource="Images/dk64/diddypad.png"  x:Shared="false" />
     <BitmapImage x:Key="baboon_balloon" UriSource="Images/dk64/lankypad.png"  x:Shared="false" />
-    <BitmapImage x:Key="monkeyport" UriSource="Images/dk64/tinypad.png"  x:Shared="false" />
-    <BitmapImage x:Key="gorilla_gone" UriSource="Images/dk64/chunkypad.png"  x:Shared="false"/>
 
     <BitmapImage x:Key="key_1" UriSource="Images/dk64/k1.png"  x:Shared="false"/>
     <BitmapImage x:Key="key_2" UriSource="Images/dk64/k2.png"  x:Shared="false"/>
@@ -225,17 +215,7 @@
     <BitmapImage x:Key="ponytail_twirl_bw" UriSource="Images/bw/tiny_move.png"  x:Shared="false" />
     <BitmapImage x:Key="primate_punch_bw" UriSource="Images/bw/chunky_move.png"  x:Shared="false" />
 
-    <BitmapImage x:Key="strong_kong_bw" UriSource="Images/bw/dkbarrel.png"  x:Shared="false" />
-    <BitmapImage x:Key="rocketbarrel_boost_bw" UriSource="Images/bw/diddybarrel.png"  x:Shared="false" />
-    <BitmapImage x:Key="orangstand_sprint_bw" UriSource="Images/bw/lankybarrel.png"  x:Shared="false" />
-    <BitmapImage x:Key="mini_monkey_bw" UriSource="Images/bw/tinybarrel.png"  x:Shared="false" />
-    <BitmapImage x:Key="hunky_chunky_bw" UriSource="Images/bw/chunkybarrel.png"  x:Shared="false" />
-
-    <BitmapImage x:Key="baboon_blast_bw" UriSource="Images/bw/dkpad.png"  x:Shared="false" />
-    <BitmapImage x:Key="simian_spring_bw" UriSource="Images/bw/diddypad.png"  x:Shared="false" />
     <BitmapImage x:Key="baboon_balloon_bw" UriSource="Images/bw/lankypad.png"  x:Shared="false" />
-    <BitmapImage x:Key="monkeyport_bw" UriSource="Images/bw/tinypad.png"  x:Shared="false" />
-    <BitmapImage x:Key="gorilla_gone_bw" UriSource="Images/bw/chunkypad.png"  x:Shared="false"/>
 
     <BitmapImage x:Key="key_1_bw" UriSource="Images/bw/k1.png"  x:Shared="false"/>
     <BitmapImage x:Key="key_2_bw" UriSource="Images/bw/k2.png"  x:Shared="false"/>
