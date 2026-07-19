@@ -133,12 +133,8 @@ namespace TrackOMatic
 
         private void UpdateFilterImage()
         {
-            var source = "../Images/dk64/filter_empty.png";
-            if (ItemsToFilterBy.Count > 0)
-            {
-                source = "../Images/dk64/filter_on.png";
-            }
-            FilterButton.Source = new BitmapImage(new Uri(source, UriKind.Relative));
+            string resource = ItemsToFilterBy.Count > 0 ? "filter_on" : "filter_empty";
+            FilterButton.Source = (ImageSource)FindResource(resource);
         }
 
         private void ApplyFilter()

@@ -59,29 +59,20 @@ namespace TrackOMatic
             {RegionName.HIDEOUT_HELM, -1 }
         };
 
-        private List<BitmapImage> homingScopeImages = new()
-        {
-                new BitmapImage( new Uri("images/bw/homingscope.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/homingonly.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/scopeonly.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/homingscope.png", UriKind.Relative)),
-        };
+        private List<string> homingScopeImages =
+        [
+            "homing_scope_bw", "homingonly", "scopeonly", "homing_scope"
+        ];
 
-        private List<BitmapImage> camShockwaveImages = new()
-        {
-                new BitmapImage( new Uri("images/bw/filmwave.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/fairycamonly.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/shockwaveonly.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/filmwave.png", UriKind.Relative)),
-        };
+        private List<string> camShockwaveImages =
+        [
+            "camera_shockwave_bw", "fairycamonly", "shockwaveonly", "camera_shockwave"
+        ];
 
-        private List<BitmapImage> slamImages = new()
-        {
-                new BitmapImage( new Uri("images/bw/progressive_slam.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/progressive_slam.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/slam2.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/slam3.png", UriKind.Relative)),
-        };
+        private List<string> slamImages =
+        [
+            "progressive_slam_1_bc_bw", "progressive_slam_1_bc", "progressive_slam_2_bc", "progressive_slam_3_bc"
+        ];
 
         private List<Image> LevelNames;
         private List<TextBlock> PointLabels;
@@ -220,7 +211,7 @@ namespace TrackOMatic
         {
             foreach (var image in LevelNames)
             {
-                image.Source = new BitmapImage(new Uri("Images/dk64/unknown.png", UriKind.Relative));
+                image.Source = (ImageSource)FindResource("unknown_label");
             }
             for (int i = 0; i < PointLabels.Count - 1; ++i) //skip isles
             {
@@ -314,8 +305,8 @@ namespace TrackOMatic
                 }
 
                 var matchingImage = LevelNames[levelNumber];
-                var imagePath = "Images/dk64/" + region.ToString().ToLower() + "_label.png";
-                matchingImage.Source = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+                var imagePath = region.ToString().ToLower() + "_label";
+                matchingImage.Source = (ImageSource)FindResource(imagePath);
                 var mainWindow = (MainWindow)Application.Current.MainWindow;
                 if (mainWindow.Regions.ContainsKey(region))
                 {
@@ -390,7 +381,7 @@ namespace TrackOMatic
             }
         }
 
-        private void CheckGroupedItem(List<ItemName> items, List<BitmapImage> imageSources, ItemBackground itemBackground)
+        private void CheckGroupedItem(List<ItemName> items, IList<string> imageSources, ItemBackground itemBackground)
         {
             int imageIndex = 0;
             ItemName firstItem = items[0];
@@ -405,7 +396,7 @@ namespace TrackOMatic
                 imageIndex += 2;
             }
 
-            itemBackground.BackgroundItemImage = imageSources[imageIndex];
+            itemBackground.BackgroundItemImage = (ImageSource)FindResource(imageSources[imageIndex]);
         }
 
         public void HandleSharedMoves()
@@ -418,7 +409,7 @@ namespace TrackOMatic
                     slamCount++;
                 }
             }
-            slam.BackgroundItemImage = slamImages[slamCount];
+            slam.BackgroundItemImage = (ImageSource)FindResource(slamImages[slamCount]);
             var homingScopeGroup = new List<ItemName> { ItemName.HOMING_AMMO, ItemName.SNIPER_SCOPE };
             var camShockwaveGroup = new List<ItemName> { ItemName.FAIRY_CAMERA, ItemName.SHOCKWAVE };
             CheckGroupedItem(homingScopeGroup, homingScopeImages, homingscope);

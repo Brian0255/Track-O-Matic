@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using TrackOMatic.Data;
@@ -15,23 +16,20 @@ namespace TrackOMatic
             set { SetValue(RegionNameProperty, value); }
         }
 
-        public static BitmapImage GetBarrierItemImage(BarrierItems item) =>
+        public BitmapImage GetBarrierItemImage(BarrierItems item) =>
             item switch
             {
-                BarrierItems.GOLDEN_BANANA => MakeImage("gb.png"),
-                BarrierItems.BLUEPRINT => MakeImage("bp.png"),
-                BarrierItems.PEARL => MakeImage("pearl.png"),
-                BarrierItems.CROWN => MakeImage("crown.png"),
-                BarrierItems.MEDAL => MakeImage("bananamedal.png"),
-                BarrierItems.RAINBOW_COIN => MakeImage("rainbowcoin.png"),
-                BarrierItems.FAIRY => MakeImage("fairy.png"),
-                BarrierItems.COMPANY_COIN => MakeImage("ninrarecoin.png"),
-                BarrierItems.BEAN => MakeImage("bean.png"),
+                BarrierItems.GOLDEN_BANANA => (BitmapImage)FindResource("golden_banana"),
+                BarrierItems.BLUEPRINT => (BitmapImage)FindResource("blueprint"),
+                BarrierItems.PEARL => (BitmapImage)FindResource("pearl"),
+                BarrierItems.CROWN => (BitmapImage)FindResource("crown"),
+                BarrierItems.MEDAL => (BitmapImage)FindResource("medal"),
+                BarrierItems.RAINBOW_COIN => (BitmapImage)FindResource("rainbow_coin"),
+                BarrierItems.FAIRY => (BitmapImage)FindResource("fairy"),
+                BarrierItems.COMPANY_COIN => (BitmapImage)FindResource("company_coin"),
+                BarrierItems.BEAN => (BitmapImage)FindResource("bean"),
                 _ => throw new ArgumentException($"Unknown barrier item: {item}")
             };
-
-        private static BitmapImage MakeImage(string filename) =>
-            new(new Uri("Images/dk64/" + filename, UriKind.Relative));
 
         public BLockerHint()
         {
@@ -55,7 +53,7 @@ namespace TrackOMatic
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            Picture.Source = new BitmapImage(new Uri("../Images/dk64/" + RegionName.ToString().ToLower() + ".png", UriKind.Relative));
+            Picture.Source = (ImageSource)FindResource(RegionName.ToString().ToLowerInvariant());
         }
 
     }
