@@ -42,25 +42,8 @@ namespace TrackOMatic
         public DataSaver DataSaver { get; private set; }
         public SpoilerSettings SpoilerSettings { get; private set; } = null!;
 
-        private List<BitmapImage> ProgressiveKongSource = new()
-        {
-                new BitmapImage( new Uri("images/bw/unknown_kong.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/donkey.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/diddy.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/lanky.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/tiny.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/chunky.png", UriKind.Relative)),
-        };
-        private List<BitmapImage> BossSource = new()
-        {
-                new BitmapImage( new Uri("images/dk64/army.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/doga.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/madjack.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/pufftoss.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/doga2.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/army2.png", UriKind.Relative)),
-                new BitmapImage( new Uri("images/dk64/kutout.png", UriKind.Relative)),
-        };
+        private List<BitmapImage> ProgressiveKongSource { get; init; }
+        private List<BitmapImage> BossSource { get; init; }
 
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
@@ -73,14 +56,33 @@ namespace TrackOMatic
             HintData.Init();
             InitOptions();
             InitData();
+            ProgressiveKongSource =
+            [
+                (BitmapImage)FindResource("unknown_kong_bw"),
+                (BitmapImage)FindResource("donkey"),
+                (BitmapImage)FindResource("diddy"),
+                (BitmapImage)FindResource("lanky"),
+                (BitmapImage)FindResource("tiny"),
+                (BitmapImage)FindResource("chunky"),
+            ];
             foreach (var progressiveItem in HelmKongs!)
             {
-                progressiveItem.ImageSources = new() { ProgressiveKongSource };
+                progressiveItem.ImageSources = [ProgressiveKongSource];
             }
-            List<List<BitmapImage>> AllBosses = new() { ProgressiveKongSource, BossSource };
+            BossSource =
+            [
+                (BitmapImage)FindResource("army"),
+                (BitmapImage)FindResource("doga"),
+                (BitmapImage)FindResource("madjack"),
+                (BitmapImage)FindResource("pufftoss"),
+                (BitmapImage)FindResource("doga2"),
+                (BitmapImage)FindResource("army2"),
+                (BitmapImage)FindResource("kutout"),
+            ];
+            List<List<BitmapImage>> allBosses = [ProgressiveKongSource, BossSource];
             foreach (var progressiveItem in BossKongs!)
             {
-                progressiveItem.ImageSources = AllBosses;
+                progressiveItem.ImageSources = allBosses;
             }
 
             SpoilerParser = new(this);
@@ -533,19 +535,19 @@ namespace TrackOMatic
 
         public void UpdateProgHintImage(ItemType itemType)
         {
-            Dictionary<ItemType, string> itemTypeToImageString = new()
+            Dictionary<ItemType, string> itemTypeToResourceString = new()
             {
-                {ItemType.GOLDEN_BANANA, "Images/dk64/gb.png" },
-                {ItemType.TOTAL_BLUEPRINTS, "Images/dk64/total_bps.png" },
-                {ItemType.KEY, "Images/dk64/blankkey.png" },
-                {ItemType.BANANA_MEDAL, "Images/dk64/bananamedal.png" },
-                {ItemType.BATTLE_CROWN, "Images/dk64/crown.png" },
-                {ItemType.FAIRY,"Images/dk64/fairy.png" },
-                {ItemType.RAINBOW_COIN, "Images/dk64/rainbowcoin.png" },
-                {ItemType.PEARL, "Images/dk64/pearl.png" },
-                {ItemType.COLORED_BANANA, "Images/dk64/colored_bananas.png" }
+                {ItemType.GOLDEN_BANANA, "golden_banana" },
+                {ItemType.TOTAL_BLUEPRINTS, "total_bps" },
+                {ItemType.KEY, "basic_key" },
+                {ItemType.BANANA_MEDAL, "medal" },
+                {ItemType.BATTLE_CROWN, "crown" },
+                {ItemType.FAIRY,"fairy" },
+                {ItemType.RAINBOW_COIN, "rainbow_coin" },
+                {ItemType.PEARL, "pearl" },
+                {ItemType.COLORED_BANANA, "colored_bananas" }
             };
-            ItemsToNextHintImage.Source = new BitmapImage(new Uri(itemTypeToImageString[itemType], UriKind.Relative));
+            ItemsToNextHintImage.Source = (BitmapImage)FindResource(itemTypeToResourceString[itemType]);
         }
 
         public void UpdateUIAmountToNextHint(int newAmount)

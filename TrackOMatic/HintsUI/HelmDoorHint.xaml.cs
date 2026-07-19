@@ -21,18 +21,18 @@ namespace TrackOMatic
             {
                 new()
                 {
-                    new BitmapImage( new Uri("images/dk64/gb.png", UriKind.Relative)),
-                    new BitmapImage( new Uri("images/dk64/bp.png", UriKind.Relative)),
-                    new BitmapImage( new Uri("images/dk64/pearl.png", UriKind.Relative)),
-                    new BitmapImage( new Uri("images/dk64/crown.png", UriKind.Relative)),
-                    new BitmapImage( new Uri("images/dk64/bananamedal.png", UriKind.Relative)),
-                    new BitmapImage( new Uri("images/dk64/rainbowcoin.png", UriKind.Relative)),
-                    new BitmapImage( new Uri("images/dk64/fairy.png", UriKind.Relative)),
+                    (BitmapImage)FindResource("golden_banana"),
+                    (BitmapImage)FindResource("blueprint"),
+                    (BitmapImage)FindResource("pearl"),
+                    (BitmapImage)FindResource("crown"),
+                    (BitmapImage)FindResource("medal"),
+                    (BitmapImage)FindResource("rainbow_coin"),
+                    (BitmapImage)FindResource("fairy"),
                 },
                 new()
                 {
-                    new BitmapImage( new Uri("images/dk64/ninrarecoin.png", UriKind.Relative)),
-                    new BitmapImage( new Uri("images/dk64/bean.png", UriKind.Relative)),
+                    (BitmapImage)FindResource("company_coin"),
+                    (BitmapImage)FindResource("bean"),
                 }
             };
             DoorItem.ImageSources = BLockerSources;
