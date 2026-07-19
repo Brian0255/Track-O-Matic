@@ -1,0 +1,6 @@
+<Project>
+  <!-- Shared version property for all projects -->
+  <PropertyGroup>
+    <Version>2.1.8</Version>
+  </PropertyGroup>
+</Project>
