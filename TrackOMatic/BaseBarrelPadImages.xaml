@@ -11,7 +11,7 @@
     <BitmapImage x:Key="baboon_blast" UriSource="Images/dk64/dkpad.png"  x:Shared="false"/>
     <BitmapImage x:Key="simian_spring" UriSource="Images/dk64/diddypad.png"  x:Shared="false"/>
     <BitmapImage x:Key="monkeyport" UriSource="Images/dk64/tinypad.png"  x:Shared="false"/>
-    <BitmapImage x:Key="gorilla_gone" UriSource="Images/dk64/chunkypad.png" />
+    <BitmapImage x:Key="gorilla_gone" UriSource="Images/dk64/chunkypad.png" x:Shared="false"/>
 
     <!--Black&White-->
     <BitmapImage x:Key="strong_kong_bw" UriSource="Images/bw/dkbarrel.png"  x:Shared="false"/>
@@ -23,5 +23,5 @@
     <BitmapImage x:Key="baboon_blast_bw" UriSource="Images/bw/dkpad.png"  x:Shared="false"/>
     <BitmapImage x:Key="simian_spring_bw" UriSource="Images/bw/diddypad.png"  x:Shared="false"/>
     <BitmapImage x:Key="monkeyport_bw" UriSource="Images/bw/tinypad.png"  x:Shared="false"/>
-    <BitmapImage x:Key="gorilla_gone_bw" UriSource="Images/bw/chunkypad.png" />
+    <BitmapImage x:Key="gorilla_gone_bw" UriSource="Images/bw/chunkypad.png" x:Shared="false"/>
 </ResourceDictionary>
