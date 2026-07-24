@@ -45,7 +45,6 @@ namespace TrackOMatic
         public HintItemList()
         {
             InitializeComponent();
-            DataContext = this;
             ProcessSelectedItems();
 
         }

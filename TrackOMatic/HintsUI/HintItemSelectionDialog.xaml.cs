@@ -12,7 +12,6 @@ namespace TrackOMatic
         public HintItemSelectionDialog(List<ItemName> itemsToTurnOn)
         {
             InitializeComponent();
-            DataContext = this;
             foreach (var child in ItemGrid.Children)
             {
                 if (child is SelectableHintItem hintItem)

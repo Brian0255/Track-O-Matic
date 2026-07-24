@@ -38,7 +38,6 @@ namespace TrackOMatic
         public ProgHintDialog()
         {
             InitializeComponent();
-            DataContext = this;
             var itemType = (ItemType)Properties.Settings.Default.ProgressiveHintItem;
             SelectedItemType = ItemTypeToPlural[itemType];
             var itemTypes = new ItemType[] { ItemType.GOLDEN_BANANA, ItemType.TOTAL_BLUEPRINTS, ItemType.KEY, ItemType.BANANA_MEDAL, ItemType.BATTLE_CROWN, ItemType.FAIRY, ItemType.RAINBOW_COIN, ItemType.PEARL, ItemType.COLORED_BANANA };

@@ -1,4 +1,4 @@
-﻿<ContentControl x:Class="TrackOMatic.Item" Loaded="Item_OnLoaded"
+<ContentControl x:Class="TrackOMatic.Item" Loaded="Item_OnLoaded"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -27,13 +27,13 @@
                     RenderOptions.ClearTypeHint="Enabled"
                                   ToolTipService.InitialShowDelay="500" ToolTipService.HasDropShadow="True">
                 <Border.ToolTip>
-                    <ToolTip Name="ToolTip" Content="{Binding HoverText}" Placement="Mouse" Visibility="Collapsed">
+                    <ToolTip Name="ToolTip" Content="{Binding HoverText, RelativeSource={RelativeSource AncestorType=local:Item}}" Placement="Mouse" Visibility="Collapsed">
                     </ToolTip>
                 </Border.ToolTip>
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <Image x:Name="Image" Source="{Binding ItemImage}"/>
+                <Image x:Name="Image" Source="{Binding ItemImage, RelativeSource={RelativeSource AncestorType=local:Item}}"/>
             </Border>
             <Image x:Name="Star" Source="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="0,0,4,4"/>
         </Grid>

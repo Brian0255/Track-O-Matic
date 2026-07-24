@@ -1,23 +1,24 @@
-﻿<UserControl x:Class="TrackOMatic.CollectibleItem"
+<UserControl x:Class="TrackOMatic.CollectibleItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TrackOMatic"
              MouseLeftButtonDown="Image_MouseLeftButtonDown"
              MouseRightButtonDown="Image_MouseRightButtonDown">
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="{Binding RowHeight}"/>
+            <RowDefinition Height="{Binding RowHeight, RelativeSource={RelativeSource AncestorType=local:CollectibleItem}}"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Viewbox Name="CountViewbox" Grid.Row="1" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="2">
-            <Grid Background="{Binding BGColor}">
-                <TextBlock Margin="3,-1,2,0" x:Name="count" Text="{Binding Text}" Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" />
+            <Grid Background="{Binding BGColor, RelativeSource={RelativeSource AncestorType=local:CollectibleItem}}">
+                <TextBlock Margin="3,-1,2,0" x:Name="count" Text="{Binding Text, RelativeSource={RelativeSource AncestorType=local:CollectibleItem}}" Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" />
             </Grid>
         </Viewbox>
-        <Image Source="{Binding ImageSource}" x:Name="image" Margin="2" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+        <Image Source="{Binding ImageSource, RelativeSource={RelativeSource AncestorType=local:CollectibleItem}}" x:Name="image" Margin="2" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
                 RenderOptions.ClearTypeHint="Enabled" HorizontalAlignment="Left">
             <Image.Effect>
                 <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />

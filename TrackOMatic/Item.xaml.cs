@@ -106,7 +106,6 @@ namespace TrackOMatic
 
         public Item()
         {
-            DataContext = this;
             InitializeComponent();
         }
 

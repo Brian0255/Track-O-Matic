@@ -1,4 +1,4 @@
-﻿<ContentControl x:Class="TrackOMatic.ItemBackground" Loaded="OnLoaded"
+<ContentControl x:Class="TrackOMatic.ItemBackground" Loaded="OnLoaded"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -31,7 +31,7 @@
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <Image x:Name="Image" Source="{Binding BackgroundItemImage}"/>
+                <Image x:Name="Image" Source="{Binding BackgroundItemImage, RelativeSource={RelativeSource AncestorType=local:ItemBackground}}"/>
             </Border>
             <Image Margin="0,0,4,4" x:Name="Star" Source="{StaticResource star_complex}" Visibility="Hidden" HorizontalAlignment="Left" IsHitTestVisible="False"/>
         </Grid>

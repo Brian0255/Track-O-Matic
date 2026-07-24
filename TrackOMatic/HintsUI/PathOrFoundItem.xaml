@@ -1,4 +1,4 @@
-﻿<ContentControl x:Class="TrackOMatic.PathOrFoundItem"
+<ContentControl x:Class="TrackOMatic.PathOrFoundItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -16,7 +16,7 @@
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <Image x:Name="image" Source="{Binding PathItemImage}"/>
+                <Image x:Name="image" Source="{Binding PathItemImage, RelativeSource={RelativeSource AncestorType=local:PathOrFoundItem}}"/>
             </Border>
             <Image x:Name="Checkmark" Source="../images/dk64/checkmark.png" Visibility="Hidden"/>
         </Grid>

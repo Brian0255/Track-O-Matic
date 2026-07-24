@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="TrackOMatic.HelmDoorPanel"
+<UserControl x:Class="TrackOMatic.HelmDoorPanel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,7 +14,15 @@
                     <RowDefinition Height="26"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Margin="10,0,0,0" Padding="0,0,0,2" FontSize="20" Foreground="White" Grid.Row="0"  FontFamily="{DynamicResource DK64Font}" Text="{Binding Heading}" VerticalAlignment="Center"/>
+                <TextBlock
+                    Margin="10,0,0,0"
+                    Padding="0,0,0,2"
+                    FontSize="20"
+                    Foreground="White"
+                    Grid.Row="0"
+                    FontFamily="{DynamicResource DK64Font}"
+                    Text="{Binding Heading, RelativeSource={RelativeSource AncestorType=local:HelmDoorPanel}}"
+                    VerticalAlignment="Center"/>
                 <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
                     <UniformGrid Name="MainGrid" Grid.Row="1" Columns="2">
                         <local:HelmDoorHint LabelText="Door 1:"/>
@@ -26,8 +34,8 @@
         <Border CornerRadius="2" BorderThickness="3">
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
-                    <GradientStop Color="{Binding LineColor}" Offset="0"/>
-                    <GradientStop Color="{Binding LineColor}" Offset="0.007"/>
+                    <GradientStop Color="{Binding LineColor, RelativeSource={RelativeSource AncestorType=local:HelmDoorPanel}}" Offset="0"/>
+                    <GradientStop Color="{Binding LineColor, RelativeSource={RelativeSource AncestorType=local:HelmDoorPanel}}" Offset="0.007"/>
                     <GradientStop Color="Transparent" Offset="0.008"/>
                     <GradientStop Color="Transparent" Offset="1"/>
                 </LinearGradientBrush>
