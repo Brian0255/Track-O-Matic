@@ -267,6 +267,12 @@ namespace TrackOMatic
                 ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
             }
         }
+
+        private void PotionCount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SavedHint.PotionCountText = PotionCount.Text;
+        }
+
         private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
