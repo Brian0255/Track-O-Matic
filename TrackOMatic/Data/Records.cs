@@ -19,12 +19,14 @@ namespace TrackOMatic
     {
         public string FullName { get; init; }
         public string ShortName { get; init; }
-        public HintGroup HintGroup { get; init; } = HintGroup.NONE;
-        public HintNameEntry(string fullName, string shortName = "")
+        public HintGroup HintGroup { get; init; }
+        public HintNameEntry(string fullName, string shortName = "", HintGroup hintGroup = HintGroup.NONE)
         {
             FullName = fullName;
             ShortName = string.IsNullOrEmpty(shortName) ? fullName : shortName;
-            if(FullName.Contains("Enemy"))
+            HintGroup = hintGroup;
+            //should be replaced but this works ok for now
+            if (FullName.Contains("Enemy"))
             {
                 HintGroup = HintGroup.ENEMY;
             }
