@@ -28,7 +28,7 @@ namespace TrackOMatic
         };
         public static List<string> MISC_DIRECT_HINT_TYPES = new()
         {
-            "Chunky","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny"
+            "Battle Arena","Chunky","Colored Bananas","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny"
         };
         public static readonly Dictionary<string, RegionName> SHORTENED_REGION_NAME_TO_REGION = new()
         {
