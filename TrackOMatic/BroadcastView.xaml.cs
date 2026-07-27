@@ -129,7 +129,6 @@ namespace TrackOMatic
         public BroadcastView()
         {
             InitializeComponent();
-            DataContext = this;
             InitializeMap();
             Collectibles = new() {
                 { ItemType.DONKEY_BLUEPRINT, DonkeyBPs},

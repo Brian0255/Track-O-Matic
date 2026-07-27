@@ -31,7 +31,6 @@ namespace TrackOMatic
         public HelmDoorPanel()
         {
             InitializeComponent();
-            DataContext = this;
             hints = new();
             foreach (var child in MainGrid.Children)
             {

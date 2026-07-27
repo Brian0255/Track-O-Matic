@@ -16,7 +16,6 @@ namespace TrackOMatic
         public HelmDoorHint()
         {
             InitializeComponent();
-            DataContext = this;
             List<List<BitmapImage>> BLockerSources = new()
             {
                 new()

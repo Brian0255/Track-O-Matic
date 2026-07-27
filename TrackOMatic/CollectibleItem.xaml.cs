@@ -138,7 +138,6 @@ namespace TrackOMatic
         public CollectibleItem()
         {
             InitializeComponent();
-            DataContext = this;
         }
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

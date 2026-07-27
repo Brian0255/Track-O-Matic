@@ -16,7 +16,6 @@ namespace TrackOMatic
             SelectedImageIndex = -1;
             images = new();
             InitializeComponent();
-            DataContext = this;
             for (int i = 0; i < toAdd.Count; ++i)
             {
                 var row = toAdd[i];

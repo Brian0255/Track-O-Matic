@@ -32,7 +32,6 @@ namespace TrackOMatic
         public ItemBackground()
         {
             InitializeComponent();
-            DataContext = this;
         }
 
         public void ChangeOpacity(double newOpacity)

@@ -36,7 +36,6 @@ namespace TrackOMatic
         public ProgressiveItem()
         {
             InitializeComponent();
-            DataContext = this;
             ImageSources = new List<List<BitmapImage>>();
         }
 

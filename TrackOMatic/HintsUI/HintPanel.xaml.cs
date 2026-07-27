@@ -53,7 +53,6 @@ namespace TrackOMatic
         {
             Console.WriteLine(HintType);
             InitializeComponent();
-            DataContext = this;
             Loaded += OnLoaded;
         }
 

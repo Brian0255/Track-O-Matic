@@ -30,7 +30,6 @@ namespace TrackOMatic
         public SelectableHintItem()
         {
             InitializeComponent();
-            DataContext = this;
         }
 
         public void UpdateImageFromState()

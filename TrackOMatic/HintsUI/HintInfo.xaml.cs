@@ -43,7 +43,6 @@ namespace TrackOMatic
         public HintInfo(HintType hintType, string panelName, bool isSavedHint = false, RegionName regionName = RegionName.UNKNOWN)
         {
             InitializeComponent();
-            DataContext = this;
             if (!isSavedHint)
             {
                 Location.Loaded += (sender, e) => Location.Focus();

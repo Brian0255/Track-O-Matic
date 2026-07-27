@@ -30,7 +30,6 @@ namespace TrackOMatic
         {
             InitializeComponent();
             SetResourceReference(PathItemImageProperty, itemName.ToString().ToLower());
-            DataContext = this;
             IsChecked = isChecked;
             ItemName = itemName;
             HintItemList = hintItemList;

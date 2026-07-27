@@ -34,7 +34,6 @@ namespace TrackOMatic
         public BLockerHint()
         {
             InitializeComponent();
-            DataContext = this;
             List<List<BitmapImage>> BLockerSources = new()
                 {
                     new() { GetBarrierItemImage(BarrierItems.GOLDEN_BANANA),

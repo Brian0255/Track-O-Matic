@@ -31,7 +31,6 @@ namespace TrackOMatic
         public BLockerPanel()
         {
             InitializeComponent();
-            DataContext = this;
             foreach (var child in MainGrid.Children)
             {
                 if (child is BLockerHint hint)

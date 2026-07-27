@@ -16,7 +16,6 @@ namespace TrackOMatic
         public LevelOrderNumber()
         {
             InitializeComponent();
-            DataContext = this;
             currentNumber = 0;
         }
 
