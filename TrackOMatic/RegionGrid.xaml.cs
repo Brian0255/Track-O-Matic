@@ -104,10 +104,10 @@ namespace TrackOMatic
 
         public void AddInitialVial(VialColor color)
         {
-            var imageName = (color.ToString() + "_vial.png").ToLower();
+            var resourceName = "vial_" + color.ToString().ToLowerInvariant();
             Item vialImage = new()
             {
-                ItemImage = new BitmapImage(new Uri("Images/dk64/" + imageName, UriKind.Relative))
+                ItemImage = (BitmapImage)FindResource(resourceName)
             };
             vialImage.SetRegion(Region);
             vialImage.Disable();
