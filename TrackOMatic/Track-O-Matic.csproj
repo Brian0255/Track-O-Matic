@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../Directory.props" />
+
   <PropertyGroup>
     <!-- Target Framework -->
     <TargetFramework>net10.0-windows</TargetFramework>
@@ -86,5 +88,13 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+
+  <!-- Version Sync Script - Cross-platform support -->
+  <Target Name="UpdateAutoUpdateInfo" AfterTargets="Build">
+    <!-- PowerShell on Windows -->
+    <Exec Command="powershell -ExecutionPolicy Bypass -File $(ProjectDir)Scripts\UpdateAutoUpdateInfo.ps1 -Version $(Version) -OutputPath $(ProjectDir)AutoUpdateInfo.xml" Condition="'$(OS)' == 'Windows_NT'" />
+    <!-- Bash on Linux/macOS -->
+    <Exec Command="bash $(ProjectDir)Scripts/UpdateAutoUpdateInfo.sh $(Version) $(ProjectDir)AutoUpdateInfo.xml" Condition="'$(OS)' != 'Windows_NT'" />
+  </Target>
 
 </Project>

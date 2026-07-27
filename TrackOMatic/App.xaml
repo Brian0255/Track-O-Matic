@@ -1,9 +1,8 @@
-﻿<Application x:Class="TrackOMatic.App"
+<Application x:Class="TrackOMatic.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:TrackOMatic"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             StartupUri="MainWindow.xaml"
              Exit="App_Exit">
     <Application.Resources>
         <ResourceDictionary>

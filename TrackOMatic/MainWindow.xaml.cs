@@ -11,6 +11,7 @@ using AutoUpdaterDotNET;
 using Microsoft.Win32;
 
 using TrackOMatic.Properties;
+using TrackOMatic.Services;
 
 using Timer = System.Timers.Timer;
 
@@ -19,7 +20,7 @@ namespace TrackOMatic
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public int TotalGBs { get; private set; }
         public BroadcastView? BroadcastView { get; private set; }
@@ -48,10 +49,36 @@ namespace TrackOMatic
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
 
+        public IVersionService VersionService { get; init; }
+
+        private string _applicationVersion = "";
+        public string ApplicationVersion
+        {
+            get => _applicationVersion;
+            private set
+            {
+                if (_applicationVersion != value)
+                {
+                    _applicationVersion = value;
+                    OnPropertyChanged(nameof(ApplicationVersion));
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         // Timer to save the data every minute. This is properly initialized, but the compiler is finicky.
         private Timer SaveTimer = null!;
-        public MainWindow()
+        public MainWindow(IVersionService versionService)
         {
+            VersionService = versionService;
+            ApplicationVersion = VersionService.GetVersionString();
+            DataContext = this;
             InitializeComponent();
             HintData.Init();
             InitOptions();
@@ -699,7 +726,7 @@ namespace TrackOMatic
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
-            AutoUpdater.InstalledVersion = new Version("2.1.8");
+            AutoUpdater.InstalledVersion = VersionService.GetApplicationVersion();
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0)

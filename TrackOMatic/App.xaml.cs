@@ -1,52 +1,60 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
+
+using Microsoft.Extensions.DependencyInjection;
+
 using TrackOMatic.Properties;
+using TrackOMatic.Services;
 
-namespace TrackOMatic
+namespace TrackOMatic;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    private readonly IServiceProvider _serviceProvider;
+
+    App()
     {
+        var services = new ServiceCollection();
+        services.AddSingleton<IVersionService, VersionService>();
 
-        App()
-        {
-            Dispatcher.UnhandledException += OnDispatcherUnhandledException;
-        }
+        _serviceProvider = services.BuildServiceProvider();
+        ServiceLocator.Initialize(_serviceProvider);
+        Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+    }
 
-        private void App_Exit(object sender, ExitEventArgs e)
-        {
-        }
+    private void App_Exit(object sender, ExitEventArgs e)
+    {
+    }
 
-        void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-        }
+    void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+    }
 
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
-            UpdatePadBarrelImages();
-        }
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
 
-        public void UpdatePadBarrelImages()
+        var versionService = _serviceProvider.GetRequiredService<IVersionService>();
+        MainWindow mainWindow = new(versionService);
+        mainWindow.Show();
+
+        UpdatePadBarrelImages();
+    }
+
+    public void UpdatePadBarrelImages()
+    {
+        var dicts = Resources.MergedDictionaries;
+        dicts.Clear();
+        dicts.Add(new ResourceDictionary
         {
-            var dicts = Resources.MergedDictionaries;
-            dicts.Clear();
-            dicts.Add(new ResourceDictionary
-            {
-                Source = new Uri("Dictionary1.xaml", UriKind.Relative)
-            });
-            var path = Settings.Default.ColoredBarrelPadMoves ? "ColoredBarrelPadImages.xaml" : "BaseBarrelPadImages.xaml";
-            dicts.Add(new ResourceDictionary
-            {
-                Source = new Uri(path, UriKind.Relative)
-            });
-        }
+            Source = new Uri("Dictionary1.xaml", UriKind.Relative)
+        });
+        var path = Settings.Default.ColoredBarrelPadMoves ? "ColoredBarrelPadImages.xaml" : "BaseBarrelPadImages.xaml";
+        dicts.Add(new ResourceDictionary
+        {
+            Source = new Uri(path, UriKind.Relative)
+        });
     }
 }
