@@ -27,6 +27,11 @@ namespace TrackOMatic
             Settings.Default.Save();
         }
 
+        private void EnemyAutofillToggle(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.EnemiesInAutofill = EnemiesInAutofillOption.IsChecked;
+            Settings.Default.Save();
+        }
         private void CompactModeToggle(object sender, RoutedEventArgs e)
         {
             Settings.Default.CompactMode = CompactOption.IsChecked;
