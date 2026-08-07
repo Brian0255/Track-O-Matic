@@ -874,6 +874,19 @@ namespace TrackOMatic
         public static readonly HintNameEntry GALLEON_CRANKY_SHARED = new("Galleon Cranky Shared");
         public static readonly HintNameEntry GALLEON_FUNKY_SHARED = new("Galleon Funky Shared");
         public static readonly HintNameEntry CAVES_CRANKY_SHARED = new("Caves Cranky Shared");
+        public static readonly HintNameEntry SEASON5_JAPES_CRATE_UNDERGROUND_NEAR_VINES = new("Japes Crate (Underground: Near Vines)", "Japes Crate (Underground)");
+        public static readonly HintNameEntry SEASON5_JAPES_CRATE_MOUNTAIN_NEAR_ENTRANCE = new("Japes Crate (Mountain: Near Entrance (Ground))", "Japes Crate (In Mountain)");
+        public static readonly HintNameEntry SEASON5_AZTEC_CRATE_QUICKSAND_BRIDGE_ROOM = new("Aztec Crate (Quicksand Bridge Room)", "Aztec Crate: Quicksand Bridge");
+        public static readonly HintNameEntry SEASON5_AZTEC_CRATE_TINY_5DT_RIGHT_SIDE = new("Aztec Crate (Tiny 5DT: Right side)", "Aztec Crate (Tiny 5DT)");
+        public static readonly HintNameEntry SEASON5_FACTORY_CRATE_CAR_RACE_LOBBY = new("Factory Crate (Car Race Lobby)", "Factory Crate (Car Race)");
+        public static readonly HintNameEntry SEASON5_GALLEON_CRATE_ENTRANCE_TUNNEL = new("Galleon Crate (Entrance tunnel crossing)", "Galleon Crate (Entrance)");
+        public static readonly HintNameEntry SEASON5_GALLEON_CRATE_ENGUARDE_BOX = new("Galleon Crate (Under lighthouse Enguarde box)", "Galleon Crate (Enguarde box)");
+        public static readonly HintNameEntry SEASON5_FOREST_CRATE_CLOCKTOWER_STUMPS = new("Forest Crate (Clocktower Stumps)", "Forest Crate (Clocktower)");
+        public static readonly HintNameEntry SEASON5_FOREST_CRATE_GIANT_MUSHROOM_TOP = new("Forest Crate (Giant Mushroom: Top Floor)", "Forest Crate (Giant Mush)");
+        public static readonly HintNameEntry SEASON5_CAVES_CRATE_NEAR_ICE_WALL_BOULDER = new("Caves Crate (Near ice wall to boulder)", "Caves Crate (Near ice wall)");
+        public static readonly HintNameEntry SEASON5_CASTLE_CRATE_LIBRARY_CROSSROADS = new("Castle Crate (Library: Crossroads)", "Castle Crate (Library)");
+        public static readonly HintNameEntry SEASON5_CASTLE_CRATE_MUSEUM_PILLAR = new("Castle Crate (Museum: Atop the Pillar)", "Castle Crate (Museum)");
+        public static readonly HintNameEntry SEASON5_HELM_CRATE_PAST_KROOL = new("Helm Crate (Just past K. Rool door)", "Helm Crate (Past K.Rool door)");
 
         public static readonly IReadOnlyList<HintNameEntry> All = typeof(HintLocation)
         .GetFields(BindingFlags.Public | BindingFlags.Static)
