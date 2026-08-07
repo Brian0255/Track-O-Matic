@@ -68,7 +68,7 @@
                 <MenuItem Name="HelmDoors" Header="Helm Doors" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmDoors}" Click="HelmDoors_Click"/>
                 <MenuItem Name="CompactOption" Header="Compact Mode" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CompactMode}" Click="CompactModeToggle"/>
                 <MenuItem Name="SortNewHintsOption" Header="Sort New Path Hints By Length" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=AutoSortPathHints}" Click="AutoSortToggle"/>
-                <MenuItem Name="EnemiesInAutofillOption" Header="Include Enemies in Autofill" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EnemiesInAutofill}" Click="EnemyAutofillToggle"/>
+                <MenuItem Name="EnemiesInAutofillOption" Header="Include Enemies in Hint Searches" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EnemiesInAutofill}" Click="EnemyAutofillToggle"/>
             </MenuItem>
             <MenuItem Header="Broadcast View" Focusable="False">
                 <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
@@ -78,7 +78,7 @@
                     <MenuItem Name="BroadcastSongDisplay" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastSongDisplay}" Click="BroadcastSongDisplayToggle"/>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Version 2.1.8" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 2.2.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
