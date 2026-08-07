@@ -28,19 +28,19 @@ namespace TrackOMatic
         };
         public static List<string> MISC_DIRECT_HINT_TYPES = new()
         {
-            "Battle Arena","Chunky","Colored Bananas","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny"
+            "Battle Arena","Chunky","Colored Bananas","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny","Shops"
         };
-        public static readonly Dictionary<string, RegionName> SHORTENED_REGION_NAME_TO_REGION = new()
+        public static readonly Dictionary<HintGroup, RegionName> REGION_HINT_GROUP_TO_REGION = new()
         {
-            {"isles", RegionName.DK_ISLES },
-            {"japes", RegionName.JUNGLE_JAPES },
-            {"aztec", RegionName.ANGRY_AZTEC },
-            {"factory", RegionName.FRANTIC_FACTORY },
-            {"galleon", RegionName.GLOOMY_GALLEON },
-            {"forest", RegionName.FUNGI_FOREST },
-            {"caves", RegionName.CRYSTAL_CAVES},
-            {"castle", RegionName.CREEPY_CASTLE },
-            {"hideout", RegionName.HIDEOUT_HELM },
+            {HintGroup.REGION_ISLES, RegionName.DK_ISLES },
+            {HintGroup.REGION_JAPES, RegionName.JUNGLE_JAPES },
+            {HintGroup.REGION_AZTEC, RegionName.ANGRY_AZTEC },
+            {HintGroup.REGION_FACTORY, RegionName.FRANTIC_FACTORY },
+            {HintGroup.REGION_GALLEON, RegionName.GLOOMY_GALLEON },
+            {HintGroup.REGION_FOREST, RegionName.FUNGI_FOREST },
+            {HintGroup.REGION_CAVES, RegionName.CRYSTAL_CAVES},
+            {HintGroup.REGION_CASTLE, RegionName.CREEPY_CASTLE },
+            {HintGroup.REGION_HELM, RegionName.HIDEOUT_HELM },
         };
 
         public static Dictionary<string, Dictionary<string, string>> UserShortcuts { get; private set; }
@@ -113,21 +113,14 @@ namespace TrackOMatic
 
         public static void InitDirectItemHintList()
         {
-            foreach(var hintRegion in SortedRegions)
+            foreach(var hintRegion in HintRegion.All)
             {
-                var words = hintRegion.Split(' ');
-                var firstWord = words[0].ToLower();
-                if (firstWord == "troff") continue;
-                //ignore something like "Aztec Colored Bananas" because that is only foolish hint relevant
-                if (words.Length > 1 && words[1].ToLower() == "colored") continue;
-                RegionName region = RegionName.DK_ISLES;
-                var shortenedName = hintRegion;
-                if (SHORTENED_REGION_NAME_TO_REGION.ContainsKey(firstWord))
+                var hintRegionName = hintRegion.ShortName;
+                if(hintRegion.HintGroup != HintGroup.NONE && REGION_HINT_GROUP_TO_REGION.ContainsKey(hintRegion.HintGroup))
                 {
-                    region = SHORTENED_REGION_NAME_TO_REGION[firstWord];
-                    shortenedName = hintRegion.Substring(firstWord.Length).TrimStart();
-                };
-                REGIONS_WITHOUT_LEVEL_NAME[region].Add(shortenedName);
+                    var level = REGION_HINT_GROUP_TO_REGION[hintRegion.HintGroup];
+                    REGIONS_WITHOUT_LEVEL_NAME[level].Add(hintRegionName);
+                }
             }
             foreach (var key in REGIONS_WITHOUT_LEVEL_NAME.Keys.ToList())
             {
