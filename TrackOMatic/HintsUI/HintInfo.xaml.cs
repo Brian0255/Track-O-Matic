@@ -131,7 +131,7 @@ namespace TrackOMatic
                     var toAdd = entry.Value;
                     if (JSONKey == "Kong Hint Shorthand") toAdd = textInfo.ToTitleCase(toAdd.ToLower());
                     var shortcut = entry.Key;
-                    if (shortcut.ToLower().Contains(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
+                    if (shortcut.ToLower().StartsWith(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
                     {
                         matches.Add(toAdd);
                     }
