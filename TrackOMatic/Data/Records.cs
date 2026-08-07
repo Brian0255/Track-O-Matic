@@ -14,6 +14,23 @@ namespace TrackOMatic
         bool PromptForFoundItem = false, 
         Visibility PotionCountVisibility = Visibility.Collapsed, 
         Visibility HintSorterVisibility = Visibility.Collapsed);
-    public record HintShortcutInfo(string JSONShortcutsKey, List<string> DefaultSortedList);
+    public record HintSuggestionConfig(List<string> JSONShortcutKeys, IReadOnlyList<HintNameEntry> DefaultSuggestions);
+    public record HintNameEntry
+    {
+        public string FullName { get; init; }
+        public string ShortName { get; init; }
+        public HintGroup HintGroup { get; init; }
+        public HintNameEntry(string fullName, string shortName = "", HintGroup hintGroup = HintGroup.NONE)
+        {
+            FullName = fullName;
+            ShortName = string.IsNullOrEmpty(shortName) ? fullName : shortName;
+            HintGroup = hintGroup;
+            //should be replaced but this works ok for now
+            if (FullName.Contains("Enemy"))
+            {
+                HintGroup = HintGroup.ENEMY;
+            }
+        }
+    }
     public record BLockerInfo(int item, int cost);
 }

@@ -14,15 +14,6 @@ namespace TrackOMatic
 {
     public static class HintData
     {
-        public static Dictionary<HintRegion, string> HINT_REGION_TO_STRING = new()
-        {
-            {HintRegion.JAPES_TO_FOREST_LOBBIES, "Japes-Forest Lobbies" },
-            {HintRegion.CAVES_TO_HELM_LOBBIES, "Caves-Helm Lobbies"},
-            {HintRegion.AZTEC_FIVE_DOOR_TEMPLE, "Aztec 5-Door Temple" },
-            {HintRegion.FACTORY_RESEARCH_DEVELOPMENT_AREA, "Factory R&D Area" },
-            {HintRegion.GALLEON_FIVE_DOOR_SHIP, "Galleon 5-Door Ship"},
-            {HintRegion.TROFF_N_SCOFF, "Troff N' Scoff" }
-        };
         public static Dictionary<RegionName, List<string>> REGIONS_WITHOUT_LEVEL_NAME = new()
         {
             {RegionName.DK_ISLES, new() },
@@ -37,19 +28,19 @@ namespace TrackOMatic
         };
         public static List<string> MISC_DIRECT_HINT_TYPES = new()
         {
-            "Chunky","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny"
+            "Battle Arena","Chunky","Colored Bananas","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny","Shops"
         };
-        public static readonly Dictionary<string, RegionName> SHORTENED_REGION_NAME_TO_REGION = new()
+        public static readonly Dictionary<HintGroup, RegionName> REGION_HINT_GROUP_TO_REGION = new()
         {
-            {"isles", RegionName.DK_ISLES },
-            {"japes", RegionName.JUNGLE_JAPES },
-            {"aztec", RegionName.ANGRY_AZTEC },
-            {"factory", RegionName.FRANTIC_FACTORY },
-            {"galleon", RegionName.GLOOMY_GALLEON },
-            {"forest", RegionName.FUNGI_FOREST },
-            {"caves", RegionName.CRYSTAL_CAVES},
-            {"castle", RegionName.CREEPY_CASTLE },
-            {"hideout", RegionName.HIDEOUT_HELM },
+            {HintGroup.REGION_ISLES, RegionName.DK_ISLES },
+            {HintGroup.REGION_JAPES, RegionName.JUNGLE_JAPES },
+            {HintGroup.REGION_AZTEC, RegionName.ANGRY_AZTEC },
+            {HintGroup.REGION_FACTORY, RegionName.FRANTIC_FACTORY },
+            {HintGroup.REGION_GALLEON, RegionName.GLOOMY_GALLEON },
+            {HintGroup.REGION_FOREST, RegionName.FUNGI_FOREST },
+            {HintGroup.REGION_CAVES, RegionName.CRYSTAL_CAVES},
+            {HintGroup.REGION_CASTLE, RegionName.CREEPY_CASTLE },
+            {HintGroup.REGION_HELM, RegionName.HIDEOUT_HELM },
         };
 
         public static Dictionary<string, Dictionary<string, string>> UserShortcuts { get; private set; }
@@ -75,95 +66,61 @@ namespace TrackOMatic
             UserShortcuts = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
             foreach (var entry in UserShortcuts["Hint Regions"].ToList())
             {
-                if (Enum.TryParse(entry.Value, out HintRegion region))
+                if (HintRegion.ByFieldName.TryGetValue(entry.Value, out var region))
                 {
-                    var hintRegion = HINT_REGION_TO_STRING[region];
-                    UserShortcuts["Hint Regions"][entry.Key] = hintRegion;
+                    UserShortcuts["Hint Regions"][entry.Key] = region.ShortName;
+                }
+            }
+            foreach (var entry in UserShortcuts["Item Locations"].ToList())
+            {
+                if (HintLocation.ByFieldName.TryGetValue(entry.Value, out var location))
+                {
+                    UserShortcuts["Item Locations"][entry.Key] = location.ShortName;
+                }
+            }
+            foreach (var entry in UserShortcuts["Moves"].ToList())
+            {
+                if (HintMove.ByFieldName.TryGetValue(entry.Value, out var move))
+                {
+                    UserShortcuts["Moves"][entry.Key] = move.ShortName;
                 }
             }
         }
 
         private static void InitSortedRegions()
         {
-            SortedRegions = new();
-            var regions = (HintRegion[])Enum.GetValues(typeof(HintRegion));
-            foreach (var hintRegion in regions)
-            {
-                var hintRegionString = hintRegion.ToString();
-                if (HINT_REGION_TO_STRING.ContainsKey(hintRegion))
-                {
-                    SortedRegions.Add(HINT_REGION_TO_STRING[hintRegion]);
-                    continue;
-                }
-                var textinfo = new CultureInfo("en-US", false).TextInfo;
-                hintRegionString = hintRegionString.Replace("_AND_", "_&_");
-                hintRegionString = hintRegionString.Replace("_", " ");
-                hintRegionString = textinfo.ToTitleCase(hintRegionString.ToLower());
-                HINT_REGION_TO_STRING[hintRegion] = hintRegionString;
-                SortedRegions.Add(hintRegionString);
-            }
-            SortedRegions.Sort();
+            SortedRegions = HintRegion.All
+                .Select(region => region.ShortName)
+                .OrderBy(name => name)
+                .ToList();
         }
 
         private static void InitSortedMoves()
         {
-            SortedMoves = new();
-            var acceptedItemTypes = new List<ItemType>
-                    {
-                        ItemType.SHARED_MOVE,
-                        ItemType.TRAINING_MOVE,
-                        ItemType.GUN,
-                        ItemType.INSTRUMENT,
-                        ItemType.PHYSICAL_MOVE,
-                        ItemType.BARREL_MOVE,
-                        ItemType.PAD_MOVE
-                    };
-            foreach (var entry in ImportantCheckList.ITEMS)
-            {
-                var info = entry.Value;
-                if (acceptedItemTypes.Contains(info.ItemType))
-                {
-                    var moveString = info.ItemName.ToString();
-                    var textinfo = new CultureInfo("en-US", false).TextInfo;
-                    if (moveString.Contains("PROGRESSIVE_SLAM")) moveString = "PROGRESSIVE_SLAM";
-                    moveString = moveString.Replace("_", " ");
-                    moveString = textinfo.ToTitleCase(moveString.ToLower());
-                    if (!SortedMoves.Contains(moveString))
-                    {
-                        SortedMoves.Add(moveString);
-                    }
-                }
-            }
-            SortedMoves.Sort();
+            SortedChecks = HintMove.All
+                .Select(move => move.ShortName)
+                .OrderBy(move => move)
+                .ToList();
         }
 
         private static void InitSortedChecks()
         {
-            SortedChecks = new();
-            foreach (var entry in UserShortcuts["Item Locations"])
-            {
-                SortedChecks.Add(entry.Value);
-            }
-            SortedChecks.Sort();
+            SortedChecks = HintLocation.All
+                .Select(loc => loc.ShortName)
+                .OrderBy(name => name)
+                .ToList();
         }
 
         public static void InitDirectItemHintList()
         {
-            foreach(var hintRegion in SortedRegions)
+            foreach(var hintRegion in HintRegion.All)
             {
-                var words = hintRegion.Split(' ');
-                var firstWord = words[0].ToLower();
-                if (firstWord == "troff") continue;
-                //ignore something like "Aztec Colored Bananas" because that is only foolish hint relevant
-                if (words.Length > 1 && words[1].ToLower() == "colored") continue;
-                RegionName region = RegionName.DK_ISLES;
-                var shortenedName = hintRegion;
-                if (SHORTENED_REGION_NAME_TO_REGION.ContainsKey(firstWord))
+                var hintRegionName = hintRegion.ShortName;
+                if(hintRegion.HintGroup != HintGroup.NONE && REGION_HINT_GROUP_TO_REGION.ContainsKey(hintRegion.HintGroup))
                 {
-                    region = SHORTENED_REGION_NAME_TO_REGION[firstWord];
-                    shortenedName = hintRegion.Substring(firstWord.Length).TrimStart();
-                };
-                REGIONS_WITHOUT_LEVEL_NAME[region].Add(shortenedName);
+                    var level = REGION_HINT_GROUP_TO_REGION[hintRegion.HintGroup];
+                    REGIONS_WITHOUT_LEVEL_NAME[level].Add(hintRegionName);
+                }
             }
             foreach (var key in REGIONS_WITHOUT_LEVEL_NAME.Keys.ToList())
             {
@@ -172,10 +129,6 @@ namespace TrackOMatic
                 regionList = regionList.Concat(MISC_DIRECT_HINT_TYPES).ToList();
                 regionList.Sort();
                 REGIONS_WITHOUT_LEVEL_NAME[key] = regionList;
-            }
-            foreach(var entry in REGIONS_WITHOUT_LEVEL_NAME)
-            {
-            
             }
         }
 

@@ -23,13 +23,14 @@ namespace TrackOMatic
     {
         private bool UserInitialized = false;
         private MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-        private Dictionary<HintSuggestion, HintShortcutInfo> suggestionToShortcutInfo = new()
+        private Dictionary<HintSuggestion, HintSuggestionConfig> suggestionToShortcutInfo = new()
         {
-            {HintSuggestion.LOCATION, new HintShortcutInfo("Hint Regions", HintData.SortedRegions) },
-            {HintSuggestion.CHECK, new HintShortcutInfo("Item Locations", HintData.SortedChecks) },
-            {HintSuggestion.MOVE, new HintShortcutInfo("Moves", HintData.SortedMoves) },
+            {HintSuggestion.REGION, new HintSuggestionConfig(new(){"Hint Regions" }, HintRegion.All) },
+            {HintSuggestion.CHECK, new HintSuggestionConfig(new(){"Item Locations" }, HintLocation.All) },
+            {HintSuggestion.MOVE, new HintSuggestionConfig(new(){"Moves" }, HintMove.All) },
+            {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(new() {"Hint Regions","Moves"}, HintRegion.All.Concat(HintMove.All).ToList()) }
         };
-        private HintShortcutInfo hintShortcutInfo;
+        private HintSuggestionConfig hintSuggestionConfig;
 
         public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
         public HintTypeSettings HintTypeSettings
@@ -69,7 +70,7 @@ namespace TrackOMatic
             }
             if (suggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
             {
-                hintShortcutInfo = suggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
+                hintSuggestionConfig = suggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
             }
             RegionName = regionName;
         }
@@ -115,21 +116,25 @@ namespace TrackOMatic
         {
             var directHintExclusions = new List<string>() { "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss","Bought" };
             var exclude = directHintExclusions;
-            var JSONKey = "Kong Hint Shorthand";
-            if(hintShortcutInfo != null)
+            var JSONKeys = new List<string>() { "Kong Hint Shorthand" };
+            if(hintSuggestionConfig != null)
             {
-                JSONKey = hintShortcutInfo.JSONShortcutsKey;
+                JSONKeys = hintSuggestionConfig.JSONShortcutKeys;
                 exclude = new();
             }
             var textInfo = new CultureInfo("en-US", false).TextInfo;
-            foreach (var entry in HintData.UserShortcuts[JSONKey])
+            foreach (var JSONKey in JSONKeys)
             {
-                var toAdd = entry.Value;
-                if (JSONKey == "Kong Hint Shorthand") toAdd = textInfo.ToTitleCase(toAdd.ToLower());
-                var shortcut = entry.Key;
-                if (shortcut.ToLower().Contains(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
+                if (!HintData.UserShortcuts.ContainsKey(JSONKey)) continue;
+                foreach (var entry in HintData.UserShortcuts[JSONKey])
                 {
-                    matches.Add(toAdd);
+                    var toAdd = entry.Value;
+                    if (JSONKey == "Kong Hint Shorthand") toAdd = textInfo.ToTitleCase(toAdd.ToLower());
+                    var shortcut = entry.Key;
+                    if (shortcut.ToLower().StartsWith(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
+                    {
+                        matches.Add(toAdd);
+                    }
                 }
             }
         }
@@ -138,21 +143,28 @@ namespace TrackOMatic
         {
             var matches = new List<string>();
             List<string> sortBy = new();
-            if (HintType == HintType.DIRECT_ITEM_HINT)
-            {
-                sortBy = HintData.REGIONS_WITHOUT_LEVEL_NAME[RegionName];
-            }
-            if (hintShortcutInfo != null)
-            {
-                sortBy = hintShortcutInfo.DefaultSortedList;
-            }
+            IEnumerable<string> filteredItems = new List<string>();
+            CheckForShortcuts(matches);
+            var include_enemies = Properties.Settings.Default.EnemiesInAutofill;
             if (HintTypeSettings.HintSuggestion == HintSuggestion.NONE)
             {
                 SuggestionBox.ItemsSource = null;
                 return;
             }
-            CheckForShortcuts(matches);
-            var filteredItems = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
+            if (HintType == HintType.DIRECT_ITEM_HINT)
+            {
+                sortBy = HintData.REGIONS_WITHOUT_LEVEL_NAME[RegionName];
+                filteredItems = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
+            }
+            else if (hintSuggestionConfig != null)
+            {
+                var input = Location.Text.ToLower();
+                filteredItems = hintSuggestionConfig.DefaultSuggestions
+                    .Where(loc => (loc.FullName.ToLower().Contains(input)
+                               || loc.ShortName.ToLower().Contains(input))
+                               && (include_enemies || loc.HintGroup != HintGroup.ENEMY))
+                    .Select(loc => loc.ShortName);
+            }
             matches = matches.Concat(filteredItems).Distinct().ToList();
             matches.Sort();
             SuggestionBox.ItemsSource = matches;
@@ -267,6 +279,12 @@ namespace TrackOMatic
                 ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
             }
         }
+
+        private void PotionCount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SavedHint.PotionCountText = PotionCount.Text;
+        }
+
         private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)

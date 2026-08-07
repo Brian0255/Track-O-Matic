@@ -2,8 +2,9 @@
 {
     public enum HintSuggestion
     { 
-        LOCATION,
+        REGION,
         MOVE,
+        REGION_OR_MOVE,
         CHECK,
         DIRECT_ITEM_HINT,
         NONE
