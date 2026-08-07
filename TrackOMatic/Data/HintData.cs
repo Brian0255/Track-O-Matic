@@ -14,15 +14,6 @@ namespace TrackOMatic
 {
     public static class HintData
     {
-        public static Dictionary<HintRegion, string> HINT_REGION_TO_STRING = new()
-        {
-            {HintRegion.JAPES_TO_FOREST_LOBBIES, "Japes-Forest Lobbies" },
-            {HintRegion.CAVES_TO_HELM_LOBBIES, "Caves-Helm Lobbies"},
-            {HintRegion.AZTEC_FIVE_DOOR_TEMPLE, "Aztec 5-Door Temple" },
-            {HintRegion.FACTORY_RESEARCH_DEVELOPMENT_AREA, "Factory R&D Area" },
-            {HintRegion.GALLEON_FIVE_DOOR_SHIP, "Galleon 5-Door Ship"},
-            {HintRegion.TROFF_N_SCOFF, "Troff N' Scoff" }
-        };
         public static Dictionary<RegionName, List<string>> REGIONS_WITHOUT_LEVEL_NAME = new()
         {
             {RegionName.DK_ISLES, new() },
@@ -75,76 +66,49 @@ namespace TrackOMatic
             UserShortcuts = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
             foreach (var entry in UserShortcuts["Hint Regions"].ToList())
             {
-                if (Enum.TryParse(entry.Value, out HintRegion region))
+                if (HintRegion.ByFieldName.TryGetValue(entry.Value, out var region))
                 {
-                    var hintRegion = HINT_REGION_TO_STRING[region];
-                    UserShortcuts["Hint Regions"][entry.Key] = hintRegion;
+                    UserShortcuts["Hint Regions"][entry.Key] = region.ShortName;
+                }
+            }
+            foreach (var entry in UserShortcuts["Item Locations"].ToList())
+            {
+                if (HintLocation.ByFieldName.TryGetValue(entry.Value, out var location))
+                {
+                    UserShortcuts["Item Locations"][entry.Key] = location.ShortName;
+                }
+            }
+            foreach (var entry in UserShortcuts["Moves"].ToList())
+            {
+                if (HintMove.ByFieldName.TryGetValue(entry.Value, out var move))
+                {
+                    UserShortcuts["Moves"][entry.Key] = move.ShortName;
                 }
             }
         }
 
         private static void InitSortedRegions()
         {
-            SortedRegions = new();
-            var regions = (HintRegion[])Enum.GetValues(typeof(HintRegion));
-            foreach (var hintRegion in regions)
-            {
-                var hintRegionString = hintRegion.ToString();
-                if (HINT_REGION_TO_STRING.ContainsKey(hintRegion))
-                {
-                    SortedRegions.Add(HINT_REGION_TO_STRING[hintRegion]);
-                    continue;
-                }
-                var textinfo = new CultureInfo("en-US", false).TextInfo;
-                hintRegionString = hintRegionString.Replace("_AND_", "_&_");
-                hintRegionString = hintRegionString.Replace("_", " ");
-                hintRegionString = textinfo.ToTitleCase(hintRegionString.ToLower());
-                HINT_REGION_TO_STRING[hintRegion] = hintRegionString;
-                SortedRegions.Add(hintRegionString);
-            }
-            SortedRegions.Sort();
+            SortedRegions = HintRegion.All
+                .Select(region => region.ShortName)
+                .OrderBy(name => name)
+                .ToList();
         }
 
         private static void InitSortedMoves()
         {
-            SortedMoves = new();
-            var acceptedItemTypes = new List<ItemType>
-                    {
-                        ItemType.SHARED_MOVE,
-                        ItemType.TRAINING_MOVE,
-                        ItemType.GUN,
-                        ItemType.INSTRUMENT,
-                        ItemType.PHYSICAL_MOVE,
-                        ItemType.BARREL_MOVE,
-                        ItemType.PAD_MOVE
-                    };
-            foreach (var entry in ImportantCheckList.ITEMS)
-            {
-                var info = entry.Value;
-                if (acceptedItemTypes.Contains(info.ItemType))
-                {
-                    var moveString = info.ItemName.ToString();
-                    var textinfo = new CultureInfo("en-US", false).TextInfo;
-                    if (moveString.Contains("PROGRESSIVE_SLAM")) moveString = "PROGRESSIVE_SLAM";
-                    moveString = moveString.Replace("_", " ");
-                    moveString = textinfo.ToTitleCase(moveString.ToLower());
-                    if (!SortedMoves.Contains(moveString))
-                    {
-                        SortedMoves.Add(moveString);
-                    }
-                }
-            }
-            SortedMoves.Sort();
+            SortedChecks = HintMove.All
+                .Select(move => move.ShortName)
+                .OrderBy(move => move)
+                .ToList();
         }
 
         private static void InitSortedChecks()
         {
-            SortedChecks = new();
-            foreach (var entry in UserShortcuts["Item Locations"])
-            {
-                SortedChecks.Add(entry.Value);
-            }
-            SortedChecks.Sort();
+            SortedChecks = HintLocation.All
+                .Select(loc => loc.ShortName)
+                .OrderBy(name => name)
+                .ToList();
         }
 
         public static void InitDirectItemHintList()
@@ -172,10 +136,6 @@ namespace TrackOMatic
                 regionList = regionList.Concat(MISC_DIRECT_HINT_TYPES).ToList();
                 regionList.Sort();
                 REGIONS_WITHOUT_LEVEL_NAME[key] = regionList;
-            }
-            foreach(var entry in REGIONS_WITHOUT_LEVEL_NAME)
-            {
-            
             }
         }
 
