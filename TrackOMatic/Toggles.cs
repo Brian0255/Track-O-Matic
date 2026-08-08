@@ -148,6 +148,7 @@ namespace TrackOMatic
                 var region = entry.Value;
                 if (region.LevelOrderNumber != null) region.LevelOrderNumber.UpdateLabel();
                 region.UpdatePoints();
+                region.UpdateRequiredChecksTotal();
             }
             BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
             BroadcastOption.IsChecked = true;
