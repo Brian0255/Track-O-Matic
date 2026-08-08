@@ -81,7 +81,7 @@
                     <RadioButton Name="broadcastNumberDisplayWOTHCount" Checked="BroadcastNumberDisplayToggle">WOTH Count</RadioButton>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Version 2.2.1" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 2.2.2" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
