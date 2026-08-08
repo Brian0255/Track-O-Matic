@@ -72,10 +72,14 @@
             </MenuItem>
             <MenuItem Header="Broadcast View" Focusable="False">
                 <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
-                <MenuItem Name="BroadcastCustomize" Header="Options">
+                <MenuItem Name="BroadcastCustomize" Header="Main Options">
                     <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastHelmKRool}" Click="BroadcastHelmKRoolToggle"/>
                     <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastShopkeepers}" Click="BroadcastShopkeepersToggle"/>
                     <MenuItem Name="BroadcastSongDisplay" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastSongDisplay}" Click="BroadcastSongDisplayToggle"/>
+                </MenuItem>
+                <MenuItem Name="BroadcastNumberDisplayOption" Header="Number Display">
+                    <RadioButton Name="broadcastNumberDisplayPoints" Checked="BroadcastNumberDisplayToggle">Points</RadioButton>
+                    <RadioButton Name="broadcastNumberDisplayWOTHCount" Checked="BroadcastNumberDisplayToggle">WOTH Count</RadioButton>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Version 2.2.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>

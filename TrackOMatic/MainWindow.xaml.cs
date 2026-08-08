@@ -116,6 +116,8 @@ namespace TrackOMatic
             hintDisplayOff.IsChecked = (Settings.Default.HintDisplay == "Off");
             hintDisplayMP.IsChecked = (Settings.Default.HintDisplay == "Multipath Hints");
             hintDisplayDirect.IsChecked = (Settings.Default.HintDisplay == "Direct Item Hints");
+            broadcastNumberDisplayPoints.IsChecked = (Settings.Default.BroadcastNumberLabel == "Points");
+            broadcastNumberDisplayWOTHCount.IsChecked = (Settings.Default.BroadcastNumberLabel == "WOTH Count");
         }
 
         private ItemBackground FindMatchingBackgroundImage(Item item)
