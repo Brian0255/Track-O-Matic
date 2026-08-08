@@ -401,6 +401,7 @@ namespace TrackOMatic
 
         private void ReadSettings(dynamic JSONObject)
         {
+            /*
             var settingsDict = JSONObject["Settings"].ToObject<Dictionary<string, object>>();
             if (settingsDict["Shockwave Shuffle"] == null) return;
             var shockwaveShuffle = (string)settingsDict["Shockwave Shuffle"];
@@ -409,6 +410,7 @@ namespace TrackOMatic
                 StartingItems.Add(ItemName.FAIRY_CAMERA, RegionName.START);
                 StartingItems.Add(ItemName.SHOCKWAVE, RegionName.START);
             }
+            */
         }
 
         public SpoilerSettings ParseSpoiler(string fileName)

@@ -97,6 +97,9 @@ namespace TrackOMatic
 
         private List<Image> LevelNames;
         private List<TextBlock> PointLabels;
+        private List<TextBlock> WOTHLabels;
+        private bool pointsEnabled = false;
+        private bool WOTHEnabled = false;
         private void InitializeMap()
         {
             var keys = new List<ItemBackground>() { key_1, key_2, key_3, key_4, key_5, key_6, key_7, key_8 };
@@ -189,6 +192,18 @@ namespace TrackOMatic
                 HelmPoints,
                 IslesPoints,
             };
+            WOTHLabels = new()
+            {
+                Level1WOTH,
+                Level2WOTH,
+                Level3WOTH,
+                Level4WOTH,
+                Level5WOTH,
+                Level6WOTH,
+                Level7WOTH,
+                HelmWOTH,
+                IslesWOTH
+            };
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             KRoolKongs = new() { KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
             HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
@@ -263,17 +278,36 @@ namespace TrackOMatic
             IslesGrid.Visibility = Visibility.Collapsed;
         }
 
-        public void ProcessSpoilerSettings(SpoilerSettings settings)
+        private void SetVisibility(List<TextBlock> labels, bool visible)
         {
-            var width = settings.PointsEnabled ? 315 : 345;
-            foreach(var label in PointLabels)
+            var UIVisibility = visible ? Visibility.Visible : Visibility.Collapsed;
+            foreach (var label in labels)
             {
-                label.Visibility = (settings.PointsEnabled) ? Visibility.Visible : Visibility.Collapsed;
+                label.Visibility = UIVisibility;
             }
-            IslesGrid.Visibility = (settings.PointsEnabled) ? Visibility.Visible : Visibility.Collapsed;
-            MovesWidth.Width = new GridLength(width, GridUnitType.Pixel);
         }
 
+        public void AdjustLayout()
+        {
+            var bothEnabled = pointsEnabled && WOTHEnabled;
+            var displayOption = Settings.Default.BroadcastNumberLabel;
+
+            var pointsCanDisplay = pointsEnabled && (!bothEnabled || displayOption == "Points");
+            var WOTHCanDisplay = WOTHEnabled && (!bothEnabled || displayOption == "WOTH Count");
+
+            SetVisibility(PointLabels, pointsCanDisplay);
+            SetVisibility(WOTHLabels, WOTHCanDisplay);
+
+            IslesGrid.Visibility = (pointsCanDisplay || WOTHCanDisplay) ? Visibility.Visible : Visibility.Collapsed;
+            MovesWidth.Width = new GridLength(pointsEnabled ? 315 : 345, GridUnitType.Pixel);
+        }
+
+        public void ProcessSpoilerSettings(SpoilerSettings settings)
+        {
+            pointsEnabled = settings.PointsEnabled;
+            WOTHEnabled = settings.WOTHEnabled;
+            AdjustLayout();
+        }
         public void AdjustWindowSize()
         {
             var baseHeight = 394;
@@ -328,18 +362,26 @@ namespace TrackOMatic
             }
         }
 
-        public void UpdateRegionPoints(RegionName region, int points, string foregroundResource)
+        private void UpdateLabel(List<TextBlock> labels, RegionName region, int count, string foregroundResource)
         {
             var levelIndex = -1;
-            //if (region == RegionName.HIDEOUT_HELM) levelIndex = 7;
             if (region == RegionName.DK_ISLES) levelIndex = 8;
-            else if(LevelNumbers.ContainsKey(region))
+            else if (LevelNumbers.ContainsKey(region))
             {
                 levelIndex = LevelNumbers[region];
             }
             if (levelIndex == -1) return;
-            PointLabels[levelIndex].Text = points.ToString();
-            PointLabels[levelIndex].SetResourceReference(TextBlock.ForegroundProperty, foregroundResource);
+            labels[levelIndex].Text = count.ToString();
+            labels[levelIndex].SetResourceReference(TextBlock.ForegroundProperty, foregroundResource);
+        }
+
+        public void UpdateRegionPoints(RegionName region, int points, string foregroundResource)
+        {
+            UpdateLabel(PointLabels, region, points, foregroundResource);
+        }
+        public void UpdateWOTHCount(RegionName region, int WOTHCount)
+        {
+            UpdateLabel(WOTHLabels, region, WOTHCount, "RequiredChecksColor");
         }
 
         public void UpdateLevelNumber(RegionName region, int newNumber)

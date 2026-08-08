@@ -98,5 +98,8 @@
     <Setting Name="EnemiesInAutofill" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="BroadcastNumberLabel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">WOTH Count</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

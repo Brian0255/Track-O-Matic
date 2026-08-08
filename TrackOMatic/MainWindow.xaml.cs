@@ -116,6 +116,8 @@ namespace TrackOMatic
             hintDisplayOff.IsChecked = (Settings.Default.HintDisplay == "Off");
             hintDisplayMP.IsChecked = (Settings.Default.HintDisplay == "Multipath Hints");
             hintDisplayDirect.IsChecked = (Settings.Default.HintDisplay == "Direct Item Hints");
+            broadcastNumberDisplayPoints.IsChecked = (Settings.Default.BroadcastNumberLabel == "Points");
+            broadcastNumberDisplayWOTHCount.IsChecked = (Settings.Default.BroadcastNumberLabel == "WOTH Count");
         }
 
         private ItemBackground FindMatchingBackgroundImage(Item item)
@@ -655,7 +657,7 @@ namespace TrackOMatic
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
-            AutoUpdater.InstalledVersion = new Version("2.2.0");
+            AutoUpdater.InstalledVersion = new Version("2.2.1");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0) return;
