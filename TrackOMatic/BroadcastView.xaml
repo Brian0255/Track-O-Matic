@@ -205,6 +205,7 @@
                     <Image Name="Level1Number" Margin="-18,7,9,9" Grid.Column="1" Source="Images/dk64/1.png" HorizontalAlignment="Center"/>
                     <Image Panel.ZIndex="0" Name="Level1Image"  Grid.Column="2" Source="Images/dk64/unknown.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level1Points" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level1WOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="1" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -217,6 +218,7 @@
                     <Image Name="Level2Number" Margin="-18,7,9,9" Grid.Column="1" Source="Images/dk64/2.png" HorizontalAlignment="Center"/>
                     <Image Panel.ZIndex="0" Name="Level2Image"  Grid.Column="2" Source="Images/dk64/unknown.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level2Points" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level2WOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="2" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -229,6 +231,7 @@
                     <Image Name="Level3Number" Margin="-18,7,9,9" Grid.Column="1" Source="Images/dk64/3.png" HorizontalAlignment="Center"/>
                     <Image Panel.ZIndex="0" Name="Level3Image"  Grid.Column="2" Source="Images/dk64/unknown.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level3Points" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level3WOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -241,6 +244,7 @@
                     <Image Name="Level4Number" Margin="-18,7,9,9" Grid.Column="1" Source="Images/dk64/4.png" HorizontalAlignment="Center"/>
                     <Image Panel.ZIndex="0" Name="Level4Image"  Grid.Column="2" Source="Images/dk64/unknown.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level4Points" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level4WOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="4" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -253,6 +257,7 @@
                     <Image Name="Level5Number" Margin="-18,7,9,9" Grid.Column="1" Source="Images/dk64/5.png" HorizontalAlignment="Center"/>
                     <Image Panel.ZIndex="0" Name="Level5Image"  Grid.Column="2" Source="Images/dk64/unknown.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level5Points" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level5WOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="5" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -265,6 +270,7 @@
                     <Image Name="Level6Number" Margin="-18,7,9,9" Grid.Column="1" Source="Images/dk64/6.png" HorizontalAlignment="Center"/>
                     <Image Panel.ZIndex="0" Name="Level6Image"  Grid.Column="2" Source="Images/dk64/unknown.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level6Points" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level6WOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="6" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -277,6 +283,7 @@
                     <Image Name="Level7Number" Margin="-18,7,9,9" Grid.Column="1" Source="Images/dk64/7.png" HorizontalAlignment="Center"/>
                     <Image Panel.ZIndex="0" Name="Level7Image"  Grid.Column="2" Source="Images/dk64/unknown.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level7Points" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="Level7WOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="7" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -289,6 +296,7 @@
                     <Image Name="HelmNumber" Margin="-18,7,9,9" Grid.Column="1" Source="Images/dk64/8.png" HorizontalAlignment="Center"/>
                     <Image Panel.ZIndex="0" Name="HelmImage"  Grid.Column="2" Source="Images/dk64/helm.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="HelmPoints" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="HelmWOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="8" Margin="0,0,0,0" Name="IslesGrid" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
@@ -297,8 +305,9 @@
                         <ColumnDefinition Width="60"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Panel.ZIndex="0" Name="IsLESImage"  Grid.Column="2" Source="Images/dk64/ISLES.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
+                    <Image Panel.ZIndex="0" Name="IslesImage"  Grid.Column="2" Source="Images/dk64/ISLES.png" HorizontalAlignment="Left" Margin="-14,8,0,9"/>
                     <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="IslesPoints" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Panel.ZIndex="1" Margin="0,0,6,2" Grid.Column="3" x:Name="IslesWOTH" FontSize="16" Foreground="White" FontFamily="Helvetica" FontWeight="Medium" Text="" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
             </Grid>
         </Grid>
