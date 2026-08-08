@@ -111,6 +111,8 @@ namespace TrackOMatic
             {
                 label.Text = toDisplay.ToString();
             }
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.BroadcastView?.UpdateWOTHCount(RegionName, toDisplay);
         }
 
         public void Reset()
@@ -175,10 +177,7 @@ namespace TrackOMatic
             var resource = (CurrentPoints >= TotalPoints && SpoilerLoaded) ? "RegionComplete" : "RegionInProgress";
             pointsLabel.SetResourceReference(TextBlock.ForegroundProperty, resource);
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            if (mainWindow.BroadcastView != null)
-            {
-                mainWindow.BroadcastView.UpdateRegionPoints(RegionName, RemainingPoints, resource);
-            }
+            mainWindow.BroadcastView?.UpdateRegionPoints(RegionName, RemainingPoints, resource);
         }
 
         public void SetShuffledRegion(RegionName newRegionName)

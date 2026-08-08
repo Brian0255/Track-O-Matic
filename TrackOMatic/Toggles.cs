@@ -98,6 +98,14 @@ namespace TrackOMatic
             Settings.Default.Save();
         }
 
+        private void BroadcastNumberDisplayToggle(object sender, RoutedEventArgs e)
+        {
+            var button = (sender as RadioButton);
+            Settings.Default.BroadcastNumberLabel = button.Content.ToString();
+            Settings.Default.Save();
+            BroadcastView?.AdjustLayout();
+        }
+
         private void AutotrackToggle(object sender, RoutedEventArgs e)
         {
             Settings.Default.Autotracking = AutotrackOption.IsChecked;
