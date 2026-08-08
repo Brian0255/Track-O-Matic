@@ -138,6 +138,7 @@ namespace TrackOMatic
                 }
 
                 region.UpdatePoints();
+                region.UpdateRequiredChecksTotal();
             }
             BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
             BroadcastOption.IsChecked = true;
