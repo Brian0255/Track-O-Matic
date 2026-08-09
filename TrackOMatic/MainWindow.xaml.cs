@@ -452,7 +452,6 @@ namespace TrackOMatic
             if (!SpoilerSettings.Empty())
             {
                 Autotracker.SetStartingItems(SpoilerParser.StartingItems);
-                Autotracker.SetSpoilerLoaded(fileName);
             }
             else
             {
@@ -671,6 +670,7 @@ namespace TrackOMatic
             Settings.Default.DesiredHeight = Height;
             Settings.Default.Save();
             DataSaver.Save();
+            Autotracker.Shutdown();
             if(BroadcastView != null)
             {
                 BroadcastView.Close();
