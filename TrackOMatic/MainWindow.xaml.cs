@@ -470,7 +470,6 @@ namespace TrackOMatic
             if (!SpoilerSettings.Empty())
             {
                 Autotracker.SetStartingItems(SpoilerParser.StartingItems);
-                Autotracker.SetSpoilerLoaded(fileName);
             }
             else
             {
@@ -701,7 +700,7 @@ namespace TrackOMatic
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
-            AutoUpdater.InstalledVersion = new Version("2.2.2");
+            AutoUpdater.InstalledVersion = new Version("2.2.3");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0)
@@ -719,6 +718,7 @@ namespace TrackOMatic
             Settings.Default.DesiredHeight = Height;
             Settings.Default.Save();
             DataSaver.Save();
+            Autotracker.Shutdown();
             if (BroadcastView != null)
             {
                 BroadcastView.Close();
