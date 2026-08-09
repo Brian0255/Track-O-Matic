@@ -17,7 +17,8 @@ namespace TrackOMatic
                 return null;
             }
         }
-        private static AttachedProcessInfo? AttachToProject64(Process target, GameVerificationInfo verificationInfo)
+
+        private static AttachedProcessInfo? AttachToProject64(Process target, IntPtr handle, GameVerificationInfo verificationInfo)
         {
             if (target.MainModule == null)
             {
@@ -34,17 +35,16 @@ namespace TrackOMatic
             }
             for (uint potentialOffset = lowerBound; potentialOffset < upperBound; potentialOffset += 1)
             {
-                if (Memory.ReadInt32(target, potentialOffset + verificationInfo.TargetAddress) == verificationInfo.TargetValue)
+                if (Memory.ReadInt32(handle, potentialOffset + verificationInfo.TargetAddress) == verificationInfo.TargetValue)
                 {
                     Console.WriteLine(potentialOffset + verificationInfo.TargetAddress);
-                    return new AttachedProcessInfo(target, potentialOffset);
+                    return new AttachedProcessInfo(target, handle, potentialOffset);
                 }
             }
             return null;
         }
 
-
-        private static AttachedProcessInfo? AttachToBizhawk(Process target, GameVerificationInfo verificationInfo)
+        private static AttachedProcessInfo? AttachToBizhawk(Process target, IntPtr handle, GameVerificationInfo verificationInfo)
         {
             Int64 addressDLL = 0;
             foreach (ProcessModule mo in target.Modules)
@@ -64,17 +64,16 @@ namespace TrackOMatic
             for (uint potentialOffset = 0x5A000; potentialOffset < 0x5658DF; potentialOffset += 16)
             {
                 var addressToCheck = (uint)(potentialOffset + verificationInfo.TargetAddress);
-                if (Memory.ReadInt16(target, addressToCheck) == verificationInfo.TargetValue)
+                if (Memory.ReadInt16(handle, addressToCheck) == verificationInfo.TargetValue)
                 {
-                    return new AttachedProcessInfo(target, (uint)(addressDLL + potentialOffset));
+                    return new AttachedProcessInfo(target, handle, (uint)(addressDLL + potentialOffset));
                 }
             }
 
             return null;
         }
 
-
-        private static AttachedProcessInfo? AttachToRMG(Process target, GameVerificationInfo gameVerificationInfo)
+        private static AttachedProcessInfo? AttachToRMG(Process target, IntPtr handle, GameVerificationInfo gameVerificationInfo)
         {
             ulong addressDLL = 0;
             foreach (ProcessModule mo in target.Modules)
@@ -94,12 +93,12 @@ namespace TrackOMatic
             for (uint potOff = 0x29C15D8; potOff < 0x2FC15D8; potOff += 16)
             {
                 ulong romAddrStart = addressDLL + potOff;
-                ulong readAddress = Memory.ReadInt64(target, romAddrStart);
+                ulong readAddress = Memory.ReadInt64(handle, romAddrStart);
                 // use this previously read address to find the game verification data
-                var testValue = Memory.ReadInt32(target, (readAddress + 0x80000000 + gameVerificationInfo.TargetAddress));
+                var testValue = Memory.ReadInt32(handle, (readAddress + 0x80000000 + gameVerificationInfo.TargetAddress));
                 if ((testValue & 0xffffffff) == gameVerificationInfo.TargetValue)
                 {
-                    return new AttachedProcessInfo(target, readAddress + 0x80000000);
+                    return new AttachedProcessInfo(target, handle, readAddress + 0x80000000);
                 }
             }
             return null;
@@ -118,28 +117,28 @@ namespace TrackOMatic
             return parent.ProcessName;
         }
 
-        private static AttachedProcessInfo? RunRetroarchScan(Process target, GameVerificationInfo gameVerificationInfo, ulong addressDLL, uint lowerBound, uint upperBound, uint step, bool isMupen)
+        private static AttachedProcessInfo? RunRetroarchScan(Process target, IntPtr handle, GameVerificationInfo gameVerificationInfo, ulong addressDLL, uint lowerBound, uint upperBound, uint step, bool isMupen)
         {
             for (uint potOff = lowerBound; potOff < upperBound; potOff += step)
             {
                 ulong romAddrStart = addressDLL + potOff;
-                ulong readAddress = Memory.ReadInt64(target, romAddrStart);
+                ulong readAddress = Memory.ReadInt64(handle, romAddrStart);
                 if (isMupen)
                 {
-                    readAddress = Memory.ReadInt64(target, (addressDLL + potOff + 4) & readAddress);
+                    readAddress = Memory.ReadInt64(handle, (addressDLL + potOff + 4) & readAddress);
                     readAddress += 0x80000000;
                 }
 
-                var testValue = Memory.ReadInt32(target, (readAddress + gameVerificationInfo.TargetAddress));
+                var testValue = Memory.ReadInt32(handle, (readAddress + gameVerificationInfo.TargetAddress));
                 if ((testValue & 0xFFFFFFFF) == gameVerificationInfo.TargetValue)
                 {
-                    return new AttachedProcessInfo(target, readAddress);
+                    return new AttachedProcessInfo(target, handle, readAddress);
                 }
             }
             return null;
         }
 
-        private static AttachedProcessInfo? AttachToRetroarch(Process target, GameVerificationInfo gameVerificationInfo)
+        private static AttachedProcessInfo? AttachToRetroarch(Process target, IntPtr handle, GameVerificationInfo gameVerificationInfo)
         {
             ulong addressDLL = 0;
             bool isMupen = false;
@@ -168,19 +167,20 @@ namespace TrackOMatic
 
             if (parentProcessName != null && parentProcessName == "parallel-launcher")
             {
-                processInfo = RunRetroarchScan(target, gameVerificationInfo, addressDLL, 0x1400000, 0x1800000, 16, isMupen);
+                processInfo = RunRetroarchScan(target, handle, gameVerificationInfo, addressDLL, 0x1400000, 0x1800000, 16, isMupen);
             }
             else
             {
                 //forcibly set isMupen to false even if it isn't just because retroarch is jank or something
-                processInfo = RunRetroarchScan(target, gameVerificationInfo, addressDLL, 0x000000, 0xFFFFFF, 4, false);
+                processInfo = RunRetroarchScan(target, handle, gameVerificationInfo, addressDLL, 0x000000, 0xFFFFFF, 4, false);
             }
 
             return processInfo;
         }
+
         public static AttachedProcessInfo? Attach(GameVerificationInfo verificationInfo)
         {
-            var emu_to_function_call = new Dictionary<string, Func<Process, GameVerificationInfo, AttachedProcessInfo?>>()
+            var emu_to_function_call = new Dictionary<string, Func<Process, IntPtr, GameVerificationInfo, AttachedProcessInfo?>>()
             {
                 {"project64", AttachToProject64 },
                 {"rmg", AttachToRMG },
@@ -189,10 +189,23 @@ namespace TrackOMatic
             foreach (var entry in emu_to_function_call)
             {
                 var process = FindProcess(entry.Key);
-                if (process != null)
+                if (process == null)
                 {
-                    return entry.Value(process, verificationInfo);
+                    continue;
                 }
+
+                IntPtr handle = Memory.OpenHandle(process);
+                if (handle == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                var result = entry.Value(process, handle, verificationInfo);
+                if (result == null)
+                {
+                    Memory.CloseHandleSafe(handle);
+                }
+                return result;
             }
             return null;
         }

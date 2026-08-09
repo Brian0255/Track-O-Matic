@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -27,7 +28,7 @@ namespace TrackOMatic
         public UpdateProgHintImage UpdateProgHintImage { get; set; }
         public Process? EmulatorProcess { get; private set; }
         public List<AutotrackedCheck> Checks;
-        public Dictionary<ItemName, bool> TrackedAlready;
+        public ConcurrentDictionary<ItemName, bool> TrackedAlready;
         public Dictionary<ItemName, RegionName> StartingItems { get; private set; }
         public GameVerificationInfo? GameVerificationInfo { get; private set; }
         public RegionName CurrentRegion { get; private set; }
@@ -39,16 +40,17 @@ namespace TrackOMatic
 
         private Dictionary<ItemName, RegionName> trackedItemLocations;
         private Timer timer;
+
         private bool attached = false;
         private ulong startAddress;
         private int timeout;
-        private bool is64Bit = false;
-        private bool spoilerLoaded = false;
+        private volatile bool spoilerLoaded = false;
         private bool autosave = false;
         private int previousMap;
-        private static bool attaching = false;
         private uint addressBase;
         private ItemType progHintItem;
+        private IntPtr processHandle;
+        private volatile bool resetRequested = false;
         public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint, UpdateProgHintImage updateProgHintImage)
         {
             CurrentRegion = RegionName.UNKNOWN;
@@ -60,7 +62,6 @@ namespace TrackOMatic
             timer = new Timer(1000);
             timer.AutoReset = false;
             timer.Elapsed += TimerHandler;
-            trackedItemLocations = new();
             ProcessNewItem = processItemCallback;
             UpdateCollectible = updateCollectibleCallback;
             SetRegionLighting = setRegionLightingCallback;
@@ -74,22 +75,25 @@ namespace TrackOMatic
             previousMap = -1;
             addressBase = 0x00000000;
         }
-        private Dictionary<ItemType, int> CollectibleItemAmounts { get; } = new()
-        {
-            {ItemType.GOLDEN_BANANA, 0 },
-            {ItemType.DONKEY_BLUEPRINT, 0 },
-            {ItemType.DIDDY_BLUEPRINT, 0 },
-            {ItemType.LANKY_BLUEPRINT, 0 },
-            {ItemType.TINY_BLUEPRINT, 0 },
-            {ItemType.CHUNKY_BLUEPRINT, 0 },
-            {ItemType.PEARL, 0 },
-            {ItemType.BANANA_MEDAL, 0 },
-            {ItemType.FAIRY, 0 },
-            {ItemType.RAINBOW_COIN, 0 },
-            {ItemType.BATTLE_CROWN, 0 },
-            {ItemType.COMPANY_COIN, 0 },
-            { ItemType.TOTAL_BLUEPRINTS, 0 }
-        };
+        private ConcurrentDictionary<ItemType, int> CollectibleItemAmounts { get; } =
+            new ConcurrentDictionary<ItemType, int>(
+                new Dictionary<ItemType, int>
+                {
+                    {ItemType.GOLDEN_BANANA, 0 },
+                    {ItemType.DONKEY_BLUEPRINT, 0 },
+                    {ItemType.DIDDY_BLUEPRINT, 0 },
+                    {ItemType.LANKY_BLUEPRINT, 0 },
+                    {ItemType.TINY_BLUEPRINT, 0 },
+                    {ItemType.CHUNKY_BLUEPRINT, 0 },
+                    {ItemType.PEARL, 0 },
+                    {ItemType.BANANA_MEDAL, 0 },
+                    {ItemType.FAIRY, 0 },
+                    {ItemType.RAINBOW_COIN, 0 },
+                    {ItemType.BATTLE_CROWN, 0 },
+                    {ItemType.COMPANY_COIN, 0 },
+                    { ItemType.TOTAL_BLUEPRINTS, 0 }
+                }
+            );
         private Dictionary<ItemType, ItemType> TURNED_BLUEPRINT_TO_COLLECTIBLE { get; } = new()
         {
             {ItemType.DONKEY_BLUEPRINT_TURNED, ItemType.DONKEY_BLUEPRINT },
@@ -100,22 +104,31 @@ namespace TrackOMatic
         };
         private void InitializeChecks(bool resetTrackedItems = true)
         {
-            Checks = new();
+            //create new list and then assign it while locking to avoid threading issues
+            var newChecks = new List<AutotrackedCheck>();
             foreach (var offsetInfo in OffsetInfo.OFFSETS)
             {
-                Checks.Add(new AutotrackedCheck(offsetInfo.ItemName, offsetInfo.Offset, offsetInfo.TotalBits, offsetInfo.Bitmask, offsetInfo.UsesCountStruct));
+                newChecks.Add(new AutotrackedCheck(offsetInfo.ItemName, offsetInfo.Offset, offsetInfo.TotalBits, offsetInfo.Bitmask, offsetInfo.UsesCountStruct));
                 if (resetTrackedItems)
                 {
                     TrackedAlready[offsetInfo.ItemName] = false;
                 }
             }
+            Checks = newChecks;
         }
 
         public void Reset()
         {
             spoilerLoaded = false;
-            attached = false;
+            StartingItems = new();
+            resetRequested = true;
+        }
+
+        public void ResetInternal()
+        {
+            Detach();
             InitializeChecks();
+            ExcludeStartingItems();
             Application.Current.Dispatcher.Invoke(() =>
             {
                 SetRegionLighting?.Invoke(CurrentRegion, false);
@@ -129,21 +142,9 @@ namespace TrackOMatic
             previousMap = -1;
         }
 
-        public void ResetChecks()
-        {
-            InitializeChecks();
-            ExcludeStartingItems();
-            CurrentRegion = RegionName.UNKNOWN;
-        }
-
         public void SetStartingItems(Dictionary<ItemName, RegionName> newItems)
         {
             StartingItems = newItems;
-            ExcludeStartingItems();
-        }
-
-        public void SetSpoilerLoaded(string fileName)
-        {
             spoilerLoaded = true;
         }
 
@@ -165,11 +166,18 @@ namespace TrackOMatic
             startAddress = attachedProcessInfo.StartAddress;
             EmulatorProcess = attachedProcessInfo.Process;
             GameVerificationInfo = verificationInfo;
+            processHandle = attachedProcessInfo.Handle;
         }
 
         private void ExcludeStartingItems()
         {
-            foreach (var entry in StartingItems)
+            //probably unnecessary, but let's just be extra safe here
+            var snapshot = StartingItems;
+            if (snapshot == null)
+            {
+                return;
+            }
+            foreach (var entry in snapshot.ToList())
             {
                 TrackedAlready[entry.Key] = true;
             }
@@ -402,12 +410,27 @@ namespace TrackOMatic
 
         private void TimerHandler(object? sender, ElapsedEventArgs e)
         {
-            Autotrack();
-            timer.Start();
+            try
+            {
+                Autotrack();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Autotracker exception: {ex}");
+            }
+            finally
+            {
+                try { timer.Start(); } catch { }
+            }
         }
 
         private void Autotrack()
         {
+            if (resetRequested)
+            {
+                resetRequested = false;
+                ResetInternal();
+            }
             if (!Properties.Settings.Default.Autotracking)
             {
                 return;
@@ -487,7 +510,7 @@ namespace TrackOMatic
         }
         private void ReadMemoryForChecks()
         {
-            foreach (var check in Checks)
+            foreach (var check in Checks.ToList())
             {
                 var checkInfo = ImportantCheckList.ITEMS[check.ItemName];
                 uint offset = 0x0000000;
@@ -570,11 +593,10 @@ namespace TrackOMatic
                 TrackedAlready[check.ItemName] = true;
                 return;
             }
-            if (TrackedAlready[check.ItemName])
+            if (TrackedAlready.TryGetValue(check.ItemName, out var alreadyTracked) && alreadyTracked)
             {
                 return;
             }
-
             bool success = false;
             bool newRegion = (CurrentRegion != previousRegion && previousRegion != RegionName.UNKNOWN);
             Application.Current.Dispatcher.Invoke(() =>
@@ -619,13 +641,13 @@ namespace TrackOMatic
             switch (numOfBits)
             {
                 case 8:
-                    toReturn = Memory.ReadInt8(EmulatorProcess, startAddress + Memory.Int8AddrFix(addr));
+                    toReturn = Memory.ReadInt8(processHandle, startAddress + Memory.Int8AddrFix(addr));
                     break;
                 case 16:
-                    toReturn = Memory.ReadInt16(EmulatorProcess, startAddress + Memory.Int16AddrFix(addr));
+                    toReturn = Memory.ReadInt16(processHandle, startAddress + Memory.Int16AddrFix(addr));
                     break;
                 case 32:
-                    toReturn = Memory.ReadInt32(EmulatorProcess, startAddress + addr);
+                    toReturn = Memory.ReadInt32(processHandle, startAddress + addr);
                     break;
                 default:
                     return 0;
@@ -646,8 +668,9 @@ namespace TrackOMatic
 
         private bool ProcessConnected()
         {
-            if (GameVerificationInfo == null)
+            if (EmulatorProcess == null || EmulatorProcess.HasExited || GameVerificationInfo == null)
             {
+                Detach();
                 return false;
             }
             if (ReadMemory(GameVerificationInfo.TargetAddress, GameVerificationInfo.TotalBits) == GameVerificationInfo.TargetValue)
@@ -658,9 +681,26 @@ namespace TrackOMatic
             timeout++;
             if (timeout > 10)
             {
-                attached = false;
+                Detach();
             }
             return false;
+        }
+
+        private void Detach()
+        {
+            if (processHandle != IntPtr.Zero)
+            {
+                Memory.CloseHandleSafe(processHandle);
+                processHandle = IntPtr.Zero;
+            }
+            attached = false;
+        }
+
+        public void Shutdown()
+        {
+            timer.Stop();
+            timer.Elapsed -= TimerHandler;
+            Detach();
         }
     }
 }

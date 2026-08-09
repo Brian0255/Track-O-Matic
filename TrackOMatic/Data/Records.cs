@@ -3,7 +3,7 @@ using System.Diagnostics;
 namespace TrackOMatic
 {
     public record GameVerificationInfo(uint TargetAddress, int TotalBits, uint TargetValue);
-    public record AttachedProcessInfo(Process Process, ulong StartAddress);
+    public record AttachedProcessInfo(Process Process, IntPtr Handle, ulong StartAddress);
     public record OffsetInfoEntry(ItemName ItemName, uint Offset, int TotalBits, int Bitmask = 0, bool UsesCountStruct = false);
     public record HintTypeSettings(
         bool PathItemsVisible,

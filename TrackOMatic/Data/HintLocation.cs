@@ -254,7 +254,7 @@ namespace TrackOMatic
         public static readonly HintNameEntry FACTORY_DONKEY_POWER_HUT = new("Factory Donkey Power Hut");
         public static readonly HintNameEntry FACTORY_CAGE_CHUNKY_KONG = new("Factory Cage: Chunky Kong");
         public static readonly HintNameEntry DK_ARCADE_ROUND_2 = new("DK Arcade Round 2");
-        public static readonly HintNameEntry FACTORY_DONKEY_DK_ARCADE_ROUND_1 = new("Factory Donkey DK Arcade Round 1", "Factory Donkey Arcade R1");
+        public static readonly HintNameEntry FACTORY_DONKEY_DK_ARCADE_ROUND_1 = new("Factory Donkey DK Arcade Round 1", "Factory Donkey Blast Course");
         public static readonly HintNameEntry FACTORY_FREE_CHUNKY_ITEM = new("Factory Free Chunky Item");
         public static readonly HintNameEntry FACTORY_TINY_MINI_BY_ARCADE = new("Factory Tiny Mini by Arcade");
         public static readonly HintNameEntry FACTORY_CHUNKY_DARK_ROOM = new("Factory Chunky Dark Room");
