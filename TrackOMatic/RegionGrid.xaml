@@ -4,5 +4,5 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrackOMatic"
-        mc:Ignorable="d" Rows="1" Columns="5" AllowDrop="True" Drop="Item_Drop" Background="Transparent">
+        mc:Ignorable="d" Columns="5" AllowDrop="True" Drop="Item_Drop" Background="Transparent">
 </UniformGrid>
