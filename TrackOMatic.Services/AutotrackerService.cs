@@ -72,7 +72,6 @@ public class AutotrackerService : IAutotrackerService
     /// </summary>
     private Dictionary<ItemName, bool> _trackedAlready { get; set; }
     private Dictionary<ItemName, RegionName> _startingItems { get; set; }
-    private Dictionary<ItemName, RegionName> _trackedItemLocations { get; set; }
     private bool _attached { get; set; }
     private ulong _startAddress { get; set; }
     private bool _is64Bit { get; set; }
@@ -137,7 +136,6 @@ public class AutotrackerService : IAutotrackerService
         _checks = [];
         _startingItems = [];
         _trackedAlready = [];
-        _trackedItemLocations = [];
         InitializeChecks();
 
         CurrentSongName = "";
@@ -149,6 +147,7 @@ public class AutotrackerService : IAutotrackerService
         _is64Bit = false;
         Timeout = 0;
         _autosave = false;
+        _progHintItem = ItemType.GOLDEN_BANANA;
     }
 
     /// <summary>
