@@ -50,47 +50,10 @@ namespace TrackOMatic
             InitializeVials();
         }
 
-        private void PerformTheJankiestResizing(double height)
+        protected override Size MeasureOverride(Size constraint)
         {
-            if (Region.ImagePointsGrid.RowDefinitions.Count > 3)
-            {
-                var mult = (height - 0.5) * 0.25;
-                var rows = Region.ImagePointsGrid.RowDefinitions;
-                if (height == 1) mult = 1;
-                rows[1].Height = new GridLength(.75 * mult, GridUnitType.Star);
-                rows[2].Height = new GridLength(.25 * mult, GridUnitType.Star);
-                rows[3].Height = new GridLength(.75 * mult, GridUnitType.Star);
-                rows[4].Height = new GridLength(1 * mult, GridUnitType.Star);
-            }
-            var newLevelOrderHeight = 0.9;
-            if (height > 1)
-            {
-                newLevelOrderHeight = 0.9 / (height * 1.22);
-            }
-            if (Region.LevelOrderNumber != null)
-            {
-                Region.LevelOrderNumber.TopRow.Height = new GridLength(newLevelOrderHeight, GridUnitType.Star);
-            }
-        }
-
-        private void AdjustSpacing()
-        {
-            int gridremainder = 0;
-            if (Children.Count % 5 != 0)
-                gridremainder = 1;
-
-            int gridnum = Math.Max((Children.Count / 5) + gridremainder, 1);
-
-            Rows = gridnum;
-
-            double height = (1 + ((Children.Count - 1) / 5)) / 2.0;
-            //if (Region.RegionName == RegionName.START) height = 1;
-            if (Children.Count <= 5) height = 1;
-            height = 1;
-            var outerOuterGrid = ((Parent as Grid).Parent as Grid);
-            int row = (int)Parent.GetValue(Grid.RowProperty);
-            outerOuterGrid.RowDefinitions[row].Height = new GridLength(height, GridUnitType.Star);
-            PerformTheJankiestResizing(height);
+            Rows = Math.Max(1, (InternalChildren.Count + Columns - 1) / Columns);
+            return base.MeasureOverride(constraint);
         }
 
         public void AddInitialVial(VialColor color)
@@ -107,8 +70,6 @@ namespace TrackOMatic
             Vials[color].Add(vialImage);
             VialItems.Add(vialImage);
             Children.Add(vialImage);
-            if (Region.RegionName == RegionName.UNHINTABLE_MOVES) return;
-            AdjustSpacing();
         }
 
         public void ResetVials()
@@ -216,7 +177,6 @@ namespace TrackOMatic
                 Region.RemoveCheck(check);
             }
             button.Region = Region;
-            if(Region.RegionName != RegionName.UNHINTABLE_MOVES) AdjustSpacing();
             Region.UpdateRequiredChecksTotal();
         }
 
