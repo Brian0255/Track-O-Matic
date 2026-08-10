@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:TrackOMatic"
         xmlns:regions="clr-namespace:TrackOMatic.Regions"
         xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
+        xmlns:converters="clr-namespace:TrackOMatic.Converters"
         mc:Ignorable="d"
         ResizeMode="CanResize"
         Closing="Window_Closing"
@@ -19,13 +20,20 @@
 
 
     <Window.Resources>
-        <Style TargetType="Image">
-            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-            <Setter Property="CaretBrush" Value="White"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Dictionary1.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="Image">
+                <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="CaretBrush" Value="White"/>
+            </Style>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+        </ResourceDictionary>
     </Window.Resources>
 
     <DockPanel>
@@ -241,36 +249,14 @@
                             </Viewbox>
                         </Grid>
                     </Grid>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BlueprintsTotal" ImageSource="Images/bw/total_bps.png" Text="0" Grid.Column="4">
-                        <local:CollectibleItem.Style>
-                            <Style TargetType="{x:Type local:CollectibleItem}">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ShowTotalBlueprintsSetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </local:CollectibleItem.Style>
-                    </local:CollectibleItem>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="CompanyCoinsTotal" ImageSource="Images/bw/company_coin.png" Text="0" Grid.Column="6">
-                        <local:CollectibleItem.Style>
-                            <Style TargetType="{x:Type local:CollectibleItem}">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ShowTotalCompanyCoinsSetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </local:CollectibleItem.Style>
-                    </local:CollectibleItem>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Pearls" ImageSource="Images/bw/pearl.png" Text="0" Grid.Column="8"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BattleCrowns" ImageSource="Images/bw/crown.png" Text="0" Grid.Column="10"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BananaMedals" ImageSource="Images/bw/bananamedal.png" Text="0" Grid.Column="12"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="RainbowCoins" ImageSource="Images/bw/rainbowcoin.png" Text="0" Grid.Column="14"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Fairies" ImageSource="Images/bw/fairy.png" Text="0" Grid.Column="16"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="GBs" ImageSource="Images/bw/GB.png" Text="0" Grid.Column="18"/>
+                    <local:TotalBlueprint x:Name="BlueprintsTotal" Grid.Column="4" Visibility="{Binding ShowTotalBlueprintsSetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
+                    <local:Countable x:Name="CompanyCoinsTotal" Grid.Column="6" ItemType="COMPANY_COIN" Visibility="{Binding ShowTotalCompanyCoinsSetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
+                    <local:Countable Grid.Column="8" ItemType="PEARL" />
+                    <local:Countable Grid.Column="10" ItemType="BATTLE_CROWN" />
+                    <local:Countable Grid.Column="12" ItemType="BANANA_MEDAL" />
+                    <local:Countable Grid.Column="14" ItemType="RAINBOW_COIN" />
+                    <local:Countable Grid.Column="16" ItemType="FAIRY" />
+                    <local:Countable Grid.Column="18" ItemType="GOLDEN_BANANA" />
                 </Grid>
                 <!-- Items -->
                 <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="0" >
@@ -338,11 +324,11 @@
                     <local:UiItem Grid.Row="4" Grid.Column="5" ItemName="GORILLA_GONE" />
 
                     <!--Blueprints-->
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="DonkeyBPs" ImageSource="Images/bw/dk_bp.png" Text="0" Grid.Row="0" Grid.Column="6"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="DiddyBPs" ImageSource="Images/bw/diddy_bp.png" Text="0" Grid.Row="1" Grid.Column="6"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="LankyBPs" ImageSource="Images/bw/lanky_bp.png" Text="0" Grid.Row="2" Grid.Column="6"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="TinyBPs" ImageSource="Images/bw/tiny_bp.png" Text="0" Grid.Row="3" Grid.Column="6"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="ChunkyBPs" ImageSource="Images/bw/chunky_bp.png" Text="0" Grid.Row="4" Grid.Column="6"/>
+                    <local:KongBlueprint Grid.Row="0" Grid.Column="6" CollectedType="DONKEY_BLUEPRINT" TurnedInType="DONKEY_BLUEPRINT_TURNED" />
+                    <local:KongBlueprint Grid.Row="1" Grid.Column="6" CollectedType="DIDDY_BLUEPRINT" TurnedInType="DIDDY_BLUEPRINT_TURNED" />
+                    <local:KongBlueprint Grid.Row="2" Grid.Column="6" CollectedType="LANKY_BLUEPRINT" TurnedInType="LANKY_BLUEPRINT_TURNED" />
+                    <local:KongBlueprint Grid.Row="3" Grid.Column="6" CollectedType="TINY_BLUEPRINT" TurnedInType="TINY_BLUEPRINT_TURNED" />
+                    <local:KongBlueprint Grid.Row="4" Grid.Column="6" CollectedType="CHUNKY_BLUEPRINT" TurnedInType="CHUNKY_BLUEPRINT_TURNED" />
 
                     <!-- Keys-->
                     <local:UiItem Grid.Row="0" Grid.Column="8" ItemName="KEY_1" />

@@ -112,25 +112,6 @@ namespace TrackOMatic
             }
         }
 
-        private void UpdateBroadcast()
-        {
-            //kinda janky way to update broadcast correctly on user input
-            var window = (MainWindow)Application.Current.MainWindow;
-            ItemType collectibleType = 0;
-            foreach (var entry in window.Collectibles)
-            {
-                if (entry.Value == this)
-                {
-                    collectibleType = entry.Key;
-                    break;
-                }
-            }
-            if (window.BroadcastView != null)
-            {
-                window.BroadcastView.UpdateCollectible(collectibleType, Text);
-            }
-        }
-
         public void SetAmount(int newAmount)
         {
             Text = newAmount;
@@ -154,7 +135,6 @@ namespace TrackOMatic
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Text++;
-                UpdateBroadcast();
             }
         }
 
@@ -168,7 +148,6 @@ namespace TrackOMatic
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 Text = Math.Max(Text - 1, 0);
-                UpdateBroadcast();
             }
         }
 

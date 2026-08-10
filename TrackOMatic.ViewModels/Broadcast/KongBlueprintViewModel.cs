@@ -166,7 +166,7 @@ public class KongBlueprintViewModel : INotifyPropertyChanged, IDisposable
 
     private void OnParsedSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e) => InitializeState();
 
-    private void UpdateImageResourceKey()
+    protected virtual void UpdateImageResourceKey()
     {
         string baseKey = _collectedType.ToResourceKey();
         if (Count <= 0)

@@ -118,11 +118,11 @@
                     <broadcast:Item Grid.Row="4" Grid.Column="5" ItemName="GORILLA_GONE" />
 
                     <!--Blueprints-->
-                    <local:CollectibleItem Margin="1" RowHeight=".9*" BGColor="Black" Interactible="False" x:Name="DonkeyBPs" ImageSource="Images/bw/dk_bp.png" Text="0" Grid.Row="0" Grid.Column="6" />
-                    <local:CollectibleItem Margin="1" RowHeight=".9*" BGColor="Black" Interactible="False" x:Name="DiddyBPs" ImageSource="Images/bw/diddy_bp.png" Text="0" Grid.Row="1" Grid.Column="6"/>
-                    <local:CollectibleItem Margin="1" RowHeight=".9*" BGColor="Black" Interactible="False" x:Name="LankyBPs" ImageSource="Images/bw/lanky_bp.png" Text="0" Grid.Row="2" Grid.Column="6"/>
-                    <local:CollectibleItem Margin="1" RowHeight=".9*" BGColor="Black" Interactible="False" x:Name="TinyBPs" ImageSource="Images/bw/tiny_bp.png" Text="0" Grid.Row="3" Grid.Column="6"/>
-                    <local:CollectibleItem Margin="1" RowHeight=".9*" BGColor="Black" Interactible="False" x:Name="ChunkyBPs" ImageSource="Images/bw/chunky_bp.png" Text="0" Grid.Row="4" Grid.Column="6"/>
+                    <broadcast:KongBlueprint Grid.Row="0" Grid.Column="6" CollectedType="DONKEY_BLUEPRINT" TurnedInType="DONKEY_BLUEPRINT_TURNED" />
+                    <broadcast:KongBlueprint Grid.Row="1" Grid.Column="6" CollectedType="DIDDY_BLUEPRINT" TurnedInType="DIDDY_BLUEPRINT_TURNED" />
+                    <broadcast:KongBlueprint Grid.Row="2" Grid.Column="6" CollectedType="LANKY_BLUEPRINT" TurnedInType="LANKY_BLUEPRINT_TURNED" />
+                    <broadcast:KongBlueprint Grid.Row="3" Grid.Column="6" CollectedType="TINY_BLUEPRINT" TurnedInType="TINY_BLUEPRINT_TURNED" />
+                    <broadcast:KongBlueprint Grid.Row="4" Grid.Column="6" CollectedType="CHUNKY_BLUEPRINT" TurnedInType="CHUNKY_BLUEPRINT_TURNED" />
                 </Grid>
                 <Grid Name="TrainingMovesGrid" Grid.Row="2" Margin="2">
                     <Grid.ColumnDefinitions>
@@ -231,12 +231,12 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <broadcast:Item Grid.Column="0" ItemName="BEAN" />
-            <local:CollectibleItem BGColor="Black" Interactible="False" x:Name="pearls" ImageSource="Images/bw/pearl.png" Text="0" Grid.Row="0" Grid.Column="1"/>
-            <local:CollectibleItem BGColor="Black" Interactible="False" x:Name="battle_crowns" ImageSource="Images/bw/crown.png" Text="0" Grid.Row="0" Grid.Column="2"/>
-            <local:CollectibleItem BGColor="Black" Interactible="False" x:Name="banana_medals" ImageSource="Images/bw/bananamedal.png" Text="0" Grid.Row="0" Grid.Column="3"/>
-            <local:CollectibleItem BGColor="Black" Interactible="False" x:Name="rainbow_coins" ImageSource="Images/bw/rainbowcoin.png" Text="0" Grid.Row="0" Grid.Column="4"/>
-            <local:CollectibleItem BGColor="Black" Interactible="False" x:Name="banana_fairies" ImageSource="Images/bw/fairy.png" Text="0" Grid.Row="0" Grid.Column="5"/>
-            <local:CollectibleItem BGColor="Black" Interactible="False" x:Name="golden_bananas" ImageSource="Images/bw/gb.png" Text="0" Grid.Row="0" Grid.Column="6"/>
+            <broadcast:Countable Grid.Column="1" ItemType="PEARL" />
+            <broadcast:Countable Grid.Column="2" ItemType="BATTLE_CROWN" />
+            <broadcast:Countable Grid.Column="3" ItemType="BANANA_MEDAL" />
+            <broadcast:Countable Grid.Column="4" ItemType="RAINBOW_COIN" />
+            <broadcast:Countable Grid.Column="5" ItemType="FAIRY" />
+            <broadcast:Countable Grid.Column="6" ItemType="GOLDEN_BANANA" />
         </Grid>
         <!-- Song Display -->
         <Grid Background="Transparent" Margin="3,1,3,5" Height="52" Visibility="{Binding BroadcastSongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">

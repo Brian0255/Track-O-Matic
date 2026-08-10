@@ -26,8 +26,6 @@ namespace TrackOMatic
         private List<ProgressiveItem> KRoolKongs;
         private List<ProgressiveItem> HelmKongs;
 
-        public Dictionary<ItemType, CollectibleItem> Collectibles { get; private set; }
-
         //need to keep count of which of these you currently have because their item display is different
         private Dictionary<ItemName, bool> SharedMoves = new()
         {
@@ -184,21 +182,6 @@ namespace TrackOMatic
 
             InitializeComponent();
 
-            Collectibles = new() {
-                { ItemType.DONKEY_BLUEPRINT, DonkeyBPs},
-                { ItemType.DIDDY_BLUEPRINT, DiddyBPs},
-                { ItemType.LANKY_BLUEPRINT, LankyBPs },
-                { ItemType.TINY_BLUEPRINT, TinyBPs },
-                { ItemType.CHUNKY_BLUEPRINT, ChunkyBPs },
-
-                {ItemType.PEARL, pearls },
-                {ItemType.BATTLE_CROWN, battle_crowns },
-                {ItemType.BANANA_MEDAL, banana_medals },
-                {ItemType.RAINBOW_COIN, rainbow_coins },
-                {ItemType.FAIRY, banana_fairies },
-                {ItemType.GOLDEN_BANANA, golden_bananas },
-            };
-
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             KRoolKongs = new() { KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
             HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
@@ -226,22 +209,8 @@ namespace TrackOMatic
             HelmKongs[index].image.Source = newSource;
         }
 
-        public void UpdateCollectible(ItemType itemType, int newAmount)
-        {
-            if (!Collectibles.ContainsKey(itemType))
-            {
-                return;
-            }
-
-            Collectibles[itemType].SetAmount(newAmount);
-        }
-
         public void Reset()
         {
-            foreach (var entry in Collectibles)
-            {
-                entry.Value.SetAmount(0);
-            }
             foreach (var key in SharedMoves.Keys.ToList())
             {
                 SharedMoves[key] = false;

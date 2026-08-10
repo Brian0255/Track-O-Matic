@@ -45,7 +45,8 @@ public class UiTotalBlueprintViewModel: INotifyPropertyChanged, IDisposable
     {
         if (!_userSettingsService.Autotracking)
         {
-            Count = int.Min(Count + 1, 40);
+            var count = _collectiblesService.GetCollectibleCount(ItemType.TOTAL_BLUEPRINTS);
+            _collectiblesService.SetCollectibleCount(ItemType.TOTAL_BLUEPRINTS, int.Min(count + 1, 40));
         }
     }
 
@@ -53,7 +54,8 @@ public class UiTotalBlueprintViewModel: INotifyPropertyChanged, IDisposable
     {
         if (!_userSettingsService.Autotracking)
         {
-            Count = int.Max(Count - 1, 0);
+            var count = _collectiblesService.GetCollectibleCount(ItemType.TOTAL_BLUEPRINTS);
+            _collectiblesService.SetCollectibleCount(ItemType.TOTAL_BLUEPRINTS, int.Max(count - 1, 0));
         }
     }
 

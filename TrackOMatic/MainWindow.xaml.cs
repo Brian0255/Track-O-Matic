@@ -31,7 +31,6 @@ namespace TrackOMatic
         public int TotalGBs { get; private set; }
         public BroadcastView? BroadcastView { get; private set; }
         public Dictionary<RegionName, Region> Regions { get; private set; } = null!;
-        public Dictionary<ItemType, CollectibleItem> Collectibles { get; private set; } = null!;
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
         public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
@@ -487,7 +486,6 @@ namespace TrackOMatic
                 }
             };
 
-            Autotracker.CollectibleUpdated += (sender, e) => Dispatcher.Invoke(() => UpdateCollectible(e.CollectibleType, e.NewTotal));
             Autotracker.SongChanged += (sender, e) => Dispatcher.Invoke(() => SetSong(e.SongGame, e.SongName));
             Autotracker.HintProgressUpdated += (sender, e) => Dispatcher.Invoke(() => UpdateUIAmountToNextHint(e.AmountToNextHint));
             Autotracker.ProgHintItemUpdated += (sender, e) => Dispatcher.Invoke(() => UpdateProgHintImage(e.ProgHintItem));
@@ -569,23 +567,6 @@ namespace TrackOMatic
             UpdateHintDisplayToggles();
             UpdateBroadcastNumberDisplayToggles();
             Regions = [];
-            Collectibles = new()
-            {
-                {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
-                {ItemType.DIDDY_BLUEPRINT, DiddyBPs },
-                {ItemType.LANKY_BLUEPRINT, LankyBPs },
-                {ItemType.TINY_BLUEPRINT, TinyBPs },
-                {ItemType.CHUNKY_BLUEPRINT, ChunkyBPs },
-
-                {ItemType.PEARL, Pearls },
-                {ItemType.BATTLE_CROWN, BattleCrowns },
-                {ItemType.BANANA_MEDAL, BananaMedals },
-                {ItemType.RAINBOW_COIN, RainbowCoins },
-                {ItemType.FAIRY, Fairies },
-                {ItemType.GOLDEN_BANANA, GBs },
-                {ItemType.COMPANY_COIN, CompanyCoinsTotal },
-                {ItemType.TOTAL_BLUEPRINTS, BlueprintsTotal }
-            };
             Items = ItemGrid;
             BossKongs = new() { BossKong1, BossKong2, BossKong3, BossKong4, BossKong5 };
             HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
@@ -617,18 +598,6 @@ namespace TrackOMatic
         {
             //probably don't need this
             //DataSaver.Save();
-        }
-
-        public void UpdateCollectible(ItemType collectibleType, int newTotal)
-        {
-            if (Collectibles.ContainsKey(collectibleType))
-            {
-                Collectibles[collectibleType].SetAmount(newTotal);
-                if (BroadcastView != null)
-                {
-                    BroadcastView.UpdateCollectible(collectibleType, newTotal);
-                }
-            }
         }
 
         public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false, bool canAutosave = true)
@@ -965,11 +934,6 @@ namespace TrackOMatic
             }
             BLockerHints.Reset();
             HelmDoorHints.Reset();
-
-            foreach (var key in Collectibles.Keys.ToList())
-            {
-                Collectibles[key].SetAmount(0);
-            }
 
             foreach (var progressiveImage in BossKongs)
             {

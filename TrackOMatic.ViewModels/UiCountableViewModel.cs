@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
@@ -13,6 +10,8 @@ namespace TrackOMatic.ViewModels;
 public class UiCountableViewModel: CountableViewModel, INotifyPropertyChanged
 {
     private readonly IUserSettingsService _userSettingsService;
+    private readonly ICollectiblesService _collectiblesService;
+    private readonly ItemType _itemType;
 
     public UiCountableViewModel(
         ItemType itemType,
@@ -22,13 +21,16 @@ public class UiCountableViewModel: CountableViewModel, INotifyPropertyChanged
     ) : base(itemType, collectiblesService, parsedSpoilerDataService)
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
+        _collectiblesService = collectiblesService ?? throw new ArgumentNullException(nameof(collectiblesService));
+        _itemType = itemType;
     }
 
     public void IncrementCount()
     {
         if (!_userSettingsService.Autotracking)
         {
-            ++Count;
+            var count = _collectiblesService.GetCollectibleCount(_itemType);
+            _collectiblesService.SetCollectibleCount(_itemType, ++count);
         }
     }
 
@@ -36,7 +38,8 @@ public class UiCountableViewModel: CountableViewModel, INotifyPropertyChanged
     {
         if (!_userSettingsService.Autotracking)
         {
-            Count = int.Max(Count - 1, 0);
+            var count = _collectiblesService.GetCollectibleCount( _itemType);
+            _collectiblesService.SetCollectibleCount(_itemType, Math.Max(count - 1, 0));
         }
     }
 }

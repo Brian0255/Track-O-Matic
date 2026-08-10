@@ -10,6 +10,8 @@ namespace TrackOMatic.ViewModels;
 public class UiKongBlueprintViewModel: KongBlueprintViewModel, INotifyPropertyChanged
 {
     private readonly IUserSettingsService _userSettingsService;
+    private readonly ICollectiblesService _collectibles;
+    private readonly ItemType _collectedType;
 
     public UiKongBlueprintViewModel(
         ItemType collectedType,
@@ -20,14 +22,17 @@ public class UiKongBlueprintViewModel: KongBlueprintViewModel, INotifyPropertyCh
         IUserSettingsService userSettingsService
     ) : base(collectedType, turnedInType, collectiblesService, parsedSpoilerDataService, savedProgressProvider)
     {
+        _collectedType = collectedType;
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
+        _collectibles = collectiblesService ?? throw new ArgumentNullException(nameof(collectiblesService));
     }
 
     public void IncrementCount()
     {
         if (!_userSettingsService.Autotracking)
         {
-            Count = int.Min(Count + 1, 8);
+            var old = _collectibles.GetCollectibleCount(_collectedType);
+            _collectibles.SetCollectibleCount(_collectedType, int.Min(old + 1, 8));
         }
     }
 
@@ -35,7 +40,8 @@ public class UiKongBlueprintViewModel: KongBlueprintViewModel, INotifyPropertyCh
     {
         if (!_userSettingsService.Autotracking)
         {
-            Count = int.Max(Count - 1, 0);
+            var old = _collectibles.GetCollectibleCount(_collectedType);
+            _collectibles.SetCollectibleCount(_collectedType, int.Max(old - 1, 0));
         }
     }
 }
