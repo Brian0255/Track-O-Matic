@@ -84,6 +84,7 @@ namespace TrackOMatic
             {
                 MainWindow.ParseSpoiler(savedProgress.spoilerPath);
             }
+            var autotrackedItems = new List<ItemName>();
             foreach (var savedItemEntry in savedProgress.SavedItems)
             {
                 var savedItem = savedItemEntry.Value;
@@ -92,7 +93,10 @@ namespace TrackOMatic
                 Item matchingItem = FindMatchingItem(savedItem.ItemName);
                 matchingItem.SetStarVisibility(savedItem.Starred);
                 matchingItem.ChangeOpacity(savedItem.Opacity);
-                if(savedItem.Autotracked) MainWindow.Autotracker.ProcessSavedItem(savedItem.ItemName);
+                if (savedItem.Autotracked)
+                {
+                    autotrackedItems.Add(savedItem.ItemName);
+                }
                 if (savedItem.Region != RegionName.UNKNOWN && !savedItem.Hinted)
                 {
                     MainWindow.Regions[region].RegionGrid.Add_Item(matchingItem, !savedItem.Autotracked, !savedItem.Hinted);
@@ -115,6 +119,7 @@ namespace TrackOMatic
             if(savedProgress.HelmKongs != null) MainWindow.LoadHelmKongs(savedProgress.HelmKongs);
             if (savedProgress.BossKongs != null) MainWindow.LoadBossKongs(savedProgress.BossKongs);
             if (savedProgress.LevelOrder != null) MainWindow.LoadLevelOrder(savedProgress.LevelOrder);
+            MainWindow.Autotracker.ProcessSavedItems(autotrackedItems);
         }
 
         public void AddSavedItem(SavedItem savedItem)
