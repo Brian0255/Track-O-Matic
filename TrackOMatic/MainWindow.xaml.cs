@@ -88,6 +88,7 @@ namespace TrackOMatic
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
 
         private Timer SaveTimer;
+        private bool autotrackerResetting = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -215,10 +216,16 @@ namespace TrackOMatic
 
             };
             Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong, UpdateUIAmountToNextHint, UpdateProgHintImage);
+            Autotracker.ResetCompleted = AutotrackerResetCompleted;
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
             SaveTimer.Start();
             FormatCollectibles();
+        }
+
+        private void AutotrackerResetCompleted()
+        {
+            autotrackerResetting = false;
         }
 
         public void SetRegionLighting(RegionName regionName, bool lightUp)
@@ -255,6 +262,7 @@ namespace TrackOMatic
 
         public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false, bool canAutosave = true)
         {
+            if (autotrackerResetting) return false;
             if (regionName == RegionName.UNKNOWN) return false;
             if (!ITEM_NAME_TO_ITEM.ContainsKey(itemToProcess)) return false;
             var item = ITEM_NAME_TO_ITEM[itemToProcess];
@@ -546,6 +554,7 @@ namespace TrackOMatic
                 {
                     region.SetLevelOrderNumber(8);
                 }
+                SetRegionLighting(entry.Key, false);
             }
             foreach (var item in DraggableItems.Cast<Item>())
             {
@@ -567,6 +576,7 @@ namespace TrackOMatic
             UpdateUIAmountToNextHint(0);
             HintHelper.GenerateThresholds();
             SetSong("", "");
+            autotrackerResetting = true;
             Autotracker.Reset();
             DataSaver.Reset();
         }
@@ -656,7 +666,7 @@ namespace TrackOMatic
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
-            AutoUpdater.InstalledVersion = new Version("2.2.3");
+            AutoUpdater.InstalledVersion = new Version("2.2.4");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0) return;
