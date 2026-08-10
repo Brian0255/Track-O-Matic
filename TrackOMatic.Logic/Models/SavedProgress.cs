@@ -16,8 +16,16 @@ public class SavedProgress
     public List<int> HelmKongs { get; set; }
     public List<int> BossKongs { get; set; }
     public List<int> LevelOrder { get; set; }
+    /// <summary>
+    /// Gets or sets the collection of countable items (pearls, battle crowns, golden bananas, etc) that have been collected in the game.
+    /// </summary>
+    /// <remarks>This is currently not serialized to the save file, but perhaps that should change in the future.</remarks>
     [JsonIgnore]
     public Dictionary<ItemType, int> Collectibles { get; set; }
+    /// <summary>
+    /// Gets a value indicating whether the spoiler file has been loaded.
+    /// </summary>
+    /// <remarks>This should never be serialized to the save file.</remarks>
     [JsonIgnore]
     public bool IsSpoilerLoaded => !string.IsNullOrWhiteSpace(spoilerPath);
 
