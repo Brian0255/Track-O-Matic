@@ -32,16 +32,18 @@ namespace TrackOMatic
         public UpdateProgHintImage UpdateProgHintImage { get; set; }
         public Process EmulatorProcess { get; private set; }
         public List<AutotrackedCheck> Checks;
-        public ConcurrentDictionary<ItemName, bool> TrackedAlready;
-        public Dictionary<ItemName, RegionName> StartingItems { get; private set; }
+        private ConcurrentDictionary<ItemName, bool> TrackedAlready;
+        private Dictionary<ItemName, RegionName> StartingItems { get; set; }
         public GameVerificationInfo GameVerificationInfo { get; private set; }
         public RegionName CurrentRegion { get; private set; }
         private RegionName previousRegion;
-        public string currentSongGame { get; private set; }
-        public string currentSongName { get; private set; }
+        private string currentSongGame { get; set; }
+        private string currentSongName { get; set; }
         public int RandomizerVersion { get; private set; }
         public int RandomizerSubVersion { get; private set; }
+        public Action ResetCompleted { get; set; }
 
+        private readonly ConcurrentQueue<Action> _commands = new();
         private System.Timers.Timer timer;
         private bool attached = false;
         private ulong startAddress;
@@ -52,7 +54,6 @@ namespace TrackOMatic
         private uint addressBase;
         private ItemType progHintItem;
         private IntPtr processHandle;
-        private volatile bool resetRequested = false;
         public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint, UpdateProgHintImage updateProgHintImage)
         {
             CurrentRegion = RegionName.UNKNOWN;
@@ -118,23 +119,25 @@ namespace TrackOMatic
             }
             Checks = newChecks;
         }
-
         public void Reset()
         {
-            spoilerLoaded = false;
-            StartingItems = new();
-            resetRequested = true;
+            _commands.Enqueue(() =>
+            {
+                ResetInternal();
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ResetCompleted?.Invoke();
+                });
+            });
         }
 
         public void ResetInternal()
         {
             Detach();
             InitializeChecks();
-            ExcludeStartingItems();
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                SetRegionLighting?.Invoke(CurrentRegion, false);
-            });
+            spoilerLoaded = false;
+            StartingItems = new();
             CurrentRegion = RegionName.UNKNOWN;
             currentSongName = "";
             RandomizerVersion = 0;
@@ -142,12 +145,18 @@ namespace TrackOMatic
             currentSongGame = "";
             autosave = false;
             previousMap = -1;
+            progHintItem = ItemType.GOLDEN_BANANA;
         }
 
         public void SetStartingItems(Dictionary<ItemName, RegionName> newItems)
         {
-            StartingItems = newItems;
-            spoilerLoaded = true;
+            var items = new Dictionary<ItemName, RegionName>(newItems);
+            _commands.Enqueue(() =>
+            {
+                StartingItems = items;
+                spoilerLoaded = true;
+                ExcludeStartingItems();
+            });
         }
 
         private void AttachIfNecessary()
@@ -229,9 +238,7 @@ namespace TrackOMatic
             var itemType = ToItemType[hintItem];
             if(progHintItem == itemType) { return; }
             progHintItem = itemType;
-            Application.Current.Dispatcher.Invoke(() => {
-                UpdateProgHintImage?.Invoke(itemType);
-            });
+            Application.Current.Dispatcher.Invoke(() => UpdateProgHintImage(itemType));
         }
 
         public void UpdateAmountToNextHint()
@@ -246,9 +253,7 @@ namespace TrackOMatic
                 totalItems = CollectibleItemAmounts[progHintItem];
             }
             var amount = GetAmountToNextHintPack(totalItems);
-            Application.Current.Dispatcher.Invoke(() => {
-                UpdateUIAmountToNextHint?.Invoke(amount);
-            });
+            Application.Current.Dispatcher.Invoke(() => UpdateUIAmountToNextHint(amount));
         }
 
         private void UpdateAddressBase()
@@ -265,14 +270,10 @@ namespace TrackOMatic
             if (MapToRegion.MAP.ContainsKey(area))
             {
                 RegionName newRegion = MapToRegion.MAP[area];
-                if(newRegion != CurrentRegion)
+                if (newRegion != CurrentRegion)
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        SetRegionLighting?.Invoke(newRegion, true);
-                    });
-                    Application.Current.Dispatcher.Invoke(() => {
-                        SetRegionLighting?.Invoke(CurrentRegion, false);
-                    });
+                    Application.Current.Dispatcher.Invoke(() => SetRegionLighting(newRegion, true));
+                    Application.Current.Dispatcher.Invoke(() => SetRegionLighting(CurrentRegion, false));
                 }
                 if(previousMap != -1 && area != previousMap)
                 {
@@ -362,10 +363,7 @@ namespace TrackOMatic
             }
             if (songGame != currentSongGame || songName != currentSongName)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    SetSong?.Invoke(songGame, songName);
-                });
+                Application.Current.Dispatcher.Invoke(() => SetSong(songGame, songName));
                 WriteToSongFiles(songGame, songName);
             }
             currentSongGame = songGame;
@@ -374,6 +372,10 @@ namespace TrackOMatic
 
         private void TimerHandler(object sender, ElapsedEventArgs e)
         {
+            while (_commands.TryDequeue(out var command))
+            {
+                command();
+            }
             try
             {
                 Autotrack();
@@ -390,13 +392,7 @@ namespace TrackOMatic
 
         private void Autotrack()
         {
-            if (resetRequested)
-            {
-                resetRequested = false;
-                ResetInternal();
-            }
             if (!Properties.Settings.Default.Autotracking) return;
-            //if (!spoilerLoaded) return;
             AttachIfNecessary();
             if (!attached) return;
             if (!ProcessConnected()) return;
@@ -515,18 +511,24 @@ namespace TrackOMatic
             }
             if (TrackedAlready.TryGetValue(check.ItemName, out var alreadyTracked) && alreadyTracked)
                 return;
-            bool success = false;
             bool newRegion = (CurrentRegion != previousRegion && previousRegion != RegionName.UNKNOWN);
+            bool success = false;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                success = (bool)ProcessNewItem?.Invoke(check.ItemName, regionToUse, false, autosave);
+                success = ProcessNewItem(check.ItemName, regionToUse, false, autosave);
             });
+
             TrackedAlready[check.ItemName] = success;
         }
-
-        public void ProcessSavedItem(ItemName item)
+        public void ProcessSavedItems(List<ItemName> items)
         {
-            TrackedAlready[item] = true;
+            _commands.Enqueue(() =>
+            {
+                foreach(var item in items)
+                {
+                    TrackedAlready[item] = true;
+                }
+            });
         }
 
         public bool ItemWasTracked(ItemName item)
@@ -539,10 +541,7 @@ namespace TrackOMatic
             if (Application.Current == null) return;
             foreach (var entry in CollectibleItemAmounts.ToList())
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    UpdateCollectible?.Invoke(entry.Key, entry.Value);
-                });
+                Application.Current.Dispatcher.Invoke(() => UpdateCollectible(entry.Key, entry.Value));
             }
         }
         private int ReadMemory(uint addr, int numOfBits, int bitmask = 0)
