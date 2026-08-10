@@ -1,3 +1,5 @@
+using TrackOMatic.Logic.Enums;
+
 namespace TrackOMatic
 {
     static class Extensions

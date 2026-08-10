@@ -6,6 +6,10 @@ using System.Text;
 using System.Timers;
 using System.Windows;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
+using TrackOMatic.Logic.Models.Autotracking;
+
 using Timer = System.Timers.Timer;
 
 namespace TrackOMatic
@@ -322,9 +326,9 @@ namespace TrackOMatic
         private void CheckVersion()
         {
             var useNewOffsets = (RandomizerVersion >= 5);
-            if (useNewOffsets != OffsetInfo.useNewOffsets)
+            if (useNewOffsets != OffsetInfo.UseNewOffsets)
             {
-                OffsetInfo.useNewOffsets = useNewOffsets;
+                OffsetInfo.UseNewOffsets = useNewOffsets;
                 InitializeChecks(false);
             }
         }

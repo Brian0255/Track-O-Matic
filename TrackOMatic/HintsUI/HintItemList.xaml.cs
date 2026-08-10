@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
+using TrackOMatic.Logic.Enums;
+
 namespace TrackOMatic
 {
     public delegate void ItemsSelectedHandler();

@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using TrackOMatic.Logic.Enums;
+
 namespace TrackOMatic
 {
     public partial class BLockerPanel : UserControl
@@ -101,15 +103,26 @@ namespace TrackOMatic
                     continue;
                 }
 
-                if (!JSONKeyMappings.SPOILER_BARRIER_TO_BARRIER_ITEM.ContainsKey(blocker.item))
+                if (GetBarrierItemType(blocker.item) is BarrierItems barrierItem)
                 {
-                    continue;
+                    hint.GB.SetIndex((int)barrierItem);
+                    hint.GBCount.Text = blocker.cost.ToString();
                 }
-
-                var adjusted_index = (int)JSONKeyMappings.SPOILER_BARRIER_TO_BARRIER_ITEM[blocker.item];
-                hint.GB.SetIndex(adjusted_index);
-                hint.GBCount.Text = blocker.cost.ToString();
             }
         }
+
+        private static BarrierItems? GetBarrierItemType(int blockerItemId) => blockerItemId switch
+        {
+            3 => BarrierItems.GOLDEN_BANANA,
+            4 => BarrierItems.BLUEPRINT,
+            5 => BarrierItems.FAIRY,
+            7 => BarrierItems.CROWN,
+            8 => BarrierItems.COMPANY_COIN,
+            9 => BarrierItems.MEDAL,
+            10 => BarrierItems.BEAN,
+            11 => BarrierItems.PEARL,
+            12 => BarrierItems.RAINBOW_COIN,
+            _ => null
+        };
     }
 }

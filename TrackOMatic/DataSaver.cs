@@ -2,6 +2,9 @@ using Newtonsoft.Json;
 
 using System.IO;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
+
 namespace TrackOMatic
 {
     public class DataSaver

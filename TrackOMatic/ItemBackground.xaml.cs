@@ -5,6 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using TrackOMatic.Logic.Enums;
+
 namespace TrackOMatic
 {
     public partial class ItemBackground : ContentControl, INotifyPropertyChanged

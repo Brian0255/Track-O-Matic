@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
+using TrackOMatic.Logic.Enums;
 using TrackOMatic.Properties;
 
 namespace TrackOMatic

@@ -3,11 +3,14 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Reflection;
 
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models.Hints;
+
 namespace TrackOMatic
 {
     public static class HintData
     {
-        public static Dictionary<RegionName, List<string>> REGIONS_WITHOUT_LEVEL_NAME = new()
+        public static Dictionary<RegionName, List<string>> REGIONS_WITHOUT_LEVEL_NAME { get; } = new()
         {
             {RegionName.DK_ISLES, new() },
             {RegionName.JUNGLE_JAPES, new() },
@@ -19,11 +22,11 @@ namespace TrackOMatic
             {RegionName.CREEPY_CASTLE, new() },
             {RegionName.HIDEOUT_HELM, new() },
         };
-        public static List<string> MISC_DIRECT_HINT_TYPES = new()
+        public static List<string> MISC_DIRECT_HINT_TYPES { get; } = new()
         {
             "Battle Arena","Chunky","Colored Bananas","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny","Shops"
         };
-        public static readonly Dictionary<HintGroup, RegionName> REGION_HINT_GROUP_TO_REGION = new()
+        public static Dictionary<HintGroup, RegionName> REGION_HINT_GROUP_TO_REGION { get; } = new()
         {
             {HintGroup.REGION_ISLES, RegionName.DK_ISLES },
             {HintGroup.REGION_JAPES, RegionName.JUNGLE_JAPES },
