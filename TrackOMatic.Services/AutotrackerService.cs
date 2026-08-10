@@ -6,6 +6,7 @@ using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events.Autotracking;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Autotracking;
+using TrackOMatic.Services.TrackerState;
 
 using ITimer = TrackOMatic.Logic.Models.ITimer;
 
@@ -23,6 +24,7 @@ public class AutotrackerService : IAutotrackerService
     private readonly ITimerFactory _timerFactory;
     private readonly IApplicationStateService _appState;
     private readonly IUserSettingsService _settings;
+    private readonly ICollectiblesService _collectiblesService;
     private readonly IRegionPlacementOrchestrator _regionPlacementOrchestrator;
     private bool _disposed;
     private ITimer? _pollingTimer;
@@ -32,7 +34,6 @@ public class AutotrackerService : IAutotrackerService
     private const double POLLING_INTERVAL_MS = 1000;
 
     #region Event Implementations
-    public event EventHandler<AutotrackerCollectibleEventArgs>? CollectibleUpdated;
     public event EventHandler<AutotrackerRegionEventArgs>? RegionLightingChanged;
     public event EventHandler<AutotrackerSongEventArgs>? SongChanged;
     public event EventHandler<AutotrackerHintEventArgs>? HintProgressUpdated;
@@ -119,6 +120,7 @@ public class AutotrackerService : IAutotrackerService
         ITimerFactory timerFactory,
         IApplicationStateService appState,
         IUserSettingsService settings,
+        ICollectiblesService collectiblesService,
         IRegionPlacementOrchestrator regionPlacementOrchestrator
     )
     {
@@ -128,6 +130,7 @@ public class AutotrackerService : IAutotrackerService
         _timerFactory = timerFactory ?? throw new ArgumentNullException(nameof(timerFactory));
         _appState = appState ?? throw new ArgumentNullException(nameof(appState));
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        _collectiblesService = collectiblesService ?? throw new ArgumentNullException(nameof(collectiblesService));
         _regionPlacementOrchestrator = regionPlacementOrchestrator ?? throw new ArgumentNullException(nameof(regionPlacementOrchestrator));
 
         // Initialize state
@@ -343,14 +346,6 @@ public class AutotrackerService : IAutotrackerService
         Shutdown();
         _disposed = true;
         GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Raises the CollectibleUpdated event.
-    /// </summary>
-    public void OnCollectibleUpdated(AutotrackerCollectibleEventArgs e)
-    {
-        CollectibleUpdated?.Invoke(this, e);
     }
 
     /// <summary>
@@ -894,11 +889,7 @@ public class AutotrackerService : IAutotrackerService
     {
         foreach (var entry in _collectibleItemAmounts.ToList())
         {
-            CollectibleUpdated?.Invoke(this, new AutotrackerCollectibleEventArgs
-            {
-                CollectibleType = entry.Key,
-                NewTotal = entry.Value
-            });
+            _collectiblesService.SetCollectibleCount(entry.Key, entry.Value);
         }
     }
 

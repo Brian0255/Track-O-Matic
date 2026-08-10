@@ -13,10 +13,6 @@ namespace TrackOMatic.Services;
 public interface IAutotrackerService : IDisposable
 {
     #region Event Callbacks
-    /// <summary>
-    /// Raised when a collectible count (e.g., Golden Bananas, Medals) changes.
-    /// </summary>
-    event EventHandler<AutotrackerCollectibleEventArgs>? CollectibleUpdated;
 
     /// <summary>
     /// Raised when the current region changes or region lighting needs to be updated.

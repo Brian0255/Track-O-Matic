@@ -6,6 +6,7 @@ using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events.Autotracking;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Autotracking;
+using TrackOMatic.Services.TrackerState;
 
 using ITimer = TrackOMatic.Logic.Models.ITimer;
 
@@ -28,13 +29,13 @@ public class AutotrackerServiceTests
         ITimerFactory timerFactory,
         IApplicationStateService appState,
         IUserSettingsService settings,
+        ICollectiblesService collectiblesService,
         IRegionPlacementOrchestrator regionPlacementOrchestrator
     )
-        : AutotrackerService(itemTracking, emulatorAttacher, memoryReader, timerFactory, appState, settings, regionPlacementOrchestrator)
+        : AutotrackerService(itemTracking, emulatorAttacher, memoryReader, timerFactory, appState, settings, collectiblesService, regionPlacementOrchestrator)
     {
 
         // Expose protected event-raising methods for testing
-        public void TestRaiseCollectibleUpdated(AutotrackerCollectibleEventArgs e) => OnCollectibleUpdated(e);
         public void TestRaiseRegionLightingChanged(AutotrackerRegionEventArgs e) => OnRegionLightingChanged(e);
         public void TestRaiseSongChanged(AutotrackerSongEventArgs e) => OnSongChanged(e);
         public void TestRaiseHintProgressUpdated(AutotrackerHintEventArgs e) => OnHintProgressUpdated(e);
@@ -81,6 +82,8 @@ public class AutotrackerServiceTests
             .Setup(o => o.TryPlaceAutoTrackedItem(It.IsAny<ItemName>(), It.IsAny<RegionName>(), It.IsAny<SavedItem>()))
             .Returns(false);
 
+        var mockCollectiblesService = new Mock<ICollectiblesService>();
+
         return new TestableAutotrackerService(
             itemTracking.Object,
             mockAttacher.Object,
@@ -88,6 +91,7 @@ public class AutotrackerServiceTests
             mockTimerFactory.Object,
             appState.Object,
             settings.Object,
+            mockCollectiblesService.Object,
             orchestrator.Object
         );
     }
@@ -124,9 +128,10 @@ public class AutotrackerServiceTests
         var mockTimerFactory = new Mock<ITimerFactory>();
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
+        var mockCollectiblesService = new Mock<ICollectiblesService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
         Assert.Throws<ArgumentNullException>(() =>
-            new AutotrackerService(null!, mockAttacher.Object, mockMemoryReader.Object, mockTimerFactory.Object, appState.Object, settings.Object, orchestrator.Object));
+            new AutotrackerService(null!, mockAttacher.Object, mockMemoryReader.Object, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, orchestrator.Object));
     }
 
     [Fact]
@@ -137,9 +142,10 @@ public class AutotrackerServiceTests
         var mockTimerFactory = new Mock<ITimerFactory>();
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
+        var mockCollectiblesService = new Mock<ICollectiblesService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
         Assert.Throws<ArgumentNullException>(() =>
-            new AutotrackerService(mockTracker.Object, null!, mockMemoryReader.Object, mockTimerFactory.Object, appState.Object, settings.Object, orchestrator.Object));
+            new AutotrackerService(mockTracker.Object, null!, mockMemoryReader.Object, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, orchestrator.Object));
     }
 
     [Fact]
@@ -150,9 +156,10 @@ public class AutotrackerServiceTests
         var mockTimerFactory = new Mock<ITimerFactory>();
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
+        var mockCollectiblesService = new Mock<ICollectiblesService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
         Assert.Throws<ArgumentNullException>(() =>
-            new AutotrackerService(mockTracker.Object, mockAttacher.Object, null!, mockTimerFactory.Object, appState.Object, settings.Object, orchestrator.Object));
+            new AutotrackerService(mockTracker.Object, mockAttacher.Object, null!, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, orchestrator.Object));
     }
 
     [Fact]
@@ -163,9 +170,10 @@ public class AutotrackerServiceTests
         var mockMemoryReader = new Mock<IProcessMemoryReader>();
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
+        var mockCollectiblesService = new Mock<ICollectiblesService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
         Assert.Throws<ArgumentNullException>(() =>
-            new AutotrackerService(mockTracker.Object, mockAttacher.Object, mockMemoryReader.Object, null!, appState.Object, settings.Object, orchestrator.Object));
+            new AutotrackerService(mockTracker.Object, mockAttacher.Object, mockMemoryReader.Object, null!, appState.Object, settings.Object, mockCollectiblesService.Object, orchestrator.Object));
     }
 
     [Fact]
@@ -450,33 +458,6 @@ public class AutotrackerServiceTests
         Assert.Equal(RegionName.DK_ISLES, capturedEventArgs.RegionName);
         Assert.False(capturedEventArgs.IsHint);
         Assert.True(capturedEventArgs.IsNewRegion);
-    }
-
-    [Fact]
-    public void CollectibleUpdated_WhenSubscribed_CanCaptureEventData()
-    {
-        var service = CreateServiceWithMocks(out _, out _, out _);
-
-        AutotrackerCollectibleEventArgs? capturedEventArgs = null;
-        object? capturedSender = null;
-
-        service.CollectibleUpdated += (sender, e) =>
-        {
-            capturedSender = sender;
-            capturedEventArgs = e;
-        };
-
-        var testEventArgs = new AutotrackerCollectibleEventArgs
-        {
-            CollectibleType = ItemType.GOLDEN_BANANA,
-            NewTotal = 42
-        };
-        service.TestRaiseCollectibleUpdated(testEventArgs);
-
-        Assert.NotNull(capturedEventArgs);
-        Assert.Same(service, capturedSender);
-        Assert.Equal(ItemType.GOLDEN_BANANA, capturedEventArgs.CollectibleType);
-        Assert.Equal(42, capturedEventArgs.NewTotal);
     }
 
     [Fact]
