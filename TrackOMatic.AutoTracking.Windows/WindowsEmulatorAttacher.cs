@@ -279,15 +279,13 @@ public class WindowsEmulatorAttacher(IProcessMemoryReader memoryReader) : IEmula
 
     private static Process? FindProcess(string name)
     {
-        Process target;
         try
         {
-            target = Process.GetProcessesByName(name)[0];
+            var list = Process.GetProcessesByName(name);
+            return list.Length > 0 ? list[0] : null;
         }
-        catch (Exception) {
+        catch (InvalidOperationException) {
             return null;
         }
-        return target;
     }
-
 }
