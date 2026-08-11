@@ -25,6 +25,7 @@ public class AutotrackerService : IAutotrackerService
     private readonly IApplicationStateService _appState;
     private readonly IUserSettingsService _settings;
     private readonly ICollectiblesService _collectiblesService;
+    private readonly ISongService _songService;
     private readonly IRegionPlacementOrchestrator _regionPlacementOrchestrator;
     private bool _disposed;
     private ITimer? _pollingTimer;
@@ -35,7 +36,6 @@ public class AutotrackerService : IAutotrackerService
 
     #region Event Implementations
     public event EventHandler<AutotrackerRegionEventArgs>? RegionLightingChanged;
-    public event EventHandler<AutotrackerSongEventArgs>? SongChanged;
     public event EventHandler<AutotrackerHintEventArgs>? HintProgressUpdated;
     public event EventHandler<AutotrackerProgHintItemEventArgs>? ProgHintItemUpdated;
     #endregion
@@ -121,6 +121,7 @@ public class AutotrackerService : IAutotrackerService
         IApplicationStateService appState,
         IUserSettingsService settings,
         ICollectiblesService collectiblesService,
+        ISongService songService,
         IRegionPlacementOrchestrator regionPlacementOrchestrator
     )
     {
@@ -131,6 +132,7 @@ public class AutotrackerService : IAutotrackerService
         _appState = appState ?? throw new ArgumentNullException(nameof(appState));
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         _collectiblesService = collectiblesService ?? throw new ArgumentNullException(nameof(collectiblesService));
+        _songService = songService ?? throw new ArgumentNullException(nameof(songService));
         _regionPlacementOrchestrator = regionPlacementOrchestrator ?? throw new ArgumentNullException(nameof(regionPlacementOrchestrator));
 
         // Initialize state
@@ -354,14 +356,6 @@ public class AutotrackerService : IAutotrackerService
     public void OnRegionLightingChanged(AutotrackerRegionEventArgs e)
     {
         RegionLightingChanged?.Invoke(this, e);
-    }
-
-    /// <summary>
-    /// Raises the SongChanged event.
-    /// </summary>
-    public void OnSongChanged(AutotrackerSongEventArgs e)
-    {
-        SongChanged?.Invoke(this, e);
     }
 
     /// <summary>
@@ -590,7 +584,7 @@ public class AutotrackerService : IAutotrackerService
         {
             CurrentSongGame = songGame;
             CurrentSongName = songName;
-            SongChanged?.Invoke(this, new AutotrackerSongEventArgs { SongGame = songGame, SongName = songName });
+            _songService.SetSong(songGame, songName);
             WriteToSongFiles(songGame, songName);
         }
     }

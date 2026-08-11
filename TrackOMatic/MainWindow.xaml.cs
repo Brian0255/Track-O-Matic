@@ -486,7 +486,6 @@ namespace TrackOMatic
                 }
             };
 
-            Autotracker.SongChanged += (sender, e) => Dispatcher.Invoke(() => SetSong(e.SongGame, e.SongName));
             Autotracker.HintProgressUpdated += (sender, e) => Dispatcher.Invoke(() => UpdateUIAmountToNextHint(e.AmountToNextHint));
             Autotracker.ProgHintItemUpdated += (sender, e) => Dispatcher.Invoke(() => UpdateProgHintImage(e.ProgHintItem));
 
@@ -791,21 +790,6 @@ namespace TrackOMatic
             ResetWidthHeight();
         }
 
-        public void SetSong(string songGame, string songName)
-        {
-            if (songName == "")
-            {
-                songGame = "";
-                songName = "Waiting for a 4.0 ROM...";
-            }
-            SongGame.Text = songGame;
-            SongName.Text = songName;
-            if (BroadcastView != null)
-            {
-                BroadcastView.UpdateSongInfo(songGame, songName);
-            }
-        }
-
         private void rootGrid_LostFocus(object sender, RoutedEventArgs e)
         {
             Keyboard.ClearFocus();
@@ -947,7 +931,6 @@ namespace TrackOMatic
 
             UpdateUIAmountToNextHint(0);
             HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
-            SetSong("", "");
             Autotracker.Reset();
             DataSaver.Reset();
         }

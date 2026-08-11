@@ -239,30 +239,6 @@
             <broadcast:Countable Grid.Column="6" ItemType="GOLDEN_BANANA" />
         </Grid>
         <!-- Song Display -->
-        <Grid Background="Transparent" Margin="3,1,3,5" Height="52" Visibility="{Binding BroadcastSongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
-            <Border Grid.Row="0" Grid.RowSpan="3" CornerRadius="5" BorderThickness="1" BorderBrush="#131414" Background="#1a1b1c">
-            </Border>
-            <Grid Background="Transparent" Grid.Row="1"  >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" Margin="3,0,0,0">
-                    <Image x:Name="Headphones" Margin="3" Grid.Row="1" Source="Images/dk64/headphones.png" Grid.Column="0"  Panel.ZIndex="2" Opacity="1" HorizontalAlignment="Center"/>
-                </Grid>
-                <Grid Grid.Column="1" Margin="6,0,0,0" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Viewbox HorizontalAlignment="Left">
-                        <TextBlock Margin="0,4,0,1" x:Name="SongGame" Text="Waiting for DK64R 4.0 ROM to be loaded..." FontWeight="Light"  Foreground="White" FontFamily="Helvetica" VerticalAlignment="Center" FontSize="16" />
-                    </Viewbox>
-                    <Viewbox Grid.Row="1" HorizontalAlignment="Left">
-                        <TextBlock Grid.Row="1" Margin="0,1,0,4" x:Name="SongName" Text="" Foreground="White" FontFamily="Helvetica" FontWeight="Medium"  VerticalAlignment="Center" FontSize="16" />
-                    </Viewbox>
-                </Grid>
-            </Grid>
-        </Grid>
+        <broadcast:Song Background="Transparent" Margin="3,1,3,5" Height="52" Visibility="{Binding BroadcastSongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
     </StackPanel>
 </Window>

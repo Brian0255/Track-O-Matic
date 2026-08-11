@@ -40,6 +40,7 @@ public static class ServiceRegistryExtensions
 
         // Autotracking service: requires platform-specific implementations (IProcessMemoryReader, IEmulatorAttacher)
         // to be registered via platform registration (e.g., AddWindowsAutotracking())
+        services.AddSingleton<ISongService, SongService>();
         services.AddSingleton<ITimerFactory, SystemTimerFactory>();
         services.AddSingleton<IAutotrackerService, AutotrackerService>();
 

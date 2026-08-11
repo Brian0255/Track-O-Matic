@@ -151,7 +151,6 @@ namespace TrackOMatic
                 return;
             }
             BroadcastView = new BroadcastView(UserSettings, ParsedSpoilerDataService);
-            BroadcastView.UpdateSongInfo(SongGame.Text, SongName.Text);
             BroadcastView.Closed += BroadcastClosed;
             BroadcastView.Show();
 

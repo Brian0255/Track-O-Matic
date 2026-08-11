@@ -20,11 +20,6 @@ public interface IAutotrackerService : IDisposable
     event EventHandler<AutotrackerRegionEventArgs>? RegionLightingChanged;
 
     /// <summary>
-    /// Raised when the current song/music changes.
-    /// </summary>
-    event EventHandler<AutotrackerSongEventArgs>? SongChanged;
-
-    /// <summary>
     /// Raised when the amount of items needed to unlock the next hint pack changes.
     /// </summary>
     event EventHandler<AutotrackerHintEventArgs>? HintProgressUpdated;

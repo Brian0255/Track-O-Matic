@@ -244,13 +244,6 @@ namespace TrackOMatic
             AdjustLayout();
         }
 
-
-        public void UpdateSongInfo(string songGame, string songName)
-        {
-            SongName.Text = songName;
-            SongGame.Text = songGame;
-        }
-
         private ItemBackground? GetMatchingItem(ItemName item)
         {
             var name = item.ToString();

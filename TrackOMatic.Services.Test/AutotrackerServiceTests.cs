@@ -30,14 +30,14 @@ public class AutotrackerServiceTests
         IApplicationStateService appState,
         IUserSettingsService settings,
         ICollectiblesService collectiblesService,
+        ISongService songService,
         IRegionPlacementOrchestrator regionPlacementOrchestrator
     )
-        : AutotrackerService(itemTracking, emulatorAttacher, memoryReader, timerFactory, appState, settings, collectiblesService, regionPlacementOrchestrator)
+        : AutotrackerService(itemTracking, emulatorAttacher, memoryReader, timerFactory, appState, settings, collectiblesService, songService, regionPlacementOrchestrator)
     {
 
         // Expose protected event-raising methods for testing
         public void TestRaiseRegionLightingChanged(AutotrackerRegionEventArgs e) => OnRegionLightingChanged(e);
-        public void TestRaiseSongChanged(AutotrackerSongEventArgs e) => OnSongChanged(e);
         public void TestRaiseHintProgressUpdated(AutotrackerHintEventArgs e) => OnHintProgressUpdated(e);
 
         // Expose PerformMemoryRead for direct testing
@@ -57,6 +57,8 @@ public class AutotrackerServiceTests
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
         var itemTracking = new Mock<IItemTrackingService>();
+        var mockCollectiblesService = new Mock<ICollectiblesService>();
+        var songService = new Mock<ISongService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
 
         // Configure default behavior for mocks
@@ -82,7 +84,6 @@ public class AutotrackerServiceTests
             .Setup(o => o.TryPlaceAutoTrackedItem(It.IsAny<ItemName>(), It.IsAny<RegionName>(), It.IsAny<SavedItem>()))
             .Returns(false);
 
-        var mockCollectiblesService = new Mock<ICollectiblesService>();
 
         return new TestableAutotrackerService(
             itemTracking.Object,
@@ -92,6 +93,7 @@ public class AutotrackerServiceTests
             appState.Object,
             settings.Object,
             mockCollectiblesService.Object,
+            songService.Object,
             orchestrator.Object
         );
     }
@@ -129,9 +131,10 @@ public class AutotrackerServiceTests
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
         var mockCollectiblesService = new Mock<ICollectiblesService>();
+        var songService = new Mock<ISongService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
         Assert.Throws<ArgumentNullException>(() =>
-            new AutotrackerService(null!, mockAttacher.Object, mockMemoryReader.Object, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, orchestrator.Object));
+            new AutotrackerService(null!, mockAttacher.Object, mockMemoryReader.Object, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, songService.Object, orchestrator.Object));
     }
 
     [Fact]
@@ -143,13 +146,14 @@ public class AutotrackerServiceTests
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
         var mockCollectiblesService = new Mock<ICollectiblesService>();
+        var songService = new Mock<ISongService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
         Assert.Throws<ArgumentNullException>(() =>
-            new AutotrackerService(mockTracker.Object, null!, mockMemoryReader.Object, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, orchestrator.Object));
+            new AutotrackerService(mockTracker.Object, null!, mockMemoryReader.Object, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, songService.Object, orchestrator.Object));
     }
 
     [Fact]
-    public void Constructor_WithNullMemoryReader_ThrowsArgumentNullException()
+    public void Constructor_WithNullMemoryReader_ThrowsArgumentNullException()  
     {
         var mockTracker = new Mock<IItemTrackingService>();
         var mockAttacher = new Mock<IEmulatorAttacher>();
@@ -157,9 +161,10 @@ public class AutotrackerServiceTests
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
         var mockCollectiblesService = new Mock<ICollectiblesService>();
+        var songService = new Mock<ISongService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
         Assert.Throws<ArgumentNullException>(() =>
-            new AutotrackerService(mockTracker.Object, mockAttacher.Object, null!, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, orchestrator.Object));
+            new AutotrackerService(mockTracker.Object, mockAttacher.Object, null!, mockTimerFactory.Object, appState.Object, settings.Object, mockCollectiblesService.Object, songService.Object, orchestrator.Object));
     }
 
     [Fact]
@@ -171,9 +176,10 @@ public class AutotrackerServiceTests
         var appState = new Mock<IApplicationStateService>();
         var settings = new Mock<IUserSettingsService>();
         var mockCollectiblesService = new Mock<ICollectiblesService>();
+        var songService = new Mock<ISongService>();
         var orchestrator = new Mock<IRegionPlacementOrchestrator>();
         Assert.Throws<ArgumentNullException>(() =>
-            new AutotrackerService(mockTracker.Object, mockAttacher.Object, mockMemoryReader.Object, null!, appState.Object, settings.Object, mockCollectiblesService.Object, orchestrator.Object));
+            new AutotrackerService(mockTracker.Object, mockAttacher.Object, mockMemoryReader.Object, null!, appState.Object, settings.Object, mockCollectiblesService.Object, songService.Object, orchestrator.Object));
     }
 
     [Fact]
@@ -485,33 +491,6 @@ public class AutotrackerServiceTests
         Assert.Same(service, capturedSender);
         Assert.Equal(RegionName.JUNGLE_JAPES, capturedEventArgs.Region);
         Assert.True(capturedEventArgs.LightUp);
-    }
-
-    [Fact]
-    public void SongChanged_WhenSubscribed_CanCaptureEventData()
-    {
-        var service = CreateServiceWithMocks(out _, out _, out _);
-
-        AutotrackerSongEventArgs? capturedEventArgs = null;
-        object? capturedSender = null;
-
-        service.SongChanged += (sender, e) =>
-        {
-            capturedSender = sender;
-            capturedEventArgs = e;
-        };
-
-        var testEventArgs = new AutotrackerSongEventArgs
-        {
-            SongGame = "Donkey Kong Country",
-            SongName = "King K. Rool"
-        };
-        service.TestRaiseSongChanged(testEventArgs);
-
-        Assert.NotNull(capturedEventArgs);
-        Assert.Same(service, capturedSender);
-        Assert.Equal("Donkey Kong Country", capturedEventArgs.SongGame);
-        Assert.Equal("King K. Rool", capturedEventArgs.SongName);
     }
 
     [Fact]
