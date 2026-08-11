@@ -19,28 +19,28 @@
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
             <Style TargetType="Viewbox">
                 <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
             </Style>
             <Style TargetType="TextBlock">
                 <Setter Property="Foreground" Value="White" />
-                <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontFamily" Value="Helvetica" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Background="{StaticResource RegionImageBG}">
-        <Border CornerRadius="4" BorderThickness="1" BorderBrush="{StaticResource BaseBG}" Background="{StaticResource RegionImageBG}" />
-        <StackPanel Orientation="Horizontal">
-            <Image Height="48" Source="{Binding ResourceKey, Converter={StaticResource ResourceKeyConverter}}"/>
-            <StackPanel Margin="0,0,0,0">
-                <Viewbox>
-                    <TextBlock Text="{Binding SongGame}" FontWeight="Light" />
-                </Viewbox>
-                <Viewbox>
-                    <TextBlock Text="{Binding SongName}" FontWeight="Medium" />
-                </Viewbox>
+    <Grid Background="{StaticResource RegionImageBG}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Border CornerRadius="4" BorderThickness="1" Grid.ColumnSpan="2" BorderBrush="{StaticResource BaseBG}" Background="{StaticResource RegionImageBG}" />
+
+        <Image Grid.Column="0" Stretch="Uniform" MaxHeight="100" Width="Auto" Margin="4" VerticalAlignment="Center" Source="{Binding ResourceKey, Converter={StaticResource ResourceKeyConverter}}"/>
+        <Viewbox Grid.Column="1" Margin="8,0,0,0">
+            <StackPanel>
+                <TextBlock Text="{Binding SongGame}" FontWeight="Light" />
+                <TextBlock Text="{Binding SongName}" FontWeight="Medium" />
             </StackPanel>
-        </StackPanel>
-    </StackPanel>
+        </Viewbox>
+    </Grid>
 </UserControl>

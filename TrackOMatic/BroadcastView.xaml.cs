@@ -20,9 +20,6 @@ namespace TrackOMatic
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public Dictionary<ItemName, bool> SelectedItems { get; private set; } = new();
-        private Dictionary<ItemName, ItemBackground> ItemMap = new();
-
         private List<ProgressiveItem> KRoolKongs;
         private List<ProgressiveItem> HelmKongs;
 
@@ -51,18 +48,6 @@ namespace TrackOMatic
 
             {ItemName.SHOCKWAVE, false },
             {ItemName.FAIRY_CAMERA, false },
-        };
-
-        private Dictionary<RegionName, int> LevelNumbers = new()
-        {
-            {RegionName.JUNGLE_JAPES, -1 },
-            {RegionName.ANGRY_AZTEC , -1 },
-            {RegionName.FRANTIC_FACTORY, -1 },
-            {RegionName.GLOOMY_GALLEON , -1 },
-            {RegionName.FUNGI_FOREST, -1 },
-            {RegionName.CRYSTAL_CAVES , -1 },
-            {RegionName.CREEPY_CASTLE, -1 },
-            {RegionName.HIDEOUT_HELM, -1 }
         };
 
         #region Proxy Properties for User Settings
@@ -219,10 +204,6 @@ namespace TrackOMatic
             {
                 StarredSharedMoves[key] = false;
             }
-            foreach (var key in LevelNumbers.Keys.ToList())
-            {
-                LevelNumbers[key] = -1;
-            }
             MovesWidth.Width = new GridLength(345, GridUnitType.Pixel);
         }
 
@@ -250,11 +231,6 @@ namespace TrackOMatic
             if (name.StartsWith("KEY"))
             {
                 return (ItemBackground)FindName(item.ToString().ToLower());
-            }
-
-            if (ItemMap.ContainsKey(item))
-            {
-                return ItemMap[item];
             }
 
             return null;

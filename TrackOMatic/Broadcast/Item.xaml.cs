@@ -28,6 +28,7 @@ public partial class Item : UserControl
     public Item()
     {
         InitializeComponent();
+        Unloaded += OnUnloaded;
     }
 
     private static void OnItemNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -45,5 +46,11 @@ public partial class Item : UserControl
                 control.DataContext = new BroadcastItemViewModel(itemName, itemTrackingService, parsedSpoilerDataService, savedProgressProvider, themeService);
             }
         }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        (DataContext as IDisposable)?.Dispose();
+        DataContext = null;
     }
 }

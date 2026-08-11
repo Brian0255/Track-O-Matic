@@ -16,13 +16,12 @@
         SizeChanged="Window_SizeChanged"
         AllowDrop="True" Drop="DropFile"
         Title="Track-O-Matic" Height="820" Width="1800" Background="{StaticResource RegionBG}"
-        MinHeight="300" MinWidth="300">
-
-
+        MinHeight="300" MinWidth="300"
+>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Dictionary1.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="Image">
                 <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
@@ -205,7 +204,7 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".1*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0">
+                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0" Visibility="{Binding ShowAmountForHintsSetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
                             <RowDefinition Height="1.2*"/>
@@ -215,16 +214,6 @@
                             <ColumnDefinition Width=".5*"/>
                             <ColumnDefinition Width=".75*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid.Style>
-                            <Style TargetType="{x:Type Grid}">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ShowAmountForHintsSetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
                         <Image Source="images/dk64/wrinkly.png" Panel.ZIndex="2" x:Name="image" Stretch="Uniform"  Grid.RowSpan="2" Margin="-2,3,3,3" Grid.ColumnSpan="2"
                             RenderOptions.ClearTypeHint="Enabled">
                             <Image.Effect>
@@ -235,8 +224,8 @@
                         <Grid  Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Name="ProgHintNumberColumn" Width="2*"/>
-                                <ColumnDefinition Name="ProgHintRightColumn" Width="0.25*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="0.25*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" Grid.ColumnSpan="1" Background="{StaticResource VeryDark}" Margin="0,0,0,0"/>
                             <Image Name="ItemsToNextHintImage" Source="Images/dk64/gb.png" Margin="0,1,1,1"/>

@@ -9,11 +9,9 @@ namespace TrackOMatic;
 /// Manages application-level resource dictionary merging for barrel/pad image variants.
 /// This is WPF-specific and lives in the UI project, not in the framework-agnostic Services layer.
 /// </summary>
-public class WpfResourceDictionaryProvider : IResourceDictionaryProvider
+public class WpfResourceDictionaryProvider(IThemeService themeService) : IResourceDictionaryProvider
 {
-    private readonly IThemeService _themeService;
-
-    public WpfResourceDictionaryProvider(IThemeService themeService) => _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
+    private readonly IThemeService _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
 
     public void UpdateResourceDictionaries()
     {

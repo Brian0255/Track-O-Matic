@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls;
 
 using TrackOMatic.Services;
@@ -29,5 +30,13 @@ public partial class ProgressiveSlam : UserControl
                 savedProgressProvider
             );
         }
+
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        (DataContext as IDisposable)?.Dispose();
+        DataContext = null;
     }
 }

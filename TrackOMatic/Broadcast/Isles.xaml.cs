@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls;
 
 using TrackOMatic.Services;
@@ -25,5 +26,13 @@ public partial class Isles : UserControl
         {
             DataContext = new IslesViewModel(itemTrackingService, levelOrderService, parsedSpoilerDataService, userSettingsService);
         }
+
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        (DataContext as IDisposable)?.Dispose();
+        DataContext = null;
     }
 }

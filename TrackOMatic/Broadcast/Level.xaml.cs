@@ -28,6 +28,7 @@ public partial class Level : UserControl
     public Level()
     {
         InitializeComponent();
+        Unloaded += OnUnloaded;
     }
 
     private static void OnLevelNumberChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -44,5 +45,11 @@ public partial class Level : UserControl
                 control.DataContext = new LevelViewModel(levelNumber, itemTrackingService, levelOrderService, parsedSpoilerDataService, userSettingsService);
             }
         }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        (DataContext as IDisposable)?.Dispose();
+        DataContext = null;
     }
 }

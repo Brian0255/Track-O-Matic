@@ -28,6 +28,7 @@ public partial class Key : UserControl
     public Key()
     {
         InitializeComponent();
+        Unloaded += OnUnloaded;
     }
 
     private static void OnLevelNumberChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -43,5 +44,11 @@ public partial class Key : UserControl
                 control.DataContext = new KeyViewModel(levelNumber, itemTrackingService, parsedSpoilerDataService, savedProgressProvider);
             }
         }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        (DataContext as IDisposable)?.Dispose();
+        DataContext = null;
     }
 }
