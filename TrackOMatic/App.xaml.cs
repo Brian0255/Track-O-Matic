@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TrackOMatic.AutoTracking.Windows;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
+using TrackOMatic.Ui;
 
 namespace TrackOMatic;
 
@@ -21,6 +22,9 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.AddTrackOMaticServices();
         services.AddWindowsAutotracking();
+
+        // Register WPF UI services
+        services.AddSingleton<IItemSelectorService, ItemSelectorServiceWpf>();
 
         _serviceProvider = services.BuildServiceProvider();
         ServiceLocator.Initialize(_serviceProvider);

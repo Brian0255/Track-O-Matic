@@ -191,11 +191,11 @@
                     <ColumnDefinition Width=".5*"/>
                 </Grid.ColumnDefinitions>
                 <Image x:Name="HelmLabel" Source="Images/dk64/lanky_bp.png" Grid.Column="1" Margin="0"/>
-                <local:ProgressiveItem  x:Name="HelmKong1"  Opacity="1" Grid.Column="3" Margin="0" />
-                <local:ProgressiveItem x:Name="HelmKong2" Opacity="1"  Grid.Column="4" Margin="0" />
-                <local:ProgressiveItem  x:Name="HelmKong3"  Opacity="1" Grid.Column="5" Margin="0" />
-                <local:ProgressiveItem x:Name="HelmKong4" Opacity="1"  Grid.Column="6" Margin="0" />
-                <local:ProgressiveItem  x:Name="HelmKong5"  Opacity="1" Grid.Column="7" Margin="0" />
+                <broadcast:HelmSlot Grid.Column="3" Opacity="1" Margin="0" SlotNumber="0" />
+                <broadcast:HelmSlot Grid.Column="4" Opacity="1" Margin="0" SlotNumber="1" />
+                <broadcast:HelmSlot Grid.Column="5" Opacity="1" Margin="0" SlotNumber="2" />
+                <broadcast:HelmSlot Grid.Column="6" Opacity="1" Margin="0" SlotNumber="3" />
+                <broadcast:HelmSlot Grid.Column="7" Opacity="1" Margin="0" SlotNumber="4" />
             </Grid>
             <Grid Grid.Column="1" Margin="0">
                 <Grid.ColumnDefinitions>

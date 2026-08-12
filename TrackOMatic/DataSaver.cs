@@ -64,7 +64,6 @@ namespace TrackOMatic
             CurrentSavedProgress.BLockerImageIndexes = MainWindow.BLockerHints.GetImageIndexes();
             CurrentSavedProgress.HelmDoorImageIndexes = MainWindow.HelmDoorHints.GetImageIndexes();
             CurrentSavedProgress.HelmDoorCounts = MainWindow.HelmDoorHints.GetItemCounts();
-            CurrentSavedProgress.HelmKongs = MainWindow.GetHelmKongs();
             CurrentSavedProgress.BossKongs = MainWindow.GetBossKongs();
             var JSONString = JsonConvert.SerializeObject(CurrentSavedProgress);
             if (writeToFile)
@@ -108,10 +107,6 @@ namespace TrackOMatic
             MainWindow.BLockerHints.LoadSavedImageIndexes(CurrentSavedProgress.BLockerImageIndexes);
             MainWindow.HelmDoorHints.LoadSavedHelmDoorCounts(CurrentSavedProgress.HelmDoorCounts);
             MainWindow.HelmDoorHints.LoadSavedImageIndexes(CurrentSavedProgress.HelmDoorImageIndexes);
-            if (CurrentSavedProgress.HelmKongs != null)
-            {
-                MainWindow.LoadHelmKongs(CurrentSavedProgress.HelmKongs);
-            }
 
             if (CurrentSavedProgress.BossKongs != null)
             {

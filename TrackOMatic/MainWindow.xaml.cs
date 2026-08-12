@@ -568,7 +568,7 @@ namespace TrackOMatic
             Regions = [];
             Items = ItemGrid;
             BossKongs = new() { BossKong1, BossKong2, BossKong3, BossKong4, BossKong5 };
-            HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
+            HelmKongs = [];
 
             HintPanels = [
                 IslesPanel,
@@ -977,11 +977,6 @@ namespace TrackOMatic
         {
             return items.Select(i => i.GetIndex()).ToList();
         }
-
-        public List<int> GetHelmKongs()
-        {
-            return GetProgressiveIndices(HelmKongs);
-        }
         public List<int> GetBossKongs()
         {
             return GetProgressiveIndices(BossKongs);
@@ -993,11 +988,6 @@ namespace TrackOMatic
                 modify[i].SetIndex(indices[i]);
             }
         }
-        public void LoadHelmKongs(List<int> indices)
-        {
-            LoadProgressiveIndices(indices, HelmKongs);
-        }
-
         public void LoadBossKongs(List<int> indices)
         {
             LoadProgressiveIndices(indices, BossKongs);

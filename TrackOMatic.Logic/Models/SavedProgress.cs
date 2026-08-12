@@ -38,9 +38,9 @@ public class SavedProgress
         HelmDoorImageIndexes = [];
         HelmDoorCounts = [];
         Collectibles = [];
-        HelmKongs = new(5);
-        BossKongs = new(5);
-        LevelOrder = new(8);
+        HelmKongs = [ 0, 0, 0, 0, 0 ];
+        BossKongs = [ 0, 0, 0, 0, 0 ];
+        LevelOrder = [ 0, 0, 0, 0, 0, 0, 0, 0 ];
         spoilerPath = "";
     }
 }

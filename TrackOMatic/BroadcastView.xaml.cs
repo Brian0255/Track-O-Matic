@@ -21,7 +21,6 @@ namespace TrackOMatic
         }
 
         private List<ProgressiveItem> KRoolKongs;
-        private List<ProgressiveItem> HelmKongs;
 
         //need to keep count of which of these you currently have because their item display is different
         private Dictionary<ItemName, bool> SharedMoves = new()
@@ -169,29 +168,17 @@ namespace TrackOMatic
 
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             KRoolKongs = new() { KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
-            HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
             for (int i = 0; i < KRoolKongs.Count; ++i)
             {
                 var item = KRoolKongs[i];
                 item.Enabled = false;
                 UpdateKRoolKong(i, mainWindow.BossKongs[i].image.Source);
             }
-            for (int i = 0; i < HelmKongs.Count; ++i)
-            {
-                var item = HelmKongs[i];
-                item.Enabled = false;
-                UpdateHelmKong(i, mainWindow.HelmKongs[i].image.Source);
-            }
         }
 
         public void UpdateKRoolKong(int index, ImageSource newSource)
         {
             KRoolKongs[index].image.Source = newSource;
-        }
-
-        public void UpdateHelmKong(int index, ImageSource newSource)
-        {
-            HelmKongs[index].image.Source = newSource;
         }
 
         public void Reset()

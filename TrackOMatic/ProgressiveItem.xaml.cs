@@ -51,10 +51,6 @@ namespace TrackOMatic
             {
                 mainWindow.BroadcastView.UpdateKRoolKong(mainWindow.BossKongs.IndexOf(this), image.Source);
             }
-            if (mainWindow.HelmKongs.IndexOf(this) != -1)
-            {
-                mainWindow.BroadcastView.UpdateHelmKong(mainWindow.HelmKongs.IndexOf(this), image.Source);
-            }
         }
 
         public void Reset()

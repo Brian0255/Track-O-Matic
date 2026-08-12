@@ -12,7 +12,7 @@ public interface IEndGameProgressionService
     /// Get the list of Kongs required for disabling the Blast-O-Matic in Helm.
     /// </summary>
     /// <returns></returns>
-    IReadOnlyList<int> GetHelmKongs();
+    IList<int> GetHelmKongs();
 
     /// <summary>
     /// Set the Kongs needed for disabling the Blast-O-Matic in Helm.

@@ -1,0 +1,67 @@
+<Window x:Class="TrackOMatic.FlexibleGridItemSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:TrackOMatic"
+        xmlns:converters="clr-namespace:TrackOMatic.Converters"
+        Title="Select Item"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        Background="{StaticResource RegionBG}"
+        Topmost="False">
+
+    <Window.Resources>
+        <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+    </Window.Resources>
+
+    <Grid Margin="2">
+        <ItemsControl ItemsSource="{Binding ItemGroups}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <!-- Each item in ItemGroups is an ItemGridRowGroup -->
+                    <ItemsControl ItemsSource="{Binding Items}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- Each item is an IItemGridCell -->
+                                <Button Margin="1"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="ItemButton_Click"
+                                        Tag="{Binding}"
+                                        Width="32"
+                                        Height="32">
+                                    <Border BorderThickness="0"
+                                            UseLayoutRounding="True"
+                                            RenderOptions.BitmapScalingMode="Fant"
+                                            RenderOptions.ClearTypeHint="Enabled">
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="Black"
+                                                            Direction="0"
+                                                            ShadowDepth="0"
+                                                            BlurRadius="14"
+                                                            Opacity="0.5" />
+                                        </Border.Effect>
+                                        <Image Source="{Binding ResourceKey, Converter={StaticResource ResourceKeyConverter}}"
+                                               Margin="1" />
+                                    </Border>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Window>

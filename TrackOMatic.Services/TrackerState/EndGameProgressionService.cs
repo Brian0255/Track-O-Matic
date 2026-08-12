@@ -38,9 +38,9 @@ public class EndGameProgressionService: IEndGameProgressionService
 
     #region IEndGameProgressionService Implementation
 
-    public IReadOnlyList<int> GetHelmKongs()
+    public IList<int> GetHelmKongs()
     {
-        return _savedProgress.HelmKongs.AsReadOnly();
+        return _savedProgress.HelmKongs;
     }
 
     public void SetHelmKongs(IEnumerable<int> kongs)

@@ -99,7 +99,6 @@ namespace TrackOMatic
                     }
                 }
             }
-            */
 
             // Populate Helm Kong order
             if (spoilerData.HelmOrder != null && spoilerData.HelmOrder.Count > 0)
@@ -121,6 +120,7 @@ namespace TrackOMatic
                     }
                 }
             }
+            */
 
             // Populate Final Boss Kong order (KRool order)
             if (spoilerData.FinalBossOrder != null && spoilerData.FinalBossOrder.Count > 0)

@@ -168,20 +168,6 @@ public class SavedProgressTests
     }
 
     [Fact]
-    public void HelmKongs_EmptyByDefault()
-    {
-        // Arrange & Act
-        var progress = new SavedProgress();
-
-        // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(progress.HelmKongs);
-            Assert.Empty(progress.HelmKongs);
-        });
-    }
-
-    [Fact]
     public void HelmKongs_CanBePopulated()
     {
         // Arrange
@@ -195,20 +181,6 @@ public class SavedProgressTests
         {
             Assert.NotNull(progress.HelmKongs);
             Assert.Equal(5, progress.HelmKongs.Count);
-        });
-    }
-
-    [Fact]
-    public void BossKongs_EmptyByDefault()
-    {
-        // Arrange & Act
-        var progress = new SavedProgress();
-
-        // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(progress.BossKongs);
-            Assert.Empty(progress.BossKongs);
         });
     }
 
