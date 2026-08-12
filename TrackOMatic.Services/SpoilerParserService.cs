@@ -109,7 +109,7 @@ public class SpoilerParserService : ISpoilerService
                 RegionData = ParseRegionPointData(rawSpoiler),
                 PointSpread = ParsePointSpread(rawSpoiler),
                 StartingItems = ParseStartingMoves(rawSpoiler),
-                BossOrder = ParseHelmOrder(startingInfo),
+                HelmOrder = ParseHelmOrder(startingInfo),
                 FinalBossOrder = ParseFinalBossOrder(startingInfo),
                 LevelOrder = ParseLevelOrder(startingInfo),
                 RegionBarrierInfo = ParseBlockerInfo(startingInfo),

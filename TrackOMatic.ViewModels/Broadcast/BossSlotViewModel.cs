@@ -117,7 +117,7 @@ public class BossSlotViewModel: ObservableObject, IDisposable
         }
         else
         {
-            var data = e.NewData.BossOrder;
+            var data = e.NewData.FinalBossOrder;
             var kongsRequired = data.Count;
             if (_slotNumber < kongsRequired)
             {

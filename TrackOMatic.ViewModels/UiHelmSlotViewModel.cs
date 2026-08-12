@@ -9,6 +9,7 @@ namespace TrackOMatic.ViewModels;
 public class UiHelmSlotViewModel : HelmSlotViewModel
 {
     private readonly IEndGameProgressionService _endGameProgressionService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly IItemSelectorService _itemSelectorService;
     private readonly int _slotNumber;
 
@@ -27,11 +28,12 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
     {
         _slotNumber = slotNumber;
         _endGameProgressionService = endGameProgressionService;
+        _parsedSpoilerDataService = parsedSpoilerDataService;
         _itemSelectorService = itemSelectorService;
 
-        SelectItemCommand = new AsyncRelayCommand<(double X, double Y)>(ExecuteSelectItem);
-        CycleNextCommand = new RelayCommand(ExecuteCycleNext);
-        CyclePreviousCommand = new RelayCommand(ExecuteCyclePrevious);
+        SelectItemCommand = new AsyncRelayCommand<(double X, double Y)>(ExecuteSelectItem, CanExecuteSelectItem);
+        CycleNextCommand = new RelayCommand(ExecuteCycleNext, CanExecuteCycleNext);
+        CyclePreviousCommand = new RelayCommand(ExecuteCyclePrevious, CanExecuteCyclePrevious);
     }
 
     private async Task ExecuteSelectItem((double X, double Y) screenMousePosition)
@@ -56,6 +58,8 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
         _endGameProgressionService.SetHelmKongs(helmKongs);
     }
 
+    private bool CanExecuteSelectItem((double X, double Y) screenMousePosition) => !_parsedSpoilerDataService.HasHelmOrder();
+
     private void ExecuteCycleNext()
     {
         var helmKongs = _endGameProgressionService.GetHelmKongs();
@@ -64,6 +68,8 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
         _endGameProgressionService.SetHelmKongs(helmKongs);
     }
 
+    private bool CanExecuteCycleNext() => !_parsedSpoilerDataService.HasHelmOrder();
+
     private void ExecuteCyclePrevious()
     {
         var helmKongs = _endGameProgressionService.GetHelmKongs();
@@ -71,4 +77,6 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
         helmKongs[_slotNumber] = (oldValue + 5) % 6; // Allow for the unknown kong.
         _endGameProgressionService.SetHelmKongs(helmKongs);
     }
+
+    private bool CanExecuteCyclePrevious() => !_parsedSpoilerDataService.HasHelmOrder();
 }

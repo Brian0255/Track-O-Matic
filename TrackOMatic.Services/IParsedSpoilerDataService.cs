@@ -71,6 +71,18 @@ public interface IParsedSpoilerDataService
     /// <remarks>If there is no current data, a new instance of <see cref="SpoilerSettings"/> will be returned.</remarks>
     /// <returns>The spoiler settings from the current parsed spoiler data.</returns>
     SpoilerSettings GetSpoilerSettings();
+
+    /// <summary>
+    /// Determines whether the current parsed spoiler data contains a helm order.
+    /// </summary>
+    /// <returns></returns>
+    bool HasHelmOrder();
+
+    /// <summary>
+    /// Determines whether the current parsed spoiler data contains a boss order.
+    /// </summary>
+    /// <returns></returns>
+    bool HasBossOrder();
 }
 
 /// <summary>

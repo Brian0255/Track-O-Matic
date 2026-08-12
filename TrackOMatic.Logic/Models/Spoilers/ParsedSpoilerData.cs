@@ -22,7 +22,7 @@ public class ParsedSpoilerData
     ///   due to the presence of the Unknown Kong value in our <see cref="Bosses"/> enum.
     ///2) The max number of entries allowed is 5. If there are fewer, the UI should hide those slots.
     /// </remarks>
-    public List<int> BossOrder { get; init; } = [];
+    public List<int> HelmOrder { get; init; } = [];
 
     /// <summary>
     /// Gets the order of bosses players have to defeat this seed in the parsed spoiler data.

@@ -14,6 +14,19 @@ internal class ItemSelectorServiceWpf(IUserSettingsService userSettingsService) 
     private readonly IUserSettingsService _userSettingsService = userSettingsService
         ?? throw new ArgumentNullException(nameof(userSettingsService));
 
+    /// <summary>
+    /// Selects an item from a grid of items, displaying a dialog to the user.
+    /// </summary>
+    /// <remarks>
+    /// This method is one of the few explicitly allowed to refer to <see cref="MainWindow"/> in code.
+    /// We need the ability to spawn a window where the mouse is located, and this is one of the
+    /// slightly better approaches we can take.
+    /// </remarks>
+    /// <param name="items">The list of items to display along with their coordinates.</param>
+    /// <param name="title">The title of the dialog window.</param>
+    /// <param name="preferredX">The preferred X coordinate for the dialog window.</param>
+    /// <param name="preferredY">The preferred Y coordinate for the dialog window.</param>
+    /// <returns>The selected item, or null if no item was selected.</returns>
     public async Task<ItemGridCell?> SelectItemAsync(IReadOnlyList<ItemGridCell> items, string title, double? preferredX = null, double? preferredY = null)
     {
         if (items == null || items.Count == 0)

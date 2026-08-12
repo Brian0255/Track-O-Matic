@@ -110,7 +110,7 @@ public class HelmSlotViewModel: ObservableObject, IDisposable
         }
         else
         {
-            var data = e.NewData.BossOrder;
+            var data = e.NewData.HelmOrder;
             var kongsRequired = data.Count;
             if (_slotNumber < kongsRequired)
             {

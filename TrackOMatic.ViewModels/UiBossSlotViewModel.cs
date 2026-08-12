@@ -9,6 +9,7 @@ namespace TrackOMatic.ViewModels;
 public class UiBossSlotViewModel : BossSlotViewModel
 {
     private readonly IEndGameProgressionService _endGameProgressionService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly IItemSelectorService _itemSelectorService;
     private readonly int _slotNumber;
 
@@ -27,11 +28,12 @@ public class UiBossSlotViewModel : BossSlotViewModel
     {
         _slotNumber = slotNumber;
         _endGameProgressionService = endGameProgressionService;
+        _parsedSpoilerDataService = parsedSpoilerDataService;
         _itemSelectorService = itemSelectorService;
 
-        SelectItemCommand = new AsyncRelayCommand<(double X, double Y)>(ExecuteSelectItem);
-        CycleNextCommand = new RelayCommand(ExecuteCycleNext);
-        CyclePreviousCommand = new RelayCommand(ExecuteCyclePrevious);
+        SelectItemCommand = new AsyncRelayCommand<(double X, double Y)>(ExecuteSelectItem, CanExecuteSelectItem);
+        CycleNextCommand = new RelayCommand(ExecuteCycleNext, CanExecuteCycleNext);
+        CyclePreviousCommand = new RelayCommand(ExecuteCyclePrevious, CanExecuteCyclePrevious);
     }
 
     private async Task ExecuteSelectItem((double X, double Y) screenMousePosition)
@@ -56,6 +58,8 @@ public class UiBossSlotViewModel : BossSlotViewModel
         _endGameProgressionService.SetBossKongs(bossKongs);
     }
 
+    private bool CanExecuteSelectItem((double X, double Y) screenMousePosition) => !_parsedSpoilerDataService.HasBossOrder();
+
     private void ExecuteCycleNext()
     {
         var bossKongs = _endGameProgressionService.GetBossKongs();
@@ -64,6 +68,8 @@ public class UiBossSlotViewModel : BossSlotViewModel
         _endGameProgressionService.SetBossKongs(bossKongs);
     }
 
+    private bool CanExecuteCycleNext() => !_parsedSpoilerDataService.HasBossOrder();
+
     private void ExecuteCyclePrevious()
     {
         var bossKongs = _endGameProgressionService.GetBossKongs();
@@ -71,4 +77,6 @@ public class UiBossSlotViewModel : BossSlotViewModel
         bossKongs[_slotNumber] = (oldValue + 12) % 13; // Allow for the unknown kong.
         _endGameProgressionService.SetBossKongs(bossKongs);
     }
+
+    private bool CanExecuteCyclePrevious() => !_parsedSpoilerDataService.HasBossOrder();
 }

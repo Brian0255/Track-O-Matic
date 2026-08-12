@@ -107,5 +107,9 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
 
     public SpoilerSettings GetSpoilerSettings() => _currentData?.SpoilerSettings ?? new();
 
+    public bool HasHelmOrder() => CurrentData?.HelmOrder is not null && CurrentData.HelmOrder.Count > 0;
+
+    public bool HasBossOrder() => CurrentData?.FinalBossOrder is not null && CurrentData.FinalBossOrder.Count > 0;
+
     #endregion
 }
