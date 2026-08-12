@@ -11,8 +11,6 @@ using AutoUpdaterDotNET;
 
 using Microsoft.Win32;
 
-using Newtonsoft.Json.Linq;
-
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;

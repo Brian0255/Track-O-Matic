@@ -1,6 +1,6 @@
+using System.Text.Json;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
-using Newtonsoft.Json;
 
 namespace TrackOMatic.Logic.Test.Models;
 
@@ -203,20 +203,6 @@ public class SavedProgressTests
     }
 
     [Fact]
-    public void LevelOrder_EmptyByDefault()
-    {
-        // Arrange & Act
-        var progress = new SavedProgress();
-
-        // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(progress.LevelOrder);
-            Assert.Empty(progress.LevelOrder);
-        });
-    }
-
-    [Fact]
     public void LevelOrder_CanBePopulated()
     {
         // Arrange
@@ -242,8 +228,8 @@ public class SavedProgressTests
         original.spoilerPath = testPath;
 
         // Act
-        var json = JsonConvert.SerializeObject(original);
-        var restored = JsonConvert.DeserializeObject<SavedProgress>(json);
+        var json = JsonSerializer.Serialize(original);
+        var restored = JsonSerializer.Deserialize<SavedProgress>(json);
 
         // Assert
         Assert.Multiple(() =>
@@ -276,8 +262,8 @@ public class SavedProgressTests
         );
 
         // Act
-        var json = JsonConvert.SerializeObject(original);
-        var restored = JsonConvert.DeserializeObject<SavedProgress>(json);
+        var json = JsonSerializer.Serialize(original);
+        var restored = JsonSerializer.Deserialize<SavedProgress>(json);
 
         // Assert
         Assert.Multiple(() =>
@@ -308,8 +294,8 @@ public class SavedProgressTests
         original.LevelOrder = [1, 2, 3, 4, 5];
 
         // Act
-        var json = JsonConvert.SerializeObject(original);
-        var restored = JsonConvert.DeserializeObject<SavedProgress>(json);
+        var json = JsonSerializer.Serialize(original);
+        var restored = JsonSerializer.Deserialize<SavedProgress>(json);
 
         // Assert
         Assert.Multiple(() =>

@@ -1,7 +1,6 @@
-using Newtonsoft.Json;
-
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models.Hints;
@@ -51,7 +50,7 @@ namespace TrackOMatic
                 ?? throw new InvalidOperationException("Unable to load default shortcuts resource.");
             using StreamReader reader = new(stream);
             string json = reader.ReadToEnd();
-            return JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json)
+            return JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(json)
                 ?? throw new InvalidOperationException("Default shortcuts resource could not be deserialized.");
         }
 
@@ -79,7 +78,7 @@ namespace TrackOMatic
 
                 using StreamReader reader = new(userShortcutsFile);
                 string json = reader.ReadToEnd();
-                var deserialized = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
+                var deserialized = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(json);
 
                 if (deserialized == null || !deserialized.ContainsKey("Hint Regions"))
                 {

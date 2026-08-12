@@ -1,6 +1,5 @@
-using Newtonsoft.Json;
-
 using System.IO;
+using System.Text.Json;
 
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
@@ -65,7 +64,7 @@ namespace TrackOMatic
             CurrentSavedProgress.HelmDoorImageIndexes = MainWindow.HelmDoorHints.GetImageIndexes();
             CurrentSavedProgress.HelmDoorCounts = MainWindow.HelmDoorHints.GetItemCounts();
             CurrentSavedProgress.BossKongs = MainWindow.GetBossKongs();
-            var JSONString = JsonConvert.SerializeObject(CurrentSavedProgress);
+            var JSONString = JsonSerializer.Serialize(CurrentSavedProgress);
             if (writeToFile)
             {
                 File.WriteAllText(filePath, JSONString);
@@ -142,7 +141,7 @@ namespace TrackOMatic
             try
             {
                 var jsonString = File.ReadAllText(filePath);
-                SavedProgress? savedData = JsonConvert.DeserializeObject<SavedProgress>(jsonString);
+                SavedProgress? savedData = JsonSerializer.Deserialize<SavedProgress>(jsonString);
                 if (savedData == null)
                 {
                     return;

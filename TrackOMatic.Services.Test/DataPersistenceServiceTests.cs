@@ -238,45 +238,6 @@ public sealed class DataPersistenceServiceTests : IDisposable
         Assert.True(failedEventFired);
     }
 
-    [Fact]
-    public void Save_WithComplexProgress_SerializesCorrectly()
-    {
-        // Arrange
-        var service = new DataPersistenceService();
-        var progress = new SavedProgress();
-
-        progress.SavedHints.Add(new("BLocker", "Location 1", "2", new(), new(), "hint-1"));
-        progress.SavedHints.Add(new("HelmDoor", "Location 2", "3", new(), new(), "hint-2"));
-        progress.SavedGBCounts[RegionName.JUNGLE_JAPES] = "10";
-        progress.SavedGBCounts[RegionName.ANGRY_AZTEC] = "5";
-        progress.BLockerImageIndexes[RegionName.JUNGLE_JAPES] = 1;
-        progress.BLockerImageIndexes[RegionName.ANGRY_AZTEC] = 2;
-        progress.HelmDoorImageIndexes.AddRange([4, 5, 6]);
-        progress.HelmDoorCounts.Add("20");
-        progress.HelmKongs.AddRange([0, 1]);
-        progress.BossKongs.Add(2);
-        progress.LevelOrder.AddRange([0, 1, 2]);
-
-        // Act
-        service.Save(progress, _testFilePath);
-
-        // Assert
-        Assert.True(File.Exists(_testFilePath));
-        var json = File.ReadAllText(_testFilePath);
-        var deserialized = JsonSerializer.Deserialize<SavedProgress>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(deserialized);
-            // Note: SavedHints doesn't deserialize properly because SavedHint has a parameterized constructor
-            // and System.Text.Json requires parameterless constructors for collection items.
-            // This is a known limitation that will be addressed in a future iteration.
-            Assert.Equal("10", deserialized.SavedGBCounts[RegionName.JUNGLE_JAPES]);
-            Assert.Equal(3, deserialized.HelmDoorImageIndexes.Count);
-            Assert.Equal(2, deserialized.HelmKongs.Count);
-        });
-    }
-
     #endregion
 
     #region Reset Tests

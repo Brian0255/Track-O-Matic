@@ -6,7 +6,7 @@ namespace TrackOMatic.Logic.Models;
 
 public class SavedProgress
 {
-    public Dictionary<ItemName, SavedItem> SavedItems { get; }
+    public Dictionary<ItemName, SavedItem> SavedItems { get; set; }
     public Dictionary<RegionName, string> SavedGBCounts { get; set; }
     public Dictionary<RegionName, int> BLockerImageIndexes { get; set; }
     public List<int> HelmDoorImageIndexes { get; set; }
