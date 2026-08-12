@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Media;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
@@ -19,8 +18,6 @@ namespace TrackOMatic
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        private List<ProgressiveItem> KRoolKongs;
 
         //need to keep count of which of these you currently have because their item display is different
         private Dictionary<ItemName, bool> SharedMoves = new()
@@ -165,20 +162,6 @@ namespace TrackOMatic
             };
 
             InitializeComponent();
-
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            KRoolKongs = new() { KRoolKong1, KRoolKong2, KRoolKong3, KRoolKong4, KRoolKong5 };
-            for (int i = 0; i < KRoolKongs.Count; ++i)
-            {
-                var item = KRoolKongs[i];
-                item.Enabled = false;
-                UpdateKRoolKong(i, mainWindow.BossKongs[i].image.Source);
-            }
-        }
-
-        public void UpdateKRoolKong(int index, ImageSource newSource)
-        {
-            KRoolKongs[index].image.Source = newSource;
         }
 
         public void Reset()

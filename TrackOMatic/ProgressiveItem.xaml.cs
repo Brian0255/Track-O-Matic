@@ -39,20 +39,6 @@ namespace TrackOMatic
             ImageSources = new List<List<BitmapImage>>();
         }
 
-        private void UpdateBroadcastView()
-        {
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            if (mainWindow.BroadcastView == null)
-            {
-                return;
-            }
-
-            if (mainWindow.BossKongs.IndexOf(this) != -1)
-            {
-                mainWindow.BroadcastView.UpdateKRoolKong(mainWindow.BossKongs.IndexOf(this), image.Source);
-            }
-        }
-
         public void Reset()
         {
             Visibility = Visibility.Visible;
@@ -69,13 +55,11 @@ namespace TrackOMatic
         private void SetImage(BitmapImage newImage)
         {
             image.Source = newImage;
-            UpdateBroadcastView();
         }
 
         private void ReadCurrentIndex()
         {
             image.Source = images[currentIndex];
-            UpdateBroadcastView();
         }
 
         private void ImageButton_LeftPress(object sender, RoutedEventArgs e)

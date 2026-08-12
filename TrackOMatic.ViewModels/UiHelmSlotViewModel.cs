@@ -29,16 +29,19 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
         _endGameProgressionService = endGameProgressionService;
         _itemSelectorService = itemSelectorService;
 
-        SelectItemCommand = new AsyncRelayCommand(ExecuteSelectItem);
+        SelectItemCommand = new AsyncRelayCommand<(double X, double Y)>(ExecuteSelectItem);
         CycleNextCommand = new RelayCommand(ExecuteCycleNext);
         CyclePreviousCommand = new RelayCommand(ExecuteCyclePrevious);
     }
 
-    private async Task ExecuteSelectItem()
+    private async Task ExecuteSelectItem((double X, double Y) screenMousePosition)
     {
-        // Implement the logic to select an item for the helm slot.
-        // This could involve opening a dialog or cycling through available items.
-        var result = await _itemSelectorService.SelectItemAsync(_helmKongMappings.AsReadOnly(), "Select Kong");
+        var result = await _itemSelectorService.SelectItemAsync(
+            _helmKongMappings.AsReadOnly(),
+            "Select Kong",
+            screenMousePosition.X,
+            screenMousePosition.Y
+        );
 
         if (result is null)
         {

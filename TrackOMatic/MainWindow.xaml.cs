@@ -565,7 +565,7 @@ namespace TrackOMatic
             UpdateBroadcastNumberDisplayToggles();
             Regions = [];
             Items = ItemGrid;
-            BossKongs = new() { BossKong1, BossKong2, BossKong3, BossKong4, BossKong5 };
+            BossKongs = [];
             HelmKongs = [];
 
             HintPanels = [

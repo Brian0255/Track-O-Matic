@@ -75,9 +75,13 @@ public partial class HelmSlot : UserControl
             return;
         }
 
-        if (viewModel.SelectItemCommand.CanExecute(null))
+        var mousePos = Mouse.GetPosition(this);
+        var screenMousePosition = PointToScreen(mousePos);
+        var parameter = (screenMousePosition.X, screenMousePosition.Y);
+
+        if (viewModel.SelectItemCommand.CanExecute(parameter))
         {
-            viewModel.SelectItemCommand.Execute(null);
+            viewModel.SelectItemCommand.Execute(parameter);
         }
     }
 

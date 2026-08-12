@@ -51,9 +51,9 @@ public class EndGameProgressionService: IEndGameProgressionService
         BlastStateChanged?.Invoke(this, new BlastStateChangedEventArgs([.. previous], newList, ChangeReason.UserModified));
     }
 
-    public IReadOnlyList<int> GetBossKongs()
+    public IList<int> GetBossKongs()
     {
-        return _savedProgress.BossKongs.AsReadOnly();
+        return _savedProgress.BossKongs;
     }
 
     public void SetBossKongs(IEnumerable<int> kongs)

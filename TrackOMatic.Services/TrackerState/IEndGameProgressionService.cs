@@ -28,7 +28,7 @@ public interface IEndGameProgressionService
     /// Get the list of Kongs required for defeating the Final Boss Gauntlet.
     /// </summary>
     /// <returns></returns>
-    IReadOnlyList<int> GetBossKongs();
+    IList<int> GetBossKongs();
 
     /// <summary>
     /// Set the Kongs needed for defeating the Final Boss Gauntlet.
