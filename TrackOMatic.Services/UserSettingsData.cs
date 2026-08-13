@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace TrackOMatic.Services;
 
 /// <summary>
@@ -26,6 +28,8 @@ public class UserSettingsData
     public bool ShowHelmOrder { get; set; } = true;
 
     // Broadcast view
+    [JsonIgnore]
+    public bool BroadcastViewActive { get; set; } = false;
     public bool BroadcastHelmKRool { get; set; } = false;
     public bool BroadcastShopkeepers { get; set; } = false;
     public bool BroadcastSongDisplay { get; set; } = false;

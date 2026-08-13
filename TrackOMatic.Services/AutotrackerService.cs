@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Timers;
@@ -135,6 +136,9 @@ public class AutotrackerService : IAutotrackerService
         _songService = songService ?? throw new ArgumentNullException(nameof(songService));
         _regionPlacementOrchestrator = regionPlacementOrchestrator ?? throw new ArgumentNullException(nameof(regionPlacementOrchestrator));
 
+        // Here is hoping we don't need disposable.
+        _settings.PropertyChanged += OnSettingsPropertyChanged;
+
         // Initialize state
         CurrentRegion = RegionName.UNKNOWN;
         _previousRegion = RegionName.UNKNOWN;
@@ -153,6 +157,22 @@ public class AutotrackerService : IAutotrackerService
         Timeout = 0;
         _autosave = false;
         _progHintItem = ItemType.GOLDEN_BANANA;
+    }
+
+    private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(_settings.Autotracking))
+        {
+            return;
+        }
+        if (_settings.Autotracking)
+        {
+            Start();
+        }
+        else
+        {
+            Stop();
+        }
     }
 
     /// <summary>
@@ -451,7 +471,7 @@ public class AutotrackerService : IAutotrackerService
         );
 
         AttachedEmulatorInfo? attachedProcessInfo = _emulatorAttacher.Attach(verificationInfo);
-        
+
         if (attachedProcessInfo == null)
         {
             return;

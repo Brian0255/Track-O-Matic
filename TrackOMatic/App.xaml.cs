@@ -65,7 +65,8 @@ public partial class App : Application
             spoilerService,
             parsedSpoilerDataService,
             levelOrderService,
-            autotrackingService
+            autotrackingService,
+            themeService
         );
         mainWindow.Show();
     }

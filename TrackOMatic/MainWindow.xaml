@@ -32,6 +32,7 @@
             </Style>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
@@ -48,44 +49,43 @@
                 <MenuItem Header="Save Data" StaysOpenOnClick="True"  Click="OnSave"/>
                 <MenuItem Header="Load Data" StaysOpenOnClick="True"  Click="OnLoad"/>
             </MenuItem>
-            <MenuItem Header="Toggles" Focusable="False">
-                <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding TopMostSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="TopMostToggle"/>
-                <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding AutotrackingSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="AutotrackToggle"/>
-                <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding SongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="SongDisplayToggle"/>
-                <MenuItem Name="HelmInLevelOrder" Header='Helm in Level Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding HelmInLevelOrderSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="HelmInLevelOrder_Click"/>
-                <MenuItem Name="ColorBarrelPadMoves" Header="Colored Barrel &amp; Pad Moves" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding ColoredBarrelPadMovesSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="ColoredBarrelPadMoves_Click"/>
+            <MenuItem Header="Toggles" Focusable="False" DataContext="{Binding MenuViewModel, RelativeSource={RelativeSource AncestorType=Window}}">
+                <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsTopMostEnabled, Mode=OneWay}" Command="{Binding ToggleTopMostCommand}" />
+                <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsAutotrackingEnabled, Mode=OneWay}" Command="{Binding ToggleAutotrackingCommand}" />
+                <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsSongDisplayEnabled, Mode=OneWay}" Command="{Binding ToggleSongDisplayCommand}" />
+                <MenuItem Name="HelmInLevelOrder" Header="Helm in Level Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsHelmInLevelOrderEnabled, Mode=OneWay}" Command="{Binding ToggleHelmInLevelOrderCommand}" />
+                <MenuItem Name="ColorBarrelPadMoves" Header="Colored Barrel &amp; Pad Moves" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsColoredBarrelPadMovesEnabled, Mode=OneWay}" Command="{Binding ToggleColoredBarrelPadMovesCommand}" />
                 <MenuItem Name="CollectiblesDisplayOption" Header="Collectibles">
-                    <MenuItem Name="TotalBPs" Header='Total Blueprints' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding ShowTotalBlueprintsSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="TotalBPs_Click"/>
-                    <MenuItem Name="CompanyCoins" Header='Company Coins' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding ShowTotalCompanyCoinsSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="CompanyCoins_Click"/>
+                    <MenuItem Name="TotalBPs" Header="Total Blueprints" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsTotalBlueprintCollectibleEnabled, Mode=OneWay}" Command="{Binding ToggleTotalBlueprintCollectibleCommand}" />
+                    <MenuItem Name="CompanyCoins" Header="Company Coins" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsCompanyCoinCollectibleEnabled, Mode=OneWay}" Command="{Binding ToggleCompanyCoinCollectibleCommand}" />
                 </MenuItem>
                 <MenuItem Name="SpoilerHintsOption" Header="Spoiler Hints">
-                    <MenuItem Name="KRoolOrder" Header='K. Rool Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding ShowKRoolOrderSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="KRoolOrder_Click"/>
-                    <MenuItem Name="HelmOrder" Header='Helm Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding ShowHelmOrderSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="HelmOrder_Click"/>
+                    <MenuItem Name="KRoolOrder" Header="K. Rool Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsHelmSpoilerOrderEnabled, Mode=OneWay}" Command="{Binding ToggleHelmSpoilerOrderCommand}" />
+                    <MenuItem Name="HelmOrder" Header="Helm Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBossSpoilerOrderEnabled, Mode=OneWay}" Command="{Binding ToggleBossSpoilerOrderCommand}" />
                 </MenuItem>
                 <MenuItem Name="ProgHintOption" Header="Progressive Hints">
-                    <MenuItem Name="ProgHintShowAmount" Header='Show Amount for Next Hint Pack' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding ShowAmountForHintsSetting, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                    <!--MenuItem Name="SetProgItemType" Header='Set Item Type' StaysOpenOnClick="True" Click="SetProgHintType"/-->
+                    <MenuItem Name="ProgHintShowAmount" Header="Show Amount for Next Hint Pack" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsProgressiveHintCounterEnabled, Mode=OneWay}" Command="{Binding ToggleProgressiveHintCounterCommand}" />
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Hint Display" Focusable="False">
-                <RadioButton Name="hintDisplayOff" Checked="HintDisplayToggle">Off</RadioButton>
-                <RadioButton Name="hintDisplayMP" Checked="HintDisplayToggle">Multipath Hints</RadioButton>
-                <RadioButton Name="hintDisplayDirect" Checked="HintDisplayToggle">Direct Item Hints</RadioButton>
-                <MenuItem Name="HelmDoors" Header="Helm Doors" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding HelmDoorsSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="HelmDoors_Click"/>
-                <MenuItem Name="CompactOption" Header="Compact Mode" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding CompactModeSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="CompactModeToggle"/>
-                <MenuItem Name="SortNewHintsOption" Header="Sort New Path Hints By Length" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding AutoSortPathHintsSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="AutoSortToggle"/>
-                <MenuItem Name="EnemiesInAutofillOption" Header="Include Enemies in Hint Searches" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding EnemiesInAutofillSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="EnemyAutofillToggle"/>
+            <MenuItem Header="Hint Display" Focusable="False" DataContext="{Binding MenuViewModel, RelativeSource={RelativeSource AncestorType=Window}}">
+                <RadioButton GroupName="HintDisplay" Name="hintDisplayOff" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.Off}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.Off}">Off</RadioButton>
+                <RadioButton GroupName="HintDisplay" Name="hintDisplayMP" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.MultipathHints}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.MultipathHints}">Multipath Hints</RadioButton>
+                <RadioButton GroupName="HintDisplay" Name="hintDisplayDirect" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.DirectItemHints}">Direct Item Hints</RadioButton>
+                <MenuItem Name="HelmDoors" Header="Helm Doors" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsHelmDoorPanelEnabled, Mode=OneWay}" Command="{Binding ToggleHelmDoorPanelCommand}" />
+                <MenuItem Name="CompactOption" Header="Compact Mode" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsCompactModeEnabled, Mode=OneWay}" Command="{Binding ToggleCompactModeCommand}" />
+                <MenuItem Name="SortNewHintsOption" Header="Sort New Path Hints By Length" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsSortablePathHintsEnabled, Mode=OneWay}" Command="{Binding ToggleSortablePathHintsCommand}" />
+                <MenuItem Name="EnemiesInAutofillOption" Header="Include Enemies in Hint Searches" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsEnemySearchEnabled, Mode=OneWay}" Command="{Binding ToggleEnemySearchCommand}" />
             </MenuItem>
-            <MenuItem Header="Broadcast View" Focusable="False">
-                <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
+            <MenuItem Header="Broadcast View" Focusable="False" DataContext="{Binding MenuViewModel, RelativeSource={RelativeSource AncestorType=Window}}">
+                <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True" IsChecked="{Binding IsBroadcastViewEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastViewCommand}" />
                 <MenuItem Name="BroadcastCustomize" Header="Main Options">
-                    <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding BroadcastHelmKRoolSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="BroadcastHelmKRoolToggle"/>
-                    <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding BroadcastShopkeepersSetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="BroadcastShopkeepersToggle"/>
-                    <MenuItem Name="BroadcastSongDisplay" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding BroadcastSongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}}" Click="BroadcastSongDisplayToggle"/>
+                    <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBroadcastHelmKRoolEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastHelmKRoolCommand}" />
+                    <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBroadcastShopkeepersEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastShopkeepersCommand}" />
+                    <MenuItem Name="BroadcastSongDisplay" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBroadcastSongDisplayEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastSongDisplayCommand}" />
                 </MenuItem>
                 <MenuItem Name="BroadcastNumberDisplayOption" Header="Number Display">
-                    <RadioButton Name="broadcastNumberDisplayPoints" Checked="BroadcastNumberDisplayToggle">Points</RadioButton>
-                    <RadioButton Name="broadcastNumberDisplayWOTHCount" Checked="BroadcastNumberDisplayToggle">WOTH Count</RadioButton>
+                    <RadioButton GroupName="BroadcastNumberDisplay" Name="broadcastNumberDisplayPoints" IsChecked="{Binding BroadcastNumberLabel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:BroadcastNumberLabel.Points}}" Command="{Binding SetBroadcastNumberLabelCommand}" CommandParameter="{x:Static enums:BroadcastNumberLabel.Points}">Points</RadioButton>
+                    <RadioButton GroupName="BroadcastNumberDisplay" Name="broadcastNumberDisplayWOTHCount" IsChecked="{Binding BroadcastNumberLabel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:BroadcastNumberLabel.WothCount}}" Command="{Binding SetBroadcastNumberLabelCommand}" CommandParameter="{x:Static enums:BroadcastNumberLabel.WothCount}">WOTH Count</RadioButton>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Version 2.2.3" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
@@ -109,10 +109,7 @@
                             <Style TargetType="{x:Type RowDefinition}">
                                 <Setter Property="Height" Value=".01*" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                        <Setter Property="Height" Value=".01*"  />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding SongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                                    <DataTrigger Binding="{Binding MenuViewModel.IsSongDisplayEnabled, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
                                         <Setter Property="Height" Value="0"  />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -124,10 +121,7 @@
                             <Style TargetType="{x:Type RowDefinition}">
                                 <Setter Property="Height" Value=".12*" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                        <Setter Property="Height" Value=".12*"  />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding SongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                                    <DataTrigger Binding="{Binding MenuViewModel.IsSongDisplayEnabled, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
                                         <Setter Property="Height" Value="0"  />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -204,7 +198,7 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".1*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0" Visibility="{Binding ShowAmountForHintsSetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
+                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0" Visibility="{Binding MenuViewModel.IsProgressiveHintCounterEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
                             <RowDefinition Height="1.2*"/>
@@ -229,7 +223,7 @@
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" Grid.ColumnSpan="1" Background="{StaticResource VeryDark}" Margin="0,0,0,0"/>
                             <Image Name="ItemsToNextHintImage" Source="Images/dk64/gb.png" Margin="0,1,1,1"/>
-                            
+
                             <Viewbox Grid.Column="1" HorizontalAlignment="Left" Margin="0">
                                 <Border Background="{StaticResource VeryDark}" Padding="0,0,0,1">
                                     <TextBlock Margin="0,-2,3,-1" x:Name="ItemsToNextHint" Text="0" VerticalAlignment="Center" FontSize="20"  Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" Visibility="Visible"/>
@@ -237,8 +231,19 @@
                             </Viewbox>
                         </Grid>
                     </Grid>
-                    <local:TotalBlueprint x:Name="BlueprintsTotal" Grid.Column="4" Visibility="{Binding ShowTotalBlueprintsSetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
-                    <local:Countable x:Name="CompanyCoinsTotal" Grid.Column="6" ItemType="COMPANY_COIN" Visibility="{Binding ShowTotalCompanyCoinsSetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
+                    <local:TotalBlueprint x:Name="BlueprintsTotal" Visibility="{Binding MenuViewModel.IsTotalBlueprintCollectibleEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
+                        <local:TotalBlueprint.Style>
+                            <Style TargetType="local:TotalBlueprint">
+                                <Setter Property="Grid.Column" Value="4"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ShowsBlueprintsButNotCoins, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                        <Setter Property="Grid.Column" Value="6"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </local:TotalBlueprint.Style>
+                    </local:TotalBlueprint>
+                    <local:Countable x:Name="CompanyCoinsTotal" Grid.Column="6" ItemType="COMPANY_COIN" Visibility="{Binding MenuViewModel.IsCompanyCoinCollectibleEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
                     <local:Countable Grid.Column="8" ItemType="PEARL" />
                     <local:Countable Grid.Column="10" ItemType="BATTLE_CROWN" />
                     <local:Countable Grid.Column="12" ItemType="BANANA_MEDAL" />
@@ -346,7 +351,7 @@
                     <local:UiItem Grid.Row="3" Grid.Column="9" ItemName="HOMING_AMMO" />
                     <local:UiItem Grid.Row="3" Grid.Column="10" ItemName="FAIRY_CAMERA" />
                     <local:UiItem Grid.Row="3" Grid.Column="11" ItemName="SHOCKWAVE" />
-                    
+
                     <!--Shopkeepers-->
                     <local:UiItem Grid.Row="0" Grid.Column="12" ItemName="CRANKY" />
                     <local:UiItem Grid.Row="1" Grid.Column="12" ItemName="CANDY" />
@@ -397,80 +402,80 @@
                     </Grid>
                 </Grid>
                 <!-- Song Display -->
-                <local:Song Grid.Row="8" Background="Transparent" Margin="3,-2,-1,3" Visibility="{Binding SongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
+                <local:Song Grid.Row="8" Background="Transparent" Margin="3,-2,-1,3" Visibility="{Binding MenuViewModel.IsSongDisplayEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
             </Grid>
             <Grid Grid.Column="1" Margin="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Name="MultipathColumns" Width="2*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Name="DirectItemHintGrid">
-                <Grid.Style>
-                    <Style TargetType="{x:Type Grid}">
-                        <Setter Property="Visibility" Value="Hidden" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding HintDisplayModeName, RelativeSource={RelativeSource AncestorType=Window}}" Value="Direct Item Hints">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Style>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Name="DirectHintsThirdMain" Width="0*"/>
-                </Grid.ColumnDefinitions>
-                <Grid Name="DirectHintsCol0" Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Name="DirectHintsCol0LastRow" Height="1*"/>
-                    </Grid.RowDefinitions>
+                <Grid Grid.Column="0" Name="DirectItemHintGrid">
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding MenuViewModel.HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Name="DirectHintsThirdMain" Width="0*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Name="DirectHintsCol0" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Name="DirectHintsCol0LastRow" Height="1*"/>
+                        </Grid.RowDefinitions>
                         <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="3" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
                         <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="3" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
                         <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="3" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
                         <local:HintPanel Grid.Row="3" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="3" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
                     </Grid>
-                <Grid Name="DirectHintsCol1" Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Name="DirectHintsCol1LastRow" Height="1*"/>
-                    </Grid.RowDefinitions>
+                    <Grid Name="DirectHintsCol1" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Name="DirectHintsCol1LastRow" Height="1*"/>
+                        </Grid.RowDefinitions>
                         <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="3" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
                         <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="3" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
                         <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="3" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
                         <local:HintPanel Grid.Row="3" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="3" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
                     </Grid>
-                <Grid Name="DirectHintsCol2" Grid.Column="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    
-                        
+                    <Grid Name="DirectHintsCol2" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+
                     </Grid>
-            </Grid>
-            <Grid Grid.Column="0" Name="MultipathGrid">
-                <Grid.Style>
-                    <Style TargetType="{x:Type Grid}">
-                        <Setter Property="Visibility" Value="Hidden" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding HintDisplayModeName, RelativeSource={RelativeSource AncestorType=Window}}" Value="Multipath Hints">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Style>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
+                </Grid>
+                <Grid Grid.Column="0" Name="MultipathGrid">
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding MenuViewModel.HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.MultipathHints}}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Name="MultipathColumn2" Width="0*"/>
                     </Grid.ColumnDefinitions>
-                <local:HintPanel HintType="PATH" x:Name="PathsPanel" Margin="3" Grid.Column="0" Heading="PATHS" LineColor="#dba512"  />
+                    <local:HintPanel HintType="PATH" x:Name="PathsPanel" Margin="3" Grid.Column="0" Heading="PATHS" LineColor="#dba512"  />
                     <Grid Name="MultipathColumn1" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Name="MultipathColumn1Row0" Height="1.6*"/>
@@ -486,8 +491,8 @@
                             <RowDefinition Height="5*"/>
                             <RowDefinition Height="3*"/>
                         </Grid.RowDefinitions>
-                        
-                        
+
+
                     </Grid>
                 </Grid>
                 <Grid Name="UnhintedColumn" Grid.Column="1">
@@ -500,7 +505,7 @@
                                 <Style TargetType="{x:Type RowDefinition}">
                                     <Setter Property="Height" Value="0*" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding HelmDoorsSetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                        <DataTrigger Binding="{Binding MenuViewModel.IsHelmDoorPanelEnabled, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
                                             <Setter Property="Height" Value="1*" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -513,7 +518,7 @@
                             <Style TargetType="{x:Type local:HintPanel}">
                                 <Setter Property="Visibility" Value="Hidden" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HintDisplayModeName, RelativeSource={RelativeSource AncestorType=Window}}" Value="Direct Item Hints">
+                                    <DataTrigger Binding="{Binding MenuViewModel.HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
                                         <Setter Property="Visibility" Value="Visible" />
                                     </DataTrigger>
                                 </Style.Triggers>

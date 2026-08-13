@@ -158,6 +158,7 @@ namespace TrackOMatic
                 else if (e.PropertyName == nameof(IUserSettingsService.BroadcastNumberLabel))
                 {
                     OnPropertyChanged(nameof(BroadcastNumberLabelSetting));
+                    AdjustLayout();
                 }
             };
 
@@ -204,34 +205,6 @@ namespace TrackOMatic
             }
 
             return null;
-        }
-
-        public void TurnItemOn(ItemName item)
-        {
-            if (SharedMoves.ContainsKey(item))
-            {
-                SharedMoves[item] = true;
-                return;
-            }
-            var match = GetMatchingItem(item);
-            if (match != null)
-            {
-                match.SetResourceReference(ItemBackground.BackgroundItemImageProperty, ((ItemName)match.Tag).ToString().ToLower());
-            }
-        }
-
-        public void TurnItemOff(ItemName item)
-        {
-            if (SharedMoves.ContainsKey(item))
-            {
-                SharedMoves[item] = false;
-                return;
-            }
-            var match = GetMatchingItem(item);
-            if (match != null)
-            {
-                match.SetResourceReference(ItemBackground.BackgroundItemImageProperty, ((ItemName)match.Tag).ToString().ToLower() + "_bw");
-            }
         }
 
         public void ActivateTooltip(ItemName item, string hoverText)

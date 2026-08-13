@@ -21,7 +21,8 @@ public class LevelOrderServiceTests
             LevelOrder = [0, 1, 2, 3, 4, 5, 6, 7]
         };
         _provider = new TestSavedProgressProvider(_progress);
-        _sut = new LevelOrderService(_provider);
+        // TODO: Mock this in the future.
+        _sut = new LevelOrderService(_provider, new UserSettingsService());
     }
 
     #region GetLevelOrder Tests

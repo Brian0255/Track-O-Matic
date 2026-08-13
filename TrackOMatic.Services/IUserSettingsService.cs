@@ -29,6 +29,7 @@ public interface IUserSettingsService : INotifyPropertyChanged
     #endregion
 
     #region Broadcast View
+    bool BroadcastViewActive { get; set; }
     bool BroadcastHelmKRool { get; set; }
     bool BroadcastShopkeepers { get; set; }
     bool BroadcastSongDisplay { get; set; }

@@ -247,6 +247,12 @@ public class UserSettingsService : IUserSettingsService
         set => SetProperty(nameof(ShowAmountForHints), () => _settingsData.ShowAmountForHints, v => _settingsData.ShowAmountForHints = v, value);
     }
 
+    public bool BroadcastViewActive
+    {
+        get => _settingsData.BroadcastViewActive;
+        set => SetProperty(nameof(BroadcastViewActive), () => _settingsData.BroadcastViewActive, v => _settingsData.BroadcastViewActive = v, value);
+    }
+
     #endregion
 
     #region INotifyPropertyChanged Support

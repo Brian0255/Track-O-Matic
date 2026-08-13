@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 using TrackOMatic.Logic.Enums;
@@ -15,16 +16,19 @@ namespace TrackOMatic.Services.TrackerState;
 public class LevelOrderService: ILevelOrderService
 {
     private readonly ISavedProgressProvider _progressProvider;
+    private readonly IUserSettingsService _userSettingsService;
     private SavedProgress _savedProgress;
 
     public event EventHandler<LevelOrderStateChangedEventArgs>? LevelOrderChanged;
 
-    public LevelOrderService(ISavedProgressProvider progressProvider)
+    public LevelOrderService(ISavedProgressProvider progressProvider, IUserSettingsService userSettingsService)
     {
         _progressProvider = progressProvider ?? throw new ArgumentNullException(nameof(progressProvider));
+        _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _savedProgress = _progressProvider.CurrentProgress;
         // Set up listener for SavedProgress changes
         _progressProvider.ProgressChanged += OnProgressChanged;
+        _userSettingsService.PropertyChanged += OnUserSettingsChanged;
     }
 
     private void InitializeCollections()
@@ -36,6 +40,21 @@ public class LevelOrderService: ILevelOrderService
     {
         _savedProgress = e.NewProgress;
         InitializeCollections();
+    }
+
+    private void OnUserSettingsChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(_userSettingsService.HelmInLevelOrder))
+        {
+            return;
+        }
+
+        if (!_userSettingsService.HelmInLevelOrder)
+        {
+            var levelOrder = GetLevelOrder();
+            levelOrder[7] = 8;
+            SetLevelOrder(levelOrder);
+        }
     }
 
     #region ILevelOrderService Implementation
