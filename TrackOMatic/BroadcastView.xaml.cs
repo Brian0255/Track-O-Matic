@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Windows;
 
 using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 
 namespace TrackOMatic
@@ -161,8 +160,24 @@ namespace TrackOMatic
                     AdjustLayout();
                 }
             };
+            ParsedSpoilerDataService.ParsedSpoilerDataChanged += (s, e) => AdjustLayout();
 
             InitializeComponent();
+
+            // When the window is closed via the X button, sync the setting
+            // Use e.Cancel = true to prevent the close and let MainWindow handle it via the setting
+            Closing += OnClosing;
+        }
+
+        private void OnClosing(object? sender, CancelEventArgs e)
+        {
+            // Cancel the close if the setting is still true (user didn't toggle it off)
+            // This prevents the cascade: window closing → setting false → handler tries to close again
+            if (UserSettings.BroadcastViewActive)
+            {
+                e.Cancel = true;
+                UserSettings.BroadcastViewActive = false;
+            }
         }
 
         public void Reset()
@@ -189,11 +204,6 @@ namespace TrackOMatic
             var hoardCanDisplay = hoardEnabled && (!bothEnabled || displayOption == BroadcastNumberLabel.WothCount);
 
             MovesWidth.Width = new GridLength(pointsEnabled ? 315 : 345, GridUnitType.Pixel);
-        }
-
-        public void ProcessSpoilerSettings(SpoilerSettings settings)
-        {
-            AdjustLayout();
         }
 
         private ItemBackground? GetMatchingItem(ItemName item)

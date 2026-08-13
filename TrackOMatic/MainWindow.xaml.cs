@@ -28,7 +28,7 @@ namespace TrackOMatic
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public int TotalGBs { get; private set; }
-        public BroadcastView? BroadcastView { get; private set; }
+        private BroadcastView? BroadcastView { get; set; }
         public Dictionary<RegionName, Region> Regions { get; private set; } = null!;
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
@@ -156,12 +156,20 @@ namespace TrackOMatic
                 }
                 else if (e.PropertyName == nameof(UserSettings.HintDisplay))
                 {
-                    OnPropertyChanged(nameof(HintDisplayModeName));
                     UpdateUiViaHintDisplay();
                 }
                 else if (e.PropertyName == nameof(UserSettings.BroadcastViewActive))
                 {
-                    UpdateBroadcastView();
+                    if (UserSettings.BroadcastViewActive)
+                    {
+                        ShowBroadcastWindow();
+                    }
+                    else
+                    {
+                        // Defer close to dispatcher to avoid InvalidOperationException
+                        // when called during BroadcastView's Closing event
+                        Dispatcher.BeginInvoke(() => BroadcastView?.Close());
+                    }
                 }
             };
 
@@ -209,22 +217,6 @@ namespace TrackOMatic
             DataSaver = new(this, DataPersistenceService, ParsedSpoilerDataService, SpoilerService);
             Reset();
             AdjustBasedOnCompactMode();
-        }
-
-        private void UpdateBroadcastView()
-        {
-            if (BroadcastView != null)
-            {
-                BroadcastView.Close();
-                BroadcastView = null;
-                return;
-            }
-            BroadcastView = new BroadcastView(UserSettings, ParsedSpoilerDataService);
-            BroadcastView.Closed += BroadcastClosed;
-            BroadcastView.Show();
-
-            BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
-            BroadcastOption.IsChecked = true;
         }
 
         /// <summary>
@@ -585,11 +577,6 @@ namespace TrackOMatic
 
         public void Reset()
         {
-            if (BroadcastView != null)
-            {
-                BroadcastView.Reset();
-            }
-
             TotalGBs = 0;
             SpoilerLoaded = false;
             ITEM_NAME_TO_REGION.Clear();
@@ -696,14 +683,30 @@ namespace TrackOMatic
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            Dispatcher.BeginInvoke(() => BroadcastView?.Close());
             AppState.DesiredWidth = Width;
             AppState.DesiredHeight = Height;
             DataSaver.Save();
             Autotracker.Shutdown();
-            if (BroadcastView != null)
+        }
+
+        private void ShowBroadcastWindow()
+        {
+            if (BroadcastView == null)
             {
-                BroadcastView.Close();
+                BroadcastView = new BroadcastView(UserSettings, ParsedSpoilerDataService);
+                // Wire up the Closed event so we can clean up when the window closes
+                BroadcastView.Closed += ClosedBroadcastWindow;
             }
+
+            BroadcastView.Show();
+            BroadcastView.Activate();
+        }
+
+        private void ClosedBroadcastWindow(object? sender, EventArgs e)
+        {
+            BroadcastView = null;
+            UserSettings.BroadcastViewActive = false;
         }
 
         public void SetShopkeepers(bool on)
@@ -718,12 +721,6 @@ namespace TrackOMatic
             var shopkeeperColumnWidth = on ? 1.0 : 0;
             ItemsSeparator.Width = new GridLength(separatorWidth, GridUnitType.Star);
             ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
-        }
-
-        private void BroadcastClosed(object? sender, EventArgs e)
-        {
-            BroadcastOption.IsChecked = false;
-            BroadcastView = null;
         }
     }
 }
