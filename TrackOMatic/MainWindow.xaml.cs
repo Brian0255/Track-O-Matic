@@ -599,18 +599,17 @@ namespace TrackOMatic
 
         public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false, bool canAutosave = true)
         {
-            return false; // Will come back.
             if (regionName == RegionName.UNKNOWN)
             {
                 return false;
             }
 
-            if (!ITEM_NAME_TO_ITEM.ContainsKey(itemToProcess))
+            if (!ITEM_NAME_TO_ITEM.TryGetValue(itemToProcess, out Item? item))
             {
                 return false;
             }
 
-            var item = ITEM_NAME_TO_ITEM[itemToProcess];
+            return false; // Will come back.
             bool darken = hint && item.Parent == ItemGrid;
             if (item.Parent != ItemGrid)
             {
@@ -622,16 +621,10 @@ namespace TrackOMatic
                 item.ChangeOpacity(1.0);
             }
 
-            Regions[regionName].RegionGrid.Add_Item(item, false, !darken);
             //should mean that there was no matching vial, item couldn't be placed as a result
             if (item.Parent == ItemGrid)
             {
                 return false;
-            }
-
-            if (BroadcastView != null && !hint)
-            {
-                BroadcastView.TurnItemOn(itemToProcess);
             }
 
             DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility.ToItemVisibility(), true, item.Image.Opacity));

@@ -78,6 +78,7 @@ namespace TrackOMatic
 
         public void InitHoverPoints()
         {
+            /*
             var matchingBackground = mainWindow.ITEM_TO_BACKGROUND_IMAGE[this];
             if (!mainWindow.SpoilerSettings.PointsEnabled)
             {
@@ -103,6 +104,7 @@ namespace TrackOMatic
             {
                 mainWindow.BroadcastView.ActivateTooltip((ItemName)Tag, HoverText);
             }
+            */
         }
 
         private bool pressed { get; set; } = false;
@@ -274,10 +276,6 @@ namespace TrackOMatic
             var key = (ItemName.ToString().ToLower() + "_bw");
             SetResourceReference(ItemImageProperty, key);
             UpdateBackgroundItemKey(key);
-            if (mainWindow.BroadcastView != null)
-            {
-                mainWindow.BroadcastView.TurnItemOff((ItemName)Tag);
-            }
 
             Brightened = false;
         }
@@ -286,13 +284,6 @@ namespace TrackOMatic
         {
             ItemName itemName = (ItemName)Tag;
             Brighten();
-            if (!rightButtonPressed && Tag != null)
-            {
-                if (mainWindow.BroadcastView != null)
-                {
-                    mainWindow.BroadcastView.TurnItemOn((ItemName)Tag);
-                }
-            }
             var opacity = (rightButtonPressed) ? 0.375 : 1.0;
             Opacity = 1.0;
             var adLayer = AdornerLayer.GetAdornerLayer(this);
@@ -412,10 +403,6 @@ namespace TrackOMatic
             MouseDown += Item_MouseDown;
             MouseMove -= Item_MouseMove;
             MouseMove += Item_MouseMove;
-            if (mainWindow.BroadcastView != null && Tag != null)
-            {
-                mainWindow.BroadcastView.TurnItemOff((ItemName)Tag);
-            }
         }
 
         private void Item_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
