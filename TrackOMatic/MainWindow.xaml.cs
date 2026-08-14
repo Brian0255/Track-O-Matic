@@ -27,7 +27,6 @@ namespace TrackOMatic
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public int TotalGBs { get; private set; }
         private BroadcastView? BroadcastView { get; set; }
         public Dictionary<RegionName, Region> Regions { get; private set; } = null!;
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
@@ -39,8 +38,6 @@ namespace TrackOMatic
 
         public List<Item> DraggableItems { get; private set; } = new();
 
-        public int collected;
-        public IAutotrackerService Autotracker { get; private set; } = null!;
         public bool SpoilerLoaded { get; private set; }
         public static Grid Items { get; private set; } = null!;
         public SpoilerParser SpoilerParser { get; private set; }
@@ -53,29 +50,16 @@ namespace TrackOMatic
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
 
-        private string _applicationVersion = "";
-        public string ApplicationVersion
-        {
-            get => _applicationVersion;
-            private set
-            {
-                if (_applicationVersion != value)
-                {
-                    _applicationVersion = value;
-                    OnPropertyChanged(nameof(ApplicationVersion));
-                }
-            }
-        }
+        private IAutotrackerService Autotracker { get; init; }
+        private IUserSettingsService UserSettings { get; init; }
+        private IApplicationStateService AppState { get; init; }
+        private IDataPersistenceService DataPersistenceService { get; init; }
+        private ISpoilerService SpoilerService { get; init; }
+        private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
 
-        public IUserSettingsService UserSettings { get; init; }
-        public IApplicationStateService AppState { get; init; }
-        public IDataPersistenceService DataPersistenceService { get; init; }
-        public ISpoilerService SpoilerService { get; init; }
-        public IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
+        private ILevelOrderService LevelOrderService { get; init; }
 
-        public ILevelOrderService LevelOrderService { get; init; }
-
-        public AppMenuBarViewModel MenuViewModel { get; init; } = null!;
+        private AppMenuBarViewModel MenuViewModel { get; init; } = null!;
 
         /// <summary>
         /// Computed property for the Blueprint Total column based on collectible visibility settings.
@@ -119,8 +103,9 @@ namespace TrackOMatic
             get => GetHintDisplayModeName(UserSettings.HintDisplay);
         }
 
-        // Timer to save the data every minute. This is properly initialized, but the compiler is finicky.
-        private Timer SaveTimer = null!;
+        // Timer to save the data every minute.
+        private Timer _saveTimer { get; init; }
+
         public MainWindow(
             IUserSettingsService settingsSergice,
             IApplicationStateService appStateService,
@@ -142,6 +127,10 @@ namespace TrackOMatic
             Autotracker = autotrackerService;
             LevelOrderService = levelOrderService;
             MenuViewModel = new AppMenuBarViewModel(UserSettings, themeService);
+
+            _saveTimer = new Timer(60000);
+            _saveTimer.Elapsed += OnTimerSave;
+            _saveTimer.Start();
 
             // Subscribe to settings changes to notify XAML bindings
             UserSettings.PropertyChanged += (s, e) =>
@@ -294,10 +283,6 @@ namespace TrackOMatic
                 PotionCountsPanel,
                 UnhintedPanel
             ];
-
-            SaveTimer = new Timer(60000);
-            SaveTimer.Elapsed += OnTimerSave;
-            SaveTimer.Start();
         }
 
         private void OnTimerSave(object? sender, ElapsedEventArgs e)
@@ -549,10 +534,6 @@ namespace TrackOMatic
             }
         }
 
-        public void OnCollectibleTextChanged()
-        {
-        }
-
         public void UpdateProgHintImage(ItemType itemType)
         {
             Dictionary<ItemType, string> itemTypeToResourceString = new()
@@ -577,7 +558,6 @@ namespace TrackOMatic
 
         public void Reset()
         {
-            TotalGBs = 0;
             SpoilerLoaded = false;
             ITEM_NAME_TO_REGION.Clear();
             SpoilerSettings = new SpoilerSettings();
@@ -707,20 +687,6 @@ namespace TrackOMatic
         {
             BroadcastView = null;
             UserSettings.BroadcastViewActive = false;
-        }
-
-        public void SetShopkeepers(bool on)
-        {
-            var currentlyOn = ShopkeeperColumn.Width.Value > 0;
-            if (currentlyOn == on)
-            {
-                return;
-            }
-
-            var separatorWidth = on ? 1.0 : 1.25;
-            var shopkeeperColumnWidth = on ? 1.0 : 0;
-            ItemsSeparator.Width = new GridLength(separatorWidth, GridUnitType.Star);
-            ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
         }
     }
 }

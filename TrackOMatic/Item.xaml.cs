@@ -8,11 +8,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Models;
 
 namespace TrackOMatic
 {
-    public partial class Item : ContentControl, INotifyPropertyChanged
+    public partial class Item : ContentControl
     {
         public Region? Region { get; set; }
 
@@ -47,18 +46,6 @@ namespace TrackOMatic
         }
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-
-        public void SyncImages()
-        {
-            if (mainWindow.ITEM_TO_BACKGROUND_IMAGE.ContainsKey(this))
-            {
-                //mainWindow.ITEM_TO_BACKGROUND_IMAGE[this].BackgroundItemImage = ItemImage;
-            }
-            if (mainWindow.ITEM_TO_DIRECT_HINT.ContainsKey(ItemName))
-            {
-                //mainWindow.ITEM_TO_DIRECT_HINT[ItemName].image.Source = ItemImage;
-            }
-        }
 
         public void Disable()
         {
@@ -122,12 +109,6 @@ namespace TrackOMatic
             }
 
             ItemName = (ItemName)Tag;
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void SetStarVisibility(Visibility newVisibility)
@@ -197,15 +178,7 @@ namespace TrackOMatic
 
         private void PerformSave()
         {
-            if (Tag == null)
-            {
-                return;
-            }
-
-            var itemName = (ItemName)Tag;
-            var regionName = (Region == null) ? RegionName.UNKNOWN : Region.RegionName;
-            bool autotracked = mainWindow.Autotracker.ItemWasTracked(itemName);
-            mainWindow.DataSaver.AddSavedItem(new SavedItem(itemName, regionName, Star.Visibility.ToItemVisibility(), autotracked, Image.Opacity));
+            return;
         }
 
         //Struct to use in the GetCursorPos function
