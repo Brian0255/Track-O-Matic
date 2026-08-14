@@ -65,6 +65,29 @@ public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotP
         InitializeState();
     }
 
+    // Lazy-initialized RegionLevelViewModel for display
+    private RegionLevelViewModel? _regionLevelViewModel;
+    public RegionLevelViewModel RegionLevelViewModel
+    {
+        get
+        {
+            if (_regionLevelViewModel == null)
+            {
+                var levelOrderService = ServiceLocator.GetService<ILevelOrderService>() ?? throw new InvalidOperationException($"{nameof(ILevelOrderService)} not found in service locator.");
+                var userSettingsService = ServiceLocator.GetService<IUserSettingsService>() ?? throw new InvalidOperationException($"{nameof(IUserSettingsService)} not found in service locator.");
+                var savedProgressProvider = ServiceLocator.GetService<ISavedProgressProvider>() ?? throw new InvalidOperationException($"{nameof(ISavedProgressProvider)} not found in service locator.");
+
+                _regionLevelViewModel = new RegionLevelViewModel(
+                    _regionName,
+                    levelOrderService,
+                    userSettingsService,
+                    _parsedSpoilerDataService,
+                    savedProgressProvider
+                );
+            }
+            return _regionLevelViewModel;
+        }
+    }
 
     private void InitializeState()
     {

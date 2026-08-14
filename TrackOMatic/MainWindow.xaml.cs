@@ -59,8 +59,6 @@ namespace TrackOMatic
 
         private ILevelOrderService LevelOrderService { get; init; }
 
-        private AppMenuBarViewModel MenuViewModel { get; init; } = null!;
-
         /// <summary>
         /// Computed property for the Blueprint Total column based on collectible visibility settings.
         /// When ShowTotalBPs is true and ShowCompanyCoins is false, position is column 6.
@@ -78,31 +76,6 @@ namespace TrackOMatic
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        /// <summary>
-        /// Helper method to get the LegacyName attribute value for a HintDisplayMode enum value.
-        /// </summary>
-        private static string GetHintDisplayModeName(HintDisplayMode mode)
-        {
-            var field = typeof(HintDisplayMode).GetField(mode.ToString());
-            if (field == null)
-            {
-                return mode.ToString();
-            }
-
-            var legacyAttr = field.GetCustomAttribute<LegacyNameAttribute>();
-            return legacyAttr?.LegacyName ?? mode.ToString();
-        }
-
-        /// <summary>
-        /// Returns the LegacyName attribute value for the current HintDisplay setting.
-        /// Used for XAML DataTrigger bindings in styles.
-        /// Example: HintDisplayMode.DirectItemHints → "Direct Item Hints"
-        /// </summary>
-        public string HintDisplayModeName
-        {
-            get => GetHintDisplayModeName(UserSettings.HintDisplay);
-        }
-
         // Timer to save the data every minute.
         private Timer _saveTimer { get; init; }
 
@@ -117,7 +90,6 @@ namespace TrackOMatic
             IThemeService themeService
         )
         {
-            DataContext = this;
             InitializeComponent();
             UserSettings = settingsSergice;
             AppState = appStateService;
@@ -126,7 +98,7 @@ namespace TrackOMatic
             ParsedSpoilerDataService = parsedSpoilerDataService;
             Autotracker = autotrackerService;
             LevelOrderService = levelOrderService;
-            MenuViewModel = new AppMenuBarViewModel(UserSettings, themeService);
+            DataContext = new MainWindowViewModel(settingsSergice, themeService);
 
             _saveTimer = new Timer(60000);
             _saveTimer.Elapsed += OnTimerSave;

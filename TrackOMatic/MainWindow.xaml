@@ -1,22 +1,31 @@
-<Window x:Class="TrackOMatic.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TrackOMatic"
-        xmlns:regions="clr-namespace:TrackOMatic.Regions"
-        xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
-        xmlns:converters="clr-namespace:TrackOMatic.Converters"
-        mc:Ignorable="d"
-        ResizeMode="CanResize"
-        Closing="Window_Closing"
-        Loaded="MainWindow_Loaded"
-        LocationChanged="Window_LocationChanged"
-        MouseDown="rootGrid_LostFocus" 
-        SizeChanged="Window_SizeChanged"
-        AllowDrop="True" Drop="DropFile"
-        Title="Track-O-Matic" Height="820" Width="1800" Background="{StaticResource RegionBG}"
-        MinHeight="300" MinWidth="300"
+<Window
+    x:Class="TrackOMatic.MainWindow"
+    x:Name="MainWindowRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:TrackOMatic"
+    xmlns:regions="clr-namespace:TrackOMatic.Regions"
+    xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels;assembly=TrackOMatic.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
+    ResizeMode="CanResize"
+    Closing="Window_Closing"
+    Loaded="MainWindow_Loaded"
+    LocationChanged="Window_LocationChanged"
+    MouseDown="rootGrid_LostFocus"
+    SizeChanged="Window_SizeChanged"
+    AllowDrop="True"
+    Drop="DropFile"
+    Title="Track-O-Matic"
+    Height="820"
+    Width="1800"
+    Background="{StaticResource RegionBG}"
+    MinHeight="300"
+    MinWidth="300"
 >
     <Window.Resources>
         <ResourceDictionary>
@@ -49,7 +58,7 @@
                 <MenuItem Header="Save Data" StaysOpenOnClick="True"  Click="OnSave"/>
                 <MenuItem Header="Load Data" StaysOpenOnClick="True"  Click="OnLoad"/>
             </MenuItem>
-            <MenuItem Header="Toggles" Focusable="False" DataContext="{Binding MenuViewModel, RelativeSource={RelativeSource AncestorType=Window}}">
+            <MenuItem Header="Toggles" Focusable="False">
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsTopMostEnabled, Mode=OneWay}" Command="{Binding ToggleTopMostCommand}" />
                 <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsAutotrackingEnabled, Mode=OneWay}" Command="{Binding ToggleAutotrackingCommand}" />
                 <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsSongDisplayEnabled, Mode=OneWay}" Command="{Binding ToggleSongDisplayCommand}" />
@@ -67,7 +76,7 @@
                     <MenuItem Name="ProgHintShowAmount" Header="Show Amount for Next Hint Pack" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsProgressiveHintCounterEnabled, Mode=OneWay}" Command="{Binding ToggleProgressiveHintCounterCommand}" />
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Hint Display" Focusable="False" DataContext="{Binding MenuViewModel, RelativeSource={RelativeSource AncestorType=Window}}">
+            <MenuItem Header="Hint Display" Focusable="False">
                 <RadioButton GroupName="HintDisplay" Name="hintDisplayOff" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.Off}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.Off}">Off</RadioButton>
                 <RadioButton GroupName="HintDisplay" Name="hintDisplayMP" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.MultipathHints}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.MultipathHints}">Multipath Hints</RadioButton>
                 <RadioButton GroupName="HintDisplay" Name="hintDisplayDirect" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.DirectItemHints}">Direct Item Hints</RadioButton>
@@ -76,7 +85,7 @@
                 <MenuItem Name="SortNewHintsOption" Header="Sort New Path Hints By Length" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsSortablePathHintsEnabled, Mode=OneWay}" Command="{Binding ToggleSortablePathHintsCommand}" />
                 <MenuItem Name="EnemiesInAutofillOption" Header="Include Enemies in Hint Searches" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsEnemySearchEnabled, Mode=OneWay}" Command="{Binding ToggleEnemySearchCommand}" />
             </MenuItem>
-            <MenuItem Header="Broadcast View" Focusable="False" DataContext="{Binding MenuViewModel, RelativeSource={RelativeSource AncestorType=Window}}">
+            <MenuItem Header="Broadcast View" Focusable="False">
                 <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True" IsChecked="{Binding IsBroadcastViewEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastViewCommand}" />
                 <MenuItem Name="BroadcastCustomize" Header="Main Options">
                     <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBroadcastHelmKRoolEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastHelmKRoolCommand}" />
@@ -109,7 +118,7 @@
                             <Style TargetType="{x:Type RowDefinition}">
                                 <Setter Property="Height" Value=".01*" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding MenuViewModel.IsSongDisplayEnabled, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                                    <DataTrigger Binding="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot}" Value="False">
                                         <Setter Property="Height" Value="0"  />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -121,7 +130,7 @@
                             <Style TargetType="{x:Type RowDefinition}">
                                 <Setter Property="Height" Value=".12*" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding MenuViewModel.IsSongDisplayEnabled, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                                    <DataTrigger Binding="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot}" Value="False">
                                         <Setter Property="Height" Value="0"  />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -198,7 +207,7 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width=".1*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0" Visibility="{Binding MenuViewModel.IsProgressiveHintCounterEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
+                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0" Visibility="{Binding DataContext.IsProgressiveHintCounterEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
                             <RowDefinition Height="1.2*"/>
@@ -231,19 +240,19 @@
                             </Viewbox>
                         </Grid>
                     </Grid>
-                    <local:TotalBlueprint x:Name="BlueprintsTotal" Visibility="{Binding MenuViewModel.IsTotalBlueprintCollectibleEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
+                    <local:TotalBlueprint x:Name="BlueprintsTotal" Visibility="{Binding DataContext.IsTotalBlueprintCollectibleEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
                         <local:TotalBlueprint.Style>
                             <Style TargetType="local:TotalBlueprint">
                                 <Setter Property="Grid.Column" Value="4"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ShowsBlueprintsButNotCoins, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                    <DataTrigger Binding="{Binding DataContext.ShowsBlueprintsButNotCoins, ElementName=MainWindowRoot}" Value="True">
                                         <Setter Property="Grid.Column" Value="6"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </local:TotalBlueprint.Style>
                     </local:TotalBlueprint>
-                    <local:Countable x:Name="CompanyCoinsTotal" Grid.Column="6" ItemType="COMPANY_COIN" Visibility="{Binding MenuViewModel.IsCompanyCoinCollectibleEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
+                    <local:Countable x:Name="CompanyCoinsTotal" Grid.Column="6" ItemType="COMPANY_COIN" Visibility="{Binding DataContext.IsCompanyCoinCollectibleEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
                     <local:Countable Grid.Column="8" ItemType="PEARL" />
                     <local:Countable Grid.Column="10" ItemType="BATTLE_CROWN" />
                     <local:Countable Grid.Column="12" ItemType="BANANA_MEDAL" />
@@ -402,7 +411,7 @@
                     </Grid>
                 </Grid>
                 <!-- Song Display -->
-                <local:Song Grid.Row="8" Background="Transparent" Margin="3,-2,-1,3" Visibility="{Binding MenuViewModel.IsSongDisplayEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
+                <local:Song Grid.Row="8" Background="Transparent" Margin="3,-2,-1,3" Visibility="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
             </Grid>
             <Grid Grid.Column="1" Margin="2">
                 <Grid.ColumnDefinitions>
@@ -414,7 +423,7 @@
                         <Style TargetType="{x:Type Grid}">
                             <Setter Property="Visibility" Value="Hidden" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding MenuViewModel.HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
+                                <DataTrigger Binding="{Binding DataContext.HintDisplayMode, ElementName=MainWindowRoot, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -464,7 +473,7 @@
                         <Style TargetType="{x:Type Grid}">
                             <Setter Property="Visibility" Value="Hidden" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding MenuViewModel.HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.MultipathHints}}" Value="True">
+                                <DataTrigger Binding="{Binding DataContext.HintDisplayMode, ElementName=MainWindowRoot, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.MultipathHints}}" Value="True">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -491,8 +500,6 @@
                             <RowDefinition Height="5*"/>
                             <RowDefinition Height="3*"/>
                         </Grid.RowDefinitions>
-
-
                     </Grid>
                 </Grid>
                 <Grid Name="UnhintedColumn" Grid.Column="1">
@@ -505,7 +512,7 @@
                                 <Style TargetType="{x:Type RowDefinition}">
                                     <Setter Property="Height" Value="0*" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding MenuViewModel.IsHelmDoorPanelEnabled, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                        <DataTrigger Binding="{Binding IsHelmDoorPanelEnabled}" Value="True">
                                             <Setter Property="Height" Value="1*" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -518,7 +525,7 @@
                             <Style TargetType="{x:Type local:HintPanel}">
                                 <Setter Property="Visibility" Value="Hidden" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding MenuViewModel.HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
+                                    <DataTrigger Binding="{Binding DataContext.HintDisplayMode, ElementName=MainWindowRoot, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
                                         <Setter Property="Visibility" Value="Visible" />
                                     </DataTrigger>
                                 </Style.Triggers>

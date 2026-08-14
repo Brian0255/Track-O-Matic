@@ -8,7 +8,7 @@ using TrackOMatic.Services;
 
 namespace TrackOMatic.ViewModels;
 
-public partial class AppMenuBarViewModel: ObservableObject, IDisposable
+public partial class MainWindowViewModel: ObservableObject, IDisposable
 {
     private readonly IUserSettingsService _userSettingsService;
     private readonly IThemeService _themeService;
@@ -276,9 +276,19 @@ public partial class AppMenuBarViewModel: ObservableObject, IDisposable
         }
     }
 
+    public bool ShowsBlueprintsButNotCoins
+    {
+        get => _userSettingsService.ShowTotalBPs && !_userSettingsService.ShowCompanyCoins;
+    }
+
+    public bool ShowsBlueprintsAndCoins
+    {
+        get => _userSettingsService.ShowTotalBPs && _userSettingsService.ShowCompanyCoins;
+    }
+
     #endregion
 
-    public AppMenuBarViewModel(IUserSettingsService userSettingsService, IThemeService themeService)
+    public MainWindowViewModel(IUserSettingsService userSettingsService, IThemeService themeService)
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
@@ -541,7 +551,7 @@ public partial class AppMenuBarViewModel: ObservableObject, IDisposable
         }
     }
 
-    ~AppMenuBarViewModel()
+    ~MainWindowViewModel()
     {
         Dispose(false);
     }

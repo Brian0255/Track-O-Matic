@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:TrackOMatic.Regions"
              xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels;assembly=TrackOMatic.ViewModels"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=viewmodels:RegionLevelViewModel}"
+             d:DataContext="{d:DesignInstance Type=viewmodels:RegionLevelViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="32"
              d:DesignWidth="32"
              MouseLeftButtonDown="RegionLevel_MouseLeftButtonDown"
@@ -29,7 +29,7 @@
             <ColumnDefinition Width=".9*" />
             <ColumnDefinition Width="2.5*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0" Margin="0">
+        <Grid Grid.Row="0" Grid.Column="0" Margin="0" DataContext="{Binding DataContext.RegionLevelViewModel, RelativeSource={RelativeSource AncestorType=local:UiRegion}}">
             <Border CornerRadius="3" Margin="0" Background="{StaticResource BaseBG}">
                 <Viewbox HorizontalAlignment="Center">
                     <TextBlock

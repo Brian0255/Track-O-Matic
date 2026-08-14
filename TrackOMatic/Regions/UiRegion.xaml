@@ -78,7 +78,7 @@
             <local:RegionLevel
                 Grid.RowSpan="6"
                 Grid.ColumnSpan="5"
-                RegionName="{Binding RegionName, RelativeSource={RelativeSource AncestorType=local:UiRegion}}"
+                d:DataContext="{d:DesignInstance Type=viewmodels:RegionLevelViewModel, IsDesignTimeCreatable=False}"
                 Visibility="{Binding DataContext.ShouldShowRegionLevel, RelativeSource={RelativeSource AncestorType=local:UiRegion}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
             />
 
