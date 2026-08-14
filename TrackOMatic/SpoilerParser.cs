@@ -142,9 +142,6 @@ namespace TrackOMatic
                     }
                 }
             }
-
-            // B Locker data is loaded here. Using the old records/methods for now.
-            MainWindow.BLockerHints.LoadBLockerInfo([.. spoilerData.RegionBarrierInfo.Select((b) => new BLockerInfo(b.Item, b.Cost))]);
         }
     }
 }

@@ -2,128 +2,50 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Models;
+using TrackOMatic.Services;
+using TrackOMatic.Services.TrackerState;
+using TrackOMatic.ViewModels.Hints;
 
-namespace TrackOMatic
+namespace TrackOMatic.HintsUI;
+
+public partial class BLockerPanel : UserControl
 {
-    public partial class BLockerPanel : UserControl
+    public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register(nameof(Heading), typeof(string), typeof(BLockerPanel));
+    public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register(nameof(LineColor), typeof(Color), typeof(BLockerPanel));
+    public string Heading
     {
-        public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register("Heading", typeof(string), typeof(BLockerPanel));
-        public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register("LineColor", typeof(Color), typeof(BLockerPanel));
-        public static readonly DependencyProperty HintTypeProperty = DependencyProperty.Register("HintType", typeof(HintType), typeof(BLockerPanel));
-        public string Heading
-        {
-            get { return (string)GetValue(HeadingProperty); }
-            set { SetValue(HeadingProperty, value); }
-        }
+        get { return (string)GetValue(HeadingProperty); }
+        set { SetValue(HeadingProperty, value); }
+    }
 
-        public Color LineColor
-        {
-            get { return (Color)GetValue(LineColorProperty); }
-            set { SetValue(LineColorProperty, value); }
-        }
+    public Color LineColor
+    {
+        get { return (Color)GetValue(LineColorProperty); }
+        set { SetValue(LineColorProperty, value); }
+    }
 
-        public HintType HintType
-        {
-            get { return (HintType)GetValue(HintTypeProperty); }
-            set { SetValue(HintTypeProperty, value); }
-        }
+    public BLockerPanel()
+    {
+        InitializeComponent();
 
-        public Dictionary<RegionName, BLockerHint> RegionToBLockerHint = new();
-        public BLockerPanel()
-        {
-            InitializeComponent();
-            foreach (var child in MainGrid.Children)
-            {
-                if (child is BLockerHint hint)
-                {
-                    RegionToBLockerHint[hint.RegionName] = hint;
-                }
-            }
-        }
+        var barrierService = ServiceLocator.GetService<IBarrierService>();
+        var parsedSpoilerDataService = ServiceLocator.GetService<IParsedSpoilerDataService>();
+        var savedProgressProvider = ServiceLocator.GetService<ISavedProgressProvider>();
+        var itemSelectorService = ServiceLocator.GetService<IItemSelectorService>();
 
-        public void Reset()
-        {
-            foreach (var hint in RegionToBLockerHint.Values)
-            {
-                hint.GBCount.Text = "?";
-                hint.GB.SetIndex(0);
-            }
-        }
+        DataContext = new BLockerPanelViewModel(
+            barrierService,
+            parsedSpoilerDataService,
+            savedProgressProvider,
+            itemSelectorService
+        );
 
-        public void LoadSavedGBCounts(Dictionary<RegionName, string> GBCounts)
-        {
-            foreach (var entry in GBCounts)
-            {
-                RegionToBLockerHint[entry.Key].GBCount.Text = entry.Value;
-            }
-        }
+        Unloaded += OnUnloaded;
+    }
 
-        public Dictionary<RegionName, string> GetGBCounts()
-        {
-            var GBCounts = new Dictionary<RegionName, string>();
-            foreach (var entry in RegionToBLockerHint)
-            {
-                GBCounts[entry.Key] = entry.Value.GBCount.Text;
-            }
-            return GBCounts;
-        }
-
-        public void LoadSavedImageIndexes(Dictionary<RegionName, int> imageIndexes)
-        {
-            foreach (var entry in imageIndexes)
-            {
-                RegionToBLockerHint[entry.Key].GB.SetIndex(entry.Value);
-            }
-        }
-
-        public Dictionary<RegionName, int> GetImageIndexes()
-        {
-            var imageIndexes = new Dictionary<RegionName, int>();
-            foreach (var entry in RegionToBLockerHint)
-            {
-                imageIndexes[entry.Key] = entry.Value.GB.GetIndex();
-            }
-            return imageIndexes;
-        }
-
-        public void LoadBLockerInfo(List<BLockerInfo> blockerInfo)
-        {
-            if (blockerInfo == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < blockerInfo.Count; i++)
-            {
-                var blocker = blockerInfo[i];
-                var regionName = EndGameMappings.LOBBY_ORDER[i];
-                if (!RegionToBLockerHint.TryGetValue(regionName, out var hint))
-                {
-                    continue;
-                }
-
-                if (GetBarrierItemType(blocker.item) is BarrierItems barrierItem)
-                {
-                    hint.GB.SetIndex((int)barrierItem);
-                    hint.GBCount.Text = blocker.cost.ToString();
-                }
-            }
-        }
-
-        private static BarrierItems? GetBarrierItemType(int blockerItemId) => blockerItemId switch
-        {
-            3 => BarrierItems.GOLDEN_BANANA,
-            4 => BarrierItems.BLUEPRINT,
-            5 => BarrierItems.FAIRY,
-            7 => BarrierItems.CROWN,
-            8 => BarrierItems.COMPANY_COIN,
-            9 => BarrierItems.MEDAL,
-            10 => BarrierItems.BEAN,
-            11 => BarrierItems.PEARL,
-            12 => BarrierItems.RAINBOW_COIN,
-            _ => null
-        };
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("BLockerPanel unloaded, verify if this is the right time.");
+        (DataContext as IDisposable)?.Dispose();
     }
 }

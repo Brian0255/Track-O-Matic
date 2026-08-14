@@ -83,6 +83,12 @@ public interface IParsedSpoilerDataService
     /// </summary>
     /// <returns></returns>
     bool HasBossOrder();
+
+    /// <summary>
+    /// Determines whether the current parsed spoiler data contains any region barrier information.
+    /// </summary>
+    /// <returns></returns>
+    bool HasRegionBarrier();
 }
 
 /// <summary>

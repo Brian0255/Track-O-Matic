@@ -275,4 +275,24 @@ public static class Extensions
             _ => ""
         };
     }
+
+    /// <summary>
+    /// Convert an raw integer from the spoiler log/game to its corresponding <see cref="BarrierItems">BarrierItem</see>.
+    /// </summary>
+    /// <remarks>Why does the enum not use the same values as the raw game integers?</remarks>
+    /// <param name="itemId">The integer to convert.</param>
+    /// <returns>The corresponding <see cref="BarrierItems">BarrierItem</see> if found; otherwise, <c>null</c>.</returns>
+    public static BarrierItems? FromRawGameToBarrier(this int itemId) => itemId switch
+    {
+        3 => BarrierItems.GOLDEN_BANANA,
+        4 => BarrierItems.BLUEPRINT,
+        5 => BarrierItems.FAIRY,
+        7 => BarrierItems.CROWN,
+        8 => BarrierItems.COMPANY_COIN,
+        9 => BarrierItems.MEDAL,
+        10 => BarrierItems.BEAN,
+        11 => BarrierItems.PEARL,
+        12 => BarrierItems.RAINBOW_COIN,
+        _ => null
+    };
 }

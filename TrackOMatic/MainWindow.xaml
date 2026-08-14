@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:TrackOMatic"
+    xmlns:hints="clr-namespace:TrackOMatic.HintsUI"
     xmlns:regions="clr-namespace:TrackOMatic.Regions"
     xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
     xmlns:converters="clr-namespace:TrackOMatic.Converters"
@@ -534,7 +535,7 @@
                     </local:HintPanel>
                     <local:HintPanel Grid.Row="0" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="3" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
                     <local:HintPanel Grid.Row="1" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="3" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
-                    <local:BLockerPanel x:Name="BLockerHints" Grid.Row="2" Margin="3" Heading="B. LOCKERS" LineColor="#F0F000"/>
+                    <hints:BLockerPanel x:Name="BLockerHints" Grid.Row="2" Margin="3" Heading="B. LOCKERS" LineColor="#F0F000"/>
                     <local:HelmDoorPanel x:Name="HelmDoorHints" Grid.Row="3" Margin="3" Heading="HELM DOORS" LineColor="#7d3cbd" />
                 </Grid>
             </Grid>

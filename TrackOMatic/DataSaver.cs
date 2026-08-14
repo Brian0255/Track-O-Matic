@@ -59,8 +59,6 @@ namespace TrackOMatic
             }
 
             FindSavedHints();
-            CurrentSavedProgress.SavedGBCounts = MainWindow.BLockerHints.GetGBCounts();
-            CurrentSavedProgress.BLockerImageIndexes = MainWindow.BLockerHints.GetImageIndexes();
             CurrentSavedProgress.HelmDoorImageIndexes = MainWindow.HelmDoorHints.GetImageIndexes();
             CurrentSavedProgress.HelmDoorCounts = MainWindow.HelmDoorHints.GetItemCounts();
             CurrentSavedProgress.BossKongs = MainWindow.GetBossKongs();
@@ -102,8 +100,6 @@ namespace TrackOMatic
                 var hintPanel = (HintPanel)MainWindow.FindName(savedHint.HintPanelKey);
                 hintPanel.AddSavedHint(savedHint);
             }
-            MainWindow.BLockerHints.LoadSavedGBCounts(CurrentSavedProgress.SavedGBCounts);
-            MainWindow.BLockerHints.LoadSavedImageIndexes(CurrentSavedProgress.BLockerImageIndexes);
             MainWindow.HelmDoorHints.LoadSavedHelmDoorCounts(CurrentSavedProgress.HelmDoorCounts);
             MainWindow.HelmDoorHints.LoadSavedImageIndexes(CurrentSavedProgress.HelmDoorImageIndexes);
 

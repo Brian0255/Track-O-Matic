@@ -14,6 +14,7 @@ public class BlockerInfoRaw
     /// </summary>
     /// <remarks>
     /// This is _not_ the same as the <see cref="BarrierItems"/> enum value.
+    /// The fact that the value can convert over to it is purely coincidental.
     /// A separate mapping function will convert this to the fully parsed output.
     /// </remarks>
     [JsonPropertyName("item")]

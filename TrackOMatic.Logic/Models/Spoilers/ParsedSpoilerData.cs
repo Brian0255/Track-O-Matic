@@ -62,4 +62,10 @@ public class ParsedSpoilerData
     /// Gets the B. Locker barrier information for each region in the parsed spoiler data.
     /// </summary>
     public List<BlockerInfoRaw> RegionBarrierInfo { get; init; } = [];
+
+    public BlockerInfoRaw GetBarrierInfo(RegionName regionName)
+    {
+        var regionIndex = (int)regionName - 2;
+        return RegionBarrierInfo.Count > regionIndex && regionIndex >= 0 ? RegionBarrierInfo[regionIndex] : new BlockerInfoRaw { Item = 0, Cost = 0 };
+    }
 }

@@ -1,12 +1,27 @@
-﻿<UserControl x:Class="TrackOMatic.BLockerHint"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TrackOMatic"
-             mc:Ignorable="d" 
-              Background="Transparent" 
-             d:DesignHeight="100" d:DesignWidth="200">
+<UserControl
+    x:Class="TrackOMatic.HintsUI.BLockerHint"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    Background="Transparent"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:BLockerHintViewModel, IsDesignTimeCreatable=False}"
+    d:DesignHeight="64"
+    d:DesignWidth="96"
+>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+            <converters:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Background="Transparent" Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="0*"/>
@@ -18,8 +33,35 @@
             <ColumnDefinition Width=".1*"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
-        <Image x:Name="Picture"  Grid.Row="1" Grid.Column="0"  Margin="0" VerticalAlignment="Bottom"/>
-        <local:ProgressiveItem x:Name="GB" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom"  />
-        <local:ItemCountBox Margin="0,2,0,0" VerticalAlignment="Bottom" ContextMenu="{x:Null}" Text="?" x:Name="GBCount" Grid.Column="3" Grid.Row="1"  Style="{StaticResource BoldText}" FontSize="17" />
+        <Image
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0"
+            VerticalAlignment="Bottom"
+            Source="{Binding RegionResourceKey, Converter={StaticResource ResourceKeyConverter}}"
+        />
+        <!-- Use the extra child to make data context binding easier. -->
+        <Grid
+            Grid.Row="1"
+            Grid.Column="1"
+            VerticalAlignment="Bottom"
+            DataContext="{Binding SlotViewModel}"
+        >
+            <local:BLockerSlot />
+        </Grid>
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="3"
+            Margin="0,2,0,0"
+            VerticalAlignment="Bottom"
+            ContextMenu="{x:Null}"
+            Style="{StaticResource BoldText}"
+            Text="{Binding BarrierCount, Mode=OneWay}"
+            IsReadOnly="{Binding IsLocked}"
+            Focusable="{Binding IsLocked, Converter={StaticResource BooleanInvertConverter}}"
+            PreviewMouseLeftButtonDown="OnTextLeftClick"
+            PreviewKeyDown="TextBox_PreviewKeyDown"
+            LostFocus="TextBox_LostFocus"
+        />
     </Grid>
 </UserControl>

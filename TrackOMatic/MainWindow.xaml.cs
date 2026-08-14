@@ -549,7 +549,6 @@ namespace TrackOMatic
             {
                 hintPanel.Reset();
             }
-            BLockerHints.Reset();
             HelmDoorHints.Reset();
 
             UpdateUIAmountToNextHint(0);

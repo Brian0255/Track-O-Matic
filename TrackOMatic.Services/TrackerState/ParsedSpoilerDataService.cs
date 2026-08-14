@@ -111,5 +111,7 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
 
     public bool HasBossOrder() => CurrentData?.FinalBossOrder is not null && CurrentData.FinalBossOrder.Count > 0;
 
+    public bool HasRegionBarrier() => CurrentData?.RegionBarrierInfo is not null && CurrentData.RegionBarrierInfo.Count > 0;
+
     #endregion
 }
