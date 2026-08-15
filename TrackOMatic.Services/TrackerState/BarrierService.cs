@@ -88,6 +88,10 @@ public class BarrierService : IBarrierService
     public string GetHelmDoorCount(HelmDoor helmDoor)
     {
         int doorIndex = helmDoor == HelmDoor.First ? 0 : 1;
+        if (_savedProgress.HelmDoorCounts.Count <= doorIndex)
+        {
+            return "?";
+        }
         return _savedProgress.HelmDoorCounts[doorIndex];
     }
 
@@ -111,6 +115,10 @@ public class BarrierService : IBarrierService
     public BarrierItems GetHelmDoorItemType(HelmDoor helmDoor)
     {
         int doorIndex = helmDoor == HelmDoor.First ? 0 : 1;
+        if (_savedProgress.HelmDoorImageIndexes.Count <= doorIndex)
+        {
+            return BarrierItems.GOLDEN_BANANA;
+        }
         return (BarrierItems)_savedProgress.HelmDoorImageIndexes[doorIndex];
     }
 

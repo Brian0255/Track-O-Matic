@@ -45,7 +45,6 @@ public partial class BLockerPanel : UserControl
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("BLockerPanel unloaded, verify if this is the right time.");
         (DataContext as IDisposable)?.Dispose();
     }
 }

@@ -1,15 +1,20 @@
-<UserControl x:Class="TrackOMatic.HelmDoorPanel"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TrackOMatic"
-             mc:Ignorable="d" 
-              Background="Transparent" 
-             d:DesignHeight="100" d:DesignWidth="200">
+<UserControl
+    x:Class="TrackOMatic.HintsUI.HelmDoorPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
+    Background="Transparent"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:HelmDoorPanelViewModel, IsDesignTimeCreatable=True}"
+    d:DesignHeight="100"
+    d:DesignWidth="200"
+>
     <Grid Background="Transparent">
         <Border CornerRadius="3" BorderThickness=".5" BorderBrush="Black" Background="{StaticResource VeryDark}">
-            <Grid Background="Transparent" >
+            <Grid Background="Transparent">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="26"/>
                     <RowDefinition Height="*"/>
@@ -24,9 +29,9 @@
                     Text="{Binding Heading, RelativeSource={RelativeSource AncestorType=local:HelmDoorPanel}}"
                     VerticalAlignment="Center"/>
                 <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
-                    <UniformGrid Name="MainGrid" Grid.Row="1" Columns="2">
-                        <local:HelmDoorHint LabelText="Door 1:"/>
-                        <local:HelmDoorHint LabelText="Door 2:"/>
+                    <UniformGrid Grid.Row="1" Columns="2">
+                        <local:HelmDoorHint DataContext="{Binding FirstDoor}" />
+                        <local:HelmDoorHint DataContext="{Binding SecondDoor}" />
                     </UniformGrid>
                 </Border>
             </Grid>

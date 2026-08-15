@@ -59,9 +59,6 @@ namespace TrackOMatic
             }
 
             FindSavedHints();
-            CurrentSavedProgress.HelmDoorImageIndexes = MainWindow.HelmDoorHints.GetImageIndexes();
-            CurrentSavedProgress.HelmDoorCounts = MainWindow.HelmDoorHints.GetItemCounts();
-            CurrentSavedProgress.BossKongs = MainWindow.GetBossKongs();
             var JSONString = JsonSerializer.Serialize(CurrentSavedProgress);
             if (writeToFile)
             {
@@ -99,13 +96,6 @@ namespace TrackOMatic
             {
                 var hintPanel = (HintPanel)MainWindow.FindName(savedHint.HintPanelKey);
                 hintPanel.AddSavedHint(savedHint);
-            }
-            MainWindow.HelmDoorHints.LoadSavedHelmDoorCounts(CurrentSavedProgress.HelmDoorCounts);
-            MainWindow.HelmDoorHints.LoadSavedImageIndexes(CurrentSavedProgress.HelmDoorImageIndexes);
-
-            if (CurrentSavedProgress.BossKongs != null)
-            {
-                MainWindow.LoadBossKongs(CurrentSavedProgress.BossKongs);
             }
         }
 
@@ -167,20 +157,5 @@ namespace TrackOMatic
 
             CurrentSavedProgress.spoilerPath = newSpoilerPath;
         }
-
-        /*
-
-        private void CheckForAutosave()
-        {
-            var filePath = "autosave.json";
-            ReadSavedDataFromFile(filePath);
-        }
-
-        public void InitSavedDataFromSpoiler(string fileName)
-        {
-            savedProgress = new SavedProgress(fileName);
-            CheckForAutosave();
-        }
-        */
     }
 }

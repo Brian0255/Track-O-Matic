@@ -32,8 +32,6 @@ namespace TrackOMatic
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
         public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
         public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
-        public List<ProgressiveItem> BossKongs { get; private set; }
-        public List<ProgressiveItem> HelmKongs { get; private set; }
         public List<HintPanel> HintPanels { get; private set; } = null!;
 
         public List<Item> DraggableItems { get; private set; } = new();
@@ -44,9 +42,6 @@ namespace TrackOMatic
         public DataSaver DataSaver { get; private set; }
         public SpoilerSettings SpoilerSettings { get; private set; } = null!;
 
-        private List<BitmapImage> ProgressiveKongSource { get; init; }
-        private List<BitmapImage> BossSource { get; init; }
-
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
 
@@ -56,8 +51,6 @@ namespace TrackOMatic
         private IDataPersistenceService DataPersistenceService { get; init; }
         private ISpoilerService SpoilerService { get; init; }
         private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
-
-        private ILevelOrderService LevelOrderService { get; init; }
 
         /// <summary>
         /// Computed property for the Blueprint Total column based on collectible visibility settings.
@@ -97,7 +90,6 @@ namespace TrackOMatic
             SpoilerService = spoilerService;
             ParsedSpoilerDataService = parsedSpoilerDataService;
             Autotracker = autotrackerService;
-            LevelOrderService = levelOrderService;
             DataContext = new MainWindowViewModel(settingsSergice, themeService);
 
             _saveTimer = new Timer(60000);
@@ -145,34 +137,6 @@ namespace TrackOMatic
             HintData.Init();
             InitOptions();
             InitData();
-            ProgressiveKongSource =
-            [
-                (BitmapImage)FindResource("unknown_kong_bw"),
-                (BitmapImage)FindResource("donkey"),
-                (BitmapImage)FindResource("diddy"),
-                (BitmapImage)FindResource("lanky"),
-                (BitmapImage)FindResource("tiny"),
-                (BitmapImage)FindResource("chunky"),
-            ];
-            foreach (var progressiveItem in HelmKongs!)
-            {
-                progressiveItem.ImageSources = [ProgressiveKongSource];
-            }
-            BossSource =
-            [
-                (BitmapImage)FindResource("army"),
-                (BitmapImage)FindResource("doga"),
-                (BitmapImage)FindResource("madjack"),
-                (BitmapImage)FindResource("pufftoss"),
-                (BitmapImage)FindResource("doga2"),
-                (BitmapImage)FindResource("army2"),
-                (BitmapImage)FindResource("kutout"),
-            ];
-            List<List<BitmapImage>> allBosses = [ProgressiveKongSource, BossSource];
-            foreach (var progressiveItem in BossKongs!)
-            {
-                progressiveItem.ImageSources = allBosses;
-            }
 
             SpoilerParser = new(this, UserSettings, SpoilerService);
             DataSaver = new(this, DataPersistenceService, ParsedSpoilerDataService, SpoilerService);
@@ -235,8 +199,6 @@ namespace TrackOMatic
             UpdateBroadcastNumberDisplayToggles();
             Regions = [];
             Items = ItemGrid;
-            BossKongs = [];
-            HelmKongs = [];
 
             HintPanels = [
                 IslesPanel,
@@ -549,7 +511,6 @@ namespace TrackOMatic
             {
                 hintPanel.Reset();
             }
-            HelmDoorHints.Reset();
 
             UpdateUIAmountToNextHint(0);
             HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
@@ -594,25 +555,6 @@ namespace TrackOMatic
                 Reset();
                 DataSaver.ReadSavedDataFromFile(filePath);
             }
-        }
-        private List<int> GetProgressiveIndices(List<ProgressiveItem> items)
-        {
-            return items.Select(i => i.GetIndex()).ToList();
-        }
-        public List<int> GetBossKongs()
-        {
-            return GetProgressiveIndices(BossKongs);
-        }
-        private void LoadProgressiveIndices(List<int> indices, List<ProgressiveItem> modify)
-        {
-            for (int i = 0; i < modify.Count; ++i)
-            {
-                modify[i].SetIndex(indices[i]);
-            }
-        }
-        public void LoadBossKongs(List<int> indices)
-        {
-            LoadProgressiveIndices(indices, BossKongs);
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
