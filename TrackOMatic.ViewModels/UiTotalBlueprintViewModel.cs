@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
@@ -9,7 +11,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels;
 
-public class UiTotalBlueprintViewModel: INotifyPropertyChanged, IDisposable
+public partial class UiTotalBlueprintViewModel: ObservableObject, IDisposable
 {
     private readonly ICollectiblesService _collectiblesService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;

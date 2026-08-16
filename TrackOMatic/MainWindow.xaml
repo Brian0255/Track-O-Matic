@@ -70,8 +70,8 @@
                     <MenuItem Name="CompanyCoins" Header="Company Coins" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsCompanyCoinCollectibleEnabled, Mode=OneWay}" Command="{Binding ToggleCompanyCoinCollectibleCommand}" />
                 </MenuItem>
                 <MenuItem Name="SpoilerHintsOption" Header="Spoiler Hints">
-                    <MenuItem Name="KRoolOrder" Header="K. Rool Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsHelmSpoilerOrderEnabled, Mode=OneWay}" Command="{Binding ToggleHelmSpoilerOrderCommand}" />
-                    <MenuItem Name="HelmOrder" Header="Helm Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBossSpoilerOrderEnabled, Mode=OneWay}" Command="{Binding ToggleBossSpoilerOrderCommand}" />
+                    <MenuItem Name="KRoolOrder" Header="K. Rool Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsShowingHelmSpoilerInfoEnabled, Mode=OneWay}" Command="{Binding ToggleHelmSpoilerOrderCommand}" />
+                    <MenuItem Name="HelmOrder" Header="Helm Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsShowingBossSpoilerInfoEnabled, Mode=OneWay}" Command="{Binding ToggleBossSpoilerOrderCommand}" />
                 </MenuItem>
                 <MenuItem Name="ProgHintOption" Header="Progressive Hints">
                     <MenuItem Name="ProgHintShowAmount" Header="Show Amount for Next Hint Pack" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsProgressiveHintCounterEnabled, Mode=OneWay}" Command="{Binding ToggleProgressiveHintCounterCommand}" />
@@ -185,82 +185,7 @@
                 </Grid>
 
                 <!--GB/other stuff display-->
-                <Grid Grid.Row="2" Name="CollectiblesGrid" Background="{StaticResource RegionBG}" Margin="0,5,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".7*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0" Visibility="{Binding DataContext.IsProgressiveHintCounterEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1.2*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width=".5*"/>
-                            <ColumnDefinition Width=".75*"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="images/dk64/wrinkly.png" Panel.ZIndex="2" x:Name="image" Stretch="Uniform"  Grid.RowSpan="2" Margin="-2,3,3,3" Grid.ColumnSpan="2"
-                            RenderOptions.ClearTypeHint="Enabled">
-                            <Image.Effect>
-                                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
-                            </Image.Effect>
-                        </Image>
-
-                        <Grid  Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="0.25*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="0" Grid.ColumnSpan="1" Background="{StaticResource VeryDark}" Margin="0,0,0,0"/>
-                            <Image Name="ItemsToNextHintImage" Source="Images/dk64/gb.png" Margin="0,1,1,1"/>
-
-                            <Viewbox Grid.Column="1" HorizontalAlignment="Left" Margin="0">
-                                <Border Background="{StaticResource VeryDark}" Padding="0,0,0,1">
-                                    <TextBlock Margin="0,-2,3,-1" x:Name="ItemsToNextHint" Text="0" VerticalAlignment="Center" FontSize="20"  Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" Visibility="Visible"/>
-                                </Border>
-                            </Viewbox>
-                        </Grid>
-                    </Grid>
-                    <local:TotalBlueprint x:Name="BlueprintsTotal" Visibility="{Binding DataContext.IsTotalBlueprintCollectibleEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
-                        <local:TotalBlueprint.Style>
-                            <Style TargetType="local:TotalBlueprint">
-                                <Setter Property="Grid.Column" Value="4"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.ShowsBlueprintsButNotCoins, ElementName=MainWindowRoot}" Value="True">
-                                        <Setter Property="Grid.Column" Value="6"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </local:TotalBlueprint.Style>
-                    </local:TotalBlueprint>
-                    <local:Countable x:Name="CompanyCoinsTotal" Grid.Column="6" ItemType="COMPANY_COIN" Visibility="{Binding DataContext.IsCompanyCoinCollectibleEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
-                    <local:Countable Grid.Column="8" ItemType="PEARL" />
-                    <local:Countable Grid.Column="10" ItemType="BATTLE_CROWN" />
-                    <local:Countable Grid.Column="12" ItemType="BANANA_MEDAL" />
-                    <local:Countable Grid.Column="14" ItemType="RAINBOW_COIN" />
-                    <local:Countable Grid.Column="16" ItemType="FAIRY" />
-                    <local:Countable Grid.Column="18" ItemType="GOLDEN_BANANA" />
-                </Grid>
+                <local:CollectiblesGridRow Grid.Row="2" />
                 <!-- Items -->
                 <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="0" >
                     <Grid.RowDefinitions>

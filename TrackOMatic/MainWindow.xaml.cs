@@ -52,16 +52,6 @@ namespace TrackOMatic
         private ISpoilerService SpoilerService { get; init; }
         private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
 
-        /// <summary>
-        /// Computed property for the Blueprint Total column based on collectible visibility settings.
-        /// When ShowTotalBPs is true and ShowCompanyCoins is false, position is column 6.
-        /// Otherwise, position is column 4.
-        /// </summary>
-        public bool ShowsBlueprintsButNotCoins
-        {
-            get => UserSettings.ShowTotalBPs && !UserSettings.ShowCompanyCoins;
-        }
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
@@ -80,7 +70,8 @@ namespace TrackOMatic
             IParsedSpoilerDataService parsedSpoilerDataService,
             ILevelOrderService levelOrderService,
             IAutotrackerService autotrackerService,
-            IThemeService themeService
+            IThemeService themeService,
+            ISavedProgressProvider savedProgressProvider
         )
         {
             InitializeComponent();
@@ -90,7 +81,7 @@ namespace TrackOMatic
             SpoilerService = spoilerService;
             ParsedSpoilerDataService = parsedSpoilerDataService;
             Autotracker = autotrackerService;
-            DataContext = new MainWindowViewModel(settingsSergice, themeService);
+            DataContext = new MainWindowViewModel(settingsSergice, themeService, autotrackerService, savedProgressProvider);
 
             _saveTimer = new Timer(60000);
             _saveTimer.Elapsed += OnTimerSave;
@@ -102,10 +93,6 @@ namespace TrackOMatic
                 if (e.PropertyName == nameof(UserSettings.CompactMode))
                 {
                     AdjustBasedOnCompactMode();
-                }
-                else if (e.PropertyName == nameof(UserSettings.ShowTotalBPs) || e.PropertyName == nameof(UserSettings.ShowCompanyCoins))
-                {
-                    OnPropertyChanged(nameof(ShowsBlueprintsButNotCoins));
                 }
                 else if (e.PropertyName == nameof(UserSettings.HintDisplay))
                 {
@@ -125,9 +112,6 @@ namespace TrackOMatic
                     }
                 }
             };
-
-            Autotracker.HintProgressUpdated += (sender, e) => Dispatcher.Invoke(() => UpdateUIAmountToNextHint(e.AmountToNextHint));
-            Autotracker.ProgHintItemUpdated += (sender, e) => Dispatcher.Invoke(() => UpdateProgHintImage(e.ProgHintItem));
 
             if (UserSettings.Autotracking)
             {
@@ -468,28 +452,6 @@ namespace TrackOMatic
             }
         }
 
-        public void UpdateProgHintImage(ItemType itemType)
-        {
-            Dictionary<ItemType, string> itemTypeToResourceString = new()
-            {
-                {ItemType.GOLDEN_BANANA, "golden_banana" },
-                {ItemType.TOTAL_BLUEPRINTS, "total_blueprints" },
-                {ItemType.KEY, "basic_key" },
-                {ItemType.BANANA_MEDAL, "medal" },
-                {ItemType.BATTLE_CROWN, "crown" },
-                {ItemType.FAIRY,"fairy" },
-                {ItemType.RAINBOW_COIN, "rainbow_coin" },
-                {ItemType.PEARL, "pearl" },
-                {ItemType.COLORED_BANANA, "colored_bananas" }
-            };
-            ItemsToNextHintImage.Source = (BitmapImage)FindResource(itemTypeToResourceString[itemType]);
-        }
-
-        public void UpdateUIAmountToNextHint(int newAmount)
-        {
-            ItemsToNextHint.Text = newAmount.ToString();
-        }
-
         public void Reset()
         {
             SpoilerLoaded = false;
@@ -512,7 +474,6 @@ namespace TrackOMatic
                 hintPanel.Reset();
             }
 
-            UpdateUIAmountToNextHint(0);
             HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
             Autotracker.Reset();
             DataSaver.Reset();

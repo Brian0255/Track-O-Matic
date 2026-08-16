@@ -7,7 +7,7 @@ using TrackOMatic.ViewModels.Broadcast;
 
 namespace TrackOMatic.ViewModels;
 
-public class UiCountableViewModel: CountableViewModel, INotifyPropertyChanged
+public partial class UiCountableViewModel: CountableViewModel, INotifyPropertyChanged
 {
     private readonly IUserSettingsService _userSettingsService;
     private readonly ICollectiblesService _collectiblesService;

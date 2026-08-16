@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
+using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels;
 
@@ -12,6 +13,26 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
 {
     private readonly IUserSettingsService _userSettingsService;
     private readonly IThemeService _themeService;
+    private readonly IAutotrackerService _autotrackerService;
+    private readonly ISavedProgressProvider _savedProgressProvider;
+
+    #region Child ViewModels
+
+    private CollectiblesGridRowViewModel? _collectiblesGridRowViewModel;
+    public CollectiblesGridRowViewModel CollectiblesGridRowViewModel
+    {
+        get
+        {
+            _collectiblesGridRowViewModel ??= new CollectiblesGridRowViewModel(
+                _userSettingsService,
+                _autotrackerService,
+                _savedProgressProvider
+            );
+            return _collectiblesGridRowViewModel;
+        }
+    }
+
+    #endregion
 
     #region Proxy Properties
 
@@ -97,7 +118,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
     private bool _isCompanyCoinCollectibleEnabled;
     public bool IsCompanyCoinCollectibleEnabled
     {
-        get => _userSettingsService.ShowCompanyCoins;
+        get => _isCompanyCoinCollectibleEnabled;
         set
         {
             if (SetProperty(ref _isCompanyCoinCollectibleEnabled, value))
@@ -107,26 +128,26 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         }
     }
 
-    private bool _isHelmSpoilerOrderEnabled;
-    public bool IsHelmSpoilerOrderEnabled
+    private bool _isShowingHelmSpoilerInfoEnabled;
+    public bool IsShowingHelmSpoilerInfoEnabled
     {
-        get => !_userSettingsService.ShowHelmOrder;
+        get => _isShowingHelmSpoilerInfoEnabled;
         set
         {
-            if (SetProperty(ref _isHelmSpoilerOrderEnabled, value))
+            if (SetProperty(ref _isShowingHelmSpoilerInfoEnabled, value))
             {
-                _userSettingsService.ShowHelmOrder = !value;
+                _userSettingsService.ShowHelmOrder = value;
             }
         }
     }
 
-    private bool _isBossSpoilerOrderEnabled;
-    public bool IsBossSpoilerOrderEnabled
+    private bool _isShowingBossSpoilerInfoEnabled;
+    public bool IsShowingBossSpoilerInfoEnabled
     {
-        get => _userSettingsService.ShowKRoolOrder;
+        get => _isShowingBossSpoilerInfoEnabled;
         set
         {
-            if (SetProperty(ref _isBossSpoilerOrderEnabled, value))
+            if (SetProperty(ref _isShowingBossSpoilerInfoEnabled, value))
             {
                 _userSettingsService.ShowKRoolOrder = value;
             }
@@ -136,7 +157,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
     private bool _isProgressiveHintCounterEnabled;
     public bool IsProgressiveHintCounterEnabled
     {
-        get => _userSettingsService.ShowAmountForHints;
+        get => _isProgressiveHintCounterEnabled;
         set
         {
             if (SetProperty(ref _isProgressiveHintCounterEnabled, value))
@@ -149,7 +170,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
     private HintDisplayMode _hintDisplayMode;
     public HintDisplayMode HintDisplayMode
     {
-        get => _userSettingsService.HintDisplay;
+        get => _hintDisplayMode;
         set
         {
             if (SetProperty(ref _hintDisplayMode, value))
@@ -162,7 +183,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
     private bool _isHelmDoorPanelEnabled;
     public bool IsHelmDoorPanelEnabled
     {
-        get => _userSettingsService.HelmDoors;
+        get => _isHelmDoorPanelEnabled;
         set
         {
             if (SetProperty(ref _isHelmDoorPanelEnabled, value))
@@ -276,22 +297,19 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         }
     }
 
-    public bool ShowsBlueprintsButNotCoins
-    {
-        get => _userSettingsService.ShowTotalBPs && !_userSettingsService.ShowCompanyCoins;
-    }
-
-    public bool ShowsBlueprintsAndCoins
-    {
-        get => _userSettingsService.ShowTotalBPs && _userSettingsService.ShowCompanyCoins;
-    }
-
     #endregion
 
-    public MainWindowViewModel(IUserSettingsService userSettingsService, IThemeService themeService)
+    public MainWindowViewModel(
+        IUserSettingsService userSettingsService,
+        IThemeService themeService,
+        IAutotrackerService autotrackerService,
+        ISavedProgressProvider savedProgressProvider
+    )
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
+        _autotrackerService = autotrackerService ?? throw new ArgumentNullException(nameof(autotrackerService));
+        _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         InitializeState();
         _userSettingsService.PropertyChanged += OnPropertyChanged;
     }
@@ -306,8 +324,8 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         IsColoredBarrelPadMovesEnabled = _userSettingsService.ColoredBarrelPadMoves;
         IsTotalBlueprintCollectibleEnabled = _userSettingsService.ShowTotalBPs;
         IsCompanyCoinCollectibleEnabled = _userSettingsService.ShowCompanyCoins;
-        IsHelmSpoilerOrderEnabled = _userSettingsService.ShowHelmOrder;
-        IsBossSpoilerOrderEnabled = _userSettingsService.ShowKRoolOrder;
+        IsShowingHelmSpoilerInfoEnabled = _userSettingsService.ShowHelmOrder;
+        IsShowingBossSpoilerInfoEnabled = _userSettingsService.ShowKRoolOrder;
         IsProgressiveHintCounterEnabled = _userSettingsService.ShowAmountForHints;
         HintDisplayMode = _userSettingsService.HintDisplay;
         IsHelmDoorPanelEnabled = _userSettingsService.HelmDoors;
@@ -368,13 +386,13 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
     [RelayCommand]
     private void ToggleHelmSpoilerOrder()
     {
-        IsHelmSpoilerOrderEnabled = !IsHelmSpoilerOrderEnabled;
+        IsShowingHelmSpoilerInfoEnabled = !IsShowingHelmSpoilerInfoEnabled;
     }
 
     [RelayCommand]
     private void ToggleBossSpoilerOrder()
     {
-        IsBossSpoilerOrderEnabled = !IsBossSpoilerOrderEnabled;
+        IsShowingBossSpoilerInfoEnabled = !IsShowingBossSpoilerInfoEnabled;
     }
 
     [RelayCommand]
@@ -477,11 +495,11 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         }
         else if (e.PropertyName == nameof(_userSettingsService.ShowHelmOrder))
         {
-            IsHelmSpoilerOrderEnabled = !_userSettingsService.ShowHelmOrder;
+            IsShowingHelmSpoilerInfoEnabled = _userSettingsService.ShowHelmOrder;
         }
         else if (e.PropertyName == nameof(_userSettingsService.ShowKRoolOrder))
         {
-            IsBossSpoilerOrderEnabled = _userSettingsService.ShowKRoolOrder;
+            IsShowingBossSpoilerInfoEnabled = _userSettingsService.ShowKRoolOrder;
         }
         else if (e.PropertyName == nameof(_userSettingsService.ShowAmountForHints))
         {
@@ -546,6 +564,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
             if (disposing)
             {
                 _userSettingsService.PropertyChanged -= OnPropertyChanged;
+                (_collectiblesGridRowViewModel as IDisposable)?.Dispose();
             }
             _disposed = true;
         }

@@ -51,6 +51,7 @@ public partial class App : Application
         var autotrackingService = _serviceProvider.GetRequiredService<IAutotrackerService>();
         var themeService = _serviceProvider.GetRequiredService<IThemeService>();
         var levelOrderService = _serviceProvider.GetRequiredService<ILevelOrderService>();
+        var savedProgressProvider = _serviceProvider.GetRequiredService<ISavedProgressProvider>();
 
         _resourceDictionaryProvider = new WpfResourceDictionaryProvider(themeService);
         _resourceDictionaryProvider.UpdateResourceDictionaries();
@@ -66,7 +67,8 @@ public partial class App : Application
             parsedSpoilerDataService,
             levelOrderService,
             autotrackingService,
-            themeService
+            themeService,
+            savedProgressProvider
         );
         mainWindow.Show();
     }

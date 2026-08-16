@@ -177,6 +177,7 @@
     <BitmapImage x:Key="candy" UriSource="Images/dk64/candy.png" x:Shared="false"/>
     <BitmapImage x:Key="funky" UriSource="Images/dk64/funky.png" x:Shared="false"/>
     <BitmapImage x:Key="snide" UriSource="Images/dk64/snide.png" x:Shared="false"/>
+    <BitmapImage x:Key="wrinkly" UriSource="Images/dk64/wrinkly.png" x:Shared="false"/>
 
     <BitmapImage x:Key="army" UriSource="Images/dk64/army.png" x:Shared="false"/>
     <BitmapImage x:Key="army2" UriSource="Images/dk64/army2.png" x:Shared="false"/>
