@@ -28,7 +28,6 @@ public partial class Item : UserControl
     public Item()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
     private static void OnItemNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

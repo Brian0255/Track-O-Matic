@@ -28,7 +28,6 @@ public partial class Level : UserControl
     public Level()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
     private static void OnLevelNumberChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

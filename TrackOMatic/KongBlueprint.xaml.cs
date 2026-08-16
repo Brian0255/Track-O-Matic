@@ -42,7 +42,6 @@ public partial class KongBlueprint : UserControl
     public KongBlueprint()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
 

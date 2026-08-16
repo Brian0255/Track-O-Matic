@@ -11,6 +11,7 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:BLockerPanelViewModel, IsDesignTimeCreatable=True}"
     d:DesignHeight="300"
     d:DesignWidth="200"
+    Unloaded="OnUnloaded"
 >
     <Grid Background="Transparent">
         <Border CornerRadius="3" BorderThickness=".5" BorderBrush="Black" Background="{StaticResource VeryDark}">

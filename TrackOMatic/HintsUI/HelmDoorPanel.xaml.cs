@@ -39,8 +39,6 @@ public partial class HelmDoorPanel : UserControl
             savedProgressProvider,
             itemSelectorService
         );
-
-        Unloaded += OnUnloaded;
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

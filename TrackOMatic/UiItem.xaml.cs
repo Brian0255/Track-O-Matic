@@ -59,7 +59,6 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
         SavedProgressProvider = ServiceLocator.GetService<ISavedProgressProvider>() ?? throw new InvalidOperationException("ISavedProgressProvider not found in service locator.");
         ThemeService = ServiceLocator.GetService<IThemeService>() ?? throw new InvalidOperationException("IThemeService not found in service locator.");
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

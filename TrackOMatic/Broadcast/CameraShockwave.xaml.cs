@@ -31,8 +31,6 @@ public partial class CameraShockwave : UserControl
                 savedProgressProvider
             );
         }
-
-        Unloaded += OnUnloaded;
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

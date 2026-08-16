@@ -10,6 +10,7 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:SongViewModel}"
              d:DesignHeight="64"
              d:DesignWidth="256"
+             Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
         <ResourceDictionary>

@@ -27,7 +27,6 @@ public partial class BossSlot : UserControl
     public BossSlot()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
     private static void OnBossSlotChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

@@ -10,7 +10,8 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewmodels:ProgressiveSlamViewModel}"
              d:DesignHeight="64"
-             d:DesignWidth="64">
+             d:DesignWidth="64"
+             Unloaded="OnUnloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

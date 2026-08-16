@@ -28,7 +28,6 @@ public partial class Countable : UserControl
     public Countable()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
     private static void OnItemTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

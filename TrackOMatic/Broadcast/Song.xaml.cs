@@ -17,11 +17,9 @@ public partial class Song : UserControl
 
         var songService = ServiceLocator.GetService<ISongService>();
         DataContext = new SongViewModel(songService);
-
-        Unloaded += Song_Unloaded;
     }
 
-    private void Song_Unloaded(object sender, RoutedEventArgs e)
+    private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         (DataContext as IDisposable)?.Dispose();
         DataContext = null;

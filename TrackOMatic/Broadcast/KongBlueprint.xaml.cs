@@ -41,7 +41,6 @@ public partial class KongBlueprint : UserControl
     public KongBlueprint()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
     private static void OnBlueprintTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

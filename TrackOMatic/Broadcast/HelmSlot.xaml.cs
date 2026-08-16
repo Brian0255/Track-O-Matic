@@ -27,7 +27,6 @@ public partial class HelmSlot : UserControl
     public HelmSlot()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
     private static void OnHelmSlotChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

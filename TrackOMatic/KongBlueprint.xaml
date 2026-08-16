@@ -12,6 +12,7 @@
              MouseLeftButtonDown="UserControl_MouseLeftButtonDown"
              MouseRightButtonDown="UserControl_MouseRightButtonDown"
              MouseWheel="UserControl_MouseWheel"
+             Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
         <ResourceDictionary>

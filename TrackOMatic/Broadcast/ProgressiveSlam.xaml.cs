@@ -30,8 +30,6 @@ public partial class ProgressiveSlam : UserControl
                 savedProgressProvider
             );
         }
-
-        Unloaded += OnUnloaded;
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

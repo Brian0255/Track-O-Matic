@@ -10,6 +10,7 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:IslesViewModel}"
              d:DesignHeight="60"
              d:DesignWidth="100"
+             Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
         <ResourceDictionary>

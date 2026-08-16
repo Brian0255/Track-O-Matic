@@ -28,7 +28,6 @@ public partial class Key : UserControl
     public Key()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
     }
 
     private static void OnLevelNumberChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

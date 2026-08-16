@@ -10,6 +10,7 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:KeyViewModel}"
              d:DesignHeight="32"
              d:DesignWidth="32"
+             Unloaded="OnUnloaded"
  >
     <UserControl.Resources>
         <ResourceDictionary>

@@ -15,7 +15,6 @@ public partial class TotalBlueprint : UserControl
     public TotalBlueprint()
     {
         InitializeComponent();
-        Unloaded += OnUnloaded;
 
         // There's no depenency properties, so just initialize the data context now.
         var collectiblesService = ServiceLocator.GetService<ICollectiblesService>();

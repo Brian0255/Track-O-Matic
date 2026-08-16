@@ -8,7 +8,8 @@
              mc:Ignorable="d"
              Background="Transparent"
              d:DesignHeight="64"
-             d:DesignWidth="64">
+             d:DesignWidth="64"
+             Unloaded="OnUnloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

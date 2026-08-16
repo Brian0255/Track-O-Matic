@@ -59,7 +59,7 @@ public class FlexibleGridItemSelectorViewModel : ObservableObject
     /// <summary>
     /// Gets or sets the currently selected item.
     /// </summary>
-    public ItemGridCell SelectedItem
+    public ItemGridCell? SelectedItem
     {
         get => _selectedItem;
         set => SetProperty(ref _selectedItem, value);
