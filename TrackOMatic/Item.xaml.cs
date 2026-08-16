@@ -7,6 +7,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using TrackOMatic.HintsUI;
 using TrackOMatic.Logic.Enums;
 
 namespace TrackOMatic

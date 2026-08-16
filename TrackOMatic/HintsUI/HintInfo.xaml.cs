@@ -11,360 +11,359 @@ using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 
-namespace TrackOMatic
+namespace TrackOMatic.HintsUI;
+
+public partial class HintInfo : UserControl, INotifyPropertyChanged
 {
-    public partial class HintInfo : UserControl, INotifyPropertyChanged
+    private bool UserInitialized = false;
+    private MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+    private Dictionary<HintSuggestion, HintSuggestionConfig> SuggestionToShortcutInfo { get; } = new()
     {
-        private bool UserInitialized = false;
-        private MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-        private Dictionary<HintSuggestion, HintSuggestionConfig> SuggestionToShortcutInfo { get; } = new()
-        {
-            {HintSuggestion.REGION, new HintSuggestionConfig(["Hint Regions"], HintRegion.All) },
-            {HintSuggestion.CHECK, new HintSuggestionConfig(["Item Locations"], HintLocation.All) },
-            {HintSuggestion.MOVE, new HintSuggestionConfig(["Moves"], HintMove.All) },
-            {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions","Moves"], HintRegion.All.Concat(HintMove.All).ToList()) }
-        };
-        private HintSuggestionConfig? HintSuggestionConfig { get; init; }
+        {HintSuggestion.REGION, new HintSuggestionConfig(["Hint Regions"], HintRegion.All) },
+        {HintSuggestion.CHECK, new HintSuggestionConfig(["Item Locations"], HintLocation.All) },
+        {HintSuggestion.MOVE, new HintSuggestionConfig(["Moves"], HintMove.All) },
+        {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions","Moves"], HintRegion.All.Concat(HintMove.All).ToList()) }
+    };
+    private HintSuggestionConfig? HintSuggestionConfig { get; init; }
 
-        public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
-        public HintTypeSettings HintTypeSettings
+    public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
+    public HintTypeSettings HintTypeSettings
+    {
+        get { return (HintTypeSettings)GetValue(HintTypeSettingsProperty); }
+        set { SetValue(HintTypeSettingsProperty, value); }
+    }
+
+    public HintType HintType { get; private set; }
+    public bool DoSuggestions { get; set; } = true;
+
+    public RegionName RegionName { get; }
+
+    public SavedHint SavedHint { get; private set; }
+
+    private IUserSettingsService UserSettingsService { get; init; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public HintInfo(HintType hintType, HintPanelType hintPanelType, string panelName, bool isSavedHint = false, RegionName regionName = RegionName.UNKNOWN)
+    {
+        InitializeComponent();
+        UserSettingsService = ServiceLocator.GetService<IUserSettingsService>();
+        if (!isSavedHint)
         {
-            get { return (HintTypeSettings)GetValue(HintTypeSettingsProperty); }
-            set { SetValue(HintTypeSettingsProperty, value); }
+            Location.Loaded += (sender, e) => Location.Focus();
         }
 
-        public HintType HintType { get; private set; }
-        public bool DoSuggestions { get; set; } = true;
-
-        public RegionName RegionName { get; }
-
-        public SavedHint SavedHint { get; private set; }
-
-        private IUserSettingsService UserSettingsService { get; init; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        HintTypeSettings = HintTypeSettingsList.SETTINGS[hintType];
+        OnPropertyChanged(nameof(HintTypeSettings));
+        SuggestionBox.ItemsSource = new List<string>(HintData.SortedRegions);
+        HintType = hintType;
+        SavedHint = new SavedHint(hintPanelType, Location.Text, PotionCount.Text, new(), new());
+        ItemsOnPath.HintInfo = this;
+        RightItems.HintInfo = this;
+        if (!HintTypeSettings.PathItemsVisible)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            RightItems.BottomRow.Height = new GridLength(0);
+        }
+        if (SuggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
+        {
+            HintSuggestionConfig = SuggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
+        }
+        RegionName = regionName;
+    }
+
+    public void UpdateSelectedItems()
+    {
+        SavedHint.PathItems = ItemsOnPath.SelectedItems;
+        SavedHint.FoundItems = RightItems.SelectedItems;
+        mainWindow.DataSaver.Save();
+    }
+
+    private void Location_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            if (SuggestionBox.Items.Count > 0)
+            {
+                Location.Text = SuggestionBox.Items[0] as string;
+            }
+            ProcessSelection();
+            Keyboard.ClearFocus();
+            mainWindow.DataSaver.Save();
+            if (HintType == HintType.REGION_POTION_COUNT)
+            {
+                PotionCount.Focus();
+            }
+        }
+        if (e.Key == Key.Down)
+        {
+            SuggestionBox.SelectedIndex = 0;
+            SuggestionBox.UpdateLayout();
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var listBoxItem = (ListBoxItem)SuggestionBox
+                .ItemContainerGenerator
+                .ContainerFromItem(SuggestionBox.SelectedItem);
+                listBoxItem?.Focus();
+            }));
+        }
+    }
+
+    private void CheckForShortcuts(List<string> matches)
+    {
+        var directHintExclusions = new List<string>() { "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss", "Bought" };
+        var exclude = directHintExclusions;
+        var JSONKeys = new List<string>() { "Kong Hint Shorthand" };
+        if (HintSuggestionConfig != null)
+        {
+            JSONKeys = HintSuggestionConfig.JSONShortcutKeys;
+            exclude = new();
+        }
+        var textInfo = new CultureInfo("en-US", false).TextInfo;
+        foreach (var JSONKey in JSONKeys)
+        {
+            if (!HintData.UserShortcuts.ContainsKey(JSONKey))
+            {
+                continue;
+            }
+            foreach (var entry in HintData.UserShortcuts[JSONKey])
+            {
+                var toAdd = entry.Value;
+                if (JSONKey == "Kong Hint Shorthand")
+                {
+                    toAdd = textInfo.ToTitleCase(toAdd.ToLower());
+                }
+                var shortcut = entry.Key;
+                if (shortcut.ToLower().StartsWith(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
+                {
+                    matches.Add(toAdd);
+                }
+            }
+        }
+    }
+
+    private void SetUpSuggestions()
+    {
+        var matches = new List<string>();
+        List<string> sortBy = new();
+        IEnumerable<string> filteredItems = new List<string>();
+        CheckForShortcuts(matches);
+        var include_enemies = UserSettingsService.EnemiesInAutofill;
+        if (HintTypeSettings.HintSuggestion == HintSuggestion.NONE)
+        {
+            SuggestionBox.ItemsSource = null;
+            return;
+        }
+        if (HintType == HintType.DIRECT_ITEM_HINT)
+        {
+            sortBy = HintData.REGIONS_WITHOUT_LEVEL_NAME[RegionName];
+            filteredItems = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
+        }
+        else if (HintSuggestionConfig != null)
+        {
+            var input = Location.Text.ToLower();
+            filteredItems = HintSuggestionConfig.DefaultSuggestions
+                .Where(loc => (loc.FullName.ToLower().Contains(input)
+                           || loc.ShortName.ToLower().Contains(input))
+                           && (include_enemies || loc.HintGroup != HintGroup.ENEMY))
+                .Select(loc => loc.ShortName);
+        }
+        matches = matches.Concat(filteredItems).Distinct().ToList();
+        matches.Sort();
+        SuggestionBox.ItemsSource = matches;
+    }
+
+    private void Location_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (!DoSuggestions)
+        {
+            return;
         }
 
-        public HintInfo(HintType hintType, HintPanelType hintPanelType, string panelName, bool isSavedHint = false, RegionName regionName = RegionName.UNKNOWN)
-        {
-            InitializeComponent();
-            UserSettingsService = ServiceLocator.GetService<IUserSettingsService>();
-            if (!isSavedHint)
-            {
-                Location.Loaded += (sender, e) => Location.Focus();
-            }
+        SetUpSuggestions();
+        BottomRow.IsOpen = Location.Text != "" && (SuggestionBox.Items.Count > 0) && HintTypeSettings.HintSuggestion != HintSuggestion.NONE;
+        SavedHint.LocationText = Location.Text;
+    }
 
-            HintTypeSettings = HintTypeSettingsList.SETTINGS[hintType];
-            OnPropertyChanged(nameof(HintTypeSettings));
-            SuggestionBox.ItemsSource = new List<string>(HintData.SortedRegions);
-            HintType = hintType;
-            SavedHint = new SavedHint(hintPanelType, Location.Text, PotionCount.Text, new(), new());
-            ItemsOnPath.HintInfo = this;
-            RightItems.HintInfo = this;
-            if (!HintTypeSettings.PathItemsVisible)
-            {
-                RightItems.BottomRow.Height = new GridLength(0);
-            }
-            if (SuggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
-            {
-                HintSuggestionConfig = SuggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
-            }
-            RegionName = regionName;
+    private bool TryProcessKongHint()
+    {
+        var hintWordList = Location.Text.Split(' ');
+        if (hintWordList.Length != 3)
+        {
+            return false;
         }
 
-        public void UpdateSelectedItems()
+        if (!HintData.UserShortcuts.ContainsKey("Kong Hint Shorthand"))
         {
-            SavedHint.PathItems = ItemsOnPath.SelectedItems;
-            SavedHint.FoundItems = RightItems.SelectedItems;
+            return false;
+        }
+
+        var shorthands = HintData.UserShortcuts["Kong Hint Shorthand"];
+        for (int i = 0; i < hintWordList.Length; ++i)
+        {
+            hintWordList[i] = hintWordList[i].ToLower();
+            if (!shorthands.ContainsKey(hintWordList[i]))
+            {
+                return false;
+            }
+        }
+        var foundKongString = shorthands[hintWordList[0]];
+        if (!Enum.TryParse(foundKongString, out ItemName kongThatIsFound))
+        {
+            return false;
+        }
+
+        var textInfo = new CultureInfo("en-US", false).TextInfo;
+        var region = shorthands[hintWordList[2]];
+        var thingThatFinds = shorthands[hintWordList[1]];
+        thingThatFinds = textInfo.ToTitleCase(thingThatFinds.ToLower());
+        var newText = thingThatFinds + " in " + region;
+        if (thingThatFinds == "Boss")
+        {
+            newText = region + " Boss Defeated";
+        }
+        RightItems.SelectedItems = new() { { kongThatIsFound, false } };
+        RightItems.ProcessSelectedItems();
+        Location.Text = newText;
+        UpdateSelectedItems();
+        return true;
+    }
+
+    private void ProcessSelection()
+    {
+        if (SuggestionBox.SelectedItem != null)
+        {
+            Location.Text = SuggestionBox.SelectedItem as string;
+            if (HintType == HintType.REGION_POTION_COUNT)
+            {
+                PotionCount.Focus();
+            }
+        }
+        BottomRow.IsOpen = false;
+
+        if (HintTypeSettings.PathItemsVisible && !UserInitialized)
+        {
+            ItemsOnPath.OpenItemSelectionDialog();
+            UserInitialized = true;
+        }
+        if (HintType == HintType.KONGS)
+        {
+            UserInitialized = TryProcessKongHint();
+        }
+        if (HintTypeSettings.PromptForFoundItem && !UserInitialized)
+        {
+            RightItems.OpenItemSelectionDialog();
+            UserInitialized = true;
+        }
+        SuggestionBox.UnselectAll();
+    }
+
+    private void SuggestionBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && SuggestionBox.SelectedItem != null)
+        {
+            ProcessSelection();
             mainWindow.DataSaver.Save();
         }
+    }
 
-        private void Location_PreviewKeyDown(object sender, KeyEventArgs e)
+    private void SuggestionBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (SuggestionBox.SelectedItem != null)
         {
-            if (e.Key == Key.Enter)
-            {
-                if (SuggestionBox.Items.Count > 0)
-                {
-                    Location.Text = SuggestionBox.Items[0] as string;
-                }
-                ProcessSelection();
-                Keyboard.ClearFocus();
-                mainWindow.DataSaver.Save();
-                if (HintType == HintType.REGION_POTION_COUNT)
-                {
-                    PotionCount.Focus();
-                }
-            }
-            if (e.Key == Key.Down)
-            {
-                SuggestionBox.SelectedIndex = 0;
-                SuggestionBox.UpdateLayout();
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    var listBoxItem = (ListBoxItem)SuggestionBox
-                    .ItemContainerGenerator
-                    .ContainerFromItem(SuggestionBox.SelectedItem);
-                    listBoxItem?.Focus();
-                }));
-            }
+            ProcessSelection();
+            mainWindow.DataSaver.Save();
         }
+    }
 
-        private void CheckForShortcuts(List<string> matches)
+    private void HintInfoWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (ItemsOnPath != null && RightItems != null)
         {
-            var directHintExclusions = new List<string>() { "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss", "Bought" };
-            var exclude = directHintExclusions;
-            var JSONKeys = new List<string>() { "Kong Hint Shorthand" };
-            if (HintSuggestionConfig != null)
+            // Execute the code only when the visual tree is fully loaded
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                JSONKeys = HintSuggestionConfig.JSONShortcutKeys;
-                exclude = new();
+
+                Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
+
+                // Get the DPI scaling factor
+                Matrix matrix = PresentationSource.FromVisual(ItemsOnPath.ItemPanel).CompositionTarget.TransformToDevice;
+                double dpiX = matrix.M11;
+                double dpiY = matrix.M22;
+
+                // Adjust position for DPI scaling
+                position = new Point(position.X / dpiX, position.Y / dpiY);
+
+                double[] selectionDialogPosition = { position.X - 10, position.Y };
+                ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
+                RightItems.SelectionDialogPosition = selectionDialogPosition;
             }
-            var textInfo = new CultureInfo("en-US", false).TextInfo;
-            foreach (var JSONKey in JSONKeys)
-            {
-                if (!HintData.UserShortcuts.ContainsKey(JSONKey))
-                {
-                    continue;
-                }
-                foreach (var entry in HintData.UserShortcuts[JSONKey])
-                {
-                    var toAdd = entry.Value;
-                    if (JSONKey == "Kong Hint Shorthand")
-                    {
-                        toAdd = textInfo.ToTitleCase(toAdd.ToLower());
-                    }
-                    var shortcut = entry.Key;
-                    if (shortcut.ToLower().StartsWith(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
-                    {
-                        matches.Add(toAdd);
-                    }
-                }
-            }
+            ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
         }
+    }
 
-        private void SetUpSuggestions()
+    private void PotionCount_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        SavedHint.PotionCountText = PotionCount.Text;
+    }
+
+    private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
         {
-            var matches = new List<string>();
-            List<string> sortBy = new();
-            IEnumerable<string> filteredItems = new List<string>();
-            CheckForShortcuts(matches);
-            var include_enemies = UserSettingsService.EnemiesInAutofill;
-            if (HintTypeSettings.HintSuggestion == HintSuggestion.NONE)
-            {
-                SuggestionBox.ItemsSource = null;
-                return;
-            }
-            if (HintType == HintType.DIRECT_ITEM_HINT)
-            {
-                sortBy = HintData.REGIONS_WITHOUT_LEVEL_NAME[RegionName];
-                filteredItems = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
-            }
-            else if (HintSuggestionConfig != null)
-            {
-                var input = Location.Text.ToLower();
-                filteredItems = HintSuggestionConfig.DefaultSuggestions
-                    .Where(loc => (loc.FullName.ToLower().Contains(input)
-                               || loc.ShortName.ToLower().Contains(input))
-                               && (include_enemies || loc.HintGroup != HintGroup.ENEMY))
-                    .Select(loc => loc.ShortName);
-            }
-            matches = matches.Concat(filteredItems).Distinct().ToList();
-            matches.Sort();
-            SuggestionBox.ItemsSource = matches;
-        }
-
-        private void Location_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!DoSuggestions)
-            {
-                return;
-            }
-
-            SetUpSuggestions();
-            BottomRow.IsOpen = Location.Text != "" && (SuggestionBox.Items.Count > 0) && HintTypeSettings.HintSuggestion != HintSuggestion.NONE;
-            SavedHint.LocationText = Location.Text;
-        }
-
-        private bool TryProcessKongHint()
-        {
-            var hintWordList = Location.Text.Split(' ');
-            if (hintWordList.Length != 3)
-            {
-                return false;
-            }
-
-            if (!HintData.UserShortcuts.ContainsKey("Kong Hint Shorthand"))
-            {
-                return false;
-            }
-
-            var shorthands = HintData.UserShortcuts["Kong Hint Shorthand"];
-            for (int i = 0; i < hintWordList.Length; ++i)
-            {
-                hintWordList[i] = hintWordList[i].ToLower();
-                if (!shorthands.ContainsKey(hintWordList[i]))
-                {
-                    return false;
-                }
-            }
-            var foundKongString = shorthands[hintWordList[0]];
-            if (!Enum.TryParse(foundKongString, out ItemName kongThatIsFound))
-            {
-                return false;
-            }
-
-            var textInfo = new CultureInfo("en-US", false).TextInfo;
-            var region = shorthands[hintWordList[2]];
-            var thingThatFinds = shorthands[hintWordList[1]];
-            thingThatFinds = textInfo.ToTitleCase(thingThatFinds.ToLower());
-            var newText = thingThatFinds + " in " + region;
-            if (thingThatFinds == "Boss")
-            {
-                newText = region + " Boss Defeated";
-            }
-            RightItems.SelectedItems = new() { { kongThatIsFound, false } };
-            RightItems.ProcessSelectedItems();
-            Location.Text = newText;
-            UpdateSelectedItems();
-            return true;
-        }
-
-        private void ProcessSelection()
-        {
-            if (SuggestionBox.SelectedItem != null)
-            {
-                Location.Text = SuggestionBox.SelectedItem as string;
-                if (HintType == HintType.REGION_POTION_COUNT)
-                {
-                    PotionCount.Focus();
-                }
-            }
-            BottomRow.IsOpen = false;
-
-            if (HintTypeSettings.PathItemsVisible && !UserInitialized)
-            {
-                ItemsOnPath.OpenItemSelectionDialog();
-                UserInitialized = true;
-            }
-            if (HintType == HintType.KONGS)
-            {
-                UserInitialized = TryProcessKongHint();
-            }
-            if (HintTypeSettings.PromptForFoundItem && !UserInitialized)
-            {
-                RightItems.OpenItemSelectionDialog();
-                UserInitialized = true;
-            }
-            SuggestionBox.UnselectAll();
-        }
-
-        private void SuggestionBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && SuggestionBox.SelectedItem != null)
-            {
-                ProcessSelection();
-                mainWindow.DataSaver.Save();
-            }
-        }
-
-        private void SuggestionBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (SuggestionBox.SelectedItem != null)
-            {
-                ProcessSelection();
-                mainWindow.DataSaver.Save();
-            }
-        }
-
-        private void HintInfoWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (ItemsOnPath != null && RightItems != null)
-            {
-                // Execute the code only when the visual tree is fully loaded
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-
-                    Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
-
-                    // Get the DPI scaling factor
-                    Matrix matrix = PresentationSource.FromVisual(ItemsOnPath.ItemPanel).CompositionTarget.TransformToDevice;
-                    double dpiX = matrix.M11;
-                    double dpiY = matrix.M22;
-
-                    // Adjust position for DPI scaling
-                    position = new Point(position.X / dpiX, position.Y / dpiY);
-
-                    double[] selectionDialogPosition = { position.X - 10, position.Y };
-                    ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
-                    RightItems.SelectionDialogPosition = selectionDialogPosition;
-                }
-                ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
-            }
-        }
-
-        private void PotionCount_TextChanged(object sender, TextChangedEventArgs e)
-        {
+            Keyboard.ClearFocus();
             SavedHint.PotionCountText = PotionCount.Text;
         }
+    }
 
-        private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
+    public void OnRemove()
+    {
+        var mainWindow = (MainWindow)Application.Current.MainWindow;
+        if (HintType != HintType.DIRECT_ITEM_HINT)
         {
-            if (e.Key == Key.Enter)
+            return;
+        }
+
+        foreach (var entry in RightItems.SelectedItems)
+        {
+            var itemName = entry.Key;
+            if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName))
             {
-                Keyboard.ClearFocus();
-                SavedHint.PotionCountText = PotionCount.Text;
+                continue;
+            }
+
+            var matchingItem = mainWindow.ITEM_NAME_TO_ITEM[itemName];
+            if (matchingItem.ItemImage.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
+            {
+                matchingItem.HandleItemReturn();
             }
         }
+    }
+    public void SetUpFromSavedHint(SavedHint savedHint)
+    {
+        DoSuggestions = false;
+        SavedHint = savedHint;
+        Location.Text = savedHint.LocationText;
+        PotionCount.Text = savedHint.PotionCountText;
+        ItemsOnPath.SelectedItems = savedHint.PathItems;
+        ItemsOnPath.ProcessSelectedItems();
+        RightItems.SelectedItems = savedHint.FoundItems;
+        RightItems.ProcessSelectedItems();
+        UserInitialized = true;
+        DoSuggestions = true;
+    }
 
-        public void OnRemove()
+    private void Location_PreviewMouseRightButtonDown(object sender, MouseEventArgs e)
+    {
+        var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right)
         {
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            if (HintType != HintType.DIRECT_ITEM_HINT)
-            {
-                return;
-            }
-
-            foreach (var entry in RightItems.SelectedItems)
-            {
-                var itemName = entry.Key;
-                if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName))
-                {
-                    continue;
-                }
-
-                var matchingItem = mainWindow.ITEM_NAME_TO_ITEM[itemName];
-                if (matchingItem.ItemImage.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
-                {
-                    matchingItem.HandleItemReturn();
-                }
-            }
-        }
-        public void SetUpFromSavedHint(SavedHint savedHint)
-        {
-            DoSuggestions = false;
-            SavedHint = savedHint;
-            Location.Text = savedHint.LocationText;
-            PotionCount.Text = savedHint.PotionCountText;
-            ItemsOnPath.SelectedItems = savedHint.PathItems;
-            ItemsOnPath.ProcessSelectedItems();
-            RightItems.SelectedItems = savedHint.FoundItems;
-            RightItems.ProcessSelectedItems();
-            UserInitialized = true;
-            DoSuggestions = true;
-        }
-
-        private void Location_PreviewMouseRightButtonDown(object sender, MouseEventArgs e)
-        {
-            var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right)
-            {
-                RoutedEvent = MouseDownEvent,
-                Source = this
-            };
-            RaiseEvent(args);
-            e.Handled = true;
-        }
+            RoutedEvent = MouseDownEvent,
+            Source = this
+        };
+        RaiseEvent(args);
+        e.Handled = true;
     }
 }

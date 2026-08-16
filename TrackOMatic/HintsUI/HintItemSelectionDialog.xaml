@@ -1,18 +1,22 @@
-<Window Closed="Window_Closed" x:Class="TrackOMatic.HintItemSelectionDialog"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:properties="clr-namespace:TrackOMatic.Properties"
-             xmlns:local="clr-namespace:TrackOMatic"
-             xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
-             mc:Ignorable="d" 
-             Height="335"
-             Width="420"
-             Topmost ="{Binding TopMostSetting, RelativeSource={RelativeSource Self}, Mode=TwoWay}"
-             Title="Select Items"
-             ResizeMode="NoResize"
-             Background="{StaticResource RegionBG}"  KeyDown="ItemGrid_KeyDown">
+<Window
+    Closed="Window_Closed"
+    x:Class="TrackOMatic.HintsUI.HintItemSelectionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:properties="clr-namespace:TrackOMatic.Properties"
+    xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
+    mc:Ignorable="d"
+    Height="335"
+    Width="420"
+    Topmost ="{Binding TopMostSetting, RelativeSource={RelativeSource Self}, Mode=TwoWay}"
+    Title="Select Items"
+    ResizeMode="NoResize"
+    Background="{StaticResource RegionBG}"
+    KeyDown="ItemGrid_KeyDown"
+>
     <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="2" >
         <Grid.RowDefinitions>
             <RowDefinition />

@@ -367,10 +367,10 @@
                             <RowDefinition Height="1*"/>
                             <RowDefinition Name="DirectHintsCol0LastRow" Height="1*"/>
                         </Grid.RowDefinitions>
-                        <local:HintPanel Grid.Row="0" HintPanelType="Isles" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="3" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
-                        <local:HintPanel Grid.Row="1" HintPanelType="Aztec" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="3" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
-                        <local:HintPanel Grid.Row="2" HintPanelType="Galleon" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="3" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
-                        <local:HintPanel Grid.Row="3" HintPanelType="Caves" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="3" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
+                        <hints:HintPanel Grid.Row="0" HintPanelType="Isles" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="3" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
+                        <hints:HintPanel Grid.Row="1" HintPanelType="Aztec" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="3" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
+                        <hints:HintPanel Grid.Row="2" HintPanelType="Galleon" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="3" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
+                        <hints:HintPanel Grid.Row="3" HintPanelType="Caves" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="3" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
                     </Grid>
                     <Grid Name="DirectHintsCol1" Grid.Column="1">
                         <Grid.RowDefinitions>
@@ -379,10 +379,10 @@
                             <RowDefinition Height="1*"/>
                             <RowDefinition Name="DirectHintsCol1LastRow" Height="1*"/>
                         </Grid.RowDefinitions>
-                        <local:HintPanel Grid.Row="0" HintPanelType="Japes" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="3" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
-                        <local:HintPanel Grid.Row="1" HintPanelType="Factory" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="3" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
-                        <local:HintPanel Grid.Row="2" HintPanelType="Forest" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="3" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
-                        <local:HintPanel Grid.Row="3" HintPanelType="Castle" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="3" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
+                        <hints:HintPanel Grid.Row="0" HintPanelType="Japes" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="3" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
+                        <hints:HintPanel Grid.Row="1" HintPanelType="Factory" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="3" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
+                        <hints:HintPanel Grid.Row="2" HintPanelType="Forest" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="3" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
+                        <hints:HintPanel Grid.Row="3" HintPanelType="Castle" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="3" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
                     </Grid>
                     <Grid Name="DirectHintsCol2" Grid.Column="2">
                         <Grid.RowDefinitions>
@@ -410,16 +410,16 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Name="MultipathColumn2" Width="0*"/>
                     </Grid.ColumnDefinitions>
-                    <local:HintPanel HintPanelType="Paths" HintType="PATH" x:Name="PathsPanel" Margin="3" Grid.Column="0" Heading="PATHS" LineColor="#dba512"  />
+                    <hints:HintPanel HintPanelType="Paths" HintType="PATH" x:Name="PathsPanel" Margin="3" Grid.Column="0" Heading="PATHS" LineColor="#dba512"  />
                     <Grid Name="MultipathColumn1" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Name="MultipathColumn1Row0" Height="1.6*"/>
                             <RowDefinition Height="1.25*"/>
                             <RowDefinition Height="3*"/>
                         </Grid.RowDefinitions>
-                        <local:HintPanel Grid.Row="0" HintPanelType="Foolish" HintType="FOOLISH_REGION" x:Name="FoolishPanel" Margin="3" Heading="FOOLISH REGIONS" LineColor="#e02f2f"  />
-                        <local:HintPanel Grid.Row="1" HintPanelType="Kongs" HintType="KONGS" x:Name="KongsPanel" Margin="3" Heading="KONGS" LineColor="#ff59e1"  />
-                        <local:HintPanel Grid.Row="2" HintPanelType="WayOfTheHoard" HintType="WAY_OF_THE_HOARD" x:Name="WotHPanel" Margin="3" Heading="WAY OF THE HOARD" LineColor="#2652ff"  />
+                        <hints:HintPanel Grid.Row="0" HintPanelType="Foolish" HintType="FOOLISH_REGION" x:Name="FoolishPanel" Margin="3" Heading="FOOLISH REGIONS" LineColor="#e02f2f"  />
+                        <hints:HintPanel Grid.Row="1" HintPanelType="Kongs" HintType="KONGS" x:Name="KongsPanel" Margin="3" Heading="KONGS" LineColor="#ff59e1"  />
+                        <hints:HintPanel Grid.Row="2" HintPanelType="WayOfTheHoard" HintType="WAY_OF_THE_HOARD" x:Name="WotHPanel" Margin="3" Heading="WAY OF THE HOARD" LineColor="#2652ff"  />
                     </Grid>
                     <Grid Name="MultipathMainColumn2"  Grid.Column="2">
                         <Grid.RowDefinitions>
@@ -446,9 +446,9 @@
                             </RowDefinition.Style>
                         </RowDefinition>
                     </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintPanelType="Helm" HintType="DIRECT_ITEM_HINT" x:Name="HelmPanel" Margin="3" Heading="HELM" LineColor="#b580ff" RegionName="HIDEOUT_HELM">
-                        <local:HintPanel.Style>
-                            <Style TargetType="{x:Type local:HintPanel}">
+                    <hints:HintPanel Grid.Row="0" HintPanelType="Helm" HintType="DIRECT_ITEM_HINT" x:Name="HelmPanel" Margin="3" Heading="HELM" LineColor="#b580ff" RegionName="HIDEOUT_HELM">
+                        <hints:HintPanel.Style>
+                            <Style TargetType="{x:Type hints:HintPanel}">
                                 <Setter Property="Visibility" Value="Hidden" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding DataContext.HintDisplayMode, ElementName=MainWindowRoot, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
@@ -456,10 +456,10 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </local:HintPanel.Style>
-                    </local:HintPanel>
-                    <local:HintPanel Grid.Row="0" HintPanelType="PotionCounts" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="3" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
-                    <local:HintPanel Grid.Row="1" HintPanelType="Unhinted" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="3" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
+                        </hints:HintPanel.Style>
+                    </hints:HintPanel>
+                    <hints:HintPanel Grid.Row="0" HintPanelType="PotionCounts" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="3" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
+                    <hints:HintPanel Grid.Row="1" HintPanelType="Unhinted" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="3" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
                     <hints:BLockerPanel x:Name="BLockerHints" Grid.Row="2" Margin="3" Heading="B. LOCKERS" LineColor="#F0F000"/>
                     <hints:HelmDoorPanel x:Name="HelmDoorHints" Grid.Row="3" Margin="3" Heading="HELM DOORS" LineColor="#7d3cbd" />
                 </Grid>
