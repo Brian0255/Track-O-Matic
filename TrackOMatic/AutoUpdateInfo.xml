@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>2.2.3</version>
-  <url>https://github.com/Brian0255/Track-O-Matic/releases/download/2.2.3/TrackOMatic_2.2.3.zip</url>
+  <version>3.0.0</version>
+  <url>https://github.com/Brian0255/Track-O-Matic/releases/download/3.0.0/TrackOMatic_3.0.0.zip</url>
   <changelog>https://github.com/Brian0255/Track-O-Matic/releases</changelog>
   <mandatory>false</mandatory>
 </item>

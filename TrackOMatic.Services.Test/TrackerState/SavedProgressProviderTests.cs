@@ -47,7 +47,7 @@ public class SavedProgressProviderTests
         // Arrange
         var initial = new SavedProgress();
         var provider = new SavedProgressProvider(initial);
-        var newProgress = new SavedProgress { spoilerPath = "test.txt" };
+        var newProgress = new SavedProgress { SpoilerPath = "test.txt" };
 
         // Act
         provider.UpdateProgress(newProgress);
@@ -56,7 +56,7 @@ public class SavedProgressProviderTests
         Assert.Multiple(() =>
         {
             Assert.Same(newProgress, provider.CurrentProgress);
-            Assert.Equal("test.txt", provider.CurrentProgress.spoilerPath);
+            Assert.Equal("test.txt", provider.CurrentProgress.SpoilerPath);
         });
     }
 

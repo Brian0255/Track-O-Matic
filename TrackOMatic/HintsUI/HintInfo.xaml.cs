@@ -48,7 +48,7 @@ namespace TrackOMatic
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public HintInfo(HintType hintType, string panelName, bool isSavedHint = false, RegionName regionName = RegionName.UNKNOWN)
+        public HintInfo(HintType hintType, HintPanelType hintPanelType, string panelName, bool isSavedHint = false, RegionName regionName = RegionName.UNKNOWN)
         {
             InitializeComponent();
             UserSettingsService = ServiceLocator.GetService<IUserSettingsService>();
@@ -61,7 +61,7 @@ namespace TrackOMatic
             OnPropertyChanged(nameof(HintTypeSettings));
             SuggestionBox.ItemsSource = new List<string>(HintData.SortedRegions);
             HintType = hintType;
-            SavedHint = new SavedHint(panelName, Location.Text, PotionCount.Text, new(), new());
+            SavedHint = new SavedHint(hintPanelType, Location.Text, PotionCount.Text, new(), new());
             ItemsOnPath.HintInfo = this;
             RightItems.HintInfo = this;
             if (!HintTypeSettings.PathItemsVisible)

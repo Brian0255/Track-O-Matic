@@ -24,7 +24,7 @@ public class SavedHintTests
 
         // Act
         var savedHint = new SavedHint(
-            "IslesPanel",
+            HintPanelType.Isles,
             "Location here",
             "2/5",
             pathItems,
@@ -35,7 +35,7 @@ public class SavedHintTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.Equal("IslesPanel", savedHint.HintPanelKey);
+            Assert.Equal(HintPanelType.Isles, savedHint.HintPanelType);
             Assert.Equal("Location here", savedHint.LocationText);
             Assert.Equal("2/5", savedHint.PotionCountText);
             Assert.Equal(2, savedHint.PathItems.Count);
@@ -53,7 +53,7 @@ public class SavedHintTests
 
         // Act
         var savedHint = new SavedHint(
-            "TestPanel",
+            HintPanelType.Aztec,
             "Test Location",
             "1/1",
             pathItems,
@@ -72,7 +72,7 @@ public class SavedHintTests
     {
         // Arrange
         var savedHint = new SavedHint(
-            "OriginalPanel",
+            HintPanelType.Isles,
             "Location",
             "1/1",
             [],
@@ -80,8 +80,8 @@ public class SavedHintTests
         );
 
         // Act & Assert
-        // HintPanelKey is a read-only get, should have no setter
-        Assert.Equal("OriginalPanel", savedHint.HintPanelKey);
+        // HintPanelType is a read-only get, should have no setter
+        Assert.Equal(HintPanelType.Isles, savedHint.HintPanelType);
     }
 
     [Fact]
@@ -89,7 +89,7 @@ public class SavedHintTests
     {
         // Arrange
         var savedHint = new SavedHint(
-            "Panel",
+            HintPanelType.Galleon,
             "Original Location",
             "1/1",
             [],
@@ -108,7 +108,7 @@ public class SavedHintTests
     {
         // Arrange
         var savedHint = new SavedHint(
-            "Panel",
+            HintPanelType.Castle,
             "Location",
             "1/1",
             [],
@@ -128,7 +128,7 @@ public class SavedHintTests
         // Arrange
         var originalPathItems = new Dictionary<ItemName, bool> { { ItemName.DONKEY, true } };
         var savedHint = new SavedHint(
-            "Panel",
+            HintPanelType.Helm,
             "Location",
             "1/1",
             originalPathItems,
@@ -154,7 +154,7 @@ public class SavedHintTests
         // Arrange
         var originalFoundItems = new Dictionary<ItemName, bool> { { ItemName.LANKY, true } };
         var savedHint = new SavedHint(
-            "Panel",
+            HintPanelType.Galleon,
             "Location",
             "1/1",
             [],
@@ -177,7 +177,7 @@ public class SavedHintTests
     public void Constructor_WithVariousPanelKeys_StoresCorrectly()
     {
         // Arrange & Act
-        var panelKeys = new[] { "IslesPanel", "AztecPanel", "PathsPanel", "FoolishPanel" };
+        var panelKeys = new[] { HintPanelType.Isles, HintPanelType.Aztec, HintPanelType.Paths, HintPanelType.Foolish };
         var savedHints = panelKeys.Select(key => new SavedHint(
             key,
             "Location",
@@ -187,7 +187,7 @@ public class SavedHintTests
         )).ToList();
 
         // Assert
-        Assert.All(savedHints, hint => Assert.Contains(hint.HintPanelKey, panelKeys));
+        Assert.All(savedHints, hint => Assert.Contains(hint.HintPanelType, panelKeys));
     }
 
     [Fact]
@@ -195,7 +195,7 @@ public class SavedHintTests
     {
         // Arrange & Act
         var savedHint = new SavedHint(
-            "Panel",
+            HintPanelType.Isles,
             "Location",
             "1/1",
             [],
@@ -230,7 +230,7 @@ public class SavedHintTests
 
         // Act
         var savedHint = new SavedHint(
-            "Panel",
+            HintPanelType.Isles,
             "Location",
             "1/1",
             pathItems,
@@ -253,7 +253,7 @@ public class SavedHintTests
     {
         // Arrange
         var hint1 = new SavedHint(
-            "Panel1",
+            HintPanelType.Isles,
             "Location1",
             "1/1",
             new Dictionary<ItemName, bool> { { ItemName.DONKEY, true } },
@@ -262,7 +262,7 @@ public class SavedHintTests
         );
 
         var hint2 = new SavedHint(
-            "Panel2",
+            HintPanelType.Isles,
             "Location2",
             "2/2",
             new Dictionary<ItemName, bool> { { ItemName.DIDDY, false } },
@@ -286,7 +286,7 @@ public class SavedHintTests
     {
         // Arrange
         var originalHint = new SavedHint(
-            "TestPanel",
+            HintPanelType.Isles,
             "Test Location",
             "3/5",
             new Dictionary<ItemName, bool> { { ItemName.DONKEY, true } },
@@ -302,7 +302,7 @@ public class SavedHintTests
         Assert.Multiple(() =>
         {
             Assert.NotNull(deserializedHint);
-            Assert.Equal(originalHint.HintPanelKey, deserializedHint.HintPanelKey);
+            Assert.Equal(originalHint.HintPanelType, deserializedHint.HintPanelType);
             Assert.Equal(originalHint.LocationText, deserializedHint.LocationText);
             Assert.Equal(originalHint.PotionCountText, deserializedHint.PotionCountText);
             Assert.Equal(originalHint.HintId, deserializedHint.HintId);
@@ -315,8 +315,8 @@ public class SavedHintTests
     public void HintId_EmptyString_IsAutoGenerated()
     {
         // Arrange & Act
-        var hint1 = new SavedHint("Panel", "Location", "1/1", [], []);
-        var hint2 = new SavedHint("Panel", "Location", "1/1", [], [], "");
+        var hint1 = new SavedHint(HintPanelType.Factory, "Location", "1/1", [], []);
+        var hint2 = new SavedHint(HintPanelType.Isles, "Location", "1/1", [], [], "");
 
         // Assert
         // Both should have auto-generated IDs (8 characters from a GUID)
@@ -336,7 +336,7 @@ public class SavedHintTests
         // Arrange
         var hints = Enumerable.Range(1, 5)
             .Select(i => new SavedHint(
-                "Panel",
+                HintPanelType.Isles,
                 $"Location{i}",
                 "1/1",
                 [],
@@ -358,7 +358,7 @@ public class SavedHintTests
         // Arrange & Act
         var savedHint = new SavedHint
         {
-            HintPanelKey = "TestPanel",
+            HintPanelType = HintPanelType.Isles,
             HintId = "test-id-123",
             LocationText = "Test Location",
             PotionCountText = "2/5",
@@ -369,7 +369,7 @@ public class SavedHintTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.Equal("TestPanel", savedHint.HintPanelKey);
+            Assert.Equal(HintPanelType.Isles, savedHint.HintPanelType);
             Assert.Equal("test-id-123", savedHint.HintId);
             Assert.Equal("Test Location", savedHint.LocationText);
             Assert.Equal("2/5", savedHint.PotionCountText);
@@ -381,7 +381,7 @@ public class SavedHintTests
     {
         // Arrange
         var savedHint = new SavedHint(
-            "Panel",
+            HintPanelType.Isles,
             "Location",
             "1/1",
             [],
@@ -399,9 +399,8 @@ public class SavedHintTests
     public void HintPanelKey_InitOnly_CannotBeChangedAfterConstruction()
     {
         // Arrange
-        var panelKey = "OriginalPanel";
         var savedHint = new SavedHint(
-            panelKey,
+            HintPanelType.Isles,
             "Location",
             "1/1",
             [],
@@ -409,9 +408,9 @@ public class SavedHintTests
         );
 
         // Act & Assert
-        // HintPanelKey should be init-only, so this should fail to compile if someone tries to set it
+        // HintPanelType should be init-only, so this should fail to compile if someone tries to set it
         // We verify the value is what we set during initialization
-        Assert.Equal(panelKey, savedHint.HintPanelKey);
+        Assert.Equal(HintPanelType.Isles, savedHint.HintPanelType);
     }
 
     [Fact]
@@ -422,7 +421,7 @@ public class SavedHintTests
 
         // Act
         var savedHint = new SavedHint(
-            "Panel",
+            HintPanelType.Isles,
             "Location",
             "1/1",
             [],

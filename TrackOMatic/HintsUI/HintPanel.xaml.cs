@@ -91,7 +91,7 @@ namespace TrackOMatic
 
         private HintInfo CreateNewHint(bool isSavedHint = false)
         {
-            var newHint = new HintInfo(HintType, Name, isSavedHint, RegionName);
+            var newHint = new HintInfo(HintType, HintPanelType, Name, isSavedHint, RegionName);
             var insertionPoint = HintList.Children.Count - 1;
             HintList.Children.Insert(insertionPoint, newHint);
             newHint.MouseDown += RemoveHint;

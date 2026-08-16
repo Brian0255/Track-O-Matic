@@ -37,7 +37,7 @@ public class SavedProgressTests
         var progress = new SavedProgress();
 
         // Assert
-        Assert.Equal("", progress.spoilerPath);
+        Assert.Equal("", progress.SpoilerPath);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class SavedProgressTests
         // Arrange
         var progress = new SavedProgress();
         var hint = new SavedHint(
-            "test_key",
+            HintPanelType.Isles,
             "Test Location",
             "5",
             new Dictionary<ItemName, bool> { { ItemName.DONKEY, true } },
@@ -225,7 +225,7 @@ public class SavedProgressTests
         // Arrange
         var original = new SavedProgress();
         var testPath = Path.Combine(AppContext.BaseDirectory, "test_path.json");
-        original.spoilerPath = testPath;
+        original.SpoilerPath = testPath;
 
         // Act
         var json = JsonSerializer.Serialize(original);
@@ -235,7 +235,7 @@ public class SavedProgressTests
         Assert.Multiple(() =>
         {
             Assert.NotNull(restored);
-            Assert.Equal(testPath, restored.spoilerPath);
+            Assert.Equal(testPath, restored.SpoilerPath);
             Assert.Empty(restored.SavedItems);
             Assert.Empty(restored.SavedHints);
         });
@@ -283,7 +283,7 @@ public class SavedProgressTests
         var testPath = Path.Combine(testDir, "test.json");
         var original = new SavedProgress
         {
-            spoilerPath = testPath
+            SpoilerPath = testPath
         };
         original.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0);
         original.SavedGBCounts[RegionName.JUNGLE_JAPES] = "15/20";
@@ -303,7 +303,7 @@ public class SavedProgressTests
             Assert.NotNull(restored);
             Assert.NotNull(restored.HelmKongs);
             Assert.NotNull(restored.LevelOrder);
-            Assert.Equal(testPath, restored.spoilerPath);
+            Assert.Equal(testPath, restored.SpoilerPath);
             Assert.Single(restored.SavedItems);
             Assert.Equal("15/20", restored.SavedGBCounts[RegionName.JUNGLE_JAPES]);
             Assert.Equal(3, restored.BLockerImageIndexes[RegionName.SHOPS]);
@@ -322,17 +322,17 @@ public class SavedProgressTests
 
         // Act
         progress1.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0);
-        progress1.spoilerPath = "path1.json";
+        progress1.SpoilerPath = "path1.json";
 
-        progress2.spoilerPath = "path2.json";
+        progress2.SpoilerPath = "path2.json";
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.Single(progress1.SavedItems);
             Assert.Empty(progress2.SavedItems);
-            Assert.Equal("path1.json", progress1.spoilerPath);
-            Assert.Equal("path2.json", progress2.spoilerPath);
+            Assert.Equal("path1.json", progress1.SpoilerPath);
+            Assert.Equal("path2.json", progress2.SpoilerPath);
         });
     }
 }

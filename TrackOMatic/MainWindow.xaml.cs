@@ -520,7 +520,7 @@ namespace TrackOMatic
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
-            AutoUpdater.InstalledVersion = new Version("2.2.3");
+            AutoUpdater.InstalledVersion = new Version("3.0.0");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (AppState.DesiredHeight == 0 || AppState.DesiredWidth == 0)

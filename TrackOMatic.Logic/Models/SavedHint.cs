@@ -14,10 +14,9 @@ public class SavedHint
     public string HintId { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the key of the hint panel associated with this saved hint.
+    /// Gets the type of the hint panel associated with this saved hint.
     /// </summary>
-    /// <remarks>This should become the <see cref="HintPanelType"/> in the future. Hints cannot move across panels.</remarks>
-    public string HintPanelKey { get; init; } = string.Empty;
+    public HintPanelType HintPanelType { get; init; } = HintPanelType.Unhinted;
 
     /// <summary>
     /// Gets or sets the location within the region/panel where the hint is relevant.
@@ -57,34 +56,19 @@ public class SavedHint
     /// <summary>
     /// Initializes a new SavedHint with the specified parameters.
     /// </summary>
-    /// <param name="hintPanelKey">The key of the hint panel (init-only, cannot be changed after initialization).</param>
+    /// <param name="hintPanelType">The type of the hint panel (init-only, cannot be changed after initialization).</param>
     /// <param name="locationText">The text describing the location of the hint.</param>
     /// <param name="potionCountText">The text describing the potion count.</param>
     /// <param name="pathItems">A dictionary of path items and their found status.</param>
     /// <param name="foundItems">A dictionary of found items and their found status.</param>
     /// <param name="hintId">The ID of the hint. If empty, will be auto-generated from a random GUID.</param>
-    public SavedHint(string hintPanelKey, string locationText, string potionCountText, Dictionary<ItemName, bool> pathItems, Dictionary<ItemName, bool> foundItems, string hintId = "")
+    public SavedHint(HintPanelType hintPanelType, string locationText, string potionCountText, Dictionary<ItemName, bool> pathItems, Dictionary<ItemName, bool> foundItems, string hintId = "")
     {
-        HintPanelKey = hintPanelKey;
+        HintPanelType = hintPanelType;
         LocationText = locationText;
         PotionCountText = potionCountText;
         PathItems = pathItems;
         FoundItems = foundItems;
-        HintId = GenerateHintIdIfNeeded(hintId);
-    }
-
-    /// <summary>
-    /// Generates a HintId if the provided ID is empty or null, using the first 8 characters of a random GUID.
-    /// </summary>
-    /// <param name="hintId">The hint ID to check and potentially replace.</param>
-    /// <returns>The provided hint ID if non-empty, or a newly generated 8-character ID from a GUID.</returns>
-    private static string GenerateHintIdIfNeeded(string hintId)
-    {
-        if (string.IsNullOrEmpty(hintId))
-        {
-            return Guid.NewGuid().ToString().Substring(0, 8);
-        }
-
-        return hintId;
+        HintId = SavedHintDto.GenerateHintIdIfNeeded(hintId);
     }
 }

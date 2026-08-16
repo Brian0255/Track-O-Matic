@@ -39,18 +39,6 @@ namespace TrackOMatic
             }
         }
 
-        private void FindSavedHints()
-        {
-            CurrentSavedProgress.SavedHints.Clear();
-            foreach (var hintPanel in MainWindow.HintPanels)
-            {
-                foreach (var hint in hintPanel.GetSavedHints())
-                {
-                    CurrentSavedProgress.SavedHints.Add(hint);
-                }
-            }
-        }
-
         public void Save(string filePath = "autosave.json", bool writeToFile = true)
         {
             if (CurrentSavedProgress == null)
@@ -58,7 +46,6 @@ namespace TrackOMatic
                 return;
             }
 
-            FindSavedHints();
             var JSONString = JsonSerializer.Serialize(CurrentSavedProgress);
             if (writeToFile)
             {
@@ -74,13 +61,13 @@ namespace TrackOMatic
             }
 
             // Load spoiler log if it exists in the saved progress
-            if (CurrentSavedProgress.spoilerPath != "" && File.Exists(CurrentSavedProgress.spoilerPath))
+            if (CurrentSavedProgress.SpoilerPath != "" && File.Exists(CurrentSavedProgress.SpoilerPath))
             {
-                await MainWindow.ParseSpoiler(CurrentSavedProgress.spoilerPath);
+                await MainWindow.ParseSpoiler(CurrentSavedProgress.SpoilerPath);
                 // Also parse into ParsedSpoilerDataService for access throughout the app
                 try
                 {
-                    var result = await _spoilerService.DeserializeAndParseAsync(CurrentSavedProgress.spoilerPath);
+                    var result = await _spoilerService.DeserializeAndParseAsync(CurrentSavedProgress.SpoilerPath);
                     if (result.IsSuccess && result.Data != null)
                     {
                         _parsedSpoilerDataService.UpdateParsedData(result.Data);
@@ -90,12 +77,6 @@ namespace TrackOMatic
                 {
                     Console.WriteLine($"Error parsing spoiler log for ParsedSpoilerDataService: {e}");
                 }
-            }
-
-            foreach (var savedHint in CurrentSavedProgress.SavedHints.ToList())
-            {
-                var hintPanel = (HintPanel)MainWindow.FindName(savedHint.HintPanelKey);
-                hintPanel.AddSavedHint(savedHint);
             }
         }
 
@@ -155,7 +136,7 @@ namespace TrackOMatic
                 return;
             }
 
-            CurrentSavedProgress.spoilerPath = newSpoilerPath;
+            CurrentSavedProgress.SpoilerPath = newSpoilerPath;
         }
     }
 }

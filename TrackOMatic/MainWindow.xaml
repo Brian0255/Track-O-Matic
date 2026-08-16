@@ -98,7 +98,7 @@
                     <RadioButton GroupName="BroadcastNumberDisplay" Name="broadcastNumberDisplayWOTHCount" IsChecked="{Binding BroadcastNumberLabel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:BroadcastNumberLabel.WothCount}}" Command="{Binding SetBroadcastNumberLabelCommand}" CommandParameter="{x:Static enums:BroadcastNumberLabel.WothCount}">WOTH Count</RadioButton>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Version 2.2.3" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 3.0.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
