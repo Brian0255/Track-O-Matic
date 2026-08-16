@@ -14,10 +14,11 @@ namespace TrackOMatic
     public partial class HintPanel : UserControl
     {
 
-        public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register("Heading", typeof(string), typeof(HintPanel));
-        public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register("LineColor", typeof(Color), typeof(HintPanel));
-        public static readonly DependencyProperty HintTypeProperty = DependencyProperty.Register("HintType", typeof(HintType), typeof(HintPanel));
-        public static readonly DependencyProperty RegionNameProperty = DependencyProperty.Register("RegionName", typeof(RegionName), typeof(HintPanel));
+        public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register(nameof(Heading), typeof(string), typeof(HintPanel));
+        public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register(nameof(LineColor), typeof(Color), typeof(HintPanel));
+        public static readonly DependencyProperty HintTypeProperty = DependencyProperty.Register(nameof(HintType), typeof(HintType), typeof(HintPanel));
+        public static readonly DependencyProperty HintPanelTypeProperty = DependencyProperty.Register(nameof(HintPanelType), typeof(HintPanelType), typeof(HintPanel));
+        public static readonly DependencyProperty RegionNameProperty = DependencyProperty.Register(nameof(RegionName), typeof(RegionName), typeof(HintPanel));
 
 
         public List<ItemName> ItemsToFilterBy { get; private set; } = new();
@@ -38,6 +39,12 @@ namespace TrackOMatic
         {
             get { return (HintType)GetValue(HintTypeProperty); }
             set { SetValue(HintTypeProperty, value); }
+        }
+
+        public HintPanelType HintPanelType
+        {
+            get => (HintPanelType)GetValue(HintPanelTypeProperty);
+            set => SetValue(HintPanelTypeProperty, value);
         }
 
         public RegionName RegionName
