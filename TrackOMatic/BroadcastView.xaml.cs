@@ -18,37 +18,10 @@ namespace TrackOMatic
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        //need to keep count of which of these you currently have because their item display is different
-        private Dictionary<ItemName, bool> SharedMoves = new()
-        {
-            {ItemName.PROGRESSIVE_SLAM_1, false },
-            {ItemName.PROGRESSIVE_SLAM_2, false },
-            {ItemName.PROGRESSIVE_SLAM_3, false },
-
-            {ItemName.SNIPER_SCOPE, false },
-            {ItemName.HOMING_AMMO, false },
-
-            {ItemName.SHOCKWAVE, false },
-            {ItemName.FAIRY_CAMERA, false },
-        };
-
-        private Dictionary<ItemName, bool> StarredSharedMoves = new()
-        {
-            {ItemName.PROGRESSIVE_SLAM_1, false },
-            {ItemName.PROGRESSIVE_SLAM_2, false },
-            {ItemName.PROGRESSIVE_SLAM_3, false },
-
-            {ItemName.SNIPER_SCOPE, false },
-            {ItemName.HOMING_AMMO, false },
-
-            {ItemName.SHOCKWAVE, false },
-            {ItemName.FAIRY_CAMERA, false },
-        };
-
         #region Proxy Properties for User Settings
 
-        public IUserSettingsService UserSettings { get; init; }
-        public IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
+        private IUserSettingsService UserSettings { get; init; }
+        private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
 
         /// <summary>
         /// Proxy property for XAML binding to TopMost setting.
@@ -163,10 +136,6 @@ namespace TrackOMatic
             ParsedSpoilerDataService.ParsedSpoilerDataChanged += (s, e) => AdjustLayout();
 
             InitializeComponent();
-
-            // When the window is closed via the X button, sync the setting
-            // Use e.Cancel = true to prevent the close and let MainWindow handle it via the setting
-            Closing += OnClosing;
         }
 
         private void OnClosing(object? sender, CancelEventArgs e)
@@ -178,19 +147,6 @@ namespace TrackOMatic
                 e.Cancel = true;
                 UserSettings.BroadcastViewActive = false;
             }
-        }
-
-        public void Reset()
-        {
-            foreach (var key in SharedMoves.Keys.ToList())
-            {
-                SharedMoves[key] = false;
-            }
-            foreach (var key in StarredSharedMoves.Keys.ToList())
-            {
-                StarredSharedMoves[key] = false;
-            }
-            MovesWidth.Width = new GridLength(345, GridUnitType.Pixel);
         }
 
         public void AdjustLayout()

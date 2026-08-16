@@ -128,6 +128,7 @@ public static class Extensions
         ItemName.KEY_6 => PointCategory.Key,
         ItemName.KEY_7 => PointCategory.Key,
         ItemName.KEY_8 => PointCategory.Key,
+        ItemName.BASIC_KEY => PointCategory.Key,
 
         ItemName.DONKEY => PointCategory.Kong,
         ItemName.DIDDY => PointCategory.Kong,
@@ -167,6 +168,7 @@ public static class Extensions
 
         ItemName.SHOCKWAVE => PointCategory.FairyMove,
         ItemName.FAIRY_CAMERA => PointCategory.FairyMove,
+        ItemName.CAMERA_SHOCKWAVE => PointCategory.FairyMove,
 
         ItemName.CLIMBING => PointCategory.TrainingMove,
         ItemName.DIVING => PointCategory.TrainingMove,
@@ -176,6 +178,7 @@ public static class Extensions
 
         ItemName.SNIPER_SCOPE => PointCategory.SharedMove,
         ItemName.HOMING_AMMO => PointCategory.SharedMove,
+        ItemName.HOMING_SCOPE => PointCategory.SharedMove,
         ItemName.PROGRESSIVE_SLAM_1 => PointCategory.SharedMove,
         ItemName.PROGRESSIVE_SLAM_2 => PointCategory.SharedMove,
         ItemName.PROGRESSIVE_SLAM_3 => PointCategory.SharedMove,

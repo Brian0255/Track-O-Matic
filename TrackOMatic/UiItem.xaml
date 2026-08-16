@@ -36,7 +36,7 @@
             Opacity="{Binding Opacity}"
         >
             <Border.ToolTip>
-                <ToolTip Content="{Binding HoverText}" Placement="Mouse" Visibility="Collapsed" />
+                <ToolTip Content="{Binding HoverText}" Visibility="{Binding HasHoverText, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" Placement="Mouse" />
             </Border.ToolTip>
             <Border.Effect>
                 <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />

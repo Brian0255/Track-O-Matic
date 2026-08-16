@@ -132,30 +132,36 @@ public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotP
                 PlacedItems.Add(vial);
             }
         }
-        else if (_parsedSpoilerDataService.CurrentData?.RegionData.TryGetValue(_regionName, out var regionData) == true)
-        {
-            for (int slotIndex = 0; slotIndex < regionData.VialColors.Count; slotIndex++)
-            {
-                var vialColor = regionData.VialColors[slotIndex];
-                var vial = new VialItemViewModel(
-                    null,
-                    _regionName,
-                    vialColor,
-                    _itemTrackingService,
-                    _parsedSpoilerDataService,
-                    _themeService);
-
-                vial.PropertyChanged += OnPlacedVialPropertyChanged;
-                PlacedItems.Add(vial);
-            }
-        }
         else
         {
-            // Materialize the enumerable before iterating
-            var itemsInRegion = _itemTrackingService.GetItemsInRegion(_regionName).ToList();
-            foreach (var item in itemsInRegion)
+            var spoilerData = _parsedSpoilerDataService.CurrentData;
+            var regionData = spoilerData?.RegionData.GetValueOrDefault(_regionName);
+            if (regionData != null && spoilerData?.SpoilerSettings?.VialsEnabled == true)
             {
-                PlacedItems.Add(new RegionItemViewModel(item.ItemName, _regionName, _itemTrackingService, _parsedSpoilerDataService, _themeService));
+                for (int slotIndex = 0; slotIndex < regionData.VialColors.Count; slotIndex++)
+                {
+                    var vialColor = regionData.VialColors[slotIndex];
+                    var vial = new VialItemViewModel(
+                        null,
+                        _regionName,
+                        vialColor,
+                        _itemTrackingService,
+                        _parsedSpoilerDataService,
+                        _themeService);
+
+                    vial.PropertyChanged += OnPlacedVialPropertyChanged;
+                    PlacedItems.Add(vial);
+                }
+            }
+
+            else
+            {
+                // Materialize the enumerable before iterating
+                var itemsInRegion = _itemTrackingService.GetItemsInRegion(_regionName).ToList();
+                foreach (var item in itemsInRegion)
+                {
+                    PlacedItems.Add(new RegionItemViewModel(item.ItemName, _regionName, _itemTrackingService, _parsedSpoilerDataService, _themeService));
+                }
             }
         }
 
@@ -413,8 +419,8 @@ public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotP
         // Only process certain change reasons to avoid stale state assumptions
         bool isRelevantChange = e.ChangeReason == ChangeReason.UserModified
                     || e.ChangeReason == ChangeReason.AutoTracked;
-                    //|| e.ChangeReason == "ItemMovedToUnknown"
-                    //|| e.ChangeReason == ChangeReason. "ItemCleared";
+        //|| e.ChangeReason == "ItemMovedToUnknown"
+        //|| e.ChangeReason == ChangeReason. "ItemCleared";
 
         if (!isRelevantChange)
         {
@@ -570,6 +576,8 @@ public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotP
             ItemPoints = points;
             HasItemPoints = points >= 0;
         }
+
+        OnPropertyChanged(nameof(ShouldShowItemPoints));
     }
 
     internal void UpdateRegionResourceKey()

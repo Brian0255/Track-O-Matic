@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
@@ -45,7 +46,9 @@ public class KeyViewModel : INotifyPropertyChanged, IDisposable
         var itemState = _itemTrackingService.GetItemState(itemName);
         UpdateImageResourceKey(itemState, itemName);
 
-        IsStarred = (itemState is not null ? itemState.Starred == ItemVisibilityState.Visible : false);
+        IsStarred = itemState is not null && itemState.Starred == ItemVisibilityState.Visible;
+        UpdateHoverText();
+
     }
 
     #region Proxy Properties
@@ -86,6 +89,20 @@ public class KeyViewModel : INotifyPropertyChanged, IDisposable
             if (_hoverText != value)
             {
                 _hoverText = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    private bool _hasHoverText = false;
+    public bool HasHoverText
+    {
+        get => _hasHoverText;
+        protected set
+        {
+            if (_hasHoverText != value)
+            {
+                _hasHoverText = value;
                 OnPropertyChanged();
             }
         }
@@ -158,7 +175,24 @@ public class KeyViewModel : INotifyPropertyChanged, IDisposable
 
     private void UpdateHoverText()
     {
-        // TODO: Actually implement based on spoiler log data.
+        var spoilerData = _parsedSpoilerDataService.CurrentData;
+        if (spoilerData is null)
+        {
+            HoverText = "";
+            HasHoverText = false;
+        }
+        else
+        {
+            var pointSpread = spoilerData.PointSpread;
+            var targetCategory = ItemName.BASIC_KEY.ToPointCategory();
+            var pointValue = pointSpread[targetCategory];
+            var suffix = pointValue == 1 ? "Point" : "Points";
+            HoverText = $"{pointValue} {suffix}";
+            HasHoverText = true;
+        }
+
+        OnPropertyChanged(nameof(HoverText));
+        OnPropertyChanged(nameof(HasHoverText));
     }
 
     private void UpdateImageResourceKey(SavedItem? item, ItemName itemName)

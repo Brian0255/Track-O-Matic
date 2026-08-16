@@ -1,17 +1,14 @@
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 using AutoUpdaterDotNET;
 
 using Microsoft.Win32;
 
-using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;

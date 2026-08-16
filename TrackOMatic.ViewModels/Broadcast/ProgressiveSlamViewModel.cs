@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Services;
@@ -85,6 +86,20 @@ public class ProgressiveSlamViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
+    private bool _hasHoverText = false;
+    public bool HasHoverText
+    {
+        get => _hasHoverText;
+        protected set
+        {
+            if (_hasHoverText != value)
+            {
+                _hasHoverText = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     #endregion
 
     #region INotifyPropertyChanged Implementation
@@ -150,7 +165,24 @@ public class ProgressiveSlamViewModel : INotifyPropertyChanged, IDisposable
 
     protected virtual void UpdateHoverText()
     {
-        // TODO: Implement these changes.
+        var spoilerData = _parsedSpoilerDataService.CurrentData;
+        if (spoilerData is null)
+        {
+            HoverText = "";
+            HasHoverText = false;
+        }
+        else
+        {
+            var pointSpread = spoilerData.PointSpread;
+            var targetCategory = ItemName.PROGRESSIVE_SLAM_1.ToPointCategory();
+            var pointValue = pointSpread[targetCategory];
+            var suffix = pointValue == 1 ? "Point" : "Points";
+            HoverText = $"{pointValue} {suffix}";
+            HasHoverText = true;
+        }
+
+        OnPropertyChanged(nameof(HoverText));
+        OnPropertyChanged(nameof(HasHoverText));
     }
 
     protected virtual void SetStarred()

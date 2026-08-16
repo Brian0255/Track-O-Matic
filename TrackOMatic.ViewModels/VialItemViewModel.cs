@@ -19,8 +19,6 @@ public class VialItemViewModel : RegionItemViewModel, IVialSlot
     /// </summary>
     public override VialColor VialColor => _vialColor;
 
-    private new ItemName? _itemName;
-
     #region Proxy Properties
     private bool _isVialStarred = false;
     /// <summary>

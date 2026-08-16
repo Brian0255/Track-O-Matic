@@ -15,6 +15,7 @@
     Title="Broadcast View"
     ResizeMode="NoResize"
     Background="{StaticResource VeryDark}"
+    Closing="OnClosing"
 >
     <Window.Resources>
         <ResourceDictionary>

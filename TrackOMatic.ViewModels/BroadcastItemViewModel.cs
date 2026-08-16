@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
@@ -130,6 +131,20 @@ public class BroadcastItemViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
+    private bool _hasHoverText = false;
+    public bool HasHoverText
+    {
+        get => _hasHoverText;
+        protected set
+        {
+            if (_hasHoverText != value)
+            {
+                _hasHoverText = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     #endregion
 
     #region INotifyPropertyChanged Implementation
@@ -216,9 +231,24 @@ public class BroadcastItemViewModel : INotifyPropertyChanged, IDisposable
 
     private void UpdateHoverText()
     {
-        // Query spoiler service for item information (currently just placeholder)
-        HoverText = $"{_itemName}";
-        // TODO: Query _spoilerService for detailed hint/point information when available
+        var spoilerData = _parsedSpoilerDataService.CurrentData;
+        if (spoilerData is null)
+        {
+            HoverText = "";
+            HasHoverText = false;
+        }
+        else
+        {
+            var pointSpread = spoilerData.PointSpread;
+            var targetCategory = _itemName.ToPointCategory();
+            var pointValue = pointSpread[targetCategory];
+            var suffix = pointValue == 1 ? "Point" : "Points";
+            HoverText = $"{pointValue} {suffix}";
+            HasHoverText = true;
+        }
+
+        OnPropertyChanged(nameof(HoverText));
+        OnPropertyChanged(nameof(HasHoverText));
     }
 
     private void UpdateImageResourceKey(SavedItem? item)
