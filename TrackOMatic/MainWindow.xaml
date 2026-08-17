@@ -23,7 +23,7 @@
     Drop="DropFile"
     Title="Track-O-Matic"
     Height="820"
-    Width="1800"
+    Width="{Binding CurrentWindowWidth}"
     Background="{StaticResource RegionBG}"
     MinHeight="300"
     MinWidth="300"
@@ -42,6 +42,7 @@
             </Style>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
             <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
         </ResourceDictionary>
     </Window.Resources>
@@ -103,7 +104,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition x:Name="HintsColumn" Width="1.43*"/>
+                <ColumnDefinition x:Name="HintsColumn" Width="{Binding HintColumnWidth, Converter={StaticResource CountToRelativeWidthConverter}}" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -390,8 +391,6 @@
                             <RowDefinition Height="1*"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-
-
                     </Grid>
                 </Grid>
                 <Grid Grid.Column="0" Name="MultipathGrid">

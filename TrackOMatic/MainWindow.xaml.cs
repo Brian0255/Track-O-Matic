@@ -133,8 +133,6 @@ namespace TrackOMatic
         private void UpdateUiViaHintDisplay()
         {
             var mode = UserSettings.HintDisplay;
-            bool compactModeOn = UserSettings.CompactMode;
-            var newRatio = compactModeOn ? 1.43 : 2.15;
             switch (mode)
             {
                 case HintDisplayMode.Off:
@@ -142,7 +140,6 @@ namespace TrackOMatic
                     DirectItemHintGrid.Visibility = Visibility.Hidden;
                     HelmPanel.Visibility = Visibility.Hidden;
                     PotionCountsPanel.Visibility = Visibility.Hidden;
-                    newRatio = 0;
                     break;
                 case HintDisplayMode.MultipathHints:
                     MultipathGrid.Visibility = Visibility.Visible;
@@ -157,7 +154,6 @@ namespace TrackOMatic
                     PotionCountsPanel.Visibility = Visibility.Hidden;
                     break;
             }
-            HintsColumn.Width = new GridLength(newRatio, GridUnitType.Star);
             ResetWidthHeight();
             UpdateHintDisplayToggles();
         }
@@ -291,25 +287,6 @@ namespace TrackOMatic
             MultipathColumn1Row0.Height = new GridLength(multipathColumn1Row0Height, GridUnitType.Star);
             var potionsRowHeight = on ? 2.54 : 0;
             OptionalPotionsRow.Height = new GridLength(potionsRowHeight, GridUnitType.Star);
-
-            if (on)
-            {
-                MultipathMainColumn2.Children.Remove(FoolishPanel);
-                MultipathMainColumn2.Children.Remove(PotionCountsPanel);
-                MultipathColumn1.Children.Add(FoolishPanel);
-                Grid.SetRow(FoolishPanel, 0);
-                UnhintedColumn.Children.Add(PotionCountsPanel);
-                Grid.SetRow(PotionCountsPanel, 0);
-            }
-            else
-            {
-                UnhintedColumn.Children.Remove(PotionCountsPanel);
-                MultipathColumn1.Children.Remove(FoolishPanel);
-                MultipathMainColumn2.Children.Add(FoolishPanel);
-                Grid.SetRow(FoolishPanel, 0);
-                MultipathMainColumn2.Children.Add(PotionCountsPanel);
-                Grid.SetRow(PotionCountsPanel, 1);
-            }
         }
 
         private void CompactModeDirectItemChanges(bool on)
@@ -320,52 +297,14 @@ namespace TrackOMatic
             DirectHintsCol1LastRow.Height = new GridLength(lastRowHeights, GridUnitType.Star);
             var thirdColumnWidth = on ? 0 : 1;
             DirectHintsThirdMain.Width = new GridLength(thirdColumnWidth, GridUnitType.Star);
-            DirectHintsCol0.Children.Clear();
-            DirectHintsCol1.Children.Clear();
-            DirectHintsCol2.Children.Clear();
-            if (on)
-            {
-                UIUtils.AddToGridRow(DirectHintsCol0, IslesPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol0, AztecPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol0, GalleonPanel, 2);
-                UIUtils.AddToGridRow(DirectHintsCol0, CavesPanel, 3);
-                UIUtils.AddToGridRow(DirectHintsCol1, JapesPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol1, FactoryPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol1, ForestPanel, 2);
-                UIUtils.AddToGridRow(DirectHintsCol1, CastlePanel, 3);
-                UIUtils.AddToGridRow(UnhintedColumn, HelmPanel, 0);
-            }
-            else
-            {
-                UnhintedColumn.Children.Remove(HelmPanel);
-                UIUtils.AddToGridRow(DirectHintsCol0, IslesPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol0, FactoryPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol0, CavesPanel, 2);
-                UIUtils.AddToGridRow(DirectHintsCol1, JapesPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol1, GalleonPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol1, CastlePanel, 2);
-                UIUtils.AddToGridRow(DirectHintsCol2, AztecPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol2, ForestPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol2, HelmPanel, 2);
-            }
         }
 
         private void AdjustBasedOnCompactMode()
         {
-            var isActuallyOn = (MultipathColumns.Width.Value == 2 && MultipathColumns.Width.IsStar);
             var on = UserSettings.CompactMode;
-            if (on == isActuallyOn)
-            {
-                return;
-            }
-
             var totalColumns = on ? 2 : 3;
             MultipathColumns.Width = new GridLength(totalColumns, GridUnitType.Star);
-            double newRatio = on ? 1.43 : 2.15;
-            if (UserSettings.HintDisplay != HintDisplayMode.Off)
-            {
-                HintsColumn.Width = new GridLength(newRatio, GridUnitType.Star);
-            }
+
             var newWidth = on ? (Width * (1392.0 / 1800.0)) : (Width * (1800.0 / 1392.0));
             Width = newWidth;
             CompactModeMultipathChanges(on);

@@ -6,11 +6,6 @@ namespace TrackOMatic
 {
     static class UIUtils
     {
-        public static void AddToGridRow(Grid grid, UIElement element, int row)
-        {
-            grid.Children.Add(element);
-            Grid.SetRow(element, row);
-        }
 
         /// <summary>
         /// Gets the DPI scale factor for the given visual element.

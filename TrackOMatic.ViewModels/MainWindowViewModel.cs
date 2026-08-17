@@ -9,7 +9,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels;
 
-public partial class MainWindowViewModel: ObservableObject, IDisposable
+public partial class MainWindowViewModel : ObservableObject, IDisposable
 {
     private readonly IUserSettingsService _userSettingsService;
     private readonly IThemeService _themeService;
@@ -173,9 +173,16 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         get => _hintDisplayMode;
         set
         {
+            bool wasVisible = _hintDisplayMode != HintDisplayMode.Off;
+            bool isVisible = value != HintDisplayMode.Off;
+
             if (SetProperty(ref _hintDisplayMode, value))
             {
                 _userSettingsService.HintDisplay = value;
+                if (wasVisible != isVisible)
+                {
+                    OnPropertyChanged(nameof(CurrentWindowWidth));
+                }
             }
         }
     }
@@ -297,6 +304,27 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets the width of the hint column based on the current hint display mode and compact mode setting.
+    /// </summary>
+    public double HintColumnWidth
+    {
+        get => _userSettingsService.HintDisplay == HintDisplayMode.Off ? 0 : _userSettingsService.CompactMode ? 1.43 : 2.15;
+    }
+
+    public double CurrentWindowWidth
+    {
+        get
+        {
+            if (HintDisplayMode == HintDisplayMode.Off)
+            {
+                return 580;
+            }
+
+            return IsCompactModeEnabled ? 1392 : 1800;
+        }
+    }
+
     #endregion
 
     public MainWindowViewModel(
@@ -311,7 +339,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         _autotrackerService = autotrackerService ?? throw new ArgumentNullException(nameof(autotrackerService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         InitializeState();
-        _userSettingsService.PropertyChanged += OnPropertyChanged;
+        _userSettingsService.PropertyChanged += OnSettingChanged;
     }
 
     private void InitializeState()
@@ -463,7 +491,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
 
     #endregion
 
-    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnSettingChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(_userSettingsService.TopMost))
         {
@@ -508,6 +536,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         else if (e.PropertyName == nameof(_userSettingsService.HintDisplay))
         {
             HintDisplayMode = _userSettingsService.HintDisplay;
+            OnPropertyChanged(nameof(HintColumnWidth));
         }
         else if (e.PropertyName == nameof(_userSettingsService.HelmDoors))
         {
@@ -516,6 +545,8 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         else if (e.PropertyName == nameof(_userSettingsService.CompactMode))
         {
             IsCompactModeEnabled = _userSettingsService.CompactMode;
+            OnPropertyChanged(nameof(HintColumnWidth));
+            OnPropertyChanged(nameof(CurrentWindowWidth));
         }
         else if (e.PropertyName == nameof(_userSettingsService.AutoSortPathHints))
         {
@@ -563,7 +594,7 @@ public partial class MainWindowViewModel: ObservableObject, IDisposable
         {
             if (disposing)
             {
-                _userSettingsService.PropertyChanged -= OnPropertyChanged;
+                _userSettingsService.PropertyChanged -= OnSettingChanged;
                 (_collectiblesGridRowViewModel as IDisposable)?.Dispose();
             }
             _disposed = true;
