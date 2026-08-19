@@ -47,7 +47,10 @@ public class ItemTrackingService : IItemTrackingService
         _itemCache.Clear();
         foreach (var item in _progressProvider.CurrentProgress.SavedItems)
         {
-            _itemCache[item.Key] = item.Value;
+            _itemCache[item.Key] = item.Value with
+            {
+                ItemName = item.Key // Ensure the ItemName is consistent with the dictionary string key
+            };
         }
     }
 
