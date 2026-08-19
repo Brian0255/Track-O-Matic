@@ -28,6 +28,7 @@
     <BitmapImage x:Key="star_simple" UriSource="Images/dk64/star_simple.png" x:Shared="false" />
     <BitmapImage x:Key="star_complex" UriSource="Images/dk64/star_complex.png" x:Shared="false" />
     <BitmapImage x:Key="x" UriSource="Images/dk64/x.png" x:Shared="false" />
+    <BitmapImage x:Key="checkmark" UriSource="Images/dk64/checkmark.png" x:Shared="false" />
 
     <BitmapImage x:Key="headphones" UriSource="Images/dk64/headphones.png" x:Shared="false" />
 

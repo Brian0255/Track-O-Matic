@@ -1,0 +1,39 @@
+<ContentControl
+    x:Class="TrackOMatic.HintsUI.HintDialogItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:HintDialogItemViewModel}"
+    Background="Transparent"
+    MouseDown="OnMouseDown"
+    MouseWheel="OnMouseWheel"
+>
+    <ContentControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+        </ResourceDictionary>
+    </ContentControl.Resources>
+    <ContentControl.Content>
+        <Grid>
+            <Border
+                BorderThickness="0" 
+                UseLayoutRounding="True"
+                SnapsToDevicePixels="True"
+                RenderOptions.ClearTypeHint="Enabled"
+            >
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+                </Border.Effect>
+                <Image x:Name="Image" Source="{Binding ImageResourceKey, Converter={StaticResource ResourceKeyConverter}}"/>
+            </Border>
+        </Grid>
+    </ContentControl.Content>
+</ContentControl>
