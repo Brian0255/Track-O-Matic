@@ -279,32 +279,6 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         }
     }
 
-    private void HintInfoWindow_Loaded(object sender, RoutedEventArgs e)
-    {
-        if (ItemsOnPath != null && RightItems != null)
-        {
-            // Execute the code only when the visual tree is fully loaded
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-
-                Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
-
-                // Get the DPI scaling factor
-                Matrix matrix = PresentationSource.FromVisual(ItemsOnPath.ItemPanel).CompositionTarget.TransformToDevice;
-                double dpiX = matrix.M11;
-                double dpiY = matrix.M22;
-
-                // Adjust position for DPI scaling
-                position = new Point(position.X / dpiX, position.Y / dpiY);
-
-                double[] selectionDialogPosition = { position.X - 10, position.Y };
-                ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
-                RightItems.SelectionDialogPosition = selectionDialogPosition;
-            }
-            ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
-        }
-    }
-
     private void PotionCount_TextChanged(object sender, TextChangedEventArgs e)
     {
         SavedHint.PotionCountText = PotionCount.Text;

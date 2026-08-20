@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using TrackOMatic.Services;
+using TrackOMatic.Logic.Models.Hints;
 
 namespace TrackOMatic.ViewModels.Hints;
 

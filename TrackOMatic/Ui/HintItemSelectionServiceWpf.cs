@@ -3,6 +3,7 @@ using System.Windows;
 
 using TrackOMatic.HintsUI;
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 
 namespace TrackOMatic.Ui;

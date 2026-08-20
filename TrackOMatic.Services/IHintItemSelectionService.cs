@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models.Hints;
 
 namespace TrackOMatic.Services;
 

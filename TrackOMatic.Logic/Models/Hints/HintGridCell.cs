@@ -1,6 +1,6 @@
 using TrackOMatic.Logic.Enums;
 
-namespace TrackOMatic.Services;
+namespace TrackOMatic.Logic.Models.Hints;
 
 /// <summary>
 /// A data class representing an item located on a grid.

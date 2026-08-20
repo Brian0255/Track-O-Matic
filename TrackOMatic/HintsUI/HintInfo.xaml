@@ -17,7 +17,7 @@
         <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
     </UserControl.Resources>
     <Border x:Name="border" Background="{StaticResource RegionBG}" CornerRadius="0" Padding="4,3,3,3" BorderBrush="Black" BorderThickness=".5">
-        <Grid x:Name="yes">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition x:Name="LocationItemsRow" Height="*"/>
                 <RowDefinition x:Name="PathItemsRow">
@@ -53,7 +53,7 @@
             <TextBox ContextMenu="{x:Null}" x:Name="PotionCount" TextChanged="PotionCount_TextChanged" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="PotionCount_PreviewKeyDown" Margin="0,0,3,0"  Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"/>
 
             <local:HintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="RightItems" BottomRowHeight="*" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
-            <local:HintItemList Margin="1,0,0,0" Loaded="HintInfoWindow_Loaded" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
+            <local:HintItemList Margin="1,0,0,0" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
             <Popup Grid.Row="1" x:Name="BottomRow" Height="120" Width="250" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}">
                 <ListBox MouseDoubleClick="SuggestionBox_MouseDoubleClick" Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" x:Name="SuggestionBox"  KeyDown="SuggestionBox_KeyDown"/>
             </Popup>

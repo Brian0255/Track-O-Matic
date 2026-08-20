@@ -1,0 +1,64 @@
+<UserControl
+    x:Class="TrackOMatic.HintsUI.FoundHintItemList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    d:DataContext="{d:DesignInstance Type=viewmodels:FoundHintItemListViewModel}"
+    mc:Ignorable="d"
+    d:DesignHeight="48" d:DesignWidth="48"
+    MouseLeftButtonDown="UserControl_MouseLeftButtonDown"
+>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UniformGrid
+        Rows="2"
+        Background="{StaticResource RegionBG}"
+        HorizontalAlignment="Right"
+    >
+        <!-- Row 0: Top items -->
+        <ItemsControl 
+            ItemsSource="{Binding TopRowItems}" 
+            Grid.Row="0"
+            HorizontalAlignment="Right"
+        >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="viewmodels:HintItemViewModel">
+                    <local:HintItem />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Row 1: Bottom items (visibility depends on ShouldShowSecondRow) -->
+        <ItemsControl 
+            ItemsSource="{Binding BottomRowItems}"
+            Visibility="{Binding ShouldShowSecondRow, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+            HorizontalAlignment="Right"
+        >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="viewmodels:HintItemViewModel">
+                    <local:HintItem />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </UniformGrid>
+</UserControl>

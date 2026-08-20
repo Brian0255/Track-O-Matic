@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Input;
 
 using TrackOMatic.Logic.Enums;
-using TrackOMatic.Services;
+using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.ViewModels.Hints;
 
 namespace TrackOMatic.HintsUI;
