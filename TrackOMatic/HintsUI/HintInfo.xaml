@@ -6,21 +6,44 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:behaviors="clr-namespace:TrackOMatic.HintsUI.Behaviors"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
     xmlns:converters="clr-namespace:TrackOMatic.Converters"
-    xmlns:wpf="http://wpfcontrols.com/"
     mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:HintInfoViewModel}"
     d:DesignHeight="100"
     d:DesignWidth="200"
 >
     <UserControl.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
         <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+
+        <!-- Style for ListBoxItems in the suggestion dropdown -->
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="0"/>
+            <Style.Triggers>
+                <!-- When item has keyboard focus (highlighted but not selected) -->
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="Background" Value="#3D5A80"/>
+                </Trigger>
+                <!-- When item is selected -->
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#2D4A70"/>
+                </Trigger>
+                <!-- When mouse is over the item -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3D5A80"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
-    <Border x:Name="border" Background="{StaticResource RegionBG}" CornerRadius="0" Padding="4,3,3,3" BorderBrush="Black" BorderThickness=".5">
-        <Grid>
+    <Border Background="{StaticResource RegionBG}" CornerRadius="0" Padding="4,3,3,3" BorderBrush="Black" BorderThickness=".5">
+        <Grid DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=local:HintInfo}}">
             <Grid.RowDefinitions>
-                <RowDefinition x:Name="LocationItemsRow" Height="*"/>
-                <RowDefinition x:Name="PathItemsRow">
+                <RowDefinition Height="*"/>
+                <RowDefinition>
                     <RowDefinition.Style>
                         <Style TargetType="RowDefinition">
                             <Setter Property="Height" Value="*"/>
@@ -49,13 +72,13 @@
                 <ColumnDefinition Width="7*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <TextBox ContextMenu="{x:Null}" Margin="1,0,0,0" TextChanged="Location_TextChanged" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}"/>
-            <TextBox ContextMenu="{x:Null}" x:Name="PotionCount" TextChanged="PotionCount_TextChanged" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"  PreviewKeyDown="PotionCount_PreviewKeyDown" Margin="0,0,3,0"  Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"/>
+            <TextBox ContextMenu="{x:Null}" Margin="1,0,0,0" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown" PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}" Text="{Binding LocationText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox ContextMenu="{x:Null}" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown" Margin="0,0,3,0" Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" Text="{Binding PotionCountText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="PotionCount_PreviewKeyDown" behaviors:FocusOnCommandBehavior.FocusRequest="{Binding IsFocusRequested}"/>
 
             <local:HintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="RightItems" BottomRowHeight="*" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
             <local:HintItemList Margin="1,0,0,0" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
-            <Popup Grid.Row="1" x:Name="BottomRow" Height="120" Width="250" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}">
-                <ListBox MouseDoubleClick="SuggestionBox_MouseDoubleClick" Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" x:Name="SuggestionBox"  KeyDown="SuggestionBox_KeyDown"/>
+            <Popup Grid.Row="1" x:Name="BottomRow" Height="120" Width="250" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}" IsOpen="{Binding SuggestionBoxIsOpen, Mode=TwoWay}">
+                <ListBox Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" x:Name="SuggestionBox" ItemsSource="{Binding Suggestions}" SelectionChanged="SuggestionBox_SelectionChanged" PreviewKeyDown="SuggestionBox_PreviewKeyDown" PreviewMouseDown="SuggestionBox_PreviewMouseDown"/>
             </Popup>
         </Grid>
 

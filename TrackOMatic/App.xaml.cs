@@ -25,6 +25,7 @@ public partial class App : Application
 
         // Register WPF UI services
         services.AddSingleton<IItemSelectorService, ItemSelectorServiceWpf>();
+        services.AddSingleton<IHintItemSelectionService, HintItemSelectionServiceWpf>();
 
         _serviceProvider = services.BuildServiceProvider();
         ServiceLocator.Initialize(_serviceProvider);

@@ -12,6 +12,7 @@ using Microsoft.Win32;
 using TrackOMatic.HintsUI;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
+using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels;

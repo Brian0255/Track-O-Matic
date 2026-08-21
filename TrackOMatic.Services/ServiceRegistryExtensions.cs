@@ -38,6 +38,8 @@ public static class ServiceRegistryExtensions
         services.AddSingleton<ISpoilerLogService, SpoilerLogService>();
         services.AddSingleton<IParsedSpoilerDataService, ParsedSpoilerDataService>();
 
+        services.AddSingleton<IShortcutService, ShortcutService>();
+
         // Autotracking service: requires platform-specific implementations (IProcessMemoryReader, IEmulatorAttacher)
         // to be registered via platform registration (e.g., AddWindowsAutotracking())
         services.AddSingleton<ISongService, SongService>();
