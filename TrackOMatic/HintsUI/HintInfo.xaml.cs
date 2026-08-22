@@ -37,13 +37,13 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
 
     private HintPanelType HintPanelType { get; init; }
 
-    public bool DoSuggestions { get; set; } = true;
-
     public RegionName RegionName { get; }
 
     public SavedHint SavedHint { get; private set; }
 
     private IUserSettingsService UserSettingsService { get; init; }
+
+    private IItemTrackingService ItemTrackingService { get; init; }
 
     private HintInfoViewModel _viewModel;
 
@@ -74,6 +74,7 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
     {
         InitializeComponent();
         UserSettingsService = ServiceLocator.GetService<IUserSettingsService>();
+        ItemTrackingService = ServiceLocator.GetService<IItemTrackingService>();
 
         // Initialize properties from constructor parameters
         HintPanelType = hintPanelType;
@@ -81,7 +82,8 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
 
         if (!isSavedHint)
         {
-            Location.Loaded += (sender, e) => Location.Focus();
+            // Focus will be handled by attached behavior after ViewModel is initialized
+            // (set in OnLoaded event below)
         }
 
         HintTypeSettings = HintTypeSettingsList.SETTINGS[hintType];
@@ -124,12 +126,19 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
             ServiceLocator.GetService<IShortcutService>(),
             ServiceLocator.GetService<IHintItemSelectionService>(),
             ServiceLocator.GetService<ISavedProgressProvider>(),
-            ServiceLocator.GetService<IItemTrackingService>(),
+            ItemTrackingService,
             UserSettingsService
         );
 
         // Setting this property triggers OnPropertyChanged, which the Grid's binding listens to
         ViewModel = viewModel;
+
+        // If this is a new hint (not a saved one), trigger focus on Location field via attached behavior
+        // The check needs to happen here because SavedHint carries the info
+        if (SavedHint.LocationText == "" && !UserInitialized)
+        {
+            viewModel.ShouldFocusLocation = true;
+        }
 
         // Wire up dialog-opening notification from ViewModel
         viewModel.PathItemsSelectionRequested += (s, e) => ItemsOnPath.OpenItemSelectionDialog();
@@ -155,7 +164,7 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
     {
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
-            string locationText = Location.Text;
+            string locationText = _viewModel?.LocationText ?? "";
 
             // Check if focus is in the SuggestionBox (dropdown)
             if (SuggestionBox.IsKeyboardFocusWithin && SuggestionBox.SelectedItem is string selectedSuggestion)
@@ -163,15 +172,18 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
                 // Use the selected item from the dropdown
                 locationText = selectedSuggestion;
             }
-            else if (_viewModel?.Suggestions.Count > 0 && Location.IsFocused)
+            else if (_viewModel?.Suggestions.Count > 0 && (sender as TextBox)?.IsFocused == true)
             {
                 // Focus is in the TextBox and there are suggestions - use first suggestion
                 locationText = _viewModel.Suggestions[0];
             }
-            // else: use what's already in Location.Text
+            // else: use what's already in LocationText
 
-            // Update the Location TextBox
-            Location.Text = locationText;
+            // Update the Location TextBox via ViewModel
+            if (_viewModel != null)
+            {
+                _viewModel.LocationText = locationText;
+            }
 
             // Close the suggestion dropdown
             if (_viewModel != null)
@@ -182,7 +194,7 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
             // Extract screen coordinates and invoke ViewModel command
             var mousePos = Mouse.GetPosition(this);
             var screenMousePosition = PointToScreen(mousePos);
-            var parameter = (Location.Text, screenMousePosition.X, screenMousePosition.Y);
+            var parameter = (locationText, screenMousePosition.X, screenMousePosition.Y);
             if (_viewModel?.ConfirmLocationAndItemsCommand.CanExecute(parameter) == true)
             {
                 _viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
@@ -235,12 +247,12 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
             // This is from the Enter key
             if (SuggestionBox.SelectedItem is string selectedSuggestion && _viewModel != null)
             {
-                Location.Text = selectedSuggestion;
+                _viewModel.LocationText = selectedSuggestion;
                 _viewModel.SuggestionBoxIsOpen = false;
 
                 var mousePos = Mouse.GetPosition(this);
                 var screenMousePosition = PointToScreen(mousePos);
-                var parameter = (Location.Text, screenMousePosition.X, screenMousePosition.Y);
+                var parameter = (selectedSuggestion, screenMousePosition.X, screenMousePosition.Y);
                 if (_viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter))
                 {
                     _viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
@@ -276,7 +288,7 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
                 string selectedSuggestion = _viewModel.Suggestions[_focusedSuggestionIndex];
 
                 // Use the selected item from the dropdown
-                Location.Text = selectedSuggestion;
+                _viewModel.LocationText = selectedSuggestion;
 
                 // Close the suggestion dropdown
                 _viewModel.SuggestionBoxIsOpen = false;
@@ -284,7 +296,7 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
                 // Extract screen coordinates and invoke ViewModel command
                 var mousePos = Mouse.GetPosition(this);
                 var screenMousePosition = PointToScreen(mousePos);
-                var parameter = (Location.Text, screenMousePosition.X, screenMousePosition.Y);
+                var parameter = (selectedSuggestion, screenMousePosition.X, screenMousePosition.Y);
                 if (_viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter))
                 {
                     _viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
@@ -342,35 +354,31 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
 
     public void OnRemove()
     {
-        var mainWindow = (MainWindow)Application.Current.MainWindow;
+        // Consider moving to the view model fully.
         if (HintType != HintType.DIRECT_ITEM_HINT)
         {
             return;
         }
 
+        // Remember to change this to utilize the hint service/view model to get the matching items instead of the control directly.
         foreach (var entry in RightItems.SelectedItems)
         {
             var itemName = entry.Key;
-            if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName))
+            var matchingItem = ItemTrackingService.GetItemState(itemName) ?? SavedItem.CreateEmpty(itemName);
+            if (matchingItem.Hinted && matchingItem.Region != RegionName.UNKNOWN)
             {
-                continue;
-            }
-
-            var matchingItem = mainWindow.ITEM_NAME_TO_ITEM[itemName];
-            if (matchingItem.ItemImage.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
-            {
-                matchingItem.HandleItemReturn();
+                // Remove from the region.
+                ItemTrackingService.SetItemState(itemName, matchingItem with { Hinted = false, Region = RegionName.UNKNOWN });
             }
         }
     }
     public void SetUpFromSavedHint(SavedHint savedHint)
     {
-        DoSuggestions = false;
         SavedHint = savedHint;
-        Location.Text = savedHint.LocationText;
-        // PotionCountText binding is updated automatically via ViewModel since SavedHint is set above
+        // Update LocationText via ViewModel
         if (_viewModel != null)
         {
+            _viewModel.LocationText = savedHint.LocationText;
             _viewModel.PotionCountText = savedHint.PotionCountText;
         }
         // These should be set within the view model rather than the UI.
@@ -379,7 +387,6 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         RightItems.SelectedItems = savedHint.FoundItems;
         RightItems.ProcessSelectedItems();
         UserInitialized = true;
-        DoSuggestions = true;
     }
 
     private void Location_PreviewMouseRightButtonDown(object sender, MouseEventArgs e)

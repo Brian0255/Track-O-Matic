@@ -210,16 +210,11 @@ public partial class HintPanel : UserControl
         return (matching, rejected);
     }
 
-    private void Sort()
-    {
-        RefreshDisplayedHints();
-    }
-
     private void OnPathItemsSelected()
     {
         if (UserSettings.AutoSortPathHints)
         {
-            Sort();
+            RefreshDisplayedHints();
         }
 
         ApplyFilter();
@@ -241,7 +236,7 @@ public partial class HintPanel : UserControl
 
     public void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        Sort();
+        RefreshDisplayedHints();
         ApplyFilter();
     }
 }

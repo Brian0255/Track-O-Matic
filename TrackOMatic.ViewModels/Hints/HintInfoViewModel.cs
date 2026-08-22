@@ -143,6 +143,7 @@ public partial class HintInfoViewModel : ObservableObject
         if (e.PropertyName == nameof(LocationText))
         {
             _potionCountFocusedForCurrentLocation = false;
+            ShouldFocusLocation = false; // Reset location focus request
             // Refresh the command's CanExecute state
             FocusAndSelectPotionCountCommand.NotifyCanExecuteChanged();
         }
@@ -383,6 +384,12 @@ public partial class HintInfoViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _isFocusRequested = false;
+
+    [ObservableProperty]
+    private bool _shouldFocusLocation = false;
+
+    [ObservableProperty]
+    private bool _locationIsFocused = false;
 
     /// <summary>
     /// Tracks whether PotionCount has already been focused for the current location entry.
