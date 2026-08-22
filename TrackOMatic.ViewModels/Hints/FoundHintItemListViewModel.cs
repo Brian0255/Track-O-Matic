@@ -12,6 +12,7 @@ namespace TrackOMatic.ViewModels.Hints;
 
 public partial class FoundHintItemListViewModel : ObservableObject
 {
+    private readonly IItemTrackingService _itemTrackingService;
     private readonly IHintItemSelectionService _hintItemSelectionService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly HintPanelType _hintPanelType;
@@ -78,21 +79,27 @@ public partial class FoundHintItemListViewModel : ObservableObject
         for (int i = 0; i < FoundItems.Count; i++)
         {
             if (i < midpoint)
+            {
                 TopRowItems.Add(FoundItems[i]);
+            }
             else
+            {
                 BottomRowItems.Add(FoundItems[i]);
+            }
         }
     }
 
     public FoundHintItemListViewModel(
         HintPanelType hintPanelType,
         string dialogTitle,
+        IItemTrackingService itemTrackingService,
         IHintItemSelectionService hintItemSelectionService,
         ISavedProgressProvider savedProgressProvider
     )
     {
         _hintPanelType = hintPanelType;
         _dialogTitle = dialogTitle ?? throw new ArgumentNullException(nameof(dialogTitle));
+        _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _hintItemSelectionService = hintItemSelectionService ?? throw new ArgumentNullException(nameof(hintItemSelectionService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _foundItems = [];

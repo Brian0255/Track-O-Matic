@@ -28,6 +28,12 @@ public partial class PathHintItemListViewModel : ObservableObject
 
     #endregion
 
+    /// <summary>
+    /// Fired when path items collection changes (items added/removed/cleared).
+    /// Parent HintPanel listens to this to trigger re-sorting and filtering.
+    /// </summary>
+    public event EventHandler? PathItemsChanged;
+
     public PathHintItemListViewModel(
         HintPanelType hintPanelType,
         string dialogTitle,
@@ -42,6 +48,19 @@ public partial class PathHintItemListViewModel : ObservableObject
         _pathItems = [];
 
         // TODO: SavedProgressProvider initializes the hinted/found items.
+    }
+
+    /// <summary>
+    /// Hook into PropertyChanged to notify when PathItems collection changes.
+    /// </summary>
+    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (e.PropertyName == nameof(PathItems))
+        {
+            PathItemsChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     [RelayCommand]

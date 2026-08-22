@@ -56,6 +56,8 @@ public partial class HintInfoViewModel : ObservableObject
     [ObservableProperty]
     private bool _suggestionBoxIsOpen = false;
 
+    public bool IsHintInfoPath => _hintPanelType == HintPanelType.Paths;
+
     /// <summary>
     /// Configuration for hint suggestions (if applicable to this hint type).
     /// Null if HintSuggestion is NONE.
@@ -125,6 +127,8 @@ public partial class HintInfoViewModel : ObservableObject
 
         // Build initial suggestions
         UpdateSuggestions();
+
+        OnPropertyChanged(nameof(IsHintInfoPath));
     }
 
     /// <summary>
@@ -154,6 +158,7 @@ public partial class HintInfoViewModel : ObservableObject
             _foundHintItemListViewModel ??= new FoundHintItemListViewModel(
                 _hintPanelType,
                 $"Select Found Items - {_hintType}",
+                _itemTrackingService,
                 _hintItemSelectionService,
                 _savedProgressProvider
                 );
@@ -325,14 +330,11 @@ public partial class HintInfoViewModel : ObservableObject
             }
         }
 
-        // Trigger path items selection dialog if applicable and not yet opened
         if (OpenPathItemsSelectionCommand.CanExecute(null))
         {
             OpenPathItemsSelectionCommand.Execute(null);
         }
-
-        // Trigger found items selection dialog if applicable and not yet opened
-        if (OpenFoundItemsSelectionCommand.CanExecute(null))
+        else if (OpenFoundItemsSelectionCommand.CanExecute(null))
         {
             OpenFoundItemsSelectionCommand.Execute(null);
         }

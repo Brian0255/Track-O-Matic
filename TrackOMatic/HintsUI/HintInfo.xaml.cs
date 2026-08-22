@@ -88,7 +88,6 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         OnPropertyChanged(nameof(HintTypeSettings));
         HintType = hintType;
         SavedHint = new SavedHint(hintPanelType, Location.Text, "", [], []);
-        ItemsOnPath.HintInfo = this;
         RightItems.HintInfo = this;
         if (!HintTypeSettings.PathItemsVisible)
         {
@@ -148,7 +147,6 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
 
     public void UpdateSelectedItems()
     {
-        SavedHint.PathItems = ItemsOnPath.SelectedItems;
         SavedHint.FoundItems = RightItems.SelectedItems;
         mainWindow.DataSaver.Save();
     }
@@ -375,8 +373,9 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         {
             _viewModel.PotionCountText = savedHint.PotionCountText;
         }
-        ItemsOnPath.SelectedItems = savedHint.PathItems;
-        ItemsOnPath.ProcessSelectedItems();
+        // These should be set within the view model rather than the UI.
+        // ItemsOnPath.SelectedItems = savedHint.PathItems;
+        // ItemsOnPath.ProcessSelectedItems();
         RightItems.SelectedItems = savedHint.FoundItems;
         RightItems.ProcessSelectedItems();
         UserInitialized = true;

@@ -150,33 +150,69 @@ public partial class HintPanel : UserControl
 
     private void ApplyFilter()
     {
-        var filteredHints = new List<HintInfo>();
-        var rejectedHints = new List<HintInfo>();
-        foreach (var child in HintList.Children)
-        {
-            if (child is HintInfo hintInfo)
-            {
-                var selectedItems = hintInfo.ItemsOnPath.SelectedItems;
-                if (ItemsToFilterBy.All(filterItem => selectedItems.ContainsKey(filterItem)))
-                {
-                    filteredHints.Add(hintInfo);
-                }
-                else
-                {
-                    rejectedHints.Add(hintInfo);
-                }
-            }
-        }
-        var combined = filteredHints.Concat(rejectedHints).ToList();
+        RefreshDisplayedHints();
+    }
+
+    /// <summary>
+    /// Refreshes displayed hints: sorts by path item count (desc), then partitions by filter.
+    /// Hints matching all filter items appear first, non-matching hints appear last.
+    /// </summary>
+    private void RefreshDisplayedHints()
+    {
+        var allHints = FetchCurrentHintList();
+
+        // Step 1: Sort by path items count (descending)
+        allHints.Sort((hint1, hint2) =>
+            hint2.ItemsOnPath.SelectedItems.Count -
+            hint1.ItemsOnPath.SelectedItems.Count);
+
+        // Step 2: Partition by filter (matching hints first, rejects second)
+        var (matchingHints, rejectedHints) = PartitionByFilter(allHints);
+
+        // Step 3: Combine and rebuild display
+        var combined = matchingHints.Concat(rejectedHints).ToList();
         BuildHintPanelFromHintList(combined);
         UpdateFilterImage();
     }
 
+    /// <summary>
+    /// Partitions hints into two groups: those matching the filter, and those that don't.
+    /// A hint matches if ALL items in ItemsToFilterBy are present in its path items.
+    /// </summary>
+    private (List<HintInfo>, List<HintInfo>) PartitionByFilter(List<HintInfo> hints)
+    {
+        var matching = new List<HintInfo>();
+        var rejected = new List<HintInfo>();
+
+        foreach (var hint in hints)
+        {
+            if (ItemsToFilterBy.Count == 0)
+            {
+                // No filter = all hints visible
+                matching.Add(hint);
+            }
+            else
+            {
+                var pathItemNames = hint.ItemsOnPath.SelectedItems.Keys.ToHashSet();
+
+                // Check if all filter items are present in path items
+                if (ItemsToFilterBy.All(filterItem => pathItemNames.Contains(filterItem)))
+                {
+                    matching.Add(hint);
+                }
+                else
+                {
+                    rejected.Add(hint);
+                }
+            }
+        }
+
+        return (matching, rejected);
+    }
+
     private void Sort()
     {
-        var hints = FetchCurrentHintList();
-        hints.Sort((hint1, hint2) => hint2.ItemsOnPath.SelectedItems.Count - hint1.ItemsOnPath.SelectedItems.Count);
-        BuildHintPanelFromHintList(hints);
+        RefreshDisplayedHints();
     }
 
     private void OnPathItemsSelected()
