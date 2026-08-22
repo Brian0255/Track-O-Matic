@@ -391,6 +391,18 @@ public partial class HintInfoViewModel : ObservableObject
     [ObservableProperty]
     private bool _locationIsFocused = false;
 
+    [ObservableProperty]
+    private bool _shouldFocusSuggestionsFirst = false;
+
+    [ObservableProperty]
+    private string? _selectedSuggestion = null;
+
+    [ObservableProperty]
+    private int _selectedSuggestionIndex = -1;
+
+    [ObservableProperty]
+    private bool _isSuggestionBoxFocused = false;
+
     /// <summary>
     /// Tracks whether PotionCount has already been focused for the current location entry.
     /// Prevents re-focusing when user presses Enter in PotionCount field.

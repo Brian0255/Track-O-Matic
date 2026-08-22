@@ -166,8 +166,8 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         {
             string locationText = _viewModel?.LocationText ?? "";
 
-            // Check if focus is in the SuggestionBox (dropdown)
-            if (SuggestionBox.IsKeyboardFocusWithin && SuggestionBox.SelectedItem is string selectedSuggestion)
+            // Check if focus is in the SuggestionBox (dropdown) and an item is selected
+            if (_viewModel?.IsSuggestionBoxFocused == true && _viewModel.SelectedSuggestion is string selectedSuggestion)
             {
                 // Use the selected item from the dropdown
                 locationText = selectedSuggestion;
@@ -219,20 +219,10 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
             // Allow keyboard navigation into suggestions without auto-selecting
             if (_viewModel?.Suggestions.Count > 0 && _viewModel.SuggestionBoxIsOpen)
             {
-                // Move focus directly to the first item in the ListBox
-                SuggestionBox.UpdateLayout();
-                var firstItem = (ListBoxItem)SuggestionBox.ItemContainerGenerator.ContainerFromIndex(0);
-                if (firstItem != null)
-                {
-                    _focusedSuggestionIndex = 0;
-                    firstItem.Focus();
-                }
-                else
-                {
-                    // Fall back to focusing the ListBox if item container isn't ready
-                    _focusedSuggestionIndex = 0;
-                    SuggestionBox.Focus();
-                }
+                // Signal the behavior to focus the first item in the ListBox
+                _viewModel.ShouldFocusSuggestionsFirst = true;
+                // Initialize the focused index so keyboard navigation can track position
+                _focusedSuggestionIndex = 0;
                 e.Handled = true;
             }
         }
@@ -240,12 +230,17 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
 
     private void SuggestionBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (sender is not ListBox listBox || _viewModel == null)
+        {
+            return;
+        }
+
         // Only process selection if it came from user action (Enter or mouse click)
         // Not from keyboard navigation (Down/Up arrows)
         if (Keyboard.IsKeyDown(Key.Enter) || Keyboard.IsKeyDown(Key.Return) || _isMouseSelecting)
         {
-            // This is from the Enter key
-            if (SuggestionBox.SelectedItem is string selectedSuggestion && _viewModel != null)
+            // This is from the Enter key or mouse click
+            if (listBox.SelectedItem is string selectedSuggestion)
             {
                 _viewModel.LocationText = selectedSuggestion;
                 _viewModel.SuggestionBoxIsOpen = false;
@@ -268,8 +263,8 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         }
         else
         {
-            // This is from keyboard navigation (Down/Up) - clear the selection
-            SuggestionBox.SelectedIndex = -1;
+            // This is from keyboard navigation (Down/Up) - clear the selection via ViewModel
+            _viewModel.SelectedSuggestionIndex = -1;
         }
     }
 
