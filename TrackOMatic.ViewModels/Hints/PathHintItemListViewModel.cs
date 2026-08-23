@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -53,7 +54,7 @@ public partial class PathHintItemListViewModel : ObservableObject
     /// <summary>
     /// Hook into PropertyChanged to notify when PathItems collection changes.
     /// </summary>
-    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
 

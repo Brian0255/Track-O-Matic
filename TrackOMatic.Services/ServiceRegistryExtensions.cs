@@ -30,6 +30,7 @@ public static class ServiceRegistryExtensions
         services.AddSingleton<ISavedProgressProvider>(sp => new SavedProgressProvider(new SavedProgress()));
         services.AddSingleton<IDataPersistenceService, DataPersistenceService>();
         services.AddSingleton<IItemTrackingService, ItemTrackingService>();
+        services.AddSingleton<IHintService, HintService>();
         services.AddSingleton<ICollectiblesService, CollectiblesService>();
         services.AddSingleton<IBarrierService, BarrierService>();
         services.AddSingleton<ITrackerStateService, TrackerStateService>();

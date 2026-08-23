@@ -11,7 +11,7 @@ public class SavedHint
     /// Gets the ID of the hint. This is meant to be auto-generated if it doesn't exist.
     /// If not provided or empty, a 8-character ID will be generated from a random GUID during initialization.
     /// </summary>
-    public string HintId { get; init; } = string.Empty;
+    public HintId HintId { get; init; }
 
     /// <summary>
     /// Gets the type of the hint panel associated with this saved hint.
@@ -69,6 +69,8 @@ public class SavedHint
         PotionCountText = potionCountText;
         PathItems = pathItems;
         FoundItems = foundItems;
-        HintId = SavedHintDto.GenerateHintIdIfNeeded(hintId);
+        HintId = new HintId(SavedHintDto.GenerateHintIdIfNeeded(hintId));
     }
+
+    public static SavedHint CreateFromPanel(HintPanelType hintPanelType) => new(hintPanelType, "", "", [], [], SavedHintDto.GenerateHintIdIfNeeded(""));
 }

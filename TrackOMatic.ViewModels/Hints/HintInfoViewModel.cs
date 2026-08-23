@@ -12,6 +12,7 @@ using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Hints;
+#pragma warning disable MVVMTK0042 // Prefer using [ObservableProperty] on partial properties
 
 /// <summary>
 /// Parent ViewModel for HintInfo control.
@@ -448,3 +449,4 @@ public partial class HintInfoViewModel : ObservableObject
         return LocationText.Length > 0 && PotionCountText.Length > 0 && _hintPanelType == HintPanelType.PotionCounts;
     }
 }
+#pragma warning restore MVVMTK0042 // Prefer using [ObservableProperty] on partial properties

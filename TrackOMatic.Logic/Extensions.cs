@@ -298,4 +298,23 @@ public static class Extensions
         12 => BarrierItems.RAINBOW_COIN,
         _ => null
     };
+
+    public static RegionName ToRegion(this HintPanelType hintPanelType) => hintPanelType switch
+    {
+        HintPanelType.Japes => RegionName.JUNGLE_JAPES,
+        HintPanelType.Aztec => RegionName.ANGRY_AZTEC,
+        HintPanelType.Factory => RegionName.FRANTIC_FACTORY,
+        HintPanelType.Galleon => RegionName.GLOOMY_GALLEON,
+        HintPanelType.Forest => RegionName.FUNGI_FOREST,
+        HintPanelType.Caves => RegionName.CRYSTAL_CAVES,
+        HintPanelType.Castle => RegionName.CREEPY_CASTLE,
+        HintPanelType.Helm => RegionName.HIDEOUT_HELM,
+        _ => RegionName.UNKNOWN
+    };
+
+    public static bool IsPlayableRegion(this RegionName region)
+    {
+        var playableRegions = EndGameMappings.LOBBY_ORDER.Concat([RegionName.START]).ToArray();
+        return playableRegions.Contains(region);
+    }
 }
