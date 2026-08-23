@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
         </ResourceDictionary>
     </UserControl.Resources>
     <UniformGrid
@@ -46,7 +47,8 @@
         <!-- Row 1: Bottom items (visibility depends on ShouldShowSecondRow) -->
         <ItemsControl 
             ItemsSource="{Binding BottomRowItems}"
-            Visibility="{Binding ShouldShowSecondRow, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+            Grid.Row="1"
+            Visibility="{Binding ShouldShowSecondRow, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
             HorizontalAlignment="Right"
         >
             <ItemsControl.ItemsPanel>

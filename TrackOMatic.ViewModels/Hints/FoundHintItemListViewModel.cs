@@ -60,6 +60,7 @@ public partial class FoundHintItemListViewModel : ObservableObject
     /// Splits FoundItems into top and bottom rows based on the old split logic.
     /// If count > 2, shows bottom row; otherwise hides it.
     /// Items are split at the midpoint: top row gets first half, bottom row gets second half.
+    /// If no items exist, adds ItemName.NONE as a placeholder to allow UI interaction.
     /// </summary>
     private void RefreshRowSplits()
     {
@@ -69,6 +70,8 @@ public partial class FoundHintItemListViewModel : ObservableObject
         if (FoundItems.Count == 0)
         {
             ShouldShowSecondRow = false;
+            // Add ItemName.NONE as a placeholder to allow the UI to be clickable
+            TopRowItems.Add(new HintItemViewModel(ItemName.NONE, false));
             return;
         }
 

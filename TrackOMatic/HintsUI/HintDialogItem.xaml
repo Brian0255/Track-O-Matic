@@ -10,6 +10,10 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=viewmodels:HintDialogItemViewModel}"
     Background="Transparent"
+    Width="32"
+    Height="32"
+    HorizontalAlignment="Left"
+    VerticalAlignment="Top"
     MouseDown="OnMouseDown"
     MouseWheel="OnMouseWheel"
 >

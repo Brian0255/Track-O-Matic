@@ -459,8 +459,22 @@
                     </hints:HintPanel>
                     <hints:HintPanel Grid.Row="0" HintPanelType="PotionCounts" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="3" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
                     <hints:HintPanel Grid.Row="1" HintPanelType="Unhinted" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="3" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
-                    <hints:BLockerPanel x:Name="BLockerHints" Grid.Row="2" Margin="3" Heading="B. LOCKERS" LineColor="#F0F000"/>
-                    <hints:HelmDoorPanel x:Name="HelmDoorHints" Grid.Row="3" Margin="3" Heading="HELM DOORS" LineColor="#7d3cbd" />
+                    <hints:BLockerPanel Visibility="Collapsed" x:Name="BLockerHints" Grid.Row="2" Margin="3" Heading="B. LOCKERS" LineColor="#F0F000"/>
+                    <hints:HelmDoorPanel Visibility="Collapsed" x:Name="HelmDoorHints" Grid.Row="3" Margin="3" Heading="HELM DOORS" LineColor="#7d3cbd" />
+
+                    <!-- NEW CONTROLS TEST AREA - Temporary staging for FoundHintItemList and PathHintItemList -->
+                    <Expander Grid.Row="2" Grid.RowSpan="2" Header="[DEBUG] New Item List Controls Test" Background="#2a2a2a" Foreground="White" Margin="3" IsExpanded="False">
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Found" Foreground="White" Margin="0,5,0,3" />
+                                <hints:FoundHintItemList x:Name="TestFoundItemList" Height="60" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Path" Foreground="White" Margin="0,10,0,3" />
+                                <hints:PathHintItemList x:Name="TestPathItemList" Height="60" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Expander>
                 </Grid>
             </Grid>
         </Grid>

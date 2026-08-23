@@ -1,6 +1,8 @@
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using TrackOMatic.Logic.Enums;
 using TrackOMatic.ViewModels.Hints;
 
 namespace TrackOMatic.HintsUI;
@@ -9,6 +11,18 @@ namespace TrackOMatic.HintsUI;
 /// </summary>
 public partial class HintDialogItem : ContentControl
 {
+    public static readonly DependencyProperty ItemNameProperty = DependencyProperty.Register(
+        nameof(ItemName),
+        typeof(ItemName),
+        typeof(HintDialogItem),
+        new PropertyMetadata(ItemName.NONE));
+
+    public ItemName ItemName
+    {
+        get => (ItemName)GetValue(ItemNameProperty);
+        set => SetValue(ItemNameProperty, value);
+    }
+
     public HintDialogItem()
     {
         InitializeComponent();

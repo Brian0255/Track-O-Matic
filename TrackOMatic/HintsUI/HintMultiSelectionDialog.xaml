@@ -8,7 +8,8 @@
     xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
     xmlns:converters="clr-namespace:TrackOMatic.Converters"
     mc:Ignorable="d"
-    d:DataContext="{d:DataInstance Type=viewmodels:MultiGridItemSelectorViewModel}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MultiGridItemSelectorViewModel}"
+    Background="{StaticResource RegionBG}"
     Title="Select Items"
     ResizeMode="NoResize"
     SizeToContent="WidthAndHeight"
@@ -24,15 +25,14 @@
     <StackPanel Margin="2">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -42,7 +42,7 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="16" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
@@ -50,22 +50,112 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <ItemsControl ItemsSource="{Binding AllItems}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Grid />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <local:HintDialogItem
-                            Grid.Row="{Binding Cell.Row}"
-                            Grid.Column="{Binding Cell.Column}"
-                            Panel.ZIndex="0"
-                        />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <!-- Column: K. Rool Phases-->
+            <local:HintDialogItem Grid.Row="0" Grid.Column="0" ItemName="DONKEY_KROOL" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="0" ItemName="DIDDY_KROOL" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="0" ItemName="LANKY_KROOL" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="0" ItemName="TINY_KROOL" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="0" ItemName="CHUNKY_KROOL" />
+
+            <!-- Row 0: DK and his items -->
+            <local:HintDialogItem Grid.Row="0" Grid.Column="1" ItemName="DONKEY" />
+            <local:HintDialogItem Grid.Row="0" Grid.Column="2" ItemName="COCONUT_GUN" />
+            <local:HintDialogItem Grid.Row="0" Grid.Column="3" ItemName="BONGO_BLAST" />
+            <local:HintDialogItem Grid.Row="0" Grid.Column="4" ItemName="GORILLA_GRAB" />
+            <local:HintDialogItem Grid.Row="0" Grid.Column="5" ItemName="STRONG_KONG" />
+            <local:HintDialogItem Grid.Row="0" Grid.Column="6" ItemName="BABOON_BLAST" />
+
+            <!-- Row 1: Diddy and his items -->
+            <local:HintDialogItem Grid.Row="1" Grid.Column="1" ItemName="DIDDY" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="2" ItemName="PEANUT_POPGUNS" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="3" ItemName="GUITAR_GAZUMP" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="4" ItemName="CHIMPY_CHARGE" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="5" ItemName="ROCKETBARREL_BOOST" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="6" ItemName="SIMIAN_SPRING" />
+
+            <!-- Row 2: Lanky and his items -->
+            <local:HintDialogItem Grid.Row="2" Grid.Column="1" ItemName="LANKY" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="2" ItemName="GRAPE_SHOOTER" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="3" ItemName="TROMBONE_TREMOR" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="4" ItemName="ORANGSTAND" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="5" ItemName="ORANGSTAND_SPRINT" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="6" ItemName="BABOON_BALLOON" />
+
+            <!-- Row 3: Tiny and her items -->
+            <local:HintDialogItem Grid.Row="3" Grid.Column="1" ItemName="TINY" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="2" ItemName="FEATHER_BOW" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="3" ItemName="SAXOPHONE_SLAM" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="4" ItemName="PONYTAIL_TWIRL" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="5" ItemName="MINI_MONKEY" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="6" ItemName="MONKEYPORT" />
+
+            <!-- Row 4: Chunky and his items -->
+            <local:HintDialogItem Grid.Row="4" Grid.Column="1" ItemName="CHUNKY" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="2" ItemName="PINEAPPLE_LAUNCHER" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="3" ItemName="TRIANGLE_TRAMPLE" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="4" ItemName="PRIMATE_PUNCH" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="5" ItemName="HUNKY_CHUNKY" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="6" ItemName="GORILLA_GONE" />
+
+            <!-- Keys (Columns 8-11) -->
+            <local:HintDialogItem Grid.Row="0" Grid.Column="8" ItemName="KEY_1" />
+            <local:HintDialogItem Grid.Row="0" Grid.Column="9" ItemName="KEY_2" />
+            <local:HintDialogItem Grid.Row="0" Grid.Column="10" ItemName="KEY_3" />
+            <local:HintDialogItem Grid.Row="0" Grid.Column="11" ItemName="KEY_4" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="8" ItemName="KEY_5" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="9" ItemName="KEY_6" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="10" ItemName="KEY_7" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="11" ItemName="KEY_8" />
+
+            <!-- Progressive Slams and Bean -->
+            <local:HintDialogItem Grid.Row="2" Grid.Column="8" ItemName="PROGRESSIVE_SLAM_1" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="9" ItemName="PROGRESSIVE_SLAM_2" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="10" ItemName="PROGRESSIVE_SLAM_3" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="11" ItemName="BEAN" />
+
+            <!-- Global Shared Moves (Row 3, Col 8-11) -->
+            <local:HintDialogItem Grid.Row="3" Grid.Column="8" ItemName="SNIPER_SCOPE" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="9" ItemName="HOMING_AMMO" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="10" ItemName="FAIRY_CAMERA" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="11" ItemName="SHOCKWAVE" />
+
+            <!-- Training Moves (Row 4, Col 8-12) -->
+            <local:HintDialogItem Grid.Row="4" Grid.Column="8" ItemName="DIVING" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="9" ItemName="ORANGE_THROWING" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="10" ItemName="BARREL_THROWING" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="11" ItemName="VINE_SWINGING" />
+            <local:HintDialogItem Grid.Row="4" Grid.Column="12" ItemName="CLIMBING" />
+
+            <!-- Potions and Kongs (Row 5) -->
+            <local:HintDialogItem Grid.Row="5" Grid.Column="0" ItemName="KONG_FAMILY" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="1" ItemName="POTION_SHARED" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="2" ItemName="POTION_DK" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="3" ItemName="POTION_DIDDY" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="4" ItemName="POTION_LANKY" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="5" ItemName="POTION_TINY" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="6" ItemName="POTION_CHUNKY" />
+
+            <!-- Misc Items (Row 5) -->
+            <local:HintDialogItem Grid.Row="5" Grid.Column="8" ItemName="UNKNOWN_VIAL" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="9" ItemName="UNKNOWN_KEY" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="10" ItemName="NINTENDO_COIN" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="11" ItemName="RAREWARE_COIN" />
+            <local:HintDialogItem Grid.Row="5" Grid.Column="12" ItemName="HINT" />
+
+            <!-- Shoopkeepers in Column 12 -->
+            <local:HintDialogItem Grid.Row="0" Grid.Column="12" ItemName="CRANKY" />
+            <local:HintDialogItem Grid.Row="1" Grid.Column="12" ItemName="CANDY" />
+            <local:HintDialogItem Grid.Row="2" Grid.Column="12" ItemName="FUNKY" />
+            <local:HintDialogItem Grid.Row="3" Grid.Column="12" ItemName="SNIDE" />
+
+            <!-- Bosses (Row 6) -->
+            <local:HintDialogItem Grid.Row="6" Grid.Column="0" ItemName="ARMY" />
+            <local:HintDialogItem Grid.Row="6" Grid.Column="1" ItemName="DOGA" />
+            <local:HintDialogItem Grid.Row="6" Grid.Column="2" ItemName="MADJACK" />
+            <local:HintDialogItem Grid.Row="6" Grid.Column="3" ItemName="PUFFTOSS" />
+            <local:HintDialogItem Grid.Row="6" Grid.Column="4" ItemName="DOGA2" />
+            <local:HintDialogItem Grid.Row="6" Grid.Column="5" ItemName="ARMY2" />
+            <local:HintDialogItem Grid.Row="6" Grid.Column="6" ItemName="KUTOUT" />
         </Grid>
 
         <Border MouseDown="OnDoneClicked" Cursor="Hand" Margin="5,18,5,5" CornerRadius="5" Background="{StaticResource RegionImageBG}" BorderBrush="Black" BorderThickness="0.5">

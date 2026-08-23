@@ -16,6 +16,7 @@ using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels;
+using TrackOMatic.ViewModels.Hints;
 
 using Timer = System.Timers.Timer;
 
@@ -471,6 +472,38 @@ namespace TrackOMatic
 
             Width = AppState.DesiredWidth;
             Height = AppState.DesiredHeight;
+
+            // Initialize test controls with ViewModels
+            InitializeTestControlViewModels();
+        }
+
+        private void InitializeTestControlViewModels()
+        {
+            try
+            {
+                // Create FoundHintItemListViewModel
+                var foundViewModel = new FoundHintItemListViewModel(
+                    HintPanelType.Paths,
+                    "Found Items",
+                    ServiceLocator.GetService<IItemTrackingService>(),
+                    ServiceLocator.GetService<IHintItemSelectionService>(),
+                    ServiceLocator.GetService<ISavedProgressProvider>()
+                );
+                TestFoundItemList.DataContext = foundViewModel;
+
+                // Create PathHintItemListViewModel
+                var pathViewModel = new PathHintItemListViewModel(
+                    HintPanelType.Paths,
+                    "Path Items",
+                    ServiceLocator.GetService<IHintItemSelectionService>(),
+                    ServiceLocator.GetService<ISavedProgressProvider>()
+                );
+                TestPathItemList.DataContext = pathViewModel;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to initialize test ViewModels: {ex.Message}");
+            }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
