@@ -7,7 +7,7 @@ namespace TrackOMatic.Logic.Models.Hints;
 /// </summary>
 public static class HintTypeSettingsList
 {
-    public static readonly Dictionary<HintType, HintTypeSettings> SETTINGS = new()
+    public static Dictionary<HintType, HintTypeSettings> SETTINGS { get; } = new()
     {
         {HintType.PATH, new HintTypeSettings(true, true, HintSuggestion.REGION_OR_MOVE, false, false, true) },
         {HintType.KONGS, new HintTypeSettings(false, true, HintSuggestion.NONE, true) },
@@ -16,7 +16,6 @@ public static class HintTypeSettingsList
         {HintType.FOOLISH_REGION, new HintTypeSettings(false, false, HintSuggestion.REGION) },
         {HintType.PATHLESS_MOVE, new HintTypeSettings(false, false, HintSuggestion.MOVE) },
         {HintType.UNHINTED, new HintTypeSettings(false, true, HintSuggestion.CHECK, true) },
-        {HintType.MISC, new HintTypeSettings(false, false, HintSuggestion.NONE) },
         {HintType.DIRECT_ITEM_HINT, new HintTypeSettings(false, true, HintSuggestion.DIRECT_ITEM_HINT, true, true) },
         {HintType.ADVANCED_ITEM_HINT, new HintTypeSettings(false, true, HintSuggestion.REGION, false) }
     };

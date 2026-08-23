@@ -408,10 +408,6 @@ namespace TrackOMatic
                 item.ChangeOpacity(1.0);
                 item.InitHoverPoints();
             }
-            foreach (var hintPanel in HintPanels)
-            {
-                hintPanel.Reset();
-            }
 
             HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
             Autotracker.Reset();

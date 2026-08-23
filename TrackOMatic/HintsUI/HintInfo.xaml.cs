@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
@@ -70,7 +71,7 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public HintInfo(HintType hintType, HintPanelType hintPanelType, string panelName, bool isSavedHint = false, RegionName regionName = RegionName.UNKNOWN)
+    public HintInfo(HintPanelType hintPanelType, bool isSavedHint = false)
     {
         InitializeComponent();
         UserSettingsService = ServiceLocator.GetService<IUserSettingsService>();
@@ -78,7 +79,8 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
 
         // Initialize properties from constructor parameters
         HintPanelType = hintPanelType;
-        RegionName = regionName;
+        RegionName = hintPanelType.ToRegion();
+        HintType = hintPanelType.ToHintType();
 
         if (!isSavedHint)
         {
@@ -86,9 +88,8 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
             // (set in OnLoaded event below)
         }
 
-        HintTypeSettings = HintTypeSettingsList.SETTINGS[hintType];
+        HintTypeSettings = HintTypeSettingsList.SETTINGS[HintType];
         OnPropertyChanged(nameof(HintTypeSettings));
-        HintType = hintType;
         SavedHint = new SavedHint(hintPanelType, Location.Text, "", [], []);
         RightItems.HintInfo = this;
         if (!HintTypeSettings.PathItemsVisible)

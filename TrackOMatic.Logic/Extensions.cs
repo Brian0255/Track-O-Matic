@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 using TrackOMatic.Logic.Attributes;
@@ -317,4 +315,35 @@ public static class Extensions
         var playableRegions = EndGameMappings.LOBBY_ORDER.Concat([RegionName.START]).ToArray();
         return playableRegions.Contains(region);
     }
+
+    public static HintType ToHintType(this HintPanelType hintPanelType) => hintPanelType switch
+    {
+        HintPanelType.WayOfTheHoard => HintType.WAY_OF_THE_HOARD,
+        HintPanelType.Foolish => HintType.FOOLISH_REGION,
+        HintPanelType.PotionCounts => HintType.REGION_POTION_COUNT,
+        HintPanelType.Kongs => HintType.KONGS,
+        HintPanelType.Unhinted => HintType.UNHINTED,
+        HintPanelType.Paths => HintType.PATH,
+        _ => HintType.DIRECT_ITEM_HINT
+    };
+
+    public static string ToHeading(this HintPanelType hintPanelType) => hintPanelType switch
+    {
+        HintPanelType.Isles => "ISLES",
+        HintPanelType.Japes => "JAPES",
+        HintPanelType.Aztec => "AZTEC",
+        HintPanelType.Factory => "FACTORY",
+        HintPanelType.Galleon => "GALLEON",
+        HintPanelType.Forest => "FOREST",
+        HintPanelType.Caves => "CAVES",
+        HintPanelType.Castle => "CASTLE",
+        HintPanelType.Helm => "HELM",
+        HintPanelType.Unhinted => "UNHINTED MOVES",
+        HintPanelType.Paths => "PATHS",
+        HintPanelType.Foolish => "FOOLISH REGIONS",
+        HintPanelType.Kongs => "KONGS",
+        HintPanelType.WayOfTheHoard => "WAY OF THE HOARD",
+        HintPanelType.PotionCounts => "POTION COUNTS",
+        _ => "Unknown"
+    };
 }

@@ -5,6 +5,7 @@ using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
@@ -12,7 +13,6 @@ using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Hints;
-#pragma warning disable MVVMTK0042 // Prefer using [ObservableProperty] on partial properties
 
 /// <summary>
 /// Parent ViewModel for HintInfo control.
@@ -20,7 +20,6 @@ namespace TrackOMatic.ViewModels.Hints;
 /// </summary>
 public partial class HintInfoViewModel : ObservableObject
 {
-    private readonly HintType _hintType;
     private readonly HintPanelType _hintPanelType;
     private readonly RegionName _regionName;
     private readonly IShortcutService _shortcutService;
@@ -39,25 +38,63 @@ public partial class HintInfoViewModel : ObservableObject
     /// </summary>
     private bool _foundItemsDialogOpened = false;
 
-    [ObservableProperty]
     private string _locationText = "";
+    public string LocationText
+    {
+        get => _locationText;
+        set
+        {
+            if (SetProperty(ref _locationText, value))
+            {
+                OnLocationTextChanged(value);
+            }
+        }
+    }
 
-    [ObservableProperty]
     private string _potionCountText = "";
+    public string PotionCountText
+    {
+        get => _potionCountText;
+        set
+        {
+            if (SetProperty(ref _potionCountText, value))
+            {
+                OnPotionCountTextChanged(value);
+            }
+        }
+    }
 
-    [ObservableProperty]
     private HintTypeSettings _hintTypeSettings = null!;
+    public HintTypeSettings HintTypeSettings
+    {
+        get => _hintTypeSettings;
+        set => SetProperty(ref _hintTypeSettings, value);
+    }
 
-    [ObservableProperty]
     private SavedHint _savedHint = null!;
+    public SavedHint SavedHint
+    {
+        get => _savedHint;
+        set => SetProperty(ref _savedHint, value);
+    }
 
-    [ObservableProperty]
     private ObservableCollection<string> _suggestions = new();
+    public ObservableCollection<string> Suggestions
+    {
+        get => _suggestions;
+        set => SetProperty(ref _suggestions, value);
+    }
 
-    [ObservableProperty]
     private bool _suggestionBoxIsOpen = false;
+    public bool SuggestionBoxIsOpen
+    {
+        get => _suggestionBoxIsOpen;
+        set => SetProperty(ref _suggestionBoxIsOpen, value);
+    }
 
     public bool IsHintInfoPath => _hintPanelType == HintPanelType.Paths;
+
+    public bool IsHintInfoFoolish => _hintPanelType == HintPanelType.Foolish;
 
     /// <summary>
     /// Configuration for hint suggestions (if applicable to this hint type).
@@ -81,13 +118,13 @@ public partial class HintInfoViewModel : ObservableObject
     /// </summary>
     private const string KONG_HINT_SHORTHAND_KEY = "Kong Hint Shorthand";
 
-    partial void OnLocationTextChanged(string? oldValue, string newValue)
+    private void OnLocationTextChanged(string newValue)
     {
         SavedHint.LocationText = newValue;
         UpdateSuggestions();
     }
 
-    partial void OnPotionCountTextChanged(string? oldValue, string newValue)
+    private void OnPotionCountTextChanged(string newValue)
     {
         SavedHint.PotionCountText = newValue;
     }
@@ -103,7 +140,6 @@ public partial class HintInfoViewModel : ObservableObject
         IItemTrackingService itemTrackingService,
         IUserSettingsService userSettingsService)
     {
-        _hintType = hintType;
         _hintPanelType = hintPanelType;
         _regionName = regionName;
         _shortcutService = shortcutService ?? throw new ArgumentNullException(nameof(shortcutService));
@@ -130,6 +166,7 @@ public partial class HintInfoViewModel : ObservableObject
         UpdateSuggestions();
 
         OnPropertyChanged(nameof(IsHintInfoPath));
+        OnPropertyChanged(nameof(IsHintInfoFoolish));
     }
 
     /// <summary>
@@ -159,7 +196,7 @@ public partial class HintInfoViewModel : ObservableObject
         {
             _foundHintItemListViewModel ??= new FoundHintItemListViewModel(
                 _hintPanelType,
-                $"Select Found Items - {_hintType}",
+                $"Select Found Items - {_hintPanelType}",
                 _itemTrackingService,
                 _hintItemSelectionService,
                 _savedProgressProvider
@@ -178,7 +215,7 @@ public partial class HintInfoViewModel : ObservableObject
         {
             _pathHintItemListViewModel ??= new PathHintItemListViewModel(
                 _hintPanelType,
-                $"Select Path Items - {_hintType}",
+                "Select Path Items",
                 _hintItemSelectionService,
                 _savedProgressProvider
             );
@@ -214,7 +251,7 @@ public partial class HintInfoViewModel : ObservableObject
     /// <summary>
     /// Returns true if path items selection can be opened for this hint type.
     /// </summary>
-    private bool CanOpenPathItemsSelection() => HintTypeSettings.PathItemsVisible && !_pathItemsDialogOpened;
+    private bool CanOpenPathItemsSelection() => IsHintInfoPath && !_pathItemsDialogOpened;
 
     /// <summary>
     /// Signal that found items selection dialog should open.
@@ -231,7 +268,7 @@ public partial class HintInfoViewModel : ObservableObject
     /// <summary>
     /// Returns true if found items selection can be opened for this hint type.
     /// </summary>
-    private bool CanOpenFoundItemsSelection() => HintTypeSettings.FoundItemVisible && !_foundItemsDialogOpened;
+    private bool CanOpenFoundItemsSelection() => !IsHintInfoFoolish && !_foundItemsDialogOpened;
 
     /// <summary>
     /// Rebuild suggestions based on current location text.
@@ -240,9 +277,8 @@ public partial class HintInfoViewModel : ObservableObject
     {
         var matches = _shortcutService.FindMatches(
             LocationText,
-            _hintType,
-            HintSuggestionConfig,
-            _regionName
+            _hintPanelType,
+            HintSuggestionConfig
         );
 
         Suggestions = new ObservableCollection<string>(matches);
@@ -250,7 +286,7 @@ public partial class HintInfoViewModel : ObservableObject
         // Update dropdown visibility
         SuggestionBoxIsOpen = LocationText != ""
             && Suggestions.Count > 0
-            && HintTypeSettings.HintSuggestion != HintSuggestion.NONE;
+            && _hintPanelType != HintPanelType.Kongs;
     }
 
     /// <summary>
@@ -320,7 +356,7 @@ public partial class HintInfoViewModel : ObservableObject
     public void ConfirmLocationAndItems((string locationText, double X, double Y) screenMousePosition)
     {
         // Try Kong hint parsing if applicable
-        if (_hintType == HintType.KONGS)
+        if (_hintPanelType == HintPanelType.Kongs)
         {
             if (TryProcessKongHint(LocationText))
             {
@@ -365,8 +401,9 @@ public partial class HintInfoViewModel : ObservableObject
     [RelayCommand]
     public void RemoveHint()
     {
-        // Only process DirectItemHints for now
-        if (_hintType != HintType.DIRECT_ITEM_HINT)
+        // Only process direct item hints that tie themselves to a region.
+        var targetRegion = _hintPanelType.ToRegion();
+        if (!targetRegion.IsPlayableRegion())
         {
             return;
         }
@@ -449,4 +486,3 @@ public partial class HintInfoViewModel : ObservableObject
         return LocationText.Length > 0 && PotionCountText.Length > 0 && _hintPanelType == HintPanelType.PotionCounts;
     }
 }
-#pragma warning restore MVVMTK0042 // Prefer using [ObservableProperty] on partial properties

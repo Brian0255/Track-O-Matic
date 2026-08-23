@@ -5,7 +5,6 @@ using System.Windows.Media;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
-using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 
 namespace TrackOMatic.HintsUI;
@@ -13,31 +12,15 @@ namespace TrackOMatic.HintsUI;
 public partial class HintPanel : UserControl
 {
 
-    public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register(nameof(Heading), typeof(string), typeof(HintPanel));
     public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register(nameof(LineColor), typeof(Color), typeof(HintPanel));
-    public static readonly DependencyProperty HintTypeProperty = DependencyProperty.Register(nameof(HintType), typeof(HintType), typeof(HintPanel));
     public static readonly DependencyProperty HintPanelTypeProperty = DependencyProperty.Register(nameof(HintPanelType), typeof(HintPanelType), typeof(HintPanel));
-    public static readonly DependencyProperty RegionNameProperty = DependencyProperty.Register(nameof(RegionName), typeof(RegionName), typeof(HintPanel));
-
 
     public List<ItemName> ItemsToFilterBy { get; private set; } = new();
-
-    public string Heading
-    {
-        get { return (string)GetValue(HeadingProperty); }
-        set { SetValue(HeadingProperty, value); }
-    }
 
     public Color LineColor
     {
         get { return (Color)GetValue(LineColorProperty); }
         set { SetValue(LineColorProperty, value); }
-    }
-
-    public HintType HintType
-    {
-        get { return (HintType)GetValue(HintTypeProperty); }
-        set { SetValue(HintTypeProperty, value); }
     }
 
     public HintPanelType HintPanelType
@@ -46,54 +29,19 @@ public partial class HintPanel : UserControl
         set => SetValue(HintPanelTypeProperty, value);
     }
 
-    public RegionName RegionName
-    {
-        get { return (RegionName)GetValue(RegionNameProperty); }
-        set { SetValue(RegionNameProperty, value); }
-    }
-
     public IUserSettingsService UserSettings { get; init; }
 
-    public void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var hintSettings = HintTypeSettingsList.SETTINGS[HintType];
-        SortButton.Visibility = hintSettings.HintSorterVisibility ? Visibility.Visible : Visibility.Collapsed;
-        FilterButton.Visibility = hintSettings.HintSorterVisibility ? Visibility.Visible : Visibility.Collapsed;
-    }
     public HintPanel()
     {
-        Console.WriteLine(HintType);
         UserSettings = ServiceLocator.GetService<IUserSettingsService>();
         InitializeComponent();
-        Loaded += OnLoaded;
-    }
-
-    public void Reset()
-    {
-        foreach (var child in HintList.Children.OfType<HintInfo>().ToList())
-        {
-            HintList.Children.Remove(child);
-        }
-        ItemsToFilterBy = new();
-        UpdateFilterImage();
-    }
-
-    private void RemoveHint(object sender, MouseEventArgs e)
-    {
-        if (e.RightButton == MouseButtonState.Pressed)
-        {
-            HintInfo hint = (HintInfo)sender;
-            hint.OnRemove();
-            HintList.Children.Remove(hint);
-        }
     }
 
     private HintInfo CreateNewHint(bool isSavedHint = false)
     {
-        var newHint = new HintInfo(HintType, HintPanelType, Name, isSavedHint, RegionName);
+        var newHint = new HintInfo(HintPanelType, isSavedHint);
         var insertionPoint = HintList.Children.Count - 1;
         HintList.Children.Insert(insertionPoint, newHint);
-        newHint.MouseDown += RemoveHint;
         newHint.ItemsOnPath.OnItemsSelected += OnPathItemsSelected;
         return newHint;
     }
@@ -122,10 +70,6 @@ public partial class HintPanel : UserControl
         return hints;
     }
 
-    private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-    {
-    }
-
     private List<HintInfo> FetchCurrentHintList()
     {
         return HintList.Children.OfType<HintInfo>().ToList();
@@ -140,12 +84,6 @@ public partial class HintPanel : UserControl
             HintList.Children.Add(hint);
         }
         HintList.Children.Add(addNewHint);
-    }
-
-    private void UpdateFilterImage()
-    {
-        string resource = ItemsToFilterBy.Count > 0 ? "filter_on" : "filter_empty";
-        FilterButton.Source = (ImageSource)FindResource(resource);
     }
 
     private void ApplyFilter()
@@ -172,7 +110,6 @@ public partial class HintPanel : UserControl
         // Step 3: Combine and rebuild display
         var combined = matchingHints.Concat(rejectedHints).ToList();
         BuildHintPanelFromHintList(combined);
-        UpdateFilterImage();
     }
 
     /// <summary>

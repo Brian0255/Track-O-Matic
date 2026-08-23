@@ -13,14 +13,12 @@ public interface IShortcutService
     /// Finds shortcuts and default suggestions that match the given location text.
     /// </summary>
     /// <param name="locationText">The user-entered location text to filter on</param>
-    /// <param name="hintType">The type of hint being edited</param>
+    /// <param name="hintPanelType">The type of hint being edited</param>
     /// <param name="config">Hint suggestion configuration (null for DirectItemHint)</param>
-    /// <param name="regionName">The region (used for DirectItemHint suggestions)</param>
     /// <returns>Enumerable of matching suggestion strings, deduplicated and sorted</returns>
     IEnumerable<string> FindMatches(
         string locationText,
-        HintType hintType,
-        HintSuggestionConfig? config,
-        RegionName regionName
+        HintPanelType hintPanelType,
+        HintSuggestionConfig? config
     );
 }

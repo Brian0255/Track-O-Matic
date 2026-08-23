@@ -50,14 +50,14 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <UniformGrid Grid.Column="0" Rows="4" Columns="2">
-                <local:HintPanel HintPanelType="Isles" HintType="DIRECT_ITEM_HINT" Heading="ISLES" LineColor="{StaticResource IslesLineColor}" RegionName="DK_ISLES" />
-                <local:HintPanel HintPanelType="Japes" HintType="DIRECT_ITEM_HINT" Heading="JAPES" LineColor="{StaticResource JapesLineColor}" RegionName="JUNGLE_JAPES" />
-                <local:HintPanel HintPanelType="Aztec" HintType="DIRECT_ITEM_HINT" Heading="AZTEC" LineColor="{StaticResource AztecLineColor}" RegionName="ANGRY_AZTEC" />
-                <local:HintPanel HintPanelType="Factory" HintType="DIRECT_ITEM_HINT" Heading="FACTORY" LineColor="{StaticResource FactoryLineColor}" RegionName="FRANTIC_FACTORY" />
-                <local:HintPanel HintPanelType="Galleon" HintType="DIRECT_ITEM_HINT" Heading="GALLEON" LineColor="{StaticResource GalleonLineColor}" RegionName="GLOOMY_GALLEON" />
-                <local:HintPanel HintPanelType="Forest" HintType="DIRECT_ITEM_HINT" Heading="FOREST" LineColor="{StaticResource ForestLineColor}" RegionName="FUNGI_FOREST" />
-                <local:HintPanel HintPanelType="Caves" HintType="DIRECT_ITEM_HINT" Heading="CAVES" LineColor="{StaticResource CavesLineColor}" RegionName="CRYSTAL_CAVES" />
-                <local:HintPanel HintPanelType="Castle" HintType="DIRECT_ITEM_HINT" Heading="CASTLE" LineColor="{StaticResource CastleLineColor}" RegionName="CREEPY_CASTLE" />
+                <local:HintPanel DataContext="{Binding IslesHintPanelViewModel}" HintPanelType="Isles" LineColor="{StaticResource IslesLineColor}" />
+                <local:HintPanel DataContext="{Binding JapesHintPanelViewModel}" HintPanelType="Japes" LineColor="{StaticResource JapesLineColor}" />
+                <local:HintPanel DataContext="{Binding AztecHintPanelViewModel}" HintPanelType="Aztec" LineColor="{StaticResource AztecLineColor}" />
+                <local:HintPanel DataContext="{Binding FactoryHintPanelViewModel}" HintPanelType="Factory" LineColor="{StaticResource FactoryLineColor}" />
+                <local:HintPanel DataContext="{Binding GalleonHintPanelViewModel}" HintPanelType="Galleon" LineColor="{StaticResource GalleonLineColor}" />
+                <local:HintPanel DataContext="{Binding ForestHintPanelViewModel}" HintPanelType="Forest" LineColor="{StaticResource ForestLineColor}" />
+                <local:HintPanel DataContext="{Binding CavesHintPanelViewModel}" HintPanelType="Caves" LineColor="{StaticResource CavesLineColor}" />
+                <local:HintPanel DataContext="{Binding CastleHintPanelViewModel}" HintPanelType="Castle" LineColor="{StaticResource CastleLineColor}" />
             </UniformGrid>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -66,8 +66,8 @@
                     <RowDefinition Height="2.6*" />
                     <RowDefinition Height="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource CountToRelativeWidthConverter}}" />
                 </Grid.RowDefinitions>
-                <local:HintPanel Grid.Row="0" HintPanelType="Helm" HintType="DIRECT_ITEM_HINT" Heading="HELM" LineColor="{StaticResource HelmLineColor}" RegionName="HIDEOUT_HELM"  />
-                <local:HintPanel Grid.Row="1" HintPanelType="Unhinted" HintType="UNHINTED" Heading="UNHINTED MOVES" LineColor="{StaticResource UnhintedLineColor}" />
+                <local:HintPanel Grid.Row="0" DataContext="{Binding HelmHintPanelViewModel}" HintPanelType="Helm" LineColor="{StaticResource HelmLineColor}" />
+                <local:HintPanel Grid.Row="1" DataContext="{Binding UnhintedHintPanelViewModel}" HintPanelType="Unhinted" LineColor="{StaticResource UnhintedLineColor}" />
                 <local:BLockerPanel Grid.Row="2" Heading="B. LOCKERS" LineColor="{StaticResource BLockerLineColor}" />
                 <local:HelmDoorPanel Grid.Row="3" Heading="HELM DOORS" LineColor="{StaticResource HelmDoorLineColor}" Visibility="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
             </Grid>
@@ -78,15 +78,15 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <UniformGrid Grid.Column="0" Rows="3" Columns="3">
-                <local:HintPanel HintPanelType="Isles" HintType="DIRECT_ITEM_HINT" Heading="ISLES" LineColor="{StaticResource IslesLineColor}" RegionName="DK_ISLES" />
-                <local:HintPanel HintPanelType="Japes" HintType="DIRECT_ITEM_HINT" Heading="JAPES" LineColor="{StaticResource JapesLineColor}" RegionName="JUNGLE_JAPES" />
-                <local:HintPanel HintPanelType="Aztec" HintType="DIRECT_ITEM_HINT" Heading="AZTEC" LineColor="{StaticResource AztecLineColor}" RegionName="ANGRY_AZTEC" />
-                <local:HintPanel HintPanelType="Factory" HintType="DIRECT_ITEM_HINT" Heading="FACTORY" LineColor="{StaticResource FactoryLineColor}" RegionName="FRANTIC_FACTORY" />
-                <local:HintPanel HintPanelType="Galleon" HintType="DIRECT_ITEM_HINT" Heading="GALLEON" LineColor="{StaticResource GalleonLineColor}" RegionName="GLOOMY_GALLEON" />
-                <local:HintPanel HintPanelType="Forest" HintType="DIRECT_ITEM_HINT" Heading="FOREST" LineColor="{StaticResource ForestLineColor}" RegionName="FUNGI_FOREST" />
-                <local:HintPanel HintPanelType="Caves" HintType="DIRECT_ITEM_HINT" Heading="CAVES" LineColor="{StaticResource CavesLineColor}" RegionName="CRYSTAL_CAVES" />
-                <local:HintPanel HintPanelType="Castle" HintType="DIRECT_ITEM_HINT" Heading="CASTLE" LineColor="{StaticResource CastleLineColor}" RegionName="CREEPY_CASTLE" />
-                <local:HintPanel Grid.Row="0" HintPanelType="Helm" HintType="DIRECT_ITEM_HINT" Heading="HELM" LineColor="{StaticResource HelmLineColor}" RegionName="HIDEOUT_HELM"  />
+                <local:HintPanel DataContext="{Binding IslesHintPanelViewModel}" HintPanelType="Isles" LineColor="{StaticResource IslesLineColor}" />
+                <local:HintPanel DataContext="{Binding JapesHintPanelViewModel}" HintPanelType="Japes" LineColor="{StaticResource JapesLineColor}" />
+                <local:HintPanel DataContext="{Binding AztecHintPanelViewModel}" HintPanelType="Aztec" LineColor="{StaticResource AztecLineColor}" />
+                <local:HintPanel DataContext="{Binding FactoryHintPanelViewModel}" HintPanelType="Factory" LineColor="{StaticResource FactoryLineColor}" />
+                <local:HintPanel DataContext="{Binding GalleonHintPanelViewModel}" HintPanelType="Galleon" LineColor="{StaticResource GalleonLineColor}" />
+                <local:HintPanel DataContext="{Binding ForestHintPanelViewModel}" HintPanelType="Forest" LineColor="{StaticResource ForestLineColor}" />
+                <local:HintPanel DataContext="{Binding CavesHintPanelViewModel}" HintPanelType="Caves" LineColor="{StaticResource CavesLineColor}" />
+                <local:HintPanel DataContext="{Binding CastleHintPanelViewModel}" HintPanelType="Castle" LineColor="{StaticResource CastleLineColor}" />
+                <local:HintPanel Grid.Row="0" DataContext="{Binding HelmHintPanelViewModel}" HintPanelType="Helm" LineColor="{StaticResource HelmLineColor}" />
             </UniformGrid>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -94,22 +94,22 @@
                     <RowDefinition Height="2.6*" />
                     <RowDefinition Height="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource CountToRelativeWidthConverter}}" />
                 </Grid.RowDefinitions>
-                <local:HintPanel Grid.Row="1" HintPanelType="Unhinted" HintType="UNHINTED" Heading="UNHINTED MOVES" LineColor="{StaticResource UnhintedLineColor}" />
+                <local:HintPanel Grid.Row="1" DataContext="{Binding UnhintedHintPanelViewModel}" HintPanelType="Unhinted" LineColor="{StaticResource UnhintedLineColor}" />
                 <local:BLockerPanel Grid.Row="2" Heading="B. LOCKERS" LineColor="{StaticResource BLockerLineColor}" />
                 <local:HelmDoorPanel Grid.Row="3" Heading="HELM DOORS" LineColor="{StaticResource HelmDoorLineColor}" Visibility="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
             </Grid>
         </Grid>
         <UniformGrid Rows="1" Columns="3" Visibility="{Binding IsMultipathCompactMode, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
-            <local:HintPanel HintPanelType="Paths" HintType="PATH" Heading="PATHS" LineColor="{StaticResource PathsLineColor}" />
+            <local:HintPanel DataContext="{Binding PathsHintPanelViewModel}" HintPanelType="Paths" LineColor="{StaticResource PathsLineColor}" />
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1.6*"/>
                     <RowDefinition Height="1.25*"/>
                     <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
-                <local:HintPanel Grid.Row="0" HintPanelType="Foolish" HintType="FOOLISH_REGION" Heading="FOOLISH REGIONS" LineColor="{StaticResource FoolishLineColor}" />
-                <local:HintPanel Grid.Row="1" HintPanelType="Kongs" HintType="KONGS" Heading="KONGS" LineColor="{StaticResource KongsLineColor}" />
-                <local:HintPanel Grid.Row="2" HintPanelType="WayOfTheHoard" HintType="WAY_OF_THE_HOARD" Heading="WAY OF THE HOARD" LineColor="{StaticResource WayOfTheHoardLineColor}" />
+                <local:HintPanel Grid.Row="0" DataContext="{Binding FoolishHintPanelViewModel}" HintPanelType="Foolish" LineColor="{StaticResource FoolishLineColor}" />
+                <local:HintPanel Grid.Row="1" DataContext="{Binding KongsHintPanelViewModel}" HintPanelType="Kongs" LineColor="{StaticResource KongsLineColor}" />
+                <local:HintPanel Grid.Row="2" DataContext="{Binding HoardHintPanelViewModel}" HintPanelType="WayOfTheHoard" LineColor="{StaticResource WayOfTheHoardLineColor}" />
             </Grid>
             <Grid>
                 <Grid.RowDefinitions>
@@ -118,29 +118,29 @@
                     <RowDefinition Height="2.6*" />
                     <RowDefinition Height="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource CountToRelativeWidthConverter}}" />
                 </Grid.RowDefinitions>
-                <local:HintPanel Grid.Row="0" HintPanelType="PotionCounts" HintType="REGION_POTION_COUNT" Heading="POTION COUNTS" LineColor="{StaticResource PotionCountsLineColor}" />
-                <local:HintPanel Grid.Row="1" HintPanelType="Unhinted" HintType="UNHINTED" Heading="UNHINTED MOVES" LineColor="{StaticResource UnhintedLineColor}" />
+                <local:HintPanel Grid.Row="0" DataContext="{Binding PotionHintPanelViewModel}" HintPanelType="PotionCounts" LineColor="{StaticResource PotionCountsLineColor}" />
+                <local:HintPanel Grid.Row="1" DataContext="{Binding UnhintedHintPanelViewModel}" HintPanelType="Unhinted" LineColor="{StaticResource UnhintedLineColor}" />
                 <local:BLockerPanel Grid.Row="2" Heading="B. LOCKERS" LineColor="{StaticResource BLockerLineColor}" />
                 <local:HelmDoorPanel Grid.Row="3" Heading="HELM DOORS" LineColor="{StaticResource HelmDoorLineColor}" Visibility="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
             </Grid>
         </UniformGrid>
         <UniformGrid Rows="1" Columns="4" Visibility="{Binding IsMultipathStandardMode, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
-            <local:HintPanel HintPanelType="Paths" HintType="PATH" Heading="PATHS" LineColor="{StaticResource PathsLineColor}" />
+            <local:HintPanel DataContext="{Binding PathsHintPanelViewModel}" HintPanelType="Paths" LineColor="{StaticResource PathsLineColor}" />
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1.25*" />
                     <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
-                <local:HintPanel Grid.Row="0" HintPanelType="Kongs" HintType="KONGS" Heading="KONGS" LineColor="{StaticResource KongsLineColor}" />
-                <local:HintPanel Grid.Row="1" HintPanelType="WayOfTheHoard" HintType="WAY_OF_THE_HOARD" Heading="WAY OF THE HOARD" LineColor="{StaticResource WayOfTheHoardLineColor}" />
+                <local:HintPanel Grid.Row="0" DataContext="{Binding KongsHintPanelViewModel}" HintPanelType="Kongs" LineColor="{StaticResource KongsLineColor}" />
+                <local:HintPanel Grid.Row="1" DataContext="{Binding HoardHintPanelViewModel}" HintPanelType="WayOfTheHoard" LineColor="{StaticResource WayOfTheHoardLineColor}" />
             </Grid>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="5*" />
                     <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
-                <local:HintPanel Grid.Row="0" HintPanelType="Foolish" HintType="FOOLISH_REGION" Heading="FOOLISH REGIONS" LineColor="{StaticResource FoolishLineColor}" />
-                <local:HintPanel Grid.Row="1" HintPanelType="PotionCounts" HintType="REGION_POTION_COUNT" Heading="POTION COUNTS" LineColor="{StaticResource PotionCountsLineColor}" />
+                <local:HintPanel Grid.Row="0" DataContext="{Binding FoolishHintPanelViewModel}" HintPanelType="Foolish" LineColor="{StaticResource FoolishLineColor}" />
+                <local:HintPanel Grid.Row="1" DataContext="{Binding PotionHintPanelViewModel}" HintPanelType="PotionCounts" LineColor="{StaticResource PotionCountsLineColor}" />
             </Grid>
             <Grid>
                 <Grid.RowDefinitions>
@@ -148,7 +148,7 @@
                     <RowDefinition Height="2.6*" />
                     <RowDefinition Height="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource CountToRelativeWidthConverter}}" />
                 </Grid.RowDefinitions>
-                <local:HintPanel Grid.Row="1" HintPanelType="Unhinted" HintType="UNHINTED" Heading="UNHINTED MOVES" LineColor="{StaticResource UnhintedLineColor}" />
+                <local:HintPanel Grid.Row="1" DataContext="{Binding UnhintedHintPanelViewModel}" HintPanelType="Unhinted" LineColor="{StaticResource UnhintedLineColor}" />
                 <local:BLockerPanel Grid.Row="2" Heading="B. LOCKERS" LineColor="{StaticResource BLockerLineColor}" />
                 <local:HelmDoorPanel Grid.Row="3" Heading="HELM DOORS" LineColor="{StaticResource HelmDoorLineColor}" Visibility="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
             </Grid>

@@ -1,6 +1,4 @@
-using System.Globalization;
-
-using TrackOMatic;
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models.Hints;
 
@@ -29,14 +27,14 @@ public class ShortcutService : IShortcutService
 
     public IEnumerable<string> FindMatches(
         string locationText,
-        HintType hintType,
-        HintSuggestionConfig? config,
-        RegionName regionName)
+        HintPanelType hintPanelType,
+        HintSuggestionConfig? config
+    )
     {
         var matches = new List<string>();
 
         // Get shortcut matches (from UserShortcuts JSON)
-        matches.AddRange(FindShortcutMatches(locationText, hintType, config?.JSONShortcutKeys, regionName));
+        matches.AddRange(FindShortcutMatches(locationText, hintPanelType, config?.JSONShortcutKeys));
 
         // Get default suggestion matches (from HintSuggestionConfig)
         if (config != null)
@@ -51,16 +49,16 @@ public class ShortcutService : IShortcutService
     /// <summary>
     /// Find matches from HintData.UserShortcuts and DirectItemHint region items.
     /// </summary>
-    private IEnumerable<string> FindShortcutMatches(
+    private List<string> FindShortcutMatches(
         string locationText,
-        HintType hintType,
-        List<string>? jsonKeys,
-        RegionName regionName)
+        HintPanelType hintPanelType,
+        List<string>? jsonKeys
+    )
     {
         var result = new List<string>();
+        var regionName = hintPanelType.ToRegion();
 
-        // DirectItemHint: Use substring match on region items
-        if (hintType == HintType.DIRECT_ITEM_HINT)
+        if (regionName.IsPlayableRegion())
         {
             result.AddRange(FindDirectItemMatches(locationText, regionName));
             return result;
@@ -85,7 +83,7 @@ public class ShortcutService : IShortcutService
                 var shortcutValue = entry.Value;
 
                 // Prefix match on the shortcut key
-                if (shortcutKey.ToLower().StartsWith(locationText.ToLower()))
+                if (shortcutKey.StartsWith(locationText, StringComparison.CurrentCultureIgnoreCase))
                 {
                     result.Add(shortcutValue);
                 }
@@ -101,18 +99,17 @@ public class ShortcutService : IShortcutService
     /// </summary>
     private IEnumerable<string> FindDirectItemMatches(string locationText, RegionName regionName)
     {
-        if (!HintData.REGIONS_WITHOUT_LEVEL_NAME.ContainsKey(regionName))
+        if (!HintData.REGIONS_WITHOUT_LEVEL_NAME.TryGetValue(regionName, out List<string>? regionItems))
         {
-            return new List<string>();
+            return [];
         }
 
-        var regionItems = HintData.REGIONS_WITHOUT_LEVEL_NAME[regionName];
-
-        return regionItems
+        return [.. regionItems
             .Where(item =>
-                item.ToLower().Contains(locationText.ToLower())
-                && !DirectHintExclusions.Contains(item))
-            .ToList();
+                item.Contains(locationText, StringComparison.CurrentCultureIgnoreCase) &&
+                !DirectHintExclusions.Contains(item)
+            )
+        ];
     }
 
     /// <summary>
@@ -128,8 +125,10 @@ public class ShortcutService : IShortcutService
 
         return suggestions
             .Where(loc =>
-                (loc.FullName.ToLower().Contains(input) || loc.ShortName.ToLower().Contains(input))
-                && (includeEnemies || loc.HintGroup != HintGroup.ENEMY))
+                (
+                    loc.FullName.Contains(input, StringComparison.CurrentCultureIgnoreCase) ||
+                    loc.ShortName.Contains(input, StringComparison.CurrentCultureIgnoreCase)
+                ) && (includeEnemies || loc.HintGroup != HintGroup.ENEMY))
             .Select(loc => loc.ShortName)
             .ToList();
     }

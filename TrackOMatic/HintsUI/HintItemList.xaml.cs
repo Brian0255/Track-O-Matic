@@ -114,6 +114,8 @@ public partial class HintItemList : UserControl
 
     public void AddNewImageToPanel(ItemName itemName, bool isChecked, UniformGrid row)
     {
+        return;
+        /*
         var mainWindow = (MainWindow)Application.Current.MainWindow;
         var newItem = new PathOrFoundItem(itemName, this, isChecked);
         var validItem = mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName);
@@ -135,6 +137,7 @@ public partial class HintItemList : UserControl
         }
         newItem.MouseDown += Image_MouseDown;
         row.Children.Add(newItem);
+        */
     }
 
     public void ProcessSelectedItems()
