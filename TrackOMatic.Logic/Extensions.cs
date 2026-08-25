@@ -299,6 +299,7 @@ public static class Extensions
 
     public static RegionName ToRegion(this HintPanelType hintPanelType) => hintPanelType switch
     {
+        HintPanelType.Isles => RegionName.DK_ISLES,
         HintPanelType.Japes => RegionName.JUNGLE_JAPES,
         HintPanelType.Aztec => RegionName.ANGRY_AZTEC,
         HintPanelType.Factory => RegionName.FRANTIC_FACTORY,
@@ -312,7 +313,7 @@ public static class Extensions
 
     public static bool IsPlayableRegion(this RegionName region)
     {
-        var playableRegions = EndGameMappings.LOBBY_ORDER.Concat([RegionName.START]).ToArray();
+        var playableRegions = EndGameMappings.LOBBY_ORDER.Concat([RegionName.DK_ISLES]).ToArray();
         return playableRegions.Contains(region);
     }
 

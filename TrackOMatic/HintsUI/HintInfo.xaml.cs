@@ -2,7 +2,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Diagnostics;
 
 using TrackOMatic.ViewModels.Hints;
 
@@ -39,40 +38,21 @@ public partial class HintInfo : UserControl
 
         _cachedPopup = popup;
 
-        // CRITICAL: Set PlacementTarget BEFORE subscribing to any property changes
+        // PlacementTarget must be set so the popup knows where to position itself
         popup.PlacementTarget = locationBox;
-        popup.Placement = PlacementMode.Bottom;
-        popup.AllowsTransparency = false; // Disable transparency to avoid rendering artifacts
 
-        // Handle popup closing to sync state back
-        popup.Closed += (s, e) => 
-        {
-            if (_viewModel.SuggestionBoxIsOpen)
-            {
-                _viewModel.SuggestionBoxIsOpen = false;
-            }
-        };
-
-        // Subscribe to ViewModel changes AFTER placement is configured
+        // Subscribe to ViewModel changes
         _viewModel.PropertyChanged += ViewModel_PropertyChanged;
 
-        // Set initial state
-        popup.IsOpen = _viewModel.SuggestionBoxIsOpen;
+        // Subscribe to dialog opening events
+        _viewModel.PathItemsSelectionRequested += ViewModel_PathItemsSelectionRequested;
+        _viewModel.FoundItemsSelectionRequested += ViewModel_FoundItemsSelectionRequested;
     }
 
     private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(HintInfoViewModel.SuggestionBoxIsOpen))
-        {
-            if (_cachedPopup is not null && _viewModel is not null)
-            {
-                bool shouldBeOpen = _viewModel.SuggestionBoxIsOpen;
-                if (_cachedPopup.IsOpen != shouldBeOpen)
-                {
-                    _cachedPopup.IsOpen = shouldBeOpen;
-                }
-            }
-        }
+        // The popup IsOpen is now handled by binding, so we don't need to manually sync it here.
+        // This method can be removed if no other properties need special handling.
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -80,6 +60,8 @@ public partial class HintInfo : UserControl
         if (_viewModel is not null)
         {
             _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            _viewModel.PathItemsSelectionRequested -= ViewModel_PathItemsSelectionRequested;
+            _viewModel.FoundItemsSelectionRequested -= ViewModel_FoundItemsSelectionRequested;
         }
         (DataContext as IDisposable)?.Dispose();
         DataContext = null;
@@ -117,26 +99,9 @@ public partial class HintInfo : UserControl
             // Close the suggestion dropdown
             viewModel.SuggestionBoxIsOpen = false;
 
-            // Extract screen coordinates and invoke ViewModel command
-            var mousePos = Mouse.GetPosition(this);
-            var screenMousePosition = PointToScreen(mousePos);
-            var parameter = (locationText, screenMousePosition.X, screenMousePosition.Y);
-            if (viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter) == true)
-            {
-                viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
-            }
-
-            // Clear focus
-            Keyboard.ClearFocus();
-
-            // TODO: Phase 2 - Uncomment when persistence layer is ready
-            // mainWindow.DataSaver.Save();
-
-
-            if (viewModel.FocusAndSelectPotionCountCommand.CanExecute(null) == true)
-            {
-                viewModel.FocusAndSelectPotionCountCommand.Execute(null);
-            }
+            // Trigger the appropriate action based on hint panel type
+            // This will focus the appropriate control (potion count, path items, or found items)
+            viewModel.TriggerLocationConfirmationAction();
 
             e.Handled = true;
         }
@@ -170,24 +135,33 @@ public partial class HintInfo : UserControl
         if (listBox.SelectedItem is string selectedSuggestion &&
             (Keyboard.IsKeyDown(Key.Enter) || Keyboard.IsKeyDown(Key.Return)))
         {
-            // Confirm the selection and advance to potion count
+            // Confirm the selection and trigger appropriate action
+            viewModel.SelectSuggestionCommand.Execute(selectedSuggestion);
+        }
+    }
+
+    /// <summary>
+    /// Confirms the currently selected suggestion and triggers the appropriate action.
+    /// Used by both keyboard (Enter) and mouse (double-click) selection paths.
+    /// </summary>
+    private void ConfirmSuggestedLocation(HintInfoViewModel viewModel, RoutedEventArgs e)
+    {
+        int selectedIndex = viewModel.SelectedSuggestionIndex;
+        if (selectedIndex >= 0 && selectedIndex < viewModel.Suggestions.Count)
+        {
+            string selectedSuggestion = viewModel.Suggestions[selectedIndex];
+
+            // Update location and close popup
             viewModel.LocationText = selectedSuggestion;
             viewModel.SuggestionBoxIsOpen = false;
 
-            var mousePos = Mouse.GetPosition(this);
-            var screenMousePosition = PointToScreen(mousePos);
-            var parameter = (selectedSuggestion, screenMousePosition.X, screenMousePosition.Y);
-            if (viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter))
-            {
-                viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
-            }
+            // Trigger the appropriate action based on hint panel type
+            viewModel.TriggerLocationConfirmationAction();
 
-            Keyboard.ClearFocus();
+            // Reset the index
+            viewModel.SelectedSuggestionIndex = -1;
 
-            if (viewModel.FocusAndSelectPotionCountCommand.CanExecute(null) == true)
-            {
-                viewModel.FocusAndSelectPotionCountCommand.Execute(null);
-            }
+            e.Handled = true;
         }
     }
 
@@ -201,32 +175,7 @@ public partial class HintInfo : UserControl
 
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
-            // Handle Enter key when focus is in the SuggestionBox
-            // Use the ViewModel's tracked focus index to get the highlighted item
-            int selectedIndex = viewModel.SelectedSuggestionIndex;
-            if (selectedIndex >= 0 && selectedIndex < viewModel.Suggestions.Count)
-            {
-                string selectedSuggestion = viewModel.Suggestions[selectedIndex];
-
-                // Use the highlighted item from the dropdown
-                viewModel.LocationText = selectedSuggestion;
-                viewModel.SuggestionBoxIsOpen = false;
-
-                // Extract screen coordinates and invoke ViewModel command
-                var mousePos = Mouse.GetPosition(this);
-                var screenMousePosition = PointToScreen(mousePos);
-                var parameter = (selectedSuggestion, screenMousePosition.X, screenMousePosition.Y);
-                if (viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter))
-                {
-                    viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
-                }
-
-                // Clear focus and reset the index
-                Keyboard.ClearFocus();
-                viewModel.SelectedSuggestionIndex = -1;
-
-                e.Handled = true;
-            }
+            ConfirmSuggestedLocation(viewModel, e);
         }
         else if (e.Key == Key.Down)
         {
@@ -251,6 +200,27 @@ public partial class HintInfo : UserControl
                 viewModel.SelectedSuggestionIndex--;
             }
         }
+    }
+
+    /// <summary>
+    /// Handles PreviewMouseDoubleClick event for the Suggestion ListBox.
+    /// Double-clicking an item (with the left mouse button) has the same behavior as pressing Enter/Return.
+    /// </summary>
+    private void SuggestionBox_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        // Only process left mouse button double-clicks
+        if (e.ChangedButton != MouseButton.Left)
+        {
+            return;
+        }
+
+        var viewModel = DataContext as HintInfoViewModel;
+        if (viewModel is null)
+        {
+            return;
+        }
+
+        ConfirmSuggestedLocation(viewModel, e);
     }
 
     /// <summary>
@@ -286,5 +256,55 @@ public partial class HintInfo : UserControl
             viewModel.RemoveHintCommand.Execute(null);
         }
         e.Handled = true;
+    }
+
+    /// <summary>
+    /// Handles the PathItemsSelectionRequested event from the ViewModel.
+    /// Opens the Path Items selection dialog.
+    /// </summary>
+    private void ViewModel_PathItemsSelectionRequested(object? sender, EventArgs e)
+    {
+        if (_viewModel is HintInfoViewModel hintInfoVM)
+        {
+            var pathViewModel = hintInfoVM.PathHintItemListViewModel;
+
+            if (pathViewModel is not null)
+            {
+                // Get the current mouse position for dialog placement
+                var mousePos = Mouse.GetPosition(this);
+                var screenMousePosition = PointToScreen(mousePos);
+                var parameter = (screenMousePosition.X, screenMousePosition.Y);
+
+                if (pathViewModel.SelectPathItemsCommand.CanExecute(parameter))
+                {
+                    pathViewModel.SelectPathItemsCommand.Execute(parameter);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles the FoundItemsSelectionRequested event from the ViewModel.
+    /// Opens the Found Items selection dialog.
+    /// </summary>
+    private void ViewModel_FoundItemsSelectionRequested(object? sender, EventArgs e)
+    {
+        if (_viewModel is HintInfoViewModel hintInfoVM)
+        {
+            var foundViewModel = hintInfoVM.FoundHintItemListViewModel;
+
+            if (foundViewModel is not null)
+            {
+                // Get the current mouse position for dialog placement
+                var mousePos = Mouse.GetPosition(this);
+                var screenMousePosition = PointToScreen(mousePos);
+                var parameter = (screenMousePosition.X, screenMousePosition.Y);
+
+                if (foundViewModel.SelectFoundItemsCommand.CanExecute(parameter))
+                {
+                    foundViewModel.SelectFoundItemsCommand.Execute(parameter);
+                }
+            }
+        }
     }
 }

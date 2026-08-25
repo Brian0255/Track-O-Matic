@@ -124,11 +124,7 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
 
     private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e)
     {
-        // Don't reload all hints when progress changes - rely on HintCreated/HintRemoved events instead
-        // This prevents unnecessary ItemsControl re-rendering and duplicate HintInfo instances
-        // Only reload if we suspect hints were modified externally (e.g., file loaded, undo/redo, etc.)
-        // For now, we trust HintCreated and HintRemoved events to keep the collection in sync
-
+        LoadHintsForPanel();
     }
 
     private void LoadHintsForPanel()

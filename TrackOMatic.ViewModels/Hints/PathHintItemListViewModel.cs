@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Events;
+using TrackOMatic.Logic.Events.Hints;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
@@ -12,7 +14,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Hints;
 
-public partial class PathHintItemListViewModel : ObservableObject
+public partial class PathHintItemListViewModel : ObservableObject, IDisposable
 {
     private readonly IHintItemSelectionService _hintItemSelectionService;
     private readonly IHintService _hintService;
@@ -64,7 +66,22 @@ public partial class PathHintItemListViewModel : ObservableObject
         _pathItems = [];
 
         // TODO: SavedProgressProvider initializes the hinted/found items.
+        _hintService.HintPathItemsUpdated += OnPathItemsUpdated;
+        _savedProgressProvider.ProgressChanged += OnProgressChanged;
+
         RefreshRow();
+    }
+
+    private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e) => UpdateItemsFromService(_hintId);
+
+    private void OnPathItemsUpdated(object? sender, HintPathItemsChangedEventArgs e)
+    {
+        if (_hintId != e.HintId)
+        {
+            return;
+        }
+
+        UpdateItemsFromService(_hintId);
     }
 
     private void RefreshRow()
@@ -102,35 +119,53 @@ public partial class PathHintItemListViewModel : ObservableObject
             screenMousePosition.Y
         );
 
-        UpdateItemsFromSelection(result);
-    }
-
-    /// <summary>
-    /// A clean place to update the hinted items from a selection.
-    /// </summary>
-    /// <remarks>
-    /// This method will eventually populate the saved hints so the
-    /// <see cref="ISavedProgressProvider"/> can update the display.
-    /// </remarks>
-    /// <param name="cells"></param>
-    private void UpdateItemsFromSelection(IEnumerable<HintGridCell> cells)
-    {
-        var selectedSet = new HashSet<ItemName>(
-            cells.Select(c => c.ItemName)
-        );
-
-        // Compare what we found with what we had. If the item is marked found, transfer it.
-        var newHintedItems = HintDialogMapping.HintDialogMappings
-            .Where(h => selectedSet.Contains(h.ItemName))
-            .Select(h =>
+        var resultItems = result.Select(c => c.ItemName).ToDictionary(i => i, i => true);
+        foreach (var item in PathItems)
+        {
+            if (resultItems.ContainsKey(item.ItemName))
             {
-                var existing = PathItems.FirstOrDefault(i => i.ItemName == h.ItemName);
-                return existing ?? new PathHintItemViewModel(_hintId, h.ItemName, false, _hintService);
-            })
-            .ToList();
+                resultItems[item.ItemName] = item.IsFound;
+            }
+        }
 
-        PathItems = new ObservableCollection<PathHintItemViewModel>(newHintedItems);
+        _hintService.SetPathItems(_hintId, resultItems);
     }
+
+    private void UpdateItemsFromService(HintId hintId)
+    {
+        var pathItems = (_hintService.GetHint(hintId) ?? new SavedHint()).PathItems;
+        var pathList = pathItems.Select(kvp => new PathHintItemViewModel(hintId, kvp.Key, kvp.Value, _hintService)).ToList();
+        PathItems = new ObservableCollection<PathHintItemViewModel>(pathList);
+    }
+
+    #region IDisposable
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _hintService.HintPathItemsUpdated -= OnPathItemsUpdated;
+                _savedProgressProvider.ProgressChanged -= OnProgressChanged;
+            }
+            _disposed = true;
+        }
+    }
+
+    ~PathHintItemListViewModel()
+    {
+        Dispose(false);
+    }
+
+    #endregion
 
     #region Object Overrides
 

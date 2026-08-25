@@ -3,7 +3,10 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Events;
+using TrackOMatic.Logic.Events.Hints;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
@@ -11,7 +14,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Hints;
 
-public partial class FoundHintItemListViewModel : ObservableObject
+public partial class FoundHintItemListViewModel : ObservableObject, IDisposable
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IHintItemSelectionService _hintItemSelectionService;
@@ -27,8 +30,8 @@ public partial class FoundHintItemListViewModel : ObservableObject
     public ObservableCollection<FoundHintItemViewModel> FoundItems
     {
         get => _foundItems;
-        set 
-        { 
+        set
+        {
             if (SetProperty(ref _foundItems, value))
             {
                 RefreshRowSplits();
@@ -57,45 +60,23 @@ public partial class FoundHintItemListViewModel : ObservableObject
         private set => SetProperty(ref _shouldShowSecondRow, value);
     }
 
+    private int _rowsToShow = 0;
+    public int RowsToShow
+    {
+        get => _rowsToShow;
+        private set => SetProperty(ref _rowsToShow, value);
+    }
+
     public bool IsHintInfoNotFoolish => _hintPanelType != HintPanelType.Foolish;
 
-    #endregion
-
-    /// <summary>
-    /// Splits FoundItems into top and bottom rows based on the old split logic.
-    /// If count > 2, shows bottom row; otherwise hides it.
-    /// Items are split at the midpoint: top row gets first half, bottom row gets second half.
-    /// If no items exist, adds ItemName.NONE as a placeholder to allow UI interaction.
-    /// </summary>
-    private void RefreshRowSplits()
+    private bool _shouldShowFocusList = false;
+    public bool ShouldShowFocusList
     {
-        TopRowItems.Clear();
-        BottomRowItems.Clear();
-
-        if (FoundItems.Count == 0)
-        {
-            ShouldShowSecondRow = false;
-            // Add ItemName.NONE as a placeholder to allow the UI to be clickable
-            TopRowItems.Add(new FoundHintItemViewModel(_hintId, ItemName.NONE, false, _hintService));
-            return;
-        }
-
-        // Use old split logic: if count > 2, enable second row
-        ShouldShowSecondRow = FoundItems.Count > 2;
-        int midpoint = (FoundItems.Count + 1) / 2;
-
-        for (int i = 0; i < FoundItems.Count; i++)
-        {
-            if (i < midpoint)
-            {
-                TopRowItems.Add(FoundItems[i]);
-            }
-            else
-            {
-                BottomRowItems.Add(FoundItems[i]);
-            }
-        }
+        get => _shouldShowFocusList;
+        private set => SetProperty(ref _shouldShowFocusList, value);
     }
+
+    #endregion
 
     public FoundHintItemListViewModel(
         HintPanelType hintPanelType,
@@ -116,9 +97,41 @@ public partial class FoundHintItemListViewModel : ObservableObject
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _foundItems = [];
 
-        // TODO: SavedProgressProvider initializes the hinted/found items.
+        UpdateItemsFromService(hintId);
+
+        _hintService.HintFoundItemsUpdated += OnFoundItemsUpdated;
+        _savedProgressProvider.ProgressChanged += OnProgressChanged;
+
         RefreshRowSplits();
+
+        ShouldShowFocusList = _hintPanelType switch
+        {
+            HintPanelType.Foolish => false,
+            HintPanelType.PotionCounts => false,
+            _ => true
+        };
     }
+
+    private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e) => UpdateItemsFromService(_hintId);
+
+    private void OnFoundItemsUpdated(object? sender, HintFoundItemsChangedEventArgs e)
+    {
+        if (_hintId != e.HintId || _hintPanelType != e.HintPanelType)
+        {
+            return;
+        }
+
+        UpdateItemsFromService(_hintId);
+    }
+
+    private void UpdateItemsFromService(HintId hintId)
+    {
+        var foundItems = (_hintService.GetHint(hintId) ?? new SavedHint()).FoundItems;
+        var foundList = foundItems.Select(kvp => new FoundHintItemViewModel(hintId, kvp.Key, kvp.Value, _hintService)).ToList();
+        FoundItems = new ObservableCollection<FoundHintItemViewModel>(foundList);
+    }
+
+    #region Commands
 
     [RelayCommand]
     private async Task SelectFoundItems((double X, double Y) screenMousePosition)
@@ -133,35 +146,112 @@ public partial class FoundHintItemListViewModel : ObservableObject
             screenMousePosition.Y
         );
 
-        UpdateItemsFromSelection(result);
+        var resultItems = result.Select(c => c.ItemName).ToDictionary(itemName => itemName, itemName => false);
+        var targetRegion = _hintPanelType.ToRegion();
+
+        if (targetRegion.IsPlayableRegion())
+        {
+            // We should add the item to the item tracking service as hinted via direct hint.
+            foreach (var itemName in resultItems.Keys)
+            {
+                var itemState = _itemTrackingService.GetItemState(itemName) ?? SavedItem.CreateEmpty(itemName);
+                if (itemState.Region == RegionName.UNKNOWN)
+                {
+                    _itemTrackingService.SetItemState(itemName, itemState with
+                    {
+                        Region = targetRegion,
+                        Hinted = true
+                    });
+                }
+            }
+        }
+
+        // Update the list with the old item checkmarks if they exist.
+        foreach (var item in FoundItems)
+        {
+            if (resultItems.ContainsKey(item.ItemName))
+            {
+                resultItems[item.ItemName] = item.IsFound;
+            }
+        }
+
+        _hintService.SetFoundItems(_hintId, resultItems, _hintPanelType);
     }
+
+    #endregion
 
     /// <summary>
-    /// A clean place to update the hinted items from a selection.
+    /// Splits FoundItems into top and bottom rows based on the old split logic.
+    /// If count > 2, shows bottom row; otherwise hides it.
+    /// Items are split at the midpoint: top row gets first half, bottom row gets second half.
+    /// If no items exist, adds ItemName.NONE as a placeholder to allow UI interaction.
     /// </summary>
-    /// <remarks>
-    /// This method will eventually populate the saved hints so the
-    /// <see cref="ISavedProgressProvider"/> can update the display.
-    /// </remarks>
-    /// <param name="cells"></param>
-    private void UpdateItemsFromSelection(IEnumerable<HintGridCell> cells)
+    private void RefreshRowSplits()
     {
-        var selectedSet = new HashSet<ItemName>(
-            cells.Select(c => c.ItemName)
-        );
+        TopRowItems.Clear();
+        BottomRowItems.Clear();
 
-        // Compare what we found with what we had. If the item is marked found, transfer it.
-        var newHintedItems = HintDialogMapping.HintDialogMappings
-            .Where(h => selectedSet.Contains(h.ItemName))
-            .Select(h =>
+        if (_hintPanelType != HintPanelType.Paths)
+        {
+            ShouldShowSecondRow = false;
+            RowsToShow = 1;
+        }
+        else
+        {
+            ShouldShowSecondRow = FoundItems.Count > 2;
+            RowsToShow = 2;
+        }
+        if (FoundItems.Count == 0)
+        {
+            // Add ItemName.NONE as a placeholder to allow the UI to be clickable
+            TopRowItems.Add(new FoundHintItemViewModel(_hintId, ItemName.NONE, false, _hintService));
+            return;
+        }
+
+        int midpoint = (FoundItems.Count + 1) / 2;
+
+        for (int i = 0; i < FoundItems.Count; i++)
+        {
+            if (i < midpoint || FoundItems.Count <= 2)
             {
-                var existing = FoundItems.FirstOrDefault(i => i.ItemName == h.ItemName);
-                return existing ?? new FoundHintItemViewModel(_hintId, h.ItemName, false, _hintService);
-            })
-            .ToList();
-
-        FoundItems = new ObservableCollection<FoundHintItemViewModel>(newHintedItems);
+                TopRowItems.Add(FoundItems[i]);
+            }
+            else
+            {
+                BottomRowItems.Add(FoundItems[i]);
+            }
+        }
     }
+
+    #region IDisposable
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _hintService.HintFoundItemsUpdated -= OnFoundItemsUpdated;
+                _savedProgressProvider.ProgressChanged -= OnProgressChanged;
+            }
+            _disposed = true;
+        }
+    }
+
+    ~FoundHintItemListViewModel()
+    {
+        Dispose(false);
+    }
+
+    #endregion
 
     #region Object Overrides
 

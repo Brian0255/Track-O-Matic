@@ -22,7 +22,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <UniformGrid
-        Rows="2"
+        Rows="{Binding RowsToShow}"
         Background="{StaticResource RegionBG}"
         HorizontalAlignment="Right"
     >

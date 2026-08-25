@@ -39,7 +39,6 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
 
     private readonly HintId _hintId;
     public HintId HintId => _hintId;
-    private readonly HintPanelType _hintPanelType;
     private readonly IHintService _hintService;
     private readonly IShortcutService _shortcutService;
     private readonly IHintItemSelectionService _hintItemSelectionService;
@@ -57,7 +56,23 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     /// </summary>
     private bool _foundItemsDialogOpened = false;
 
-    public HintPanelType HintPanelType { get; private set; }
+    private HintPanelType _hintPanelType = (HintPanelType)(-1); // Initialize to invalid value to ensure first assignment triggers notification
+
+    public HintPanelType HintPanelType
+    {
+        get => _hintPanelType;
+        private set
+        {
+            if (SetProperty(ref _hintPanelType, value))
+            {
+                // Update dependent properties when HintPanelType changes
+                IsHintInfoPath = value == HintPanelType.Paths;
+                IsHintInfoFoolish = value == HintPanelType.Foolish;
+                IsHintInfoPotionCount = value == HintPanelType.PotionCounts;
+                OnPropertyChanged(nameof(IsHintInfoNotFoolish));
+            }
+        }
+    }
 
     public RegionName RegionName { get; private set; }
 
@@ -165,13 +180,28 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     private PathHintItemListViewModel? _pathHintItemListViewModel;
 
 
-    public bool IsHintInfoPath => _hintPanelType == HintPanelType.Paths;
+    private bool _isHintInfoPath = false;
+    public bool IsHintInfoPath
+    {
+        get => _isHintInfoPath;
+        private set => SetProperty(ref _isHintInfoPath, value);
+    }
 
-    public bool IsHintInfoFoolish => _hintPanelType == HintPanelType.Foolish;
+    private bool _isHintInfoFoolish = false;
+    public bool IsHintInfoFoolish
+    {
+        get => _isHintInfoFoolish;
+        private set => SetProperty(ref _isHintInfoFoolish, value);
+    }
 
     public bool IsHintInfoNotFoolish => !IsHintInfoPath;
 
-    public bool IsHintInfoPotionCount => _hintPanelType == HintPanelType.PotionCounts;
+    private bool _isHintInfoPotionCount = false;
+    public bool IsHintInfoPotionCount
+    {
+        get => _isHintInfoPotionCount;
+        private set => SetProperty(ref _isHintInfoPotionCount, value);
+    }
 
     /// <summary>
     /// Configuration for hint suggestions (if applicable to this hint type).
@@ -244,11 +274,6 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
 
         // Build initial suggestions
         UpdateSuggestions();
-
-        OnPropertyChanged(nameof(IsHintInfoPath));
-        OnPropertyChanged(nameof(IsHintInfoFoolish));
-        OnPropertyChanged(nameof(IsHintInfoNotFoolish));
-        OnPropertyChanged(nameof(IsHintInfoPotionCount));
     }
 
     private void OnPotionCountUpdated(object? sender, HintUpdatedEventArgs e)
@@ -375,9 +400,11 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         if (!string.IsNullOrEmpty(selectedSuggestion))
         {
             LocationText = selectedSuggestion;
-        }
+            SuggestionBoxIsOpen = false;
 
-        SuggestionBoxIsOpen = false;
+            // Trigger the appropriate action based on hint panel type
+            TriggerLocationConfirmationAction();
+        }
     }
 
     /// <summary>
@@ -443,6 +470,71 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         return LocationText.Length > 0 && PotionCountText.Length > 0 && _hintPanelType == HintPanelType.PotionCounts;
     }
 
+    /// <summary>
+    /// Trigger the appropriate action when location text is confirmed.
+    /// Implements "first come, first serve" behavior:
+    /// 1. PotionCounts panel: Focus potion count text box
+    /// 2. Paths panel: Open path items selection dialog
+    /// 3. Kongs panel: Try Kong hint parsing, then open found items dialog if parsing succeeds
+    /// 4. Everything else (except Foolish): Open found items selection dialog
+    /// </summary>
+    public void TriggerLocationConfirmationAction()
+    {
+        System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] HintPanelType={_hintPanelType}, IsHintInfoPotionCount={IsHintInfoPotionCount}, IsHintInfoPath={IsHintInfoPath}, IsHintInfoFoolish={IsHintInfoFoolish}");
+
+        // Priority 1: Potion Counts panel
+        if (IsHintInfoPotionCount)
+        {
+            if (FocusAndSelectPotionCountCommand.CanExecute(null))
+            {
+                FocusAndSelectPotionCountCommand.Execute(null);
+            }
+            return;
+        }
+
+        // Priority 2: Paths panel
+        if (IsHintInfoPath)
+        {
+            if (OpenPathItemsSelectionCommand.CanExecute(null))
+            {
+                OpenPathItemsSelectionCommand.Execute(null);
+            }
+            return;
+        }
+
+        // Priority 3: Kongs panel (special Kong hint parsing logic)
+        if (_hintPanelType == HintPanelType.Kongs)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] Priority 3: Kongs panel");
+            if (TryProcessKongHint(LocationText))
+            {
+                // Kong hint was processed successfully
+                _pathItemsDialogOpened = false;
+                _foundItemsDialogOpened = true; // Kong items go directly to FoundItems
+                return;
+            }
+        }
+
+        // Priority 4: Everything else except Foolish (they don't have item selections)
+        if (!IsHintInfoFoolish)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] Priority 4: CanExecute={OpenFoundItemsSelectionCommand.CanExecute(null)}, IsHintInfoFoolish={IsHintInfoFoolish}, FoundItemsDialogOpened={_foundItemsDialogOpened}");
+            if (OpenFoundItemsSelectionCommand.CanExecute(null))
+            {
+                System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] Executing OpenFoundItemsSelectionCommand");
+                OpenFoundItemsSelectionCommand.Execute(null);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] OpenFoundItemsSelectionCommand cannot execute");
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] Priority 4 skipped: IsHintInfoFoolish={IsHintInfoFoolish}");
+        }
+    }
+
     #endregion
 
     /// <summary>
@@ -450,15 +542,11 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     /// </summary>
     private void UpdateSuggestions()
     {
-
-
         var matches = _shortcutService.FindMatches(
             LocationText,
             _hintPanelType,
             HintSuggestionConfig
         ).ToList();
-
-
 
         // Update collection in-place to avoid redundant popup re-rendering
         if (Suggestions.Count != matches.Count || !Suggestions.SequenceEqual(matches))
@@ -507,7 +595,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
             }
         }
 
-        // Parse the Kong item from first word
+        // The kong to find is in the first word. The region is the third. The second is who or what guards the kong.
         var foundKongString = kongShorthands[hintWordList[0]];
         if (!Enum.TryParse(foundKongString, out ItemName kongThatIsFound))
         {
