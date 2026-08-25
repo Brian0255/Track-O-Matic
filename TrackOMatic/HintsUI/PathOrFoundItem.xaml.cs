@@ -41,7 +41,6 @@ public partial class PathOrFoundItem : ContentControl
     private void UpdateCheckmark()
     {
         Checkmark.Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden;
-        HintItemList.UpdateCheckmark(ItemName, IsChecked);
     }
 
     public void Toggle()

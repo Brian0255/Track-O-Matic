@@ -33,8 +33,10 @@ public partial class HelmDoorPanel : UserControl
         var barrierService = ServiceLocator.GetService<IBarrierService>();
         var savedProgressProvider = ServiceLocator.GetService<ISavedProgressProvider>();
         var itemSelectorService = ServiceLocator.GetService<IItemSelectorService>();
+        var userSettingsService = ServiceLocator.GetService<IUserSettingsService>();
 
         DataContext = new HelmDoorPanelViewModel(
+            userSettingsService,
             barrierService,
             savedProgressProvider,
             itemSelectorService

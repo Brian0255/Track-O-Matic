@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -14,18 +15,28 @@ namespace TrackOMatic.ViewModels.Hints;
 public partial class PathHintItemListViewModel : ObservableObject
 {
     private readonly IHintItemSelectionService _hintItemSelectionService;
+    private readonly IHintService _hintService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly HintPanelType _hintPanelType;
+    private readonly HintId _hintId;
     private readonly string _dialogTitle;
 
     #region Proxy Properties
 
-    private ObservableCollection<HintItemViewModel> _pathItems;
-    public ObservableCollection<HintItemViewModel> PathItems
+    private ObservableCollection<PathHintItemViewModel> _pathItems;
+    public ObservableCollection<PathHintItemViewModel> PathItems
     {
         get => _pathItems;
-        set => SetProperty(ref _pathItems, value);
+        set
+        {
+            if (SetProperty(ref _pathItems, value))
+            {
+                RefreshRow();
+            }
+        }
     }
+
+    public bool IsHintInfoPath => _hintPanelType == HintPanelType.Paths;
 
     #endregion
 
@@ -37,18 +48,32 @@ public partial class PathHintItemListViewModel : ObservableObject
 
     public PathHintItemListViewModel(
         HintPanelType hintPanelType,
+        HintId hintId,
         string dialogTitle,
+        IHintService hintService,
         IHintItemSelectionService hintItemSelectionService,
         ISavedProgressProvider savedProgressProvider
     )
     {
+        _hintId = hintId;
         _hintPanelType = hintPanelType;
         _dialogTitle = dialogTitle ?? throw new ArgumentNullException(nameof(dialogTitle));
+        _hintService = hintService ?? throw new ArgumentNullException(nameof(hintService));
         _hintItemSelectionService = hintItemSelectionService ?? throw new ArgumentNullException(nameof(hintItemSelectionService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _pathItems = [];
 
         // TODO: SavedProgressProvider initializes the hinted/found items.
+        RefreshRow();
+    }
+
+    private void RefreshRow()
+    {
+        if (PathItems.Count == 0)
+        {
+            // Add ItemName.NONE as a placeholder to allow the UI to be clickable.
+            PathItems.Add(new PathHintItemViewModel(_hintId, ItemName.NONE, false, _hintService));
+        }
     }
 
     /// <summary>
@@ -100,10 +125,16 @@ public partial class PathHintItemListViewModel : ObservableObject
             .Select(h =>
             {
                 var existing = PathItems.FirstOrDefault(i => i.ItemName == h.ItemName);
-                return existing ?? new HintItemViewModel(h.ItemName, false);
+                return existing ?? new PathHintItemViewModel(_hintId, h.ItemName, false, _hintService);
             })
             .ToList();
 
-        PathItems = new ObservableCollection<HintItemViewModel>(newHintedItems);
+        PathItems = new ObservableCollection<PathHintItemViewModel>(newHintedItems);
     }
+
+    #region Object Overrides
+
+    public override string ToString() => "Items on path: " + string.Join(", ", PathItems.Select(i => i.ItemName));
+
+    #endregion
 }

@@ -13,6 +13,7 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:HintInfoViewModel}"
     d:DesignHeight="100"
     d:DesignWidth="200"
+    Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
@@ -40,7 +41,7 @@
         </Style>
     </UserControl.Resources>
     <Border Background="{StaticResource RegionBG}" CornerRadius="0" Padding="4,3,3,3" BorderBrush="Black" BorderThickness=".5">
-        <Grid DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=local:HintInfo}}">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition>
@@ -73,14 +74,13 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <TextBox ContextMenu="{x:Null}" Margin="1,0,0,0" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown" PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}" Text="{Binding LocationText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" behaviors:FocusLocationBehavior.FocusRequest="{Binding ShouldFocusLocation}"/>
-            <TextBox ContextMenu="{x:Null}" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown" Margin="0,0,3,0" Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PotionCountVisibility, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" Text="{Binding PotionCountText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="PotionCount_PreviewKeyDown" behaviors:FocusOnCommandBehavior.FocusRequest="{Binding IsFocusRequested}"/>
+            <TextBox ContextMenu="{x:Null}" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown" Margin="0,0,3,0" Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding IsHintInfoPotionCount, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" Text="{Binding PotionCountText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="PotionCount_PreviewKeyDown" behaviors:FocusOnCommandBehavior.FocusRequest="{Binding IsFocusRequested}"/>
 
-            <local:HintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="RightItems" BottomRowHeight="*" CustomHorizontalAlignment="Right" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.FoundItemVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
-            <local:HintItemList Margin="1,0,0,0" x:Name="ItemsOnPath" Grid.Row="1" BottomRowHeight="0" CustomHorizontalAlignment="Left" Visibility="{Binding ElementName=HintInfoWindow, Path=HintTypeSettings.PathItemsVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"/>
-            <Popup Grid.Row="1" Height="120" Width="250" Placement="Bottom" PlacementTarget="{Binding ElementName=Location}" IsOpen="{Binding SuggestionBoxIsOpen, Mode=TwoWay}">
-                <ListBox Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" ItemsSource="{Binding Suggestions}" SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}" SelectedIndex="{Binding SelectedSuggestionIndex, Mode=TwoWay}" SelectionChanged="SuggestionBox_SelectionChanged" PreviewKeyDown="SuggestionBox_PreviewKeyDown" PreviewMouseDown="SuggestionBox_PreviewMouseDown" behaviors:SuggestionListFocusBehavior.FocusFirstItem="{Binding ShouldFocusSuggestionsFirst}" behaviors:TrackFocusWithinBehavior.IsFocusedWithin="{Binding IsSuggestionBoxFocused}"/>
+            <local:FoundHintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" DataContext="{Binding FoundHintItemListViewModel}" Visibility="{Binding IsHintInfoNotFoolish, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"/>
+            <local:PathHintItemList Margin="1,0,0,0" Grid.Row="1" DataContext="{Binding PathHintItemListViewModel}" Visibility="{Binding IsHintInfoPath, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"/>
+            <Popup x:Name="SuggestionPopup" Height="120" Width="250" Placement="Bottom" AllowsTransparency="True">
+                <ListBox Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" ItemsSource="{Binding Suggestions}" SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}" SelectedIndex="{Binding SelectedSuggestionIndex, Mode=TwoWay}" SelectionChanged="SuggestionBox_SelectionChanged" PreviewKeyDown="SuggestionBox_PreviewKeyDown" behaviors:SuggestionListFocusBehavior.FocusFirstItem="{Binding ShouldFocusSuggestionsFirst}" behaviors:TrackFocusWithinBehavior.IsFocusedWithin="{Binding IsSuggestionBoxFocused}"/>
             </Popup>
         </Grid>
-
     </Border>
 </UserControl>

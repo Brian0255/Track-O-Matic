@@ -16,7 +16,6 @@ using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels;
-using TrackOMatic.ViewModels.Hints;
 
 using Timer = System.Timers.Timer;
 
@@ -25,7 +24,7 @@ namespace TrackOMatic
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
         private BroadcastView? BroadcastView { get; set; }
         public Dictionary<RegionName, Region> Regions { get; private set; } = null!;
@@ -51,13 +50,6 @@ namespace TrackOMatic
         private IDataPersistenceService DataPersistenceService { get; init; }
         private ISpoilerService SpoilerService { get; init; }
         private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         // Timer to save the data every minute.
         private Timer _saveTimer { get; init; }
@@ -88,30 +80,7 @@ namespace TrackOMatic
             _saveTimer.Start();
 
             // Subscribe to settings changes to notify XAML bindings
-            UserSettings.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(UserSettings.CompactMode))
-                {
-                    AdjustBasedOnCompactMode();
-                }
-                else if (e.PropertyName == nameof(UserSettings.HintDisplay))
-                {
-                    UpdateUiViaHintDisplay();
-                }
-                else if (e.PropertyName == nameof(UserSettings.BroadcastViewActive))
-                {
-                    if (UserSettings.BroadcastViewActive)
-                    {
-                        ShowBroadcastWindow();
-                    }
-                    else
-                    {
-                        // Defer close to dispatcher to avoid InvalidOperationException
-                        // when called during BroadcastView's Closing event
-                        Dispatcher.BeginInvoke(() => BroadcastView?.Close());
-                    }
-                }
-            };
+            UserSettings.PropertyChanged += OnSettingChanged;
 
             if (UserSettings.Autotracking)
             {
@@ -125,7 +94,31 @@ namespace TrackOMatic
             SpoilerParser = new(this, UserSettings, SpoilerService);
             DataSaver = new(this, DataPersistenceService, ParsedSpoilerDataService, SpoilerService);
             Reset();
-            AdjustBasedOnCompactMode();
+        }
+
+        private void OnSettingChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(UserSettings.HintDisplay))
+            {
+                UpdateUiViaHintDisplay();
+            }
+            else if (e.PropertyName == nameof(UserSettings.CompactMode))
+            {
+                AdjustBasedOnCompactMode();
+            }
+            else if (e.PropertyName == nameof(UserSettings.BroadcastViewActive))
+            {
+                if (UserSettings.BroadcastViewActive)
+                {
+                    ShowBroadcastWindow();
+                }
+                else
+                {
+                    // Defer close to dispatcher to avoid InvalidOperationException
+                    // when called during BroadcastView's Closing event
+                    Dispatcher.BeginInvoke(() => BroadcastView?.Close());
+                }
+            }
         }
 
         /// <summary>
@@ -134,28 +127,6 @@ namespace TrackOMatic
         /// <remarks>This method will be refactored eventually to not have MainWindow doing everything.</remarks>
         private void UpdateUiViaHintDisplay()
         {
-            var mode = UserSettings.HintDisplay;
-            switch (mode)
-            {
-                case HintDisplayMode.Off:
-                    MultipathGrid.Visibility = Visibility.Hidden;
-                    DirectItemHintGrid.Visibility = Visibility.Hidden;
-                    HelmPanel.Visibility = Visibility.Hidden;
-                    PotionCountsPanel.Visibility = Visibility.Hidden;
-                    break;
-                case HintDisplayMode.MultipathHints:
-                    MultipathGrid.Visibility = Visibility.Visible;
-                    DirectItemHintGrid.Visibility = Visibility.Hidden;
-                    HelmPanel.Visibility = Visibility.Hidden;
-                    PotionCountsPanel.Visibility = Visibility.Visible;
-                    break;
-                case HintDisplayMode.DirectItemHints:
-                    MultipathGrid.Visibility = Visibility.Hidden;
-                    DirectItemHintGrid.Visibility = Visibility.Visible;
-                    HelmPanel.Visibility = Visibility.Visible;
-                    PotionCountsPanel.Visibility = Visibility.Hidden;
-                    break;
-            }
             ResetWidthHeight();
             UpdateHintDisplayToggles();
         }
@@ -180,23 +151,7 @@ namespace TrackOMatic
             Regions = [];
             Items = ItemGrid;
 
-            HintPanels = [
-                IslesPanel,
-                FactoryPanel,
-                CavesPanel,
-                JapesPanel,
-                GalleonPanel,
-                CastlePanel,
-                AztecPanel,
-                ForestPanel,
-                HelmPanel,
-                PathsPanel,
-                KongsPanel,
-                WotHPanel,
-                FoolishPanel,
-                PotionCountsPanel,
-                UnhintedPanel
-            ];
+            HintPanels = [];
         }
 
         private void OnTimerSave(object? sender, ElapsedEventArgs e)
@@ -269,48 +224,15 @@ namespace TrackOMatic
             }
             Width = newWidth;
             Height = 820;
-            if (UserSettings.HintDisplay == HintDisplayMode.MultipathHints)
-            {
-                MultipathGrid.Visibility = Visibility.Visible;
-                DirectItemHintGrid.Visibility = Visibility.Hidden;
-            }
-            if (UserSettings.HintDisplay == HintDisplayMode.DirectItemHints)
-            {
-                DirectItemHintGrid.Visibility = Visibility.Visible;
-                MultipathGrid.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void CompactModeMultipathChanges(bool on)
-        {
-            var multipath2Width = on ? 0 : 1;
-            MultipathColumn2.Width = new GridLength(multipath2Width, GridUnitType.Star);
-            var multipathColumn1Row0Height = on ? 1.6 : 0;
-            MultipathColumn1Row0.Height = new GridLength(multipathColumn1Row0Height, GridUnitType.Star);
-            var potionsRowHeight = on ? 2.54 : 0;
-            OptionalPotionsRow.Height = new GridLength(potionsRowHeight, GridUnitType.Star);
-        }
-
-        private void CompactModeDirectItemChanges(bool on)
-        {
-            //god i hate this
-            var lastRowHeights = on ? 1 : 0;
-            DirectHintsCol0LastRow.Height = new GridLength(lastRowHeights, GridUnitType.Star);
-            DirectHintsCol1LastRow.Height = new GridLength(lastRowHeights, GridUnitType.Star);
-            var thirdColumnWidth = on ? 0 : 1;
-            DirectHintsThirdMain.Width = new GridLength(thirdColumnWidth, GridUnitType.Star);
         }
 
         private void AdjustBasedOnCompactMode()
         {
             var on = UserSettings.CompactMode;
             var totalColumns = on ? 2 : 3;
-            MultipathColumns.Width = new GridLength(totalColumns, GridUnitType.Star);
 
             var newWidth = on ? (Width * (1392.0 / 1800.0)) : (Width * (1800.0 / 1392.0));
             Width = newWidth;
-            CompactModeMultipathChanges(on);
-            CompactModeDirectItemChanges(on);
         }
 
         private void ResetSize(object sender, RoutedEventArgs e)
@@ -321,14 +243,6 @@ namespace TrackOMatic
         private void rootGrid_LostFocus(object sender, RoutedEventArgs e)
         {
             Keyboard.ClearFocus();
-        }
-
-        public void InitRegionsFromEmptySpoiler()
-        {
-            foreach (var entry in Regions)
-            {
-                entry.Value.SetAsEmptySpoiler();
-            }
         }
 
         public async Task ParseSpoiler(string fileName)
@@ -468,38 +382,6 @@ namespace TrackOMatic
 
             Width = AppState.DesiredWidth;
             Height = AppState.DesiredHeight;
-
-            // Initialize test controls with ViewModels
-            InitializeTestControlViewModels();
-        }
-
-        private void InitializeTestControlViewModels()
-        {
-            try
-            {
-                // Create FoundHintItemListViewModel
-                var foundViewModel = new FoundHintItemListViewModel(
-                    HintPanelType.Paths,
-                    "Found Items",
-                    ServiceLocator.GetService<IItemTrackingService>(),
-                    ServiceLocator.GetService<IHintItemSelectionService>(),
-                    ServiceLocator.GetService<ISavedProgressProvider>()
-                );
-                TestFoundItemList.DataContext = foundViewModel;
-
-                // Create PathHintItemListViewModel
-                var pathViewModel = new PathHintItemListViewModel(
-                    HintPanelType.Paths,
-                    "Path Items",
-                    ServiceLocator.GetService<IHintItemSelectionService>(),
-                    ServiceLocator.GetService<ISavedProgressProvider>()
-                );
-                TestPathItemList.DataContext = pathViewModel;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to initialize test ViewModels: {ex.Message}");
-            }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -528,6 +410,11 @@ namespace TrackOMatic
         {
             BroadcastView = null;
             UserSettings.BroadcastViewActive = false;
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            UserSettings.PropertyChanged -= OnSettingChanged;
         }
     }
 }

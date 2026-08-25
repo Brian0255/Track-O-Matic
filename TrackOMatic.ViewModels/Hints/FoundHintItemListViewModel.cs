@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -14,14 +15,16 @@ public partial class FoundHintItemListViewModel : ObservableObject
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IHintItemSelectionService _hintItemSelectionService;
+    private readonly IHintService _hintService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly HintPanelType _hintPanelType;
+    private readonly HintId _hintId;
     private readonly string _dialogTitle;
 
     #region Proxy Properties
 
-    private ObservableCollection<HintItemViewModel> _foundItems;
-    public ObservableCollection<HintItemViewModel> FoundItems
+    private ObservableCollection<FoundHintItemViewModel> _foundItems;
+    public ObservableCollection<FoundHintItemViewModel> FoundItems
     {
         get => _foundItems;
         set 
@@ -33,15 +36,15 @@ public partial class FoundHintItemListViewModel : ObservableObject
         }
     }
 
-    private ObservableCollection<HintItemViewModel> _topRowItems = [];
-    public ObservableCollection<HintItemViewModel> TopRowItems
+    private ObservableCollection<FoundHintItemViewModel> _topRowItems = [];
+    public ObservableCollection<FoundHintItemViewModel> TopRowItems
     {
         get => _topRowItems;
         private set => SetProperty(ref _topRowItems, value);
     }
 
-    private ObservableCollection<HintItemViewModel> _bottomRowItems = [];
-    public ObservableCollection<HintItemViewModel> BottomRowItems
+    private ObservableCollection<FoundHintItemViewModel> _bottomRowItems = [];
+    public ObservableCollection<FoundHintItemViewModel> BottomRowItems
     {
         get => _bottomRowItems;
         private set => SetProperty(ref _bottomRowItems, value);
@@ -53,6 +56,8 @@ public partial class FoundHintItemListViewModel : ObservableObject
         get => _shouldShowSecondRow;
         private set => SetProperty(ref _shouldShowSecondRow, value);
     }
+
+    public bool IsHintInfoNotFoolish => _hintPanelType != HintPanelType.Foolish;
 
     #endregion
 
@@ -71,7 +76,7 @@ public partial class FoundHintItemListViewModel : ObservableObject
         {
             ShouldShowSecondRow = false;
             // Add ItemName.NONE as a placeholder to allow the UI to be clickable
-            TopRowItems.Add(new HintItemViewModel(ItemName.NONE, false));
+            TopRowItems.Add(new FoundHintItemViewModel(_hintId, ItemName.NONE, false, _hintService));
             return;
         }
 
@@ -94,16 +99,20 @@ public partial class FoundHintItemListViewModel : ObservableObject
 
     public FoundHintItemListViewModel(
         HintPanelType hintPanelType,
+        HintId hintId,
         string dialogTitle,
         IItemTrackingService itemTrackingService,
         IHintItemSelectionService hintItemSelectionService,
+        IHintService hintService,
         ISavedProgressProvider savedProgressProvider
     )
     {
+        _hintId = hintId;
         _hintPanelType = hintPanelType;
         _dialogTitle = dialogTitle ?? throw new ArgumentNullException(nameof(dialogTitle));
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _hintItemSelectionService = hintItemSelectionService ?? throw new ArgumentNullException(nameof(hintItemSelectionService));
+        _hintService = hintService ?? throw new ArgumentNullException(nameof(hintService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _foundItems = [];
 
@@ -147,10 +156,16 @@ public partial class FoundHintItemListViewModel : ObservableObject
             .Select(h =>
             {
                 var existing = FoundItems.FirstOrDefault(i => i.ItemName == h.ItemName);
-                return existing ?? new HintItemViewModel(h.ItemName, false);
+                return existing ?? new FoundHintItemViewModel(_hintId, h.ItemName, false, _hintService);
             })
             .ToList();
 
-        FoundItems = new ObservableCollection<HintItemViewModel>(newHintedItems);
+        FoundItems = new ObservableCollection<FoundHintItemViewModel>(newHintedItems);
     }
+
+    #region Object Overrides
+
+    public override string ToString() => "Items found: " + string.Join(", ", FoundItems.Select(i => i.ItemName));
+
+    #endregion
 }

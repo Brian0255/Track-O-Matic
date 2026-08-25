@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Events.Hints;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
@@ -18,10 +19,28 @@ namespace TrackOMatic.ViewModels.Hints;
 /// Parent ViewModel for HintInfo control.
 /// Manages hint text fields, suggestion building, Kong hint parsing, and child list ViewModels.
 /// </summary>
-public partial class HintInfoViewModel : ObservableObject
+public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoViewModel>, IDisposable
 {
+    /// <summary>
+    /// Json key for Kong Hint shorthand lookups.
+    /// </summary>
+    private const string KONG_HINT_SHORTHAND_KEY = "Kong Hint Shorthand";
+
+    /// <summary>
+    /// Mapping of HintSuggestion types to their configurations.
+    /// </summary>
+    private static readonly Dictionary<HintSuggestion, HintSuggestionConfig> SuggestionToConfigMap = new()
+    {
+        {HintSuggestion.REGION, new HintSuggestionConfig(["Hint Regions"], HintRegion.All)},
+        {HintSuggestion.CHECK, new HintSuggestionConfig(["Item Locations"], HintLocation.All)},
+        {HintSuggestion.MOVE, new HintSuggestionConfig(["Moves"], HintMove.All)},
+        {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions", "Moves"], HintRegion.All.Concat(HintMove.All).ToList())}
+    };
+
+    private readonly HintId _hintId;
+    public HintId HintId => _hintId;
     private readonly HintPanelType _hintPanelType;
-    private readonly RegionName _regionName;
+    private readonly IHintService _hintService;
     private readonly IShortcutService _shortcutService;
     private readonly IHintItemSelectionService _hintItemSelectionService;
     private readonly ISavedProgressProvider _savedProgressProvider;
@@ -38,6 +57,22 @@ public partial class HintInfoViewModel : ObservableObject
     /// </summary>
     private bool _foundItemsDialogOpened = false;
 
+    public HintPanelType HintPanelType { get; private set; }
+
+    public RegionName RegionName { get; private set; }
+
+    /// <summary>
+    /// Event invoked when path items selection dialog should open.
+    /// Code-behind subscribes to this for actual dialog opening.
+    /// </summary>
+    public event EventHandler? PathItemsSelectionRequested;
+
+    /// <summary>
+    /// Event invoked when found items selection dialog should open.
+    /// Code-behind subscribes to this for actual dialog opening.
+    /// </summary>
+    public event EventHandler? FoundItemsSelectionRequested;
+
     private string _locationText = "";
     public string LocationText
     {
@@ -46,7 +81,7 @@ public partial class HintInfoViewModel : ObservableObject
         {
             if (SetProperty(ref _locationText, value))
             {
-                OnLocationTextChanged(value);
+                _hintService.UpdateHintLocation(_hintId, value);
             }
         }
     }
@@ -59,7 +94,7 @@ public partial class HintInfoViewModel : ObservableObject
         {
             if (SetProperty(ref _potionCountText, value))
             {
-                OnPotionCountTextChanged(value);
+                _hintService.UpdateHintPotionCount(_hintId, value);
             }
         }
     }
@@ -71,12 +106,7 @@ public partial class HintInfoViewModel : ObservableObject
         set => SetProperty(ref _hintTypeSettings, value);
     }
 
-    private SavedHint _savedHint = null!;
-    public SavedHint SavedHint
-    {
-        get => _savedHint;
-        set => SetProperty(ref _savedHint, value);
-    }
+
 
     private ObservableCollection<string> _suggestions = new();
     public ObservableCollection<string> Suggestions
@@ -92,9 +122,56 @@ public partial class HintInfoViewModel : ObservableObject
         set => SetProperty(ref _suggestionBoxIsOpen, value);
     }
 
+
+    /// <summary>
+    /// Lazy-load FoundHintItemListViewModel.
+    /// </summary>
+    public FoundHintItemListViewModel FoundHintItemListViewModel
+    {
+        get
+        {
+            _foundHintItemListViewModel ??= new FoundHintItemListViewModel(
+                _hintPanelType,
+                _hintId,
+                $"Select Found Items - {_hintPanelType}",
+                _itemTrackingService,
+                _hintItemSelectionService,
+                _hintService,
+                _savedProgressProvider
+                );
+            return _foundHintItemListViewModel;
+        }
+    }
+    private FoundHintItemListViewModel? _foundHintItemListViewModel;
+
+    /// <summary>
+    /// Lazy-load PathHintItemListViewModel.
+    /// </summary>
+    public PathHintItemListViewModel PathHintItemListViewModel
+    {
+        get
+        {
+            _pathHintItemListViewModel ??= new PathHintItemListViewModel(
+                _hintPanelType,
+                _hintId,
+                "Select Path Items",
+                _hintService,
+                _hintItemSelectionService,
+                _savedProgressProvider
+            );
+            return _pathHintItemListViewModel;
+        }
+    }
+    private PathHintItemListViewModel? _pathHintItemListViewModel;
+
+
     public bool IsHintInfoPath => _hintPanelType == HintPanelType.Paths;
 
     public bool IsHintInfoFoolish => _hintPanelType == HintPanelType.Foolish;
+
+    public bool IsHintInfoNotFoolish => !IsHintInfoPath;
+
+    public bool IsHintInfoPotionCount => _hintPanelType == HintPanelType.PotionCounts;
 
     /// <summary>
     /// Configuration for hint suggestions (if applicable to this hint type).
@@ -102,54 +179,59 @@ public partial class HintInfoViewModel : ObservableObject
     /// </summary>
     private HintSuggestionConfig? HintSuggestionConfig { get; set; }
 
-    /// <summary>
-    /// Mapping of HintSuggestion types to their configurations.
-    /// </summary>
-    private static readonly Dictionary<HintSuggestion, HintSuggestionConfig> SuggestionToConfigMap = new()
-    {
-        {HintSuggestion.REGION, new HintSuggestionConfig(["Hint Regions"], HintRegion.All)},
-        {HintSuggestion.CHECK, new HintSuggestionConfig(["Item Locations"], HintLocation.All)},
-        {HintSuggestion.MOVE, new HintSuggestionConfig(["Moves"], HintMove.All)},
-        {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions", "Moves"], HintRegion.All.Concat(HintMove.All).ToList())}
-    };
+    [ObservableProperty]
+    private bool _isFocusRequested = false;
+
+    [ObservableProperty]
+    private bool _shouldFocusLocation = false;
+
+    [ObservableProperty]
+    private bool _locationIsFocused = false;
+
+    [ObservableProperty]
+    private bool _shouldFocusSuggestionsFirst = false;
+
+    [ObservableProperty]
+    private string? _selectedSuggestion = null;
+
+    [ObservableProperty]
+    private int _selectedSuggestionIndex = -1;
+
+    [ObservableProperty]
+    private bool _isSuggestionBoxFocused = false;
 
     /// <summary>
-    /// Json key for Kong Hint shorthand lookups.
+    /// Tracks whether PotionCount has already been focused for the current location entry.
+    /// Prevents re-focusing when user presses Enter in PotionCount field.
+    /// Resets when LocationText changes.
     /// </summary>
-    private const string KONG_HINT_SHORTHAND_KEY = "Kong Hint Shorthand";
-
-    private void OnLocationTextChanged(string newValue)
-    {
-        SavedHint.LocationText = newValue;
-        UpdateSuggestions();
-    }
-
-    private void OnPotionCountTextChanged(string newValue)
-    {
-        SavedHint.PotionCountText = newValue;
-    }
+    private bool _potionCountFocusedForCurrentLocation = false;
 
     public HintInfoViewModel(
-        HintType hintType,
-        HintPanelType hintPanelType,
-        RegionName regionName,
-        SavedHint savedHint,
+        HintId hintId,
+        IHintService hintService,
         IShortcutService shortcutService,
         IHintItemSelectionService hintItemSelectionService,
         ISavedProgressProvider savedProgressProvider,
         IItemTrackingService itemTrackingService,
         IUserSettingsService userSettingsService)
     {
-        _hintPanelType = hintPanelType;
-        _regionName = regionName;
         _shortcutService = shortcutService ?? throw new ArgumentNullException(nameof(shortcutService));
+        _hintService = hintService ?? throw new ArgumentNullException(nameof(hintService));
         _hintItemSelectionService = hintItemSelectionService ?? throw new ArgumentNullException(nameof(hintItemSelectionService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
 
-        // Initialize settings
-        HintTypeSettings = HintTypeSettingsList.SETTINGS[hintType];
+        _hintId = hintId;
+
+        var hint = _hintService.GetHint(hintId);
+        if (hint is not null)
+        {
+            HintPanelType = hint.HintPanelType;
+            RegionName = HintPanelType.ToRegion();
+            HintTypeSettings = HintTypeSettingsList.SETTINGS[HintPanelType.ToHintType()];
+        }
 
         // Get suggestion config if applicable
         if (SuggestionToConfigMap.TryGetValue(HintTypeSettings.HintSuggestion, out var config))
@@ -157,16 +239,43 @@ public partial class HintInfoViewModel : ObservableObject
             HintSuggestionConfig = config;
         }
 
-        // Initialize SavedHint
-        SavedHint = savedHint;
-        LocationText = savedHint.LocationText;
-        PotionCountText = savedHint.PotionCountText;
+        _hintService.HintLocationUpdated += OnLocationUpdated;
+        _hintService.HintPotionCountUpdated += OnPotionCountUpdated;
 
         // Build initial suggestions
         UpdateSuggestions();
 
         OnPropertyChanged(nameof(IsHintInfoPath));
         OnPropertyChanged(nameof(IsHintInfoFoolish));
+        OnPropertyChanged(nameof(IsHintInfoNotFoolish));
+        OnPropertyChanged(nameof(IsHintInfoPotionCount));
+    }
+
+    private void OnPotionCountUpdated(object? sender, HintUpdatedEventArgs e)
+    {
+        if (e.HintId != _hintId)
+        {
+            return;
+        }
+
+        _potionCountText = e.UpdatedHint.PotionCountText;
+        OnPropertyChanged(nameof(PotionCountText));
+    }
+
+    private void OnLocationUpdated(object? sender, HintUpdatedEventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine($"[HintInfoViewModel.OnLocationUpdated] Event received, checking HintId: {e.HintId} vs {_hintId}");
+
+        if (e.HintId != _hintId)
+        {
+            return;
+        }
+
+        System.Diagnostics.Debug.WriteLine($"[HintInfoViewModel.OnLocationUpdated] Processing location update from '{_locationText}' to '{e.UpdatedHint.LocationText}'");
+
+        _locationText = e.UpdatedHint.LocationText;
+        OnPropertyChanged(nameof(LocationText));
+        UpdateSuggestions();
     }
 
     /// <summary>
@@ -187,54 +296,7 @@ public partial class HintInfoViewModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// Lazy-load FoundHintItemListViewModel.
-    /// </summary>
-    public FoundHintItemListViewModel FoundHintItemListViewModel
-    {
-        get
-        {
-            _foundHintItemListViewModel ??= new FoundHintItemListViewModel(
-                _hintPanelType,
-                $"Select Found Items - {_hintPanelType}",
-                _itemTrackingService,
-                _hintItemSelectionService,
-                _savedProgressProvider
-                );
-            return _foundHintItemListViewModel;
-        }
-    }
-    private FoundHintItemListViewModel? _foundHintItemListViewModel;
-
-    /// <summary>
-    /// Lazy-load PathHintItemListViewModel.
-    /// </summary>
-    public PathHintItemListViewModel PathHintItemListViewModel
-    {
-        get
-        {
-            _pathHintItemListViewModel ??= new PathHintItemListViewModel(
-                _hintPanelType,
-                "Select Path Items",
-                _hintItemSelectionService,
-                _savedProgressProvider
-            );
-            return _pathHintItemListViewModel;
-        }
-    }
-    private PathHintItemListViewModel? _pathHintItemListViewModel;
-
-    /// <summary>
-    /// Event invoked when path items selection dialog should open.
-    /// Code-behind subscribes to this for actual dialog opening.
-    /// </summary>
-    public event EventHandler? PathItemsSelectionRequested;
-
-    /// <summary>
-    /// Event invoked when found items selection dialog should open.
-    /// Code-behind subscribes to this for actual dialog opening.
-    /// </summary>
-    public event EventHandler? FoundItemsSelectionRequested;
+    #region Commands
 
     /// <summary>
     /// Signal that path items selection dialog should open.
@@ -270,82 +332,6 @@ public partial class HintInfoViewModel : ObservableObject
     /// </summary>
     private bool CanOpenFoundItemsSelection() => !IsHintInfoFoolish && !_foundItemsDialogOpened;
 
-    /// <summary>
-    /// Rebuild suggestions based on current location text.
-    /// </summary>
-    private void UpdateSuggestions()
-    {
-        var matches = _shortcutService.FindMatches(
-            LocationText,
-            _hintPanelType,
-            HintSuggestionConfig
-        );
-
-        Suggestions = new ObservableCollection<string>(matches);
-
-        // Update dropdown visibility
-        SuggestionBoxIsOpen = LocationText != ""
-            && Suggestions.Count > 0
-            && _hintPanelType != HintPanelType.Kongs;
-    }
-
-    /// <summary>
-    /// Try to parse location text as a Kong hint (3-word abbreviation format).
-    /// If successful, registers the Kong in FoundItems and returns true.
-    /// </summary>
-    private bool TryProcessKongHint(string locationText)
-    {
-        var hintWordList = locationText.Split(' ');
-        if (hintWordList.Length != 3)
-        {
-            return false;
-        }
-
-        if (!HintData.UserShortcuts.TryGetValue(KONG_HINT_SHORTHAND_KEY, out var kongShorthands))
-        {
-            return false;
-        }
-
-        // Validate all three words are valid Kong shorthand keys
-        for (int i = 0; i < hintWordList.Length; i++)
-        {
-            hintWordList[i] = hintWordList[i].ToLower();
-            if (!kongShorthands.ContainsKey(hintWordList[i]))
-            {
-                return false;
-            }
-        }
-
-        // Parse the Kong item from first word
-        var foundKongString = kongShorthands[hintWordList[0]];
-        if (!Enum.TryParse(foundKongString, out ItemName kongThatIsFound))
-        {
-            return false;
-        }
-
-        // Build human-readable location text from the three parts
-        var textInfo = new CultureInfo("en-US", false).TextInfo;
-        var region = kongShorthands[hintWordList[2]];
-        var thingThatFinds = kongShorthands[hintWordList[1]];
-        thingThatFinds = textInfo.ToTitleCase(thingThatFinds.ToLower());
-
-        var newText = thingThatFinds + " in " + region;
-        if (thingThatFinds == "Boss")
-        {
-            newText = region + " Boss Defeated";
-        }
-
-        // Populate found items with the Kong
-        SavedHint.FoundItems = new Dictionary<ItemName, bool> { { kongThatIsFound, false } };
-
-        // TODO: Phase 2 - Call ItemTrackingService to register Kong as user-hinted item
-        // _itemTrackingService.SetItemState(kongThatIsFound, new SavedItem(...));
-
-        // Update location text (will trigger UpdateSuggestions via partial OnLocationTextChanged)
-        LocationText = newText;
-
-        return true;
-    }
 
     /// <summary>
     /// Handle user selecting a suggestion or manually confirming location (Enter key).
@@ -403,50 +389,21 @@ public partial class HintInfoViewModel : ObservableObject
     {
         // Only process direct item hints that tie themselves to a region.
         var targetRegion = _hintPanelType.ToRegion();
-        if (!targetRegion.IsPlayableRegion())
+        if (targetRegion.IsPlayableRegion())
         {
-            return;
+            foreach (var hint in FoundHintItemListViewModel.FoundItems)
+            {
+                var itemState = _itemTrackingService.GetItemState(hint.ItemName);
+                if (itemState is not null && itemState.Hinted && itemState.Region == targetRegion)
+                {
+                    // Preserve any stars if they were set this way.
+                    _itemTrackingService.SetItemState(hint.ItemName, itemState with { Hinted = false, Region = RegionName.UNKNOWN });
+                }
+            }
         }
 
-        // TODO: Phase 2 - Call ItemTrackingService to remove hinted-but-not-found items
-        // Find items that were direct-hinted but never found
-        // var itemsToRemove = SavedHint.FoundItems
-        //     .Where(entry => !entry.Value) // Not found (false = not found)
-        //     .Select(entry => entry.Key)
-        //     .ToList();
-        // foreach (var item in itemsToRemove)
-        // {
-        //     _itemTrackingService.ClearItemState(item);
-        // }
+        _hintService.RemoveHint(_hintId);
     }
-
-    [ObservableProperty]
-    private bool _isFocusRequested = false;
-
-    [ObservableProperty]
-    private bool _shouldFocusLocation = false;
-
-    [ObservableProperty]
-    private bool _locationIsFocused = false;
-
-    [ObservableProperty]
-    private bool _shouldFocusSuggestionsFirst = false;
-
-    [ObservableProperty]
-    private string? _selectedSuggestion = null;
-
-    [ObservableProperty]
-    private int _selectedSuggestionIndex = -1;
-
-    [ObservableProperty]
-    private bool _isSuggestionBoxFocused = false;
-
-    /// <summary>
-    /// Tracks whether PotionCount has already been focused for the current location entry.
-    /// Prevents re-focusing when user presses Enter in PotionCount field.
-    /// Resets when LocationText changes.
-    /// </summary>
-    private bool _potionCountFocusedForCurrentLocation = false;
 
     /// <summary>
     /// Command to focus and select the PotionCount TextBox when user confirms location.
@@ -485,4 +442,163 @@ public partial class HintInfoViewModel : ObservableObject
         // Allow confirm if we have both location and potion count text
         return LocationText.Length > 0 && PotionCountText.Length > 0 && _hintPanelType == HintPanelType.PotionCounts;
     }
+
+    #endregion
+
+    /// <summary>
+    /// Rebuild suggestions based on current location text.
+    /// </summary>
+    private void UpdateSuggestions()
+    {
+
+
+        var matches = _shortcutService.FindMatches(
+            LocationText,
+            _hintPanelType,
+            HintSuggestionConfig
+        ).ToList();
+
+
+
+        // Update collection in-place to avoid redundant popup re-rendering
+        if (Suggestions.Count != matches.Count || !Suggestions.SequenceEqual(matches))
+        {
+
+            Suggestions.Clear();
+            foreach (var match in matches)
+            {
+                Suggestions.Add(match);
+            }
+        }
+
+        // Update dropdown visibility
+        bool shouldBeOpen = LocationText != ""
+            && Suggestions.Count > 0
+            && _hintPanelType != HintPanelType.Kongs;
+
+
+        SuggestionBoxIsOpen = shouldBeOpen;
+    }
+
+    /// <summary>
+    /// Try to parse location text as a Kong hint (3-word abbreviation format).
+    /// If successful, registers the Kong in FoundItems and returns true.
+    /// </summary>
+    private bool TryProcessKongHint(string locationText)
+    {
+        var hintWordList = locationText.Split(' ');
+        if (hintWordList.Length != 3)
+        {
+            return false;
+        }
+
+        if (!HintData.UserShortcuts.TryGetValue(KONG_HINT_SHORTHAND_KEY, out var kongShorthands))
+        {
+            return false;
+        }
+
+        // Validate all three words are valid Kong shorthand keys
+        for (int i = 0; i < hintWordList.Length; i++)
+        {
+            hintWordList[i] = hintWordList[i].ToLower();
+            if (!kongShorthands.ContainsKey(hintWordList[i]))
+            {
+                return false;
+            }
+        }
+
+        // Parse the Kong item from first word
+        var foundKongString = kongShorthands[hintWordList[0]];
+        if (!Enum.TryParse(foundKongString, out ItemName kongThatIsFound))
+        {
+            return false;
+        }
+
+        // Build human-readable location text from the three parts
+        var textInfo = new CultureInfo("en-US", false).TextInfo;
+        var region = kongShorthands[hintWordList[2]];
+        var thingThatFinds = kongShorthands[hintWordList[1]];
+        thingThatFinds = textInfo.ToTitleCase(thingThatFinds.ToLower());
+
+        var newText = thingThatFinds + " in " + region;
+        if (thingThatFinds == "Boss")
+        {
+            newText = region + " Boss Defeated";
+        }
+
+        _hintService.SetFoundItems(_hintId, new Dictionary<ItemName, bool> { { kongThatIsFound, false } }, HintPanelType);
+        _hintService.UpdateHintLocation(_hintId, newText);
+
+        return true;
+    }
+
+
+    #region Object Overrides
+
+    public bool Equals(HintInfoViewModel? other)
+    {
+        return other is not null && _hintId == other._hintId;
+    }
+
+    public override bool Equals(object? obj) => Equals(obj as HintInfoViewModel);
+
+    public override int GetHashCode() => _hintId.GetHashCode();
+
+    public override string ToString()
+    {
+        switch (_hintPanelType)
+        {
+            case HintPanelType.Paths:
+                return $"Hint {_hintId}: {LocationText} is on the Path";
+            case HintPanelType.Foolish:
+                return $"Hint {_hintId}: {LocationText} is Foolish";
+            case HintPanelType.PotionCounts:
+                return $"Hint {_hintId}: {LocationText} has {PotionCountText} Potion[s]";
+            case HintPanelType.Kongs:
+                return $"Kong Hint {_hintId}: {LocationText}";
+            default:
+                return $"Hint {_hintId}: {LocationText}";
+        }
+    }
+
+    #endregion
+
+    #region Operator Overloads
+
+    public static bool operator ==(HintInfoViewModel? left, HintInfoViewModel? right) => left?.Equals(right) ?? right is null;
+
+    public static bool operator !=(HintInfoViewModel? left, HintInfoViewModel? right) => !(left == right);
+
+    #endregion
+
+    #region IDisposable
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from events
+                _hintService.HintLocationUpdated -= OnLocationUpdated;
+                _hintService.HintPotionCountUpdated -= OnPotionCountUpdated;
+            }
+            _disposed = true;
+        }
+    }
+
+    ~HintInfoViewModel()
+    {
+        Dispose(false);
+    }
+
+    #endregion
 }

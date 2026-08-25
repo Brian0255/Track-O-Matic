@@ -5,11 +5,11 @@ using TrackOMatic.ViewModels.Hints;
 
 namespace TrackOMatic.HintsUI;
 /// <summary>
-/// Interaction logic for HintItem.xaml
+/// Interaction logic for PathHintItem.xaml
 /// </summary>
-public partial class HintItem : ContentControl
+public partial class PathHintItem : ContentControl
 {
-    public HintItem()
+    public PathHintItem()
     {
         InitializeComponent();
     }
@@ -28,7 +28,7 @@ public partial class HintItem : ContentControl
 
     private void ToggleCheck()
     {
-        if (DataContext is not HintItemViewModel viewModel)
+        if (DataContext is not PathHintItemViewModel viewModel)
         {
             return;
         }

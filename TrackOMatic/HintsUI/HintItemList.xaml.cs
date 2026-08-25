@@ -48,19 +48,6 @@ public partial class HintItemList : UserControl
     {
         InitializeComponent();
         ProcessSelectedItems();
-
-    }
-
-    private void UpdateCheckmarks(HintItemSelectionDialog dialog)
-    {
-        var copy = new Dictionary<ItemName, bool>(dialog.SelectedItems);
-        foreach (var entry in copy)
-        {
-            if (SelectedItems.ContainsKey(entry.Key))
-            {
-                dialog.SelectedItems[entry.Key] = SelectedItems[entry.Key];
-            }
-        }
     }
 
     public void OpenItemSelectionDialog()
@@ -71,27 +58,8 @@ public partial class HintItemList : UserControl
         mousePosition = PointToScreen(mousePosition);
         UIUtils.MoveWindowAndEnsureVisible(dialog, mousePosition.X - 20, mousePosition.Y - 10);
         dialog.ShowDialog();
-        UpdateCheckmarks(dialog);
         SelectedItems = dialog.SelectedItems;
         ProcessSelectedItems();
-        if (HintInfo != null)
-        {
-            HintInfo.UpdateSelectedItems();
-        }
-    }
-
-    public void UpdateCheckmark(ItemName itemName, bool isChecked)
-    {
-        if (!SelectedItems.ContainsKey(itemName))
-        {
-            return;
-        }
-
-        SelectedItems[itemName] = isChecked;
-        if (HintInfo != null)
-        {
-            HintInfo.UpdateSelectedItems();
-        }
     }
 
     public void Image_MouseDown(object sender, MouseEventArgs e)

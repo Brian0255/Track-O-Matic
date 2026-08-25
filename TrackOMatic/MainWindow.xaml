@@ -16,6 +16,7 @@
     ResizeMode="CanResize"
     Closing="Window_Closing"
     Loaded="MainWindow_Loaded"
+    Unloaded="OnUnloaded"
     LocationChanged="Window_LocationChanged"
     MouseDown="rootGrid_LostFocus"
     SizeChanged="Window_SizeChanged"
@@ -340,143 +341,10 @@
                 <!-- Song Display -->
                 <local:Song Grid.Row="8" Background="Transparent" Margin="3,-2,-1,3" Visibility="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
             </Grid>
-            <Grid Grid.Column="1" Margin="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Name="MultipathColumns" Width="2*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" Name="DirectItemHintGrid">
-                    <Grid.Style>
-                        <Style TargetType="{x:Type Grid}">
-                            <Setter Property="Visibility" Value="Hidden" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.HintDisplayMode, ElementName=MainWindowRoot, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Grid.Style>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Name="DirectHintsThirdMain" Width="0*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Name="DirectHintsCol0" Grid.Column="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Name="DirectHintsCol0LastRow" Height="1*"/>
-                        </Grid.RowDefinitions>
-                        <hints:HintPanel Grid.Row="0" HintPanelType="Isles" x:Name="IslesPanel" Margin="3" LineColor="#fff67a" />
-                        <hints:HintPanel Grid.Row="1" HintPanelType="Aztec" x:Name="AztecPanel" Margin="3" LineColor="#ffb01f" />
-                        <hints:HintPanel Grid.Row="2" HintPanelType="Galleon" x:Name="GalleonPanel" Margin="3" LineColor="#216fff" />
-                        <hints:HintPanel Grid.Row="3" HintPanelType="Caves" x:Name="CavesPanel" Margin="3" LineColor="#42ddf5" />
-                    </Grid>
-                    <Grid Name="DirectHintsCol1" Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Name="DirectHintsCol1LastRow" Height="1*"/>
-                        </Grid.RowDefinitions>
-                        <hints:HintPanel Grid.Row="0" HintPanelType="Japes" x:Name="JapesPanel" Margin="3" LineColor="#59ff64" />
-                        <hints:HintPanel Grid.Row="1" HintPanelType="Factory" x:Name="FactoryPanel" Margin="3" LineColor="#eeeeee" />
-                        <hints:HintPanel Grid.Row="2" HintPanelType="Forest" x:Name="ForestPanel" Margin="3" LineColor="#006b3e" />
-                        <hints:HintPanel Grid.Row="3" HintPanelType="Castle" x:Name="CastlePanel" Margin="3" LineColor="#99a3ad" />
-                    </Grid>
-                    <Grid Name="DirectHintsCol2" Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                        </Grid.RowDefinitions>
-                    </Grid>
-                </Grid>
-                <Grid Grid.Column="0" Name="MultipathGrid">
-                    <Grid.Style>
-                        <Style TargetType="{x:Type Grid}">
-                            <Setter Property="Visibility" Value="Hidden" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.HintDisplayMode, ElementName=MainWindowRoot, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.MultipathHints}}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Grid.Style>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Name="MultipathColumn2" Width="0*"/>
-                    </Grid.ColumnDefinitions>
-                    <hints:HintPanel HintPanelType="Paths" x:Name="PathsPanel" Margin="3" Grid.Column="0" LineColor="#dba512"  />
-                    <Grid Name="MultipathColumn1" Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Name="MultipathColumn1Row0" Height="1.6*"/>
-                            <RowDefinition Height="1.25*"/>
-                            <RowDefinition Height="3*"/>
-                        </Grid.RowDefinitions>
-                        <hints:HintPanel Grid.Row="0" HintPanelType="Foolish" x:Name="FoolishPanel" Margin="3"  LineColor="#e02f2f"  />
-                        <hints:HintPanel Grid.Row="1" HintPanelType="Kongs" x:Name="KongsPanel" Margin="3" LineColor="#ff59e1"  />
-                        <hints:HintPanel Grid.Row="2" HintPanelType="WayOfTheHoard" x:Name="WotHPanel" Margin="3" LineColor="#2652ff"  />
-                    </Grid>
-                    <Grid Name="MultipathMainColumn2"  Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="5*"/>
-                            <RowDefinition Height="3*"/>
-                        </Grid.RowDefinitions>
-                    </Grid>
-                </Grid>
-                <Grid Name="UnhintedColumn" Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Name="OptionalPotionsRow" Height="2.54*"/>
-                        <RowDefinition Height="5*"/>
-                        <RowDefinition Height="2.6*"/>
-                        <RowDefinition>
-                            <RowDefinition.Style>
-                                <Style TargetType="{x:Type RowDefinition}">
-                                    <Setter Property="Height" Value="0*" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsHelmDoorPanelEnabled}" Value="True">
-                                            <Setter Property="Height" Value="1*" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </RowDefinition.Style>
-                        </RowDefinition>
-                    </Grid.RowDefinitions>
-                    <hints:HintPanel Grid.Row="0" HintPanelType="Helm" x:Name="HelmPanel" Margin="3" LineColor="#b580ff" >
-                        <hints:HintPanel.Style>
-                            <Style TargetType="{x:Type hints:HintPanel}">
-                                <Setter Property="Visibility" Value="Hidden" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.HintDisplayMode, ElementName=MainWindowRoot, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </hints:HintPanel.Style>
-                    </hints:HintPanel>
-                    <hints:HintPanel Grid.Row="0" HintPanelType="PotionCounts" x:Name="PotionCountsPanel" Margin="3" LineColor="#D0D0D0"  />
-                    <hints:HintPanel Grid.Row="1" HintPanelType="Unhinted" x:Name="UnhintedPanel" Margin="3" LineColor="#36f77d"  />
-                    <hints:BLockerPanel Visibility="Collapsed" x:Name="BLockerHints" Grid.Row="2" Margin="3" Heading="B. LOCKERS" LineColor="#F0F000"/>
-                    <hints:HelmDoorPanel Visibility="Collapsed" x:Name="HelmDoorHints" Grid.Row="3" Margin="3" Heading="HELM DOORS" LineColor="#7d3cbd" />
-
-                    <!-- NEW CONTROLS TEST AREA - Temporary staging for FoundHintItemList and PathHintItemList -->
-                    <Expander Grid.Row="2" Grid.RowSpan="2" Header="[DEBUG] New Item List Controls Test" Background="#2a2a2a" Foreground="White" Margin="3" IsExpanded="False">
-                        <StackPanel Orientation="Vertical" Margin="5">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Found" Foreground="White" Margin="0,5,0,3" />
-                                <hints:FoundHintItemList x:Name="TestFoundItemList" Height="60" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Path" Foreground="White" Margin="0,10,0,3" />
-                                <hints:PathHintItemList x:Name="TestPathItemList" Height="60" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Expander>
-                </Grid>
-            </Grid>
+            <hints:Main
+                Grid.Column="1"
+                Margin="2"
+            />
         </Grid>
     </DockPanel>
 </Window>

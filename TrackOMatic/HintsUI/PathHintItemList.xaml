@@ -28,8 +28,8 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="viewmodels:HintItemViewModel">
-                    <local:HintItem />
+                <DataTemplate DataType="viewmodels:PathHintItemViewModel">
+                    <local:PathHintItem />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

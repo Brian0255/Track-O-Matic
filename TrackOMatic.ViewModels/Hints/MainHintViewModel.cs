@@ -194,6 +194,22 @@ public class MainHintViewModel : ObservableObject
 
     public bool IsDirectHintStandardMode => !_userSettingsService.CompactMode && _userSettingsService.HintDisplay == HintDisplayMode.DirectItemHints;
 
+    /// <summary>
+    /// Returns a unique key representing the current mode combination.
+    /// This property changes whenever any mode property changes, forcing the ContentTemplateSelector to re-evaluate.
+    /// </summary>
+    public string CurrentModeKey
+    {
+        get
+        {
+            if (IsDirectHintCompactMode) return "DirectCompact";
+            if (IsDirectHintStandardMode) return "DirectStandard";
+            if (IsMultipathCompactMode) return "MultipathCompact";
+            if (IsMultipathStandardMode) return "MultipathStandard";
+            return "None";
+        }
+    }
+
     #endregion
 
     public MainHintViewModel(
@@ -238,6 +254,7 @@ public class MainHintViewModel : ObservableObject
             OnPropertyChanged(nameof(IsDirectHintStandardMode));
             OnPropertyChanged(nameof(IsMultipathCompactMode));
             OnPropertyChanged(nameof(IsMultipathStandardMode));
+            OnPropertyChanged(nameof(CurrentModeKey));
         }
         else if (e.PropertyName == nameof(IUserSettingsService.CompactMode))
         {
@@ -246,6 +263,7 @@ public class MainHintViewModel : ObservableObject
             OnPropertyChanged(nameof(IsDirectHintStandardMode));
             OnPropertyChanged(nameof(IsMultipathCompactMode));
             OnPropertyChanged(nameof(IsMultipathStandardMode));
+            OnPropertyChanged(nameof(CurrentModeKey));
         }
         else if (e.PropertyName == nameof(IUserSettingsService.HelmDoors))
         {

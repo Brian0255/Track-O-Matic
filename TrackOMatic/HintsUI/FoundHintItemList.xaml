@@ -38,8 +38,8 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="viewmodels:HintItemViewModel">
-                    <local:HintItem />
+                <DataTemplate DataType="viewmodels:FoundHintItemViewModel">
+                    <local:FoundHintItem />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
@@ -57,8 +57,8 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="viewmodels:HintItemViewModel">
-                    <local:HintItem />
+                <DataTemplate DataType="viewmodels:FoundHintItemViewModel">
+                    <local:FoundHintItem />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

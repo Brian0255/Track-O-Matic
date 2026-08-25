@@ -1,204 +1,129 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Diagnostics;
 
-using TrackOMatic.Logic;
-using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Models;
-using TrackOMatic.Logic.Models.Hints;
-using TrackOMatic.Services;
-using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels.Hints;
 
 namespace TrackOMatic.HintsUI;
 
-public partial class HintInfo : UserControl, INotifyPropertyChanged
+public partial class HintInfo : UserControl
 {
-    private bool UserInitialized = false;
-    private MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-    private Dictionary<HintSuggestion, HintSuggestionConfig> SuggestionToShortcutInfo { get; } = new()
-    {
-        {HintSuggestion.REGION, new HintSuggestionConfig(["Hint Regions"], HintRegion.All) },
-        {HintSuggestion.CHECK, new HintSuggestionConfig(["Item Locations"], HintLocation.All) },
-        {HintSuggestion.MOVE, new HintSuggestionConfig(["Moves"], HintMove.All) },
-        {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions","Moves"], HintRegion.All.Concat(HintMove.All).ToList()) }
-    };
-    private HintSuggestionConfig? HintSuggestionConfig { get; init; }
+    private HintInfoViewModel? _viewModel;
+    private bool _isInitialized = false;
+    private Popup? _cachedPopup = null;
 
-    public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
-    public HintTypeSettings HintTypeSettings
-    {
-        get { return (HintTypeSettings)GetValue(HintTypeSettingsProperty); }
-        set { SetValue(HintTypeSettingsProperty, value); }
-    }
-
-    public HintType HintType { get; private set; }
-
-    private HintPanelType HintPanelType { get; init; }
-
-    public RegionName RegionName { get; }
-
-    public SavedHint SavedHint { get; private set; }
-
-    private IUserSettingsService UserSettingsService { get; init; }
-
-    private IItemTrackingService ItemTrackingService { get; init; }
-
-    private HintInfoViewModel _viewModel;
-
-    /// <summary>
-    /// Exposes the ViewModel for XAML binding (follows MVVM pattern).
-    /// Notifies when changed so Grid's DataContext binding picks it up.
-    /// </summary>
-    public HintInfoViewModel ViewModel
-    {
-        get => _viewModel;
-        private set
-        {
-            if (_viewModel != value)
-            {
-                _viewModel = value;
-                OnPropertyChanged(nameof(ViewModel));
-            }
-        }
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    public HintInfo(HintPanelType hintPanelType, bool isSavedHint = false)
+    public HintInfo()
     {
         InitializeComponent();
-        UserSettingsService = ServiceLocator.GetService<IUserSettingsService>();
-        ItemTrackingService = ServiceLocator.GetService<IItemTrackingService>();
-
-        // Initialize properties from constructor parameters
-        HintPanelType = hintPanelType;
-        RegionName = hintPanelType.ToRegion();
-        HintType = hintPanelType.ToHintType();
-
-        if (!isSavedHint)
-        {
-            // Focus will be handled by attached behavior after ViewModel is initialized
-            // (set in OnLoaded event below)
-        }
-
-        HintTypeSettings = HintTypeSettingsList.SETTINGS[HintType];
-        OnPropertyChanged(nameof(HintTypeSettings));
-        SavedHint = new SavedHint(hintPanelType, Location.Text, "", [], []);
-        RightItems.HintInfo = this;
-        if (!HintTypeSettings.PathItemsVisible)
-        {
-            RightItems.BottomRow.Height = new GridLength(0);
-        }
-        if (SuggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
-        {
-            HintSuggestionConfig = SuggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
-        }
-
-        // Temporarily declared in code behind.
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        (DataContext as IDisposable)?.Dispose();
-        DataContext = null;
-    }
-
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (_viewModel != null)
+        // Guard against multiple Loaded events
+        if (_isInitialized)
         {
-            return; // Already loaded
+            return;
         }
 
-        var viewModel = new HintInfoViewModel(
-            HintType,
-            HintPanelType,
-            RegionName,
-            SavedHint,
-            ServiceLocator.GetService<IShortcutService>(),
-            ServiceLocator.GetService<IHintItemSelectionService>(),
-            ServiceLocator.GetService<ISavedProgressProvider>(),
-            ItemTrackingService,
-            UserSettingsService
-        );
+        _isInitialized = true;
 
-        // Setting this property triggers OnPropertyChanged, which the Grid's binding listens to
-        ViewModel = viewModel;
-
-        // If this is a new hint (not a saved one), trigger focus on Location field via attached behavior
-        // The check needs to happen here because SavedHint carries the info
-        if (SavedHint.LocationText == "" && !UserInitialized)
+        _viewModel = DataContext as HintInfoViewModel;
+        if (_viewModel is null || FindName("SuggestionPopup") is not Popup popup || FindName("Location") is not TextBox locationBox)
         {
-            viewModel.ShouldFocusLocation = true;
+            return;
         }
 
-        // Wire up dialog-opening notification from ViewModel
-        viewModel.PathItemsSelectionRequested += (s, e) => ItemsOnPath.OpenItemSelectionDialog();
-        viewModel.FoundItemsSelectionRequested += (s, e) => RightItems.OpenItemSelectionDialog();
+        _cachedPopup = popup;
 
-        // Reset focused suggestion index when suggestions change
-        viewModel.PropertyChanged += (s, e) =>
+        // CRITICAL: Set PlacementTarget BEFORE subscribing to any property changes
+        popup.PlacementTarget = locationBox;
+        popup.Placement = PlacementMode.Bottom;
+        popup.AllowsTransparency = false; // Disable transparency to avoid rendering artifacts
+
+        // Handle popup closing to sync state back
+        popup.Closed += (s, e) => 
         {
-            if (e.PropertyName == nameof(HintInfoViewModel.Suggestions))
+            if (_viewModel.SuggestionBoxIsOpen)
             {
-                _focusedSuggestionIndex = -1;
+                _viewModel.SuggestionBoxIsOpen = false;
             }
         };
+
+        // Subscribe to ViewModel changes AFTER placement is configured
+        _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+
+        // Set initial state
+        popup.IsOpen = _viewModel.SuggestionBoxIsOpen;
     }
 
-    public void UpdateSelectedItems()
+    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        SavedHint.FoundItems = RightItems.SelectedItems;
-        mainWindow.DataSaver.Save();
+        if (e.PropertyName == nameof(HintInfoViewModel.SuggestionBoxIsOpen))
+        {
+            if (_cachedPopup is not null && _viewModel is not null)
+            {
+                bool shouldBeOpen = _viewModel.SuggestionBoxIsOpen;
+                if (_cachedPopup.IsOpen != shouldBeOpen)
+                {
+                    _cachedPopup.IsOpen = shouldBeOpen;
+                }
+            }
+        }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel is not null)
+        {
+            _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+        }
+        (DataContext as IDisposable)?.Dispose();
+        DataContext = null;
+        _cachedPopup = null;
     }
 
     private void Location_PreviewKeyDown(object sender, KeyEventArgs e)
     {
+        var viewModel = DataContext as HintInfoViewModel;
+        if (viewModel is null)
+        {
+            return;
+        }
+
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
-            string locationText = _viewModel?.LocationText ?? "";
+            string locationText = viewModel.LocationText ?? "";
 
             // Check if focus is in the SuggestionBox (dropdown) and an item is selected
-            if (_viewModel?.IsSuggestionBoxFocused == true && _viewModel.SelectedSuggestion is string selectedSuggestion)
+            if (viewModel.IsSuggestionBoxFocused == true && viewModel.SelectedSuggestion is string selectedSuggestion)
             {
                 // Use the selected item from the dropdown
                 locationText = selectedSuggestion;
             }
-            else if (_viewModel?.Suggestions.Count > 0 && (sender as TextBox)?.IsFocused == true)
+            else if (viewModel.Suggestions.Count > 0 && (sender as TextBox)?.IsFocused == true)
             {
                 // Focus is in the TextBox and there are suggestions - use first suggestion
-                locationText = _viewModel.Suggestions[0];
+                locationText = viewModel.Suggestions[0];
             }
             // else: use what's already in LocationText
 
             // Update the Location TextBox via ViewModel
-            if (_viewModel != null)
-            {
-                _viewModel.LocationText = locationText;
-            }
+            viewModel.LocationText = locationText;
 
             // Close the suggestion dropdown
-            if (_viewModel != null)
-            {
-                _viewModel.SuggestionBoxIsOpen = false;
-            }
+            viewModel.SuggestionBoxIsOpen = false;
 
             // Extract screen coordinates and invoke ViewModel command
             var mousePos = Mouse.GetPosition(this);
             var screenMousePosition = PointToScreen(mousePos);
             var parameter = (locationText, screenMousePosition.X, screenMousePosition.Y);
-            if (_viewModel?.ConfirmLocationAndItemsCommand.CanExecute(parameter) == true)
+            if (viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter) == true)
             {
-                _viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
+                viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
             }
 
             // Clear focus
@@ -208,9 +133,9 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
             // mainWindow.DataSaver.Save();
 
 
-            if (_viewModel?.FocusAndSelectPotionCountCommand.CanExecute(null) == true)
+            if (viewModel.FocusAndSelectPotionCountCommand.CanExecute(null) == true)
             {
-                _viewModel.FocusAndSelectPotionCountCommand.Execute(null);
+                viewModel.FocusAndSelectPotionCountCommand.Execute(null);
             }
 
             e.Handled = true;
@@ -218,12 +143,12 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         else if (e.Key == Key.Down)
         {
             // Allow keyboard navigation into suggestions without auto-selecting
-            if (_viewModel?.Suggestions.Count > 0 && _viewModel.SuggestionBoxIsOpen)
+            if (viewModel.Suggestions.Count > 0 && viewModel.SuggestionBoxIsOpen)
             {
                 // Signal the behavior to focus the first item in the ListBox
-                _viewModel.ShouldFocusSuggestionsFirst = true;
-                // Initialize the focused index so keyboard navigation can track position
-                _focusedSuggestionIndex = 0;
+                viewModel.ShouldFocusSuggestionsFirst = true;
+                // Initialize the focus index in ViewModel for navigation tracking
+                viewModel.SelectedSuggestionIndex = 0;
                 e.Handled = true;
             }
         }
@@ -231,101 +156,101 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
 
     private void SuggestionBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is not ListBox listBox || _viewModel == null)
+        if (sender is not ListBox listBox || DataContext is not HintInfoViewModel viewModel)
+        {
+            return;
+        }
+        if (!listBox.IsLoaded)
         {
             return;
         }
 
-        // Only process selection if it came from user action (Enter or mouse click)
-        // Not from keyboard navigation (Down/Up arrows)
-        if (Keyboard.IsKeyDown(Key.Enter) || Keyboard.IsKeyDown(Key.Return) || _isMouseSelecting)
+        // Only process if user explicitly selected via mouse or Enter key
+        // Keyboard navigation (arrow keys) should not trigger this flow
+        if (listBox.SelectedItem is string selectedSuggestion &&
+            (Keyboard.IsKeyDown(Key.Enter) || Keyboard.IsKeyDown(Key.Return)))
         {
-            // This is from the Enter key or mouse click
-            if (listBox.SelectedItem is string selectedSuggestion)
+            // Confirm the selection and advance to potion count
+            viewModel.LocationText = selectedSuggestion;
+            viewModel.SuggestionBoxIsOpen = false;
+
+            var mousePos = Mouse.GetPosition(this);
+            var screenMousePosition = PointToScreen(mousePos);
+            var parameter = (selectedSuggestion, screenMousePosition.X, screenMousePosition.Y);
+            if (viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter))
             {
-                _viewModel.LocationText = selectedSuggestion;
-                _viewModel.SuggestionBoxIsOpen = false;
-
-                var mousePos = Mouse.GetPosition(this);
-                var screenMousePosition = PointToScreen(mousePos);
-                var parameter = (selectedSuggestion, screenMousePosition.X, screenMousePosition.Y);
-                if (_viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter))
-                {
-                    _viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
-                }
-
-                Keyboard.ClearFocus();
-
-                if (_viewModel?.FocusAndSelectPotionCountCommand.CanExecute(null) == true)
-                {
-                    _viewModel.FocusAndSelectPotionCountCommand.Execute(null);
-                }
+                viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
             }
-        }
-        else
-        {
-            // This is from keyboard navigation (Down/Up) - clear the selection via ViewModel
-            _viewModel.SelectedSuggestionIndex = -1;
+
+            Keyboard.ClearFocus();
+
+            if (viewModel.FocusAndSelectPotionCountCommand.CanExecute(null) == true)
+            {
+                viewModel.FocusAndSelectPotionCountCommand.Execute(null);
+            }
         }
     }
 
-    private bool _isMouseSelecting = false;
-    private int _focusedSuggestionIndex = -1;
-
-
     private void SuggestionBox_PreviewKeyDown(object sender, KeyEventArgs e)
     {
+        var viewModel = DataContext as HintInfoViewModel;
+        if (viewModel is null)
+        {
+            return;
+        }
+
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
             // Handle Enter key when focus is in the SuggestionBox
-            // Use the tracked focused index instead of SelectedItem (which we clear during navigation)
-            if (_focusedSuggestionIndex >= 0 && _focusedSuggestionIndex < _viewModel?.Suggestions.Count && _viewModel != null)
+            // Use the ViewModel's tracked focus index to get the highlighted item
+            int selectedIndex = viewModel.SelectedSuggestionIndex;
+            if (selectedIndex >= 0 && selectedIndex < viewModel.Suggestions.Count)
             {
-                string selectedSuggestion = _viewModel.Suggestions[_focusedSuggestionIndex];
+                string selectedSuggestion = viewModel.Suggestions[selectedIndex];
 
-                // Use the selected item from the dropdown
-                _viewModel.LocationText = selectedSuggestion;
-
-                // Close the suggestion dropdown
-                _viewModel.SuggestionBoxIsOpen = false;
+                // Use the highlighted item from the dropdown
+                viewModel.LocationText = selectedSuggestion;
+                viewModel.SuggestionBoxIsOpen = false;
 
                 // Extract screen coordinates and invoke ViewModel command
                 var mousePos = Mouse.GetPosition(this);
                 var screenMousePosition = PointToScreen(mousePos);
                 var parameter = (selectedSuggestion, screenMousePosition.X, screenMousePosition.Y);
-                if (_viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter))
+                if (viewModel.ConfirmLocationAndItemsCommand.CanExecute(parameter))
                 {
-                    _viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
+                    viewModel.ConfirmLocationAndItemsCommand.Execute(parameter);
                 }
 
                 // Clear focus and reset the index
                 Keyboard.ClearFocus();
-                _focusedSuggestionIndex = -1;
+                viewModel.SelectedSuggestionIndex = -1;
 
                 e.Handled = true;
             }
         }
         else if (e.Key == Key.Down)
         {
-            // Track Down navigation
-            if (_focusedSuggestionIndex >= 0 && _focusedSuggestionIndex < _viewModel?.Suggestions.Count - 1)
+            // Track Down navigation in ViewModel
+            int currentIndex = viewModel.SelectedSuggestionIndex;
+            if (currentIndex >= 0 && currentIndex < viewModel.Suggestions.Count - 1)
             {
-                _focusedSuggestionIndex++;
+                viewModel.SelectedSuggestionIndex++;
+            }
+            else if (currentIndex < 0)
+            {
+                // First Down key press: start at index 0
+                viewModel.SelectedSuggestionIndex = 0;
             }
         }
         else if (e.Key == Key.Up)
         {
-            // Track Up navigation
-            if (_focusedSuggestionIndex > 0)
+            // Track Up navigation in ViewModel
+            int currentIndex = viewModel.SelectedSuggestionIndex;
+            if (currentIndex > 0)
             {
-                _focusedSuggestionIndex--;
+                viewModel.SelectedSuggestionIndex--;
             }
         }
-    }
-
-    private void SuggestionBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        _isMouseSelecting = true;
     }
 
     /// <summary>
@@ -334,12 +259,17 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
     /// </summary>
     private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
     {
+        var viewModel = DataContext as HintInfoViewModel;
+        if (viewModel is null)
+        {
+            return;
+        }
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
             // Invoke the command to confirm potion count and prepare to save
-            if (_viewModel?.ConfirmPotionCountCommand.CanExecute(null) == true)
+            if (viewModel?.ConfirmPotionCountCommand.CanExecute(null) == true)
             {
-                _viewModel.ConfirmPotionCountCommand.Execute(null);
+                viewModel.ConfirmPotionCountCommand.Execute(null);
             }
 
             // Clear focus from the potion count box
@@ -348,51 +278,13 @@ public partial class HintInfo : UserControl, INotifyPropertyChanged
         }
     }
 
-    public void OnRemove()
-    {
-        // Consider moving to the view model fully.
-        if (HintType != HintType.DIRECT_ITEM_HINT)
-        {
-            return;
-        }
-
-        // Remember to change this to utilize the hint service/view model to get the matching items instead of the control directly.
-        foreach (var entry in RightItems.SelectedItems)
-        {
-            var itemName = entry.Key;
-            var matchingItem = ItemTrackingService.GetItemState(itemName) ?? SavedItem.CreateEmpty(itemName);
-            if (matchingItem.Hinted && matchingItem.Region != RegionName.UNKNOWN)
-            {
-                // Remove from the region.
-                ItemTrackingService.SetItemState(itemName, matchingItem with { Hinted = false, Region = RegionName.UNKNOWN });
-            }
-        }
-    }
-    public void SetUpFromSavedHint(SavedHint savedHint)
-    {
-        SavedHint = savedHint;
-        // Update LocationText via ViewModel
-        if (_viewModel != null)
-        {
-            _viewModel.LocationText = savedHint.LocationText;
-            _viewModel.PotionCountText = savedHint.PotionCountText;
-        }
-        // These should be set within the view model rather than the UI.
-        // ItemsOnPath.SelectedItems = savedHint.PathItems;
-        // ItemsOnPath.ProcessSelectedItems();
-        RightItems.SelectedItems = savedHint.FoundItems;
-        RightItems.ProcessSelectedItems();
-        UserInitialized = true;
-    }
-
     private void Location_PreviewMouseRightButtonDown(object sender, MouseEventArgs e)
     {
-        var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right)
+        var viewModel = DataContext as HintInfoViewModel;
+        if (viewModel?.RemoveHintCommand.CanExecute(null) == true)
         {
-            RoutedEvent = MouseDownEvent,
-            Source = this
-        };
-        RaiseEvent(args);
+            viewModel.RemoveHintCommand.Execute(null);
+        }
         e.Handled = true;
     }
 }
