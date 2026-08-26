@@ -56,7 +56,6 @@ namespace TrackOMatic
         {
             var newVisibility = (Star.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
             SetStarVisibility(newVisibility);
-            mainWindow.BACKGROUND_IMAGE_TO_ITEM[this].SetStarVisibility(newVisibility);
         }
 
         public void ItemBackground_MouseDown(object sender, MouseEventArgs e)
@@ -77,15 +76,6 @@ namespace TrackOMatic
             }
             else if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var item = mainWindow.BACKGROUND_IMAGE_TO_ITEM[this];
-                if (item.Parent != mainWindow.ItemGrid)
-                {
-                    item.HandleItemReturn();
-                    if (item.Region != null && item.Region.RegionName != RegionName.UNHINTABLE_MOVES)
-                    {
-                        item.DoDragDrop(e.RightButton == MouseButtonState.Pressed);
-                    }
-                }
             }
         }
 

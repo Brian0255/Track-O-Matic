@@ -27,13 +27,7 @@ namespace TrackOMatic
     public partial class MainWindow : Window
     {
         private BroadcastView? BroadcastView { get; set; }
-        public Dictionary<RegionName, Region> Regions { get; private set; } = null!;
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
-        public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
-        public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
-        public List<HintPanel> HintPanels { get; private set; } = null!;
-
-        public List<Item> DraggableItems { get; private set; } = new();
 
         public bool SpoilerLoaded { get; private set; }
         public static Grid Items { get; private set; } = null!;
@@ -42,7 +36,6 @@ namespace TrackOMatic
         public SpoilerSettings SpoilerSettings { get; private set; } = null!;
 
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
-        public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
 
         private IAutotrackerService Autotracker { get; init; }
         private IUserSettingsService UserSettings { get; init; }
@@ -91,7 +84,7 @@ namespace TrackOMatic
             InitOptions();
             InitData();
 
-            SpoilerParser = new(this, UserSettings, SpoilerService);
+            SpoilerParser = new(UserSettings, SpoilerService);
             DataSaver = new(this, DataPersistenceService, ParsedSpoilerDataService, SpoilerService);
             Reset();
         }
@@ -148,10 +141,6 @@ namespace TrackOMatic
         {
             UpdateHintDisplayToggles();
             UpdateBroadcastNumberDisplayToggles();
-            Regions = [];
-            Items = ItemGrid;
-
-            HintPanels = [];
         }
 
         private void OnTimerSave(object? sender, ElapsedEventArgs e)
@@ -167,29 +156,8 @@ namespace TrackOMatic
                 return false;
             }
 
-            if (!ITEM_NAME_TO_ITEM.TryGetValue(itemToProcess, out Item? item))
-            {
-                return false;
-            }
-
             return false; // Will come back.
-            bool darken = hint && item.Parent == ItemGrid;
-            if (item.Parent != ItemGrid)
-            {
-                var parent = (RegionGrid)item.Parent;
-                parent.Handle_RegionGrid(item, false);
-            }
-            if (!hint)
-            {
-                item.ChangeOpacity(1.0);
-            }
-
-            //should mean that there was no matching vial, item couldn't be placed as a result
-            if (item.Parent == ItemGrid)
-            {
-                return false;
-            }
-
+            Item? item;
             DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility.ToItemVisibility(), true, item.Image.Opacity));
             DataSaver.Save("autosave.json", canAutosave);
             return true;
@@ -274,9 +242,7 @@ namespace TrackOMatic
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (Path.GetExtension(files[0]).ToUpper().Equals(".JSON"))
                 {
-                    Reset();
-                    await ParseSpoiler(files[0]);
-                    DataSaver.setSpoilerPath(files[0]);
+                    await OpenSpoilerFromPath(files[0]);
                 }
             }
         }
@@ -299,29 +265,24 @@ namespace TrackOMatic
                 string folderPath = Path.GetDirectoryName(selectedFilePath) ?? "";
 
                 AppState.LastFolderPath = folderPath;
+                await OpenSpoilerFromPath(selectedFilePath);
+            }
+        }
+
+        private async Task OpenSpoilerFromPath(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
                 Reset();
-                await ParseSpoiler(selectedFilePath);
-                DataSaver.setSpoilerPath(selectedFilePath);
+                await ParseSpoiler(filePath);
+                DataSaver.SetSpoilerPath(filePath);
             }
         }
 
         public void Reset()
         {
             SpoilerLoaded = false;
-            ITEM_NAME_TO_REGION.Clear();
             SpoilerSettings = new SpoilerSettings();
-            foreach (var entry in Regions)
-            {
-                var region = entry.Value;
-                region.Reset();
-            }
-            foreach (var item in DraggableItems.Cast<Item>())
-            {
-                item.CanLeftClick = true;
-                item.SetStarVisibility(Visibility.Hidden);
-                item.ChangeOpacity(1.0);
-                item.InitHoverPoints();
-            }
 
             HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
             Autotracker.Reset();

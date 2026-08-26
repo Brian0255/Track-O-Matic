@@ -9,16 +9,14 @@ namespace TrackOMatic
 {
     public class SpoilerParser
     {
-        public MainWindow MainWindow { get; }
         public Dictionary<ItemName, RegionName> StartingItems { get; private set; } = [];
 
         private IUserSettingsService UserSettings { get; init; }
         private ISpoilerService SpoilerService { get; set; }
         private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
 
-        public SpoilerParser(MainWindow mainWindow, IUserSettingsService userSettings, ISpoilerService spoilerService, IParsedSpoilerDataService parsedSpoilerDataService = null!)
+        public SpoilerParser(IUserSettingsService userSettings, ISpoilerService spoilerService, IParsedSpoilerDataService parsedSpoilerDataService = null!)
         {
-            MainWindow = mainWindow;
             UserSettings = userSettings;
             SpoilerService = spoilerService;
             ParsedSpoilerDataService = parsedSpoilerDataService ?? ServiceLocator.GetService<IParsedSpoilerDataService>();

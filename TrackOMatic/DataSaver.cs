@@ -129,7 +129,7 @@ namespace TrackOMatic
             }
         }
 
-        public void setSpoilerPath(string newSpoilerPath)
+        public void SetSpoilerPath(string newSpoilerPath)
         {
             if (CurrentSavedProgress == null)
             {
