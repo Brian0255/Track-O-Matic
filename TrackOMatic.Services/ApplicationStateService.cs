@@ -13,14 +13,14 @@ public class ApplicationStateService : IApplicationStateService
     private const string StateFileName = "app-state.json";
     private readonly string _stateFilePath;
     private ApplicationStateData _stateData;
-    private readonly JsonSerializerOptions _serializerOptions;
+    private readonly IDataPersistenceService _dataPersistenceService;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Creates an ApplicationStateService with default app data folder location.
     /// </summary>
-    public ApplicationStateService() : this(null)
+    public ApplicationStateService(IDataPersistenceService dataPersistenceService) : this(null, dataPersistenceService)
     {
     }
 
@@ -29,8 +29,10 @@ public class ApplicationStateService : IApplicationStateService
     /// Used primarily for testing with custom file locations.
     /// </summary>
     /// <param name="stateFilePath">Optional custom path for state file. If null, uses default app data folder.</param>
-    internal ApplicationStateService(string? stateFilePath)
+    internal ApplicationStateService(string? stateFilePath, IDataPersistenceService dataPersistenceService)
     {
+        _dataPersistenceService = dataPersistenceService;
+
         // Determine platform-specific app data folder or use provided path
         if (string.IsNullOrEmpty(stateFilePath))
         {
@@ -43,38 +45,23 @@ public class ApplicationStateService : IApplicationStateService
             _stateFilePath = stateFilePath;
         }
 
-        _serializerOptions = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = true
-        }
-        ;
-
         // Initialize data with defaults
         _stateData = new ApplicationStateData();
 
         // Try to load from file, use defaults if file doesn't exist
-        if (File.Exists(_stateFilePath))
-        {
-            LoadFromFile();
-        }
+        _ = LoadFromFileAsync();
     }
     /// <summary>
     /// Loads application state from the JSON file.
     /// </summary>
-    private void LoadFromFile()
+    private async Task LoadFromFileAsync()
     {
         try
         {
-            if (!File.Exists(_stateFilePath))
+            ApplicationStateData? data = await _dataPersistenceService.LoadAsync<ApplicationStateData>(_stateFilePath);
+            if (data is not null)
             {
-                return;
-            }
-            string json = File.ReadAllText(_stateFilePath);
-            var loaded = JsonSerializer.Deserialize<ApplicationStateData>(json, _serializerOptions);
-            if (loaded != null)
-            {
-                _stateData = loaded;
+                _stateData = data;
             }
         }
         catch (Exception ex)
@@ -87,19 +74,11 @@ public class ApplicationStateService : IApplicationStateService
     /// <summary>
     /// Saves settings to the JSON file.
     /// </summary>
-    public void SaveToFile()
+    internal async Task SaveToFileAsync()
     {
         try
         {
-            // Ensure directory exists
-            string? directory = Path.GetDirectoryName(_stateFilePath);
-            if (directory != null && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            string json = JsonSerializer.Serialize(_stateData, _serializerOptions);
-            File.WriteAllText(_stateFilePath, json);
+            await _dataPersistenceService.SaveAsync(_stateData, _stateFilePath);
         }
         catch (Exception ex)
         {
@@ -164,7 +143,7 @@ public class ApplicationStateService : IApplicationStateService
         {
             setter(value);
             OnPropertyChanged(propertyName);
-            SaveToFile();
+            _ = SaveToFileAsync();
         }
     }
 

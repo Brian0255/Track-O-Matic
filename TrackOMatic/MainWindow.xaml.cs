@@ -32,7 +32,6 @@ namespace TrackOMatic
         public bool SpoilerLoaded { get; private set; }
         public static Grid Items { get; private set; } = null!;
         public SpoilerParser SpoilerParser { get; private set; }
-        public DataSaver DataSaver { get; private set; }
         public SpoilerSettings SpoilerSettings { get; private set; } = null!;
 
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
@@ -43,6 +42,7 @@ namespace TrackOMatic
         private IDataPersistenceService DataPersistenceService { get; init; }
         private ISpoilerService SpoilerService { get; init; }
         private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
+        private IDataSaverService DataSaverService { get; init; }
 
         // Timer to save the data every minute.
         private Timer _saveTimer { get; init; }
@@ -56,12 +56,14 @@ namespace TrackOMatic
             ILevelOrderService levelOrderService,
             IAutotrackerService autotrackerService,
             IThemeService themeService,
-            ISavedProgressProvider savedProgressProvider
+            ISavedProgressProvider savedProgressProvider,
+            IDataSaverService dataSaverService
         )
         {
             InitializeComponent();
             UserSettings = settingsSergice;
             AppState = appStateService;
+            DataSaverService = dataSaverService;
             DataPersistenceService = dataPersistenceService;
             SpoilerService = spoilerService;
             ParsedSpoilerDataService = parsedSpoilerDataService;
@@ -85,7 +87,6 @@ namespace TrackOMatic
             InitData();
 
             SpoilerParser = new(UserSettings, SpoilerService);
-            DataSaver = new(this, DataPersistenceService, ParsedSpoilerDataService, SpoilerService);
             Reset();
         }
 
@@ -146,21 +147,7 @@ namespace TrackOMatic
         private void OnTimerSave(object? sender, ElapsedEventArgs e)
         {
             //probably don't need this
-            //DataSaver.Save();
-        }
-
-        public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false, bool canAutosave = true)
-        {
-            if (regionName == RegionName.UNKNOWN)
-            {
-                return false;
-            }
-
-            return false; // Will come back.
-            Item? item;
-            DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility.ToItemVisibility(), true, item.Image.Opacity));
-            DataSaver.Save("autosave.json", canAutosave);
-            return true;
+            //DataSaverService.Save();
         }
 
         private void InitOptions()
@@ -271,12 +258,7 @@ namespace TrackOMatic
 
         private async Task OpenSpoilerFromPath(string filePath)
         {
-            if (File.Exists(filePath))
-            {
-                Reset();
-                await ParseSpoiler(filePath);
-                DataSaver.SetSpoilerPath(filePath);
-            }
+            await DataSaverService.InitWithSpoilerAsync(filePath);
         }
 
         public void Reset()
@@ -286,14 +268,14 @@ namespace TrackOMatic
 
             HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
             Autotracker.Reset();
-            DataSaver.Reset();
+            DataSaverService.Reset();
         }
         private void OnReset(object sender, RoutedEventArgs e)
         {
             Reset();
         }
 
-        private void OnSave(object sender, RoutedEventArgs e)
+        private async void OnSave(object sender, RoutedEventArgs e)
         {
             var saveDialog = new SaveFileDialog
             {
@@ -305,12 +287,12 @@ namespace TrackOMatic
             if (saveDialog.ShowDialog() == true)
             {
                 var filePath = saveDialog.FileName;
-                DataSaver.Save(filePath);
+                await DataSaverService.SaveAsync(filePath);
             }
         }
 
 
-        private void OnLoad(object sender, RoutedEventArgs e)
+        private async void OnLoad(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -324,7 +306,7 @@ namespace TrackOMatic
             {
                 var filePath = openFileDialog.FileName;
                 Reset();
-                DataSaver.ReadSavedDataFromFile(filePath);
+                await DataSaverService.LoadAsync(filePath);
             }
         }
 
@@ -345,12 +327,12 @@ namespace TrackOMatic
             Height = AppState.DesiredHeight;
         }
 
-        private void Window_Closing(object sender, CancelEventArgs e)
+        private async void Window_Closing(object sender, CancelEventArgs e)
         {
-            Dispatcher.BeginInvoke(() => BroadcastView?.Close());
+            await Dispatcher.BeginInvoke(() => BroadcastView?.Close());
             AppState.DesiredWidth = Width;
             AppState.DesiredHeight = Height;
-            DataSaver.Save();
+            await DataSaverService.SaveAsync();
             Autotracker.Shutdown();
         }
 

@@ -20,14 +20,14 @@ public class UserSettingsService : IUserSettingsService
     private const string SettingsFileName = "user-settings.json";
     private readonly string _settingsFilePath;
     private UserSettingsData _settingsData;
-    private readonly JsonSerializerOptions _serializerOptions;
+    private readonly IDataPersistenceService _dataPersistenceService;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Creates a UserSettingsService with default app data folder location.
     /// </summary>
-    public UserSettingsService() : this(null)
+    public UserSettingsService(IDataPersistenceService dataPersistenceService) : this(null, dataPersistenceService)
     {
     }
 
@@ -36,8 +36,9 @@ public class UserSettingsService : IUserSettingsService
     /// Used primarily for testing with custom file locations.
     /// </summary>
     /// <param name="settingsFilePath">Optional custom path for settings file. If null, uses default app data folder.</param>
-    internal UserSettingsService(string? settingsFilePath)
+    internal UserSettingsService(string? settingsFilePath, IDataPersistenceService dataPersistenceService)
     {
+        _dataPersistenceService = dataPersistenceService;
         // Determine platform-specific app data folder or use provided path
         if (string.IsNullOrEmpty(settingsFilePath))
         {
@@ -50,41 +51,24 @@ public class UserSettingsService : IUserSettingsService
             _settingsFilePath = settingsFilePath;
         }
 
-        _serializerOptions = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = true
-        }
-        ;
-
         // Initialize data with defaults
         _settingsData = new UserSettingsData();
 
         // Try to load from file, use defaults if file doesn't exist
-        if (File.Exists(_settingsFilePath))
-        {
-            LoadFromFile();
-        }
+        _ = LoadFromFileAsync();
     }
 
     /// <summary>
     /// Loads settings from the JSON file.
     /// </summary>
-    private void LoadFromFile()
+    private async Task LoadFromFileAsync()
     {
         try
         {
-            if (!File.Exists(_settingsFilePath))
+            UserSettingsData? data = await _dataPersistenceService.LoadAsync<UserSettingsData>(_settingsFilePath);
+            if (data is not null)
             {
-                return;
-            }
-
-            string json = File.ReadAllText(_settingsFilePath);
-            var loaded = JsonSerializer.Deserialize<UserSettingsData>(json, _serializerOptions);
-
-            if (loaded != null)
-            {
-                _settingsData = loaded;
+                _settingsData = data;
             }
         }
         catch (Exception ex)
@@ -97,19 +81,11 @@ public class UserSettingsService : IUserSettingsService
     /// <summary>
     /// Saves settings to the JSON file.
     /// </summary>
-    public void SaveToFile()
+    internal async Task SaveToFileAsync()
     {
         try
         {
-            // Ensure directory exists
-            string? directory = Path.GetDirectoryName(_settingsFilePath);
-            if (directory != null && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            string json = JsonSerializer.Serialize(_settingsData, _serializerOptions);
-            File.WriteAllText(_settingsFilePath, json);
+            await _dataPersistenceService.SaveAsync(_settingsData, _settingsFilePath);
         }
         catch (Exception ex)
         {
@@ -266,7 +242,7 @@ public class UserSettingsService : IUserSettingsService
         {
             setter(value);
             OnPropertyChanged(propertyName);
-            SaveToFile();
+            _ = SaveToFileAsync();
         }
     }
 

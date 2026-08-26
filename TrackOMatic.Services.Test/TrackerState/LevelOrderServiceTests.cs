@@ -4,6 +4,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.Services.Test.TrackerState;
 
+
 /// <summary>
 /// Unit tests for LevelOrderService.
 /// Tests level order state management and event firing.
@@ -22,7 +23,7 @@ public class LevelOrderServiceTests
         };
         _provider = new TestSavedProgressProvider(_progress);
         // TODO: Mock this in the future.
-        _sut = new LevelOrderService(_provider, new UserSettingsService());
+        _sut = new LevelOrderService(_provider, new UserSettingsService(new DataPersistenceService()));
     }
 
     #region GetLevelOrder Tests

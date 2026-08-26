@@ -1,8 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-
-using TrackOMatic.Logic.Events;
-using TrackOMatic.Logic.Models;
+using System.Text.Json.Serialization;
 
 [assembly: InternalsVisibleTo("TrackOMatic.Services.Test")]
 
@@ -14,90 +12,41 @@ namespace TrackOMatic.Services;
 /// </summary>
 public class DataPersistenceService : IDataPersistenceService
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
+    private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
-        WriteIndented = true
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    public event EventHandler<SavedProgressChangedEventArgs>? SaveCompleted;
-    public event EventHandler<string>? SaveFailed;
-
-    /// <summary>
-    /// Load saved progress from a JSON file.
-    /// </summary>
-    public SavedProgress? Load(string filePath)
+    public async Task<T?> LoadAsync<T>(string filePath) where T : class
     {
         if (!File.Exists(filePath))
         {
-            return null;
+            return default;
         }
 
-        try
-        {
-            var jsonString = File.ReadAllText(filePath);
-            var savedData = JsonSerializer.Deserialize<SavedProgress>(jsonString, JsonOptions);
-            return savedData;
-        }
-        catch (JsonException ex)
-        {
-            var errorMsg = $"Failed to deserialize {filePath}: {ex.Message}";
-            SaveFailed?.Invoke(this, errorMsg);
-            return null;
-        }
-        catch (IOException ex)
-        {
-            var errorMsg = $"Failed to read {filePath}: {ex.Message}";
-            SaveFailed?.Invoke(this, errorMsg);
-            return null;
-        }
-        catch (Exception ex)
-        {
-            var errorMsg = $"Unexpected error loading {filePath}: {ex.Message}";
-            SaveFailed?.Invoke(this, errorMsg);
-            return null;
-        }
+        var jsonString = await File.ReadAllTextAsync(filePath);
+        return JsonSerializer.Deserialize<T>(jsonString, _jsonOptions);
     }
 
-    /// <summary>
-    /// Save game progress to a JSON file.
-    /// </summary>
-    public void Save(SavedProgress progress, string filePath)
+    public async Task SaveAsync<T>(T data, string filePath, bool ensureDirectory = true) where T : class
     {
-        if (progress == null)
+        if (data is null)
         {
-            SaveFailed?.Invoke(this, "Cannot save null SavedProgress");
-            return;
+            throw new ArgumentNullException(nameof(data), "Data cannot be null.");
         }
 
-        try
+        if (ensureDirectory)
         {
-            var jsonString = JsonSerializer.Serialize(progress, JsonOptions);
-            File.WriteAllText(filePath, jsonString);
-            SaveCompleted?.Invoke(this, new SavedProgressChangedEventArgs
+            string? directory = Path.GetDirectoryName(filePath);
+            if (directory != null && !Directory.Exists(directory))
             {
-                FilePath = filePath,
-                Success = true
-            });
+                Directory.CreateDirectory(directory);
+            }
         }
-        catch (IOException ex)
-        {
-            var errorMsg = $"Failed to write {filePath}: {ex.Message}";
-            SaveFailed?.Invoke(this, errorMsg);
-        }
-        catch (Exception ex)
-        {
-            var errorMsg = $"Unexpected error saving to {filePath}: {ex.Message}";
-            SaveFailed?.Invoke(this, errorMsg);
-        }
-    }
 
-    /// <summary>
-    /// Clear in-memory state (if needed for reset scenarios).
-    /// </summary>
-    public void Reset()
-    {
-        // Service is stateless; nothing to reset
-        // Placeholder for future cache management if needed
+        var jsonString = JsonSerializer.Serialize(data, _jsonOptions);
+        await File.WriteAllTextAsync(filePath, jsonString);
     }
 }

@@ -15,7 +15,7 @@ public static class ServiceRegistryExtensions
     /// </summary>
     public static IServiceCollection AddTrackOMaticServices(this IServiceCollection services)
     {
-        // Existing application services
+        services.AddSingleton<IDataPersistenceService, DataPersistenceService>();
         services.AddSingleton<IUserSettingsService, UserSettingsService>();
         services.AddSingleton<IApplicationStateService, ApplicationStateService>();
         services.AddSingleton<IThemeService, BarrelPadThemeService>();
@@ -28,7 +28,11 @@ public static class ServiceRegistryExtensions
         // broadcasts state changes via ProgressChanged event, allowing subscribed services to
         // reinitialize their caches.
         services.AddSingleton<ISavedProgressProvider>(sp => new SavedProgressProvider(new SavedProgress()));
-        services.AddSingleton<IDataPersistenceService, DataPersistenceService>();
+        services.AddSingleton<IDataSaverService>(sp => new DataSaverService(
+            sp.GetRequiredService<IDataPersistenceService>(),
+            sp.GetRequiredService<IParsedSpoilerDataService>(),
+            sp.GetRequiredService<ISpoilerService>()
+        ));
         services.AddSingleton<IItemTrackingService, ItemTrackingService>();
         services.AddSingleton<IHintService>(sp => new HintService(sp.GetRequiredService<IItemTrackingService>(), sp.GetRequiredService<ISavedProgressProvider>()));
         services.AddSingleton<ICollectiblesService, CollectiblesService>();

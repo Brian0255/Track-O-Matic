@@ -53,6 +53,7 @@ public partial class App : Application
         var themeService = _serviceProvider.GetRequiredService<IThemeService>();
         var levelOrderService = _serviceProvider.GetRequiredService<ILevelOrderService>();
         var savedProgressProvider = _serviceProvider.GetRequiredService<ISavedProgressProvider>();
+        var dataSaverService = _serviceProvider.GetRequiredService<IDataSaverService>();
 
         _resourceDictionaryProvider = new WpfResourceDictionaryProvider(themeService);
         _resourceDictionaryProvider.UpdateResourceDictionaries();
@@ -69,7 +70,8 @@ public partial class App : Application
             levelOrderService,
             autotrackingService,
             themeService,
-            savedProgressProvider
+            savedProgressProvider,
+            dataSaverService
         );
         mainWindow.Show();
     }
