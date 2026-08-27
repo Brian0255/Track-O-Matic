@@ -7,6 +7,11 @@ namespace TrackOMatic.Services;
 
 public class DataSaverService : IDataSaverService
 {
+    private static readonly string AppDataDirectory = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "Track-O-Matic"
+    );
+
     private readonly IDataPersistenceService _dataPersistenceService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISpoilerService _spoilerService;
@@ -89,8 +94,11 @@ public class DataSaverService : IDataSaverService
 
         try
         {
-            await _dataPersistenceService.SaveAsync(CurrentSavedProgress, filePath);
-            SaveCompleted?.Invoke(this, new() { FilePath = filePath, Success = true });
+            // If only a filename is provided, resolve it to the app data directory
+            string resolvedPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(AppDataDirectory, filePath);
+
+            await _dataPersistenceService.SaveAsync(CurrentSavedProgress, resolvedPath);
+            SaveCompleted?.Invoke(this, new() { FilePath = resolvedPath, Success = true });
         }
         catch (Exception ex)
         {

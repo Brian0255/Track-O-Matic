@@ -26,6 +26,8 @@ namespace TrackOMatic
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly TimeSpan _saveInterval = TimeSpan.FromMinutes(1);
+
         private BroadcastView? BroadcastView { get; set; }
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
 
@@ -39,7 +41,6 @@ namespace TrackOMatic
         private IAutotrackerService Autotracker { get; init; }
         private IUserSettingsService UserSettings { get; init; }
         private IApplicationStateService AppState { get; init; }
-        private IDataPersistenceService DataPersistenceService { get; init; }
         private ISpoilerService SpoilerService { get; init; }
         private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
         private IDataSaverService DataSaverService { get; init; }
@@ -50,7 +51,6 @@ namespace TrackOMatic
         public MainWindow(
             IUserSettingsService settingsSergice,
             IApplicationStateService appStateService,
-            IDataPersistenceService dataPersistenceService,
             ISpoilerService spoilerService,
             IParsedSpoilerDataService parsedSpoilerDataService,
             ILevelOrderService levelOrderService,
@@ -64,14 +64,13 @@ namespace TrackOMatic
             UserSettings = settingsSergice;
             AppState = appStateService;
             DataSaverService = dataSaverService;
-            DataPersistenceService = dataPersistenceService;
             SpoilerService = spoilerService;
             ParsedSpoilerDataService = parsedSpoilerDataService;
             Autotracker = autotrackerService;
             DataContext = new MainWindowViewModel(settingsSergice, themeService, autotrackerService, savedProgressProvider);
 
-            _saveTimer = new Timer(60000);
-            _saveTimer.Elapsed += OnTimerSave;
+            _saveTimer = new Timer(_saveInterval);
+            _saveTimer.Elapsed += async (sender, e) => await OnTimerSave(sender, e);
             _saveTimer.Start();
 
             // Subscribe to settings changes to notify XAML bindings
@@ -98,7 +97,7 @@ namespace TrackOMatic
             }
             else if (e.PropertyName == nameof(UserSettings.CompactMode))
             {
-                AdjustBasedOnCompactMode();
+                ResetWidthHeight();
             }
             else if (e.PropertyName == nameof(UserSettings.BroadcastViewActive))
             {
@@ -144,10 +143,16 @@ namespace TrackOMatic
             UpdateBroadcastNumberDisplayToggles();
         }
 
-        private void OnTimerSave(object? sender, ElapsedEventArgs e)
+        private async Task OnTimerSave(object? sender, ElapsedEventArgs e)
         {
-            //probably don't need this
-            //DataSaverService.Save();
+            try
+            {
+                await DataSaverService.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Auto-save failed: {ex.Message}");
+            }
         }
 
         private void InitOptions()
@@ -175,19 +180,10 @@ namespace TrackOMatic
             double newWidth = 580;
             if (UserSettings.HintDisplay != HintDisplayMode.Off)
             {
-                newWidth = (UserSettings.CompactMode) ? 1392.0 : 1800.0;
+                newWidth = UserSettings.CompactMode ? 1392.0 : 1800.0;
             }
             Width = newWidth;
             Height = 820;
-        }
-
-        private void AdjustBasedOnCompactMode()
-        {
-            var on = UserSettings.CompactMode;
-            var totalColumns = on ? 2 : 3;
-
-            var newWidth = on ? (Width * (1392.0 / 1800.0)) : (Width * (1800.0 / 1392.0));
-            Width = newWidth;
         }
 
         private void ResetSize(object sender, RoutedEventArgs e)
@@ -312,23 +308,39 @@ namespace TrackOMatic
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            var viewModel = (MainWindowViewModel)DataContext;
+
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
             AutoUpdater.InstalledVersion = new Version("3.0.0");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
+
+            // Only restore saved dimensions if they make sense for current mode
+            // This prevents flicker when CompactMode changes between sessions
             if (AppState.DesiredHeight == 0 || AppState.DesiredWidth == 0)
             {
                 return;
             }
 
-            Width = AppState.DesiredWidth;
-            Height = AppState.DesiredHeight;
+            double expectedWidth = viewModel.CurrentWindowWidth;
+
+            // Only restore saved width if it matches the expected width for current mode
+            // If mode changed since last save, use the correct width for current mode
+            if (Math.Abs(AppState.DesiredWidth - expectedWidth) < 1)
+            {
+                Width = AppState.DesiredWidth;
+                Height = AppState.DesiredHeight;
+            }
+            // else: Keep current width from InitOptions, don't restore
         }
 
         private async void Window_Closing(object sender, CancelEventArgs e)
         {
+            _saveTimer.Stop();
+            _saveTimer.Dispose();
+
             await Dispatcher.BeginInvoke(() => BroadcastView?.Close());
             AppState.DesiredWidth = Width;
             AppState.DesiredHeight = Height;

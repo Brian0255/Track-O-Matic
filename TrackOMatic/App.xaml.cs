@@ -46,7 +46,6 @@ public partial class App : Application
 
         var settingsService = _serviceProvider.GetRequiredService<IUserSettingsService>();
         var appStateService = _serviceProvider.GetRequiredService<IApplicationStateService>();
-        var dataPersistenceService = _serviceProvider.GetRequiredService<IDataPersistenceService>();
         var spoilerService = _serviceProvider.GetRequiredService<ISpoilerService>();
         var parsedSpoilerDataService = _serviceProvider.GetRequiredService<IParsedSpoilerDataService>();
         var autotrackingService = _serviceProvider.GetRequiredService<IAutotrackerService>();
@@ -64,7 +63,6 @@ public partial class App : Application
         (
             settingsService,
             appStateService,
-            dataPersistenceService,
             spoilerService,
             parsedSpoilerDataService,
             levelOrderService,

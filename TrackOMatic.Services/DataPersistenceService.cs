@@ -40,7 +40,8 @@ public class DataPersistenceService : IDataPersistenceService
         if (ensureDirectory)
         {
             string? directory = Path.GetDirectoryName(filePath);
-            if (directory != null && !Directory.Exists(directory))
+            // Only create directory if it's not empty (empty string means file is in current directory)
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }

@@ -9,6 +9,11 @@ public class SavedProgress
 {
     [JsonPropertyName("Version")]
     public Version SaveFileVersion { get; set; } = new Version(3, 0, 0);
+
+    /// <summary>
+    /// Collection of saved items with their state. Empty items are automatically filtered out during serialization.
+    /// </summary>
+    [JsonConverter(typeof(SavedItemsConverter))]
     public Dictionary<ItemName, SavedItem> SavedItems { get; set; }
     public Dictionary<RegionName, string> SavedGBCounts { get; set; }
     public Dictionary<RegionName, int> BLockerImageIndexes { get; set; }
