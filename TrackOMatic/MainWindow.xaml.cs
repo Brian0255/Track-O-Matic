@@ -186,12 +186,12 @@ namespace TrackOMatic
             Height = 820;
         }
 
-        private void ResetSize(object sender, RoutedEventArgs e)
+        private void OnResetSize(object sender, RoutedEventArgs e)
         {
             ResetWidthHeight();
         }
 
-        private void rootGrid_LostFocus(object sender, RoutedEventArgs e)
+        private void OnMouseDown(object sender, RoutedEventArgs e)
         {
             Keyboard.ClearFocus();
         }
@@ -230,7 +230,7 @@ namespace TrackOMatic
             }
         }
 
-        private async void OpenSpoiler(object sender, RoutedEventArgs e)
+        private async void OnOpenSpoiler(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new();
             openFileDialog.Filter = "JSON files (*.json)|*.json";
@@ -266,7 +266,7 @@ namespace TrackOMatic
             Autotracker.Reset();
             DataSaverService.Reset();
         }
-        private void OnReset(object sender, RoutedEventArgs e)
+        private void OnResetTracker(object sender, RoutedEventArgs e)
         {
             Reset();
         }

@@ -18,7 +18,7 @@
     Loaded="MainWindow_Loaded"
     Unloaded="OnUnloaded"
     LocationChanged="Window_LocationChanged"
-    MouseDown="rootGrid_LostFocus"
+    MouseDown="OnMouseDown"
     SizeChanged="Window_SizeChanged"
     AllowDrop="True"
     Drop="DropFile"
@@ -55,9 +55,9 @@
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
             <MenuItem Header="File" Focusable="False">
-                <MenuItem Header="Open Spoiler Log" StaysOpenOnClick="True"  Click="OpenSpoiler"/>
-                <MenuItem Header="Reset Size" StaysOpenOnClick="True"  Click="ResetSize"/>
-                <MenuItem Header="Reset Tracker" StaysOpenOnClick="True"  Click="OnReset"/>
+                <MenuItem Header="Open Spoiler Log" StaysOpenOnClick="True"  Click="OnOpenSpoiler"/>
+                <MenuItem Header="Reset Size" StaysOpenOnClick="True"  Click="OnResetSize"/>
+                <MenuItem Header="Reset Tracker" StaysOpenOnClick="True"  Click="OnResetTracker"/>
                 <MenuItem Header="Save Data" StaysOpenOnClick="True"  Click="OnSave"/>
                 <MenuItem Header="Load Data" StaysOpenOnClick="True"  Click="OnLoad"/>
             </MenuItem>
