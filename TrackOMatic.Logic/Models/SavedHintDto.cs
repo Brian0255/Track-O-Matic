@@ -64,14 +64,14 @@ internal class SavedHintDto
     /// </summary>
     /// <param name="hintId">The hint ID to check and potentially replace.</param>
     /// <returns>The provided hint ID if non-empty, or a newly generated 8-character ID from a GUID.</returns>
-    internal static string GenerateHintIdIfNeeded(string? hintId)
+    internal static HintId GenerateHintIdIfNeeded(string? hintId)
     {
         if (string.IsNullOrEmpty(hintId))
         {
-            return Guid.NewGuid().ToString().Substring(0, 8);
+            return new(Guid.NewGuid());
         }
 
-        return hintId;
+        return new(hintId);
     }
 
     private static HintPanelType ConvertFromLegacyKey(string? key)

@@ -16,7 +16,8 @@ public class DataPersistenceService : IDataPersistenceService
     {
         PropertyNameCaseInsensitive = true,
         WriteIndented = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        Converters = { new JsonStringEnumConverter() }
     };
 
     public async Task<T> LoadAsync<T>(string filePath, CancellationToken cancellationToken = default) where T : class, new()

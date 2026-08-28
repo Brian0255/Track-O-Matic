@@ -20,6 +20,16 @@ public record HintId
         Value = value;
     }
 
+    public HintId(Guid guid)
+    {
+        if (guid.Equals(Guid.Empty))
+        {
+            throw new ArgumentException("HintId cannot be all zeroes.", nameof(guid));
+        }
+
+        Value = guid.ToString()[..8];
+    }
+
     public override string ToString() => Value;
     public static implicit operator string(HintId hintId) => hintId.Value;
 }

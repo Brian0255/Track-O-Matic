@@ -119,7 +119,7 @@ public partial class PathHintItemListViewModel : ObservableObject, IDisposable
             screenMousePosition.Y
         );
 
-        var resultItems = result.Select(c => c.ItemName).ToDictionary(i => i, i => true);
+        var resultItems = result.Select(c => c.ItemName).ToDictionary(i => i, i => false);
         foreach (var item in PathItems)
         {
             if (resultItems.ContainsKey(item.ItemName))

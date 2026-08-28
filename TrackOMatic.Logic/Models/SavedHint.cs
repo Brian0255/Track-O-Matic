@@ -1,4 +1,7 @@
+using System.Text.Json.Serialization;
+
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models.Converters;
 
 namespace TrackOMatic.Logic.Models;
 
@@ -11,6 +14,7 @@ public class SavedHint
     /// Gets the ID of the hint. This is meant to be auto-generated if it doesn't exist.
     /// If not provided or empty, a 8-character ID will be generated from a random GUID during initialization.
     /// </summary>
+    [JsonConverter(typeof(HintIdJsonConverter))]
     public HintId HintId { get; init; }
 
     /// <summary>
@@ -69,7 +73,7 @@ public class SavedHint
         PotionCountText = potionCountText;
         PathItems = pathItems;
         FoundItems = foundItems;
-        HintId = new HintId(SavedHintDto.GenerateHintIdIfNeeded(hintId));
+        HintId = SavedHintDto.GenerateHintIdIfNeeded(hintId);
     }
 
     public static SavedHint CreateFromPanel(HintPanelType hintPanelType) => new(hintPanelType, "", "", [], [], SavedHintDto.GenerateHintIdIfNeeded(""));
