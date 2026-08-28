@@ -228,7 +228,7 @@ public class RegionLevelViewModelTests
             parsedSpoilerDataService,
             savedProgressProvider);
 
-        viewModel.IncrementLevelOrder();
+        viewModel.IncrementLevelOrderCommand.Execute(null);
 
         Assert.Equal(0, viewModel.LevelOrderNumber);
     }
@@ -249,7 +249,7 @@ public class RegionLevelViewModelTests
             parsedSpoilerDataService,
             savedProgressProvider);
 
-        viewModel.DecrementLevelOrder();
+        viewModel.DecrementLevelOrderCommand.Execute(null);
 
         Assert.Equal(1, viewModel.LevelOrderNumber);
     }
@@ -274,7 +274,7 @@ public class RegionLevelViewModelTests
             parsedSpoilerDataService,
             savedProgressProvider);
 
-        viewModel.IncrementLevelOrder();
+        viewModel.IncrementLevelOrderCommand.Execute(null);
 
         Assert.Equal(8, viewModel.LevelOrderNumber);
     }

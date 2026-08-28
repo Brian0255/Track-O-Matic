@@ -18,6 +18,7 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:AllAndToBoolConverter x:Key="AllAndToBoolConverter" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:PlayableRegionConverter x:Key="PlayableRegionConverter" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
             <converters:LobbyRegionConverter x:Key="LobbyRegionConverter" />
@@ -75,12 +76,15 @@
                 Margin="{StaticResource RegionPictureMargin}" />
 
             <!-- Level order number is set here. ...may consider rewriting this as well. -->
-            <local:RegionLevel
+            <!-- Container Grid handles visibility from parent RegionViewModel -->
+            <Grid
                 Grid.RowSpan="6"
                 Grid.ColumnSpan="5"
-                d:DataContext="{d:DesignInstance Type=viewmodels:RegionLevelViewModel, IsDesignTimeCreatable=False}"
-                Visibility="{Binding DataContext.ShouldShowRegionLevel, RelativeSource={RelativeSource AncestorType=local:UiRegion}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
-            />
+                Visibility="{Binding ShouldShowRegionLevel, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+            >
+                <!-- Child RegionLevel has its own DataContext -->
+                <local:RegionLevel DataContext="{Binding RegionLevelViewModel}" />
+            </Grid>
 
             <!-- If playing with WOTH point totals, the amount of items is shown here. -->
             <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3">

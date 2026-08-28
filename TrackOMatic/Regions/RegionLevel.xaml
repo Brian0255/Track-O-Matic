@@ -29,7 +29,7 @@
             <ColumnDefinition Width=".9*" />
             <ColumnDefinition Width="2.5*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0" Margin="0" DataContext="{Binding DataContext.RegionLevelViewModel, RelativeSource={RelativeSource AncestorType=local:UiRegion}}">
+        <Grid Grid.Row="0" Grid.Column="0" Margin="0">
             <Border CornerRadius="3" Margin="0" Background="{StaticResource BaseBG}">
                 <Viewbox HorizontalAlignment="Center">
                     <TextBlock

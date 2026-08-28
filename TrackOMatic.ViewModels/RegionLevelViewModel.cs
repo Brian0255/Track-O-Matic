@@ -1,5 +1,5 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
@@ -7,7 +7,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels;
 
-public class RegionLevelViewModel : INotifyPropertyChanged, IDisposable
+public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionLevelViewModel>, IDisposable
 {
     private readonly RegionName _regionName;
     private readonly ILevelOrderService _levelOrderService;
@@ -47,42 +47,21 @@ public class RegionLevelViewModel : INotifyPropertyChanged, IDisposable
     public int LevelOrderNumber
     {
         get => _levelOrderNumber;
-        private set
-        {
-            if (_levelOrderNumber != value)
-            {
-                _levelOrderNumber = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _levelOrderNumber, value);
     }
 
     private string _levelText = "?";
     public string LevelText
     {
         get => _levelText;
-        internal set
-        {
-            if (_levelText != value)
-            {
-                _levelText = value;
-                OnPropertyChanged();
-            }
-        }
+        internal set => SetProperty(ref _levelText, value);
     }
 
     #endregion
 
-    public void IncrementLevelOrder()
+    [RelayCommand(CanExecute = nameof(CanChangeLevelOrder))]
+    private void IncrementLevelOrder()
     {
-        if (_parsedSpoilerDataService.CurrentData?.HasLevelOrder == false)
-        {
-            return;
-        }
-        if (_regionName == RegionName.HIDEOUT_HELM && LevelOrderNumber == 8 && !_userSettingsService.HelmInLevelOrder)
-        {
-            return;
-        }
         var levelOrders = _levelOrderService.GetLevelOrder().ToList();
         var index = ToLevelOrderIndex();
         int maxSelectableLevelOrder = _userSettingsService.HelmInLevelOrder ? 8 : 7;
@@ -94,16 +73,9 @@ public class RegionLevelViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
-    public void DecrementLevelOrder()
+    [RelayCommand(CanExecute = nameof(CanChangeLevelOrder))]
+    private void DecrementLevelOrder()
     {
-        if (_parsedSpoilerDataService.CurrentData?.HasLevelOrder == false)
-        {
-            return;
-        }
-        if (_regionName == RegionName.HIDEOUT_HELM && LevelOrderNumber == 8 && !_userSettingsService.HelmInLevelOrder)
-        {
-            return;
-        }
         var levelOrders = _levelOrderService.GetLevelOrder().ToList();
         var index = ToLevelOrderIndex();
         int maxSelectableLevelOrder = _userSettingsService.HelmInLevelOrder ? 8 : 7;
@@ -115,12 +87,9 @@ public class RegionLevelViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
-    public void HandleMouseWheel(int delta)
+    [RelayCommand(CanExecute = nameof(CanHandleMouseWheel))]
+    private void HandleMouseWheel(int delta)
     {
-        if (_parsedSpoilerDataService.CurrentData?.HasLevelOrder == false)
-        {
-            return;
-        }
         if (delta > 0)
         {
             IncrementLevelOrder();
@@ -131,15 +100,20 @@ public class RegionLevelViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
-    #region INotifyPropertyChanged Implementation
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!)
+    private bool CanChangeLevelOrder()
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        if (_parsedSpoilerDataService.CurrentData?.HasLevelOrder == false)
+        {
+            return false;
+        }
+        if (_regionName == RegionName.HIDEOUT_HELM && LevelOrderNumber == 8 && !_userSettingsService.HelmInLevelOrder)
+        {
+            return false;
+        }
+        return true;
     }
 
-    #endregion
+    private bool CanHandleMouseWheel(int _) => CanChangeLevelOrder();
 
     #region IDisposable
 
@@ -223,7 +197,23 @@ public class RegionLevelViewModel : INotifyPropertyChanged, IDisposable
 
     #endregion
 
-    public override bool Equals(object? obj) => obj is RegionLevelViewModel other && _regionName == other._regionName;
+    #region Object/Equality Overrides
+
+    public bool Equals(RegionLevelViewModel? other) => other is not null && _regionName == other._regionName;
+
+    public override bool Equals(object? obj) => Equals(obj as RegionLevelViewModel);
 
     public override int GetHashCode() => _regionName.GetHashCode();
+
+    public override string ToString() => $"{_regionName} at Level {LevelOrderNumber}";
+
+    #endregion
+
+    #region Operator Overloads
+
+    public static bool operator ==(RegionLevelViewModel? left, RegionLevelViewModel? right) => left?.Equals(right) ?? right is null;
+
+    public static bool operator !=(RegionLevelViewModel? left, RegionLevelViewModel? right) => !(left == right);
+
+    #endregion
 }

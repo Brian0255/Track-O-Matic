@@ -2,6 +2,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
@@ -14,7 +16,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels;
 
-public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotProvider
+public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewModel>, IDisposable, IRegionSlotProvider
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
@@ -63,31 +65,23 @@ public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotP
 
         // Initialize state directly (not debounced) in constructor
         InitializeState();
+
+        // Eagerly initialize RegionLevelViewModel
+        var levelOrderService = ServiceLocator.GetService<ILevelOrderService>() ?? throw new InvalidOperationException($"{nameof(ILevelOrderService)} not found in service locator.");
+        var userSettingsService = ServiceLocator.GetService<IUserSettingsService>() ?? throw new InvalidOperationException($"{nameof(IUserSettingsService)} not found in service locator.");
+
+        _regionLevelViewModel = new RegionLevelViewModel(
+            _regionName,
+            levelOrderService,
+            userSettingsService,
+            _parsedSpoilerDataService,
+            savedProgressProvider
+        );
     }
 
-    // Lazy-initialized RegionLevelViewModel for display
-    private RegionLevelViewModel? _regionLevelViewModel;
-    public RegionLevelViewModel RegionLevelViewModel
-    {
-        get
-        {
-            if (_regionLevelViewModel == null)
-            {
-                var levelOrderService = ServiceLocator.GetService<ILevelOrderService>() ?? throw new InvalidOperationException($"{nameof(ILevelOrderService)} not found in service locator.");
-                var userSettingsService = ServiceLocator.GetService<IUserSettingsService>() ?? throw new InvalidOperationException($"{nameof(IUserSettingsService)} not found in service locator.");
-                var savedProgressProvider = ServiceLocator.GetService<ISavedProgressProvider>() ?? throw new InvalidOperationException($"{nameof(ISavedProgressProvider)} not found in service locator.");
-
-                _regionLevelViewModel = new RegionLevelViewModel(
-                    _regionName,
-                    levelOrderService,
-                    userSettingsService,
-                    _parsedSpoilerDataService,
-                    savedProgressProvider
-                );
-            }
-            return _regionLevelViewModel;
-        }
-    }
+    // RegionLevelViewModel for display
+    private readonly RegionLevelViewModel _regionLevelViewModel;
+    public RegionLevelViewModel RegionLevelViewModel => _regionLevelViewModel;
 
     private void InitializeState()
     {
@@ -240,98 +234,49 @@ public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotP
     public ObservableCollection<IRegionItemViewModel> PlacedItems
     {
         get => _placedItems;
-        private set
-        {
-            if (_placedItems != value)
-            {
-                _placedItems = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _placedItems, value);
     }
 
     private string _regionResourceKey = "";
     public string RegionResourceKey
     {
         get => _regionResourceKey;
-        set
-        {
-            if (_regionResourceKey != value)
-            {
-                _regionResourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        internal set => SetProperty(ref _regionResourceKey, value);
     }
 
     private string _backgroundResourceKey = "RegionBG";
     public string BackgroundResourceKey
     {
         get => _backgroundResourceKey;
-        set
-        {
-            if (_backgroundResourceKey != value)
-            {
-                _backgroundResourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _backgroundResourceKey, value);
     }
 
     private bool _hasWothPoints = false;
     public bool HasWothPoints
     {
         get => _hasWothPoints;
-        set
-        {
-            if (_hasWothPoints != value)
-            {
-                _hasWothPoints = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _hasWothPoints, value);
     }
 
     private int _wothPoints = -1;
     public int WothPoints
     {
         get => _wothPoints;
-        set
-        {
-            if (_wothPoints != value)
-            {
-                _wothPoints = value;
-                OnPropertyChanged();
-            }
-        }
+        internal set => SetProperty(ref _wothPoints, value);
     }
 
     private bool _hasItemPoints = false;
     public bool HasItemPoints
     {
         get => _hasItemPoints;
-        set
-        {
-            if (_hasItemPoints != value)
-            {
-                _hasItemPoints = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _hasItemPoints, value);
     }
 
     private int _itemPoints = -1;
     public int ItemPoints
     {
         get => _itemPoints;
-        set
-        {
-            if (_itemPoints != value)
-            {
-                _itemPoints = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _itemPoints, value);
     }
 
     public bool ShouldShowItemPoints
@@ -342,17 +287,6 @@ public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotP
     public bool ShouldShowRegionLevel
     {
         get => _regionName != RegionName.START && _regionName != RegionName.DK_ISLES;
-    }
-
-    #endregion
-
-    #region INotifyPropertyChanged Implementation
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     #endregion
@@ -666,11 +600,23 @@ public class RegionViewModel : INotifyPropertyChanged, IDisposable, IRegionSlotP
         BackgroundResourceKey = isLit ? "RegionBGLitUp" : "RegionBG";
     }
 
-    #region Equality Members
+    #region Object Overrides
 
-    public override bool Equals(object? obj) => obj is RegionViewModel other && other._regionName == _regionName;
+    public bool Equals(RegionViewModel? other) => other is not null && other._regionName == _regionName;
+
+    public override bool Equals(object? obj) => Equals(obj as RegionViewModel);
 
     public override int GetHashCode() => _regionName.GetHashCode();
+
+    public override string ToString() => $"Region: {_regionName}, PlacedItems: {PlacedItems.Count}, WothPoints: {WothPoints}, ItemPoints: {ItemPoints}";
+
+    #endregion
+
+    #region Operator Overloads
+
+    public static bool operator ==(RegionViewModel? left, RegionViewModel? right) => left?.Equals(right) ?? right is null;
+
+    public static bool operator !=(RegionViewModel? left, RegionViewModel? right) => !(left == right);
 
     #endregion
 }

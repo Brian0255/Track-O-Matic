@@ -26,7 +26,7 @@ namespace TrackOMatic
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly TimeSpan _saveInterval = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan _saveInterval = TimeSpan.FromSeconds(30);
 
         private BroadcastView? BroadcastView { get; set; }
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();

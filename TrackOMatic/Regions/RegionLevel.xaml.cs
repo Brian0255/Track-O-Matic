@@ -22,7 +22,10 @@ public partial class RegionLevel : UserControl
             return;
         }
 
-        viewModel.IncrementLevelOrder();
+        if (viewModel.IncrementLevelOrderCommand.CanExecute(null))
+        {
+            viewModel.IncrementLevelOrderCommand.Execute(null);
+        }
     }
 
     private void RegionLevel_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -32,7 +35,10 @@ public partial class RegionLevel : UserControl
             return;
         }
 
-        viewModel.DecrementLevelOrder();
+        if (viewModel.DecrementLevelOrderCommand.CanExecute(null))
+        {
+            viewModel.DecrementLevelOrderCommand.Execute(null);
+        }
     }
 
     private void RegionLevel_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -42,7 +48,10 @@ public partial class RegionLevel : UserControl
             return;
         }
 
-        viewModel.HandleMouseWheel(e.Delta);
+        if (viewModel.HandleMouseWheelCommand.CanExecute(e.Delta))
+        {
+            viewModel.HandleMouseWheelCommand.Execute(e.Delta);
+        }
         e.Handled = true;
     }
 }
