@@ -158,7 +158,7 @@
             <local:HintDialogItem Grid.Row="6" Grid.Column="6" ItemName="KUTOUT" />
         </Grid>
 
-        <Border MouseDown="OnDoneClicked" Cursor="Hand" Margin="5,18,5,5" CornerRadius="5" Background="{StaticResource RegionImageBG}" BorderBrush="Black" BorderThickness="0.5">
+        <Border MouseDown="OnDoneClicked" Cursor="Hand" Margin="5,18,5,5" Padding="0,10,0,10" CornerRadius="5" Background="{StaticResource RegionImageBG}" BorderBrush="Black" BorderThickness="0.5">
             <TextBlock Margin="0" Text="Done" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center" />
         </Border>
     </StackPanel>
