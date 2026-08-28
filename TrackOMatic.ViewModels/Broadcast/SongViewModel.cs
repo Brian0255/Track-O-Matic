@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using TrackOMatic.Logic.Events.Autotracking;
 using TrackOMatic.Services.TrackerState;
 
@@ -11,7 +13,7 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// Can be injected into MainWindow or BroadcastView independently.
 /// Handles synchronization context marshaling for UI updates from background threads.
 /// </summary>
-public class SongViewModel : INotifyPropertyChanged, IDisposable
+public class SongViewModel : ObservableObject, IDisposable
 {
     private readonly ISongService _songService;
     private readonly SynchronizationContext? _uiContext;
@@ -35,40 +37,19 @@ public class SongViewModel : INotifyPropertyChanged, IDisposable
     public string SongGame
     {
         get => _songGame;
-        private set
-        {
-            if (_songGame != value)
-            {
-                _songGame = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _songGame, value);
     }
 
     public string SongName
     {
         get => _songName;
-        private set
-        {
-            if (_songName != value)
-            {
-                _songName = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _songName, value);
     }
 
     public string ResourceKey
     {
         get => _resourceKey;
-        private set
-        {
-            if (_resourceKey != value)
-            {
-                _resourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _resourceKey, value);
     }
 
     private void InitializeState()
@@ -95,18 +76,6 @@ public class SongViewModel : INotifyPropertyChanged, IDisposable
         SongGame = _songService.SongGame;
         SongName = _songService.SongName;
     }
-
-    #region INotifyPropertyChanged Implementation
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    #endregion
 
     #region IDisposable Implementation
 

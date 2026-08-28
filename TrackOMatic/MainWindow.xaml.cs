@@ -309,8 +309,6 @@ namespace TrackOMatic
                 System.Diagnostics.Debug.WriteLine($"Failed to save data: {ex.Message}");
             }
         }
-
-
         private async void OnLoad(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -341,12 +339,7 @@ namespace TrackOMatic
         {
             var viewModel = (MainWindowViewModel)DataContext;
 
-            AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
-            AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
-
-            AutoUpdater.InstalledVersion = new Version("3.0.0");
-
-            AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
+            HandleAutoUpdate();
 
             // Only restore saved dimensions if they make sense for current mode
             // This prevents flicker when CompactMode changes between sessions
@@ -365,6 +358,23 @@ namespace TrackOMatic
                 Height = AppState.DesiredHeight;
             }
             // else: Keep current width from InitOptions, don't restore
+        }
+
+        private static void HandleAutoUpdate()
+        {
+            try
+            {
+                AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
+                AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
+
+                AutoUpdater.InstalledVersion = new Version("3.0.0");
+
+                AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"AutoUpdater failed to start: {ex.Message}");
+            }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

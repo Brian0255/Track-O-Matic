@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
@@ -13,7 +15,7 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// A view model for displaying data about the DK Isles region in the broadcast view.
 /// </summary>
 /// <remarks>This view model only changes based on point totals, but sub classes can watch for additional items.</remarks>
-public class IslesViewModel : INotifyPropertyChanged, IDisposable
+public class IslesViewModel : ObservableObject, IDisposable
 {
     protected readonly IItemTrackingService _itemTrackingService;
     protected readonly ILevelOrderService _levelOrderService;
@@ -81,81 +83,35 @@ public class IslesViewModel : INotifyPropertyChanged, IDisposable
     public string RegionResourceKey
     {
         get => _keyResourceKey;
-        protected set
-        {
-            if (_keyResourceKey != value)
-            {
-                _keyResourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _keyResourceKey, value);
     }
 
     private bool _showRegionImage = false;
     public bool ShowRegionImage
     {
         get => _showRegionImage;
-        protected set
-        {
-            if (_showRegionImage != value)
-            {
-                _showRegionImage = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _showRegionImage, value);
     }
 
     private bool _showRemainingPoints = false;
     public bool ShowRemainingPoints
     {
         get => _showRemainingPoints;
-        protected set
-        {
-            if (_showRemainingPoints != value)
-            {
-                _showRemainingPoints = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _showRemainingPoints, value);
     }
 
     private string _pointsText = "";
     public string PointsText
     {
         get => _pointsText;
-        protected set
-        {
-            if (_pointsText != value)
-            {
-                _pointsText = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _pointsText, value);
     }
 
     private string _pointColorResource = "RegionInProgress";
     public string PointColorResource
     {
         get => _pointColorResource;
-        protected set
-        {
-            if (_pointColorResource != value)
-            {
-                _pointColorResource = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    #endregion
-
-    #region INotifyPropertyChanged Implementation
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        protected set => SetProperty(ref _pointColorResource, value);
     }
 
     #endregion

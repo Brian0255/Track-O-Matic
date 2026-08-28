@@ -289,14 +289,10 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
 
     private void OnLocationUpdated(object? sender, HintUpdatedEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine($"[HintInfoViewModel.OnLocationUpdated] Event received, checking HintId: {e.HintId} vs {_hintId}");
-
         if (e.HintId != _hintId)
         {
             return;
         }
-
-        System.Diagnostics.Debug.WriteLine($"[HintInfoViewModel.OnLocationUpdated] Processing location update from '{_locationText}' to '{e.UpdatedHint.LocationText}'");
 
         _locationText = e.UpdatedHint.LocationText;
         OnPropertyChanged(nameof(LocationText));
@@ -480,8 +476,6 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     /// </summary>
     public void TriggerLocationConfirmationAction()
     {
-        System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] HintPanelType={_hintPanelType}, IsHintInfoPotionCount={IsHintInfoPotionCount}, IsHintInfoPath={IsHintInfoPath}, IsHintInfoFoolish={IsHintInfoFoolish}");
-
         // Priority 1: Potion Counts panel
         if (IsHintInfoPotionCount)
         {
@@ -505,7 +499,6 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         // Priority 3: Kongs panel (special Kong hint parsing logic)
         if (_hintPanelType == HintPanelType.Kongs)
         {
-            System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] Priority 3: Kongs panel");
             if (TryProcessKongHint(LocationText))
             {
                 // Kong hint was processed successfully
@@ -518,20 +511,10 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         // Priority 4: Everything else except Foolish (they don't have item selections)
         if (!IsHintInfoFoolish)
         {
-            System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] Priority 4: CanExecute={OpenFoundItemsSelectionCommand.CanExecute(null)}, IsHintInfoFoolish={IsHintInfoFoolish}, FoundItemsDialogOpened={_foundItemsDialogOpened}");
             if (OpenFoundItemsSelectionCommand.CanExecute(null))
             {
-                System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] Executing OpenFoundItemsSelectionCommand");
                 OpenFoundItemsSelectionCommand.Execute(null);
             }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] OpenFoundItemsSelectionCommand cannot execute");
-            }
-        }
-        else
-        {
-            System.Diagnostics.Debug.WriteLine($"[TriggerLocationConfirmationAction] Priority 4 skipped: IsHintInfoFoolish={IsHintInfoFoolish}");
         }
     }
 

@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
@@ -9,7 +11,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public class KongBlueprintViewModel : INotifyPropertyChanged, IDisposable
+public class KongBlueprintViewModel : ObservableObject, IDisposable
 {
     private readonly ICollectiblesService _collectiblesService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
@@ -80,38 +82,16 @@ public class KongBlueprintViewModel : INotifyPropertyChanged, IDisposable
     public int Count
     {
         get => _count;
-        protected set
-        {
-            if (_count != value)
-            {
-                _count = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _count, value);
     }
 
     private string _imageResourceKey = "";
     public string ImageResourceKey
     {
         get => _imageResourceKey;
-        protected set
-        {
-            if (_imageResourceKey != value)
-            {
-                _imageResourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _imageResourceKey, value);
     }
 
-    #endregion
-
-    #region INotifyPropertyChanged Implementation
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
     #endregion
 
     #region IDisposable Implementation

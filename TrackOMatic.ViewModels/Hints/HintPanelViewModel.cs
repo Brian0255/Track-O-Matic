@@ -89,26 +89,6 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
         _hintService.HintCreated += OnHintCreated;
         _hintService.HintRemoved += OnHintRemoved;
 
-        // Monitor collection changes
-        _hintInfoViewModels.CollectionChanged += (s, e) =>
-        {
-            System.Diagnostics.Debug.WriteLine($"[HintInfoViewModels.CollectionChanged] Action={e.Action}, NewCount={HintInfoViewModels.Count}");
-            if (e.NewItems != null)
-            {
-                foreach (HintInfoViewModel item in e.NewItems)
-                {
-                    System.Diagnostics.Debug.WriteLine($"  [NEW] HintId={item.HintId}");
-                }
-            }
-            if (e.OldItems != null)
-            {
-                foreach (HintInfoViewModel item in e.OldItems)
-                {
-                    System.Diagnostics.Debug.WriteLine($"  [OLD] HintId={item.HintId}");
-                }
-            }
-        };
-
         // Initialize the hints for the current progress.
         LoadHintsForPanel();
         OnPropertyChanged(nameof(IsPathHintPanel));

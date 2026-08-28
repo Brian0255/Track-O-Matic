@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 using TrackOMatic.Logic.Enums;
-using TrackOMatic.Services;
 
 namespace TrackOMatic.ViewModels;
 

@@ -146,7 +146,7 @@ public partial class BLockerHintViewModel : ObservableObject, IDisposable
             var barrierInfo = e.NewData.GetBarrierInfo(_regionName);
             target = barrierInfo.Cost.ToString();
         }
-        catch (Exception _)
+        catch (Exception)
         {
             target = "?";
         }

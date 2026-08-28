@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
@@ -10,7 +12,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public class KeyViewModel : INotifyPropertyChanged, IDisposable
+public class KeyViewModel : ObservableObject, IDisposable
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
@@ -56,67 +58,28 @@ public class KeyViewModel : INotifyPropertyChanged, IDisposable
     public string ImageResourceKey
     {
         get => _imageResourceKey;
-        private set
-        {
-            if (_imageResourceKey != value)
-            {
-                _imageResourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _imageResourceKey, value);
     }
 
     private bool _isStarred = false;
     public bool IsStarred
     {
         get => _isStarred;
-        private set
-        {
-            if (_isStarred != value)
-            {
-                _isStarred = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _isStarred, value);
     }
 
     private string _hoverText = "";
     public string HoverText
     {
         get => _hoverText;
-        private set
-        {
-            if (_hoverText != value)
-            {
-                _hoverText = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _hoverText, value);
     }
 
     private bool _hasHoverText = false;
     public bool HasHoverText
     {
         get => _hasHoverText;
-        protected set
-        {
-            if (_hasHoverText != value)
-            {
-                _hasHoverText = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    #endregion
-
-    #region INotifyPropertyChanged Implementation
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        protected set => SetProperty(ref _hasHoverText, value);
     }
 
     #endregion
