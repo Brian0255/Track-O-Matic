@@ -16,6 +16,8 @@ public class DataSaverService : IDataSaverService
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISpoilerService _spoilerService;
 
+    private readonly object _lockObject = new();
+
     private SavedProgress CurrentSavedProgress { get; set; }
 
     public DataSaverService(IDataPersistenceService dataPersistenceService, IParsedSpoilerDataService parsedSpoilerDataService, ISpoilerService spoilerService)

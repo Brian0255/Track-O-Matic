@@ -26,7 +26,7 @@ namespace TrackOMatic
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly TimeSpan _saveInterval = TimeSpan.FromMinutes(1);
+        private static readonly TimeSpan _saveInterval = TimeSpan.FromSeconds(10);
 
         private BroadcastView? BroadcastView { get; set; }
         public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
@@ -225,7 +225,14 @@ namespace TrackOMatic
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (Path.GetExtension(files[0]).ToUpper().Equals(".JSON"))
                 {
-                    await OpenSpoilerFromPath(files[0]);
+                    try
+                    {
+                        await OpenSpoilerFromPath(files[0]);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to open spoiler: {ex.Message}");
+                    }
                 }
             }
         }
@@ -242,13 +249,21 @@ namespace TrackOMatic
                 openFileDialog.InitialDirectory = lastFolderPath;
             }
 
-            if (openFileDialog.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() != true)
+            {
+                return;
+            }
+            try
             {
                 string selectedFilePath = openFileDialog.FileName;
                 string folderPath = Path.GetDirectoryName(selectedFilePath) ?? "";
 
                 AppState.LastFolderPath = folderPath;
                 await OpenSpoilerFromPath(selectedFilePath);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to open spoiler: {ex.Message}");
             }
         }
 
@@ -280,10 +295,18 @@ namespace TrackOMatic
                 Title = "Save Data",
                 Filter = "JSON Files (*.json)|*.json"
             };
-            if (saveDialog.ShowDialog() == true)
+            if (saveDialog.ShowDialog() != true)
+            {
+                return;
+            }
+            try
             {
                 var filePath = saveDialog.FileName;
                 await DataSaverService.SaveAsync(filePath);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to save data: {ex.Message}");
             }
         }
 
@@ -298,11 +321,19 @@ namespace TrackOMatic
                 Filter = "JSON Files (*.json)|*.json"
             };
 
-            if (openFileDialog.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() != true)
+            {
+                return;
+            }
+            try
             {
                 var filePath = openFileDialog.FileName;
                 Reset();
                 await DataSaverService.LoadAsync(filePath);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load data: {ex.Message}");
             }
         }
 
@@ -336,16 +367,25 @@ namespace TrackOMatic
             // else: Keep current width from InitOptions, don't restore
         }
 
-        private async void Window_Closing(object sender, CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             _saveTimer.Stop();
             _saveTimer.Dispose();
 
-            await Dispatcher.BeginInvoke(() => BroadcastView?.Close());
-            AppState.DesiredWidth = Width;
-            AppState.DesiredHeight = Height;
-            await DataSaverService.SaveAsync();
-            Autotracker.Shutdown();
+            try
+            {
+                AppState.DesiredWidth = Width;
+                AppState.DesiredHeight = Height;
+                Autotracker.Shutdown();
+                BroadcastView?.Close();
+
+                // Fire and forget the async save - it will complete in the background
+                _ = DataSaverService.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to save on exit: {ex.Message}");
+            }
         }
 
         private void ShowBroadcastWindow()

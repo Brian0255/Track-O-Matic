@@ -227,11 +227,19 @@ public class UserSettingsService : IUserSettingsService
     /// </summary>
     private void SetProperty<T>(string propertyName, Func<T> getter, Action<T> setter, T value)
     {
-        if (!EqualityComparer<T>.Default.Equals(getter(), value))
+        if (EqualityComparer<T>.Default.Equals(getter(), value))
         {
-            setter(value);
-            OnPropertyChanged(propertyName);
+            return;
+        }
+        setter(value);
+        OnPropertyChanged(propertyName);
+        try
+        {
             _ = SaveToFileAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to save settings after changing {propertyName}: {ex.Message}");
         }
     }
 

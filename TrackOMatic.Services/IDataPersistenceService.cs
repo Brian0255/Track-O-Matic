@@ -12,9 +12,9 @@ public interface IDataPersistenceService
     /// <param name="filePath">The path to the JSON file.</param>
     /// <returns>
     /// A task that represents the asynchronous operation. The task result contains the loaded data,
-    /// or null if the file does not exist or could not be loaded.
+    /// or a default instance of <typeparamref name="T"/> if the file does not exist or is empty.
     /// </returns>
-    Task<T> LoadAsync<T>(string filePath) where T : class, new();
+    Task<T> LoadAsync<T>(string filePath, CancellationToken cancellationToken = default) where T : class, new();
 
     /// <summary>
     /// Asynchronously save data to a JSON file.
@@ -26,5 +26,5 @@ public interface IDataPersistenceService
     /// <returns>A task that represents the asynchronous operation.</returns>
     /// <exception cref="IOException">Thrown if an I/O error occurs while saving the file.</exception>
     /// <exception cref="ArgumentNullException">Thrown if the data to save is null.</exception>
-    Task SaveAsync<T>(T data, string filePath, bool ensureDirectory = true) where T : class;
+    Task SaveAsync<T>(T data, string filePath, bool ensureDirectory = true, CancellationToken cancellationToken = default) where T : class;
 }

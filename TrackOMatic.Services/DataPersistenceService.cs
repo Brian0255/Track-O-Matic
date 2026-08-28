@@ -19,15 +19,15 @@ public class DataPersistenceService : IDataPersistenceService
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    public async Task<T> LoadAsync<T>(string filePath) where T : class, new()
+    public async Task<T> LoadAsync<T>(string filePath, CancellationToken cancellationToken = default) where T : class, new()
     {
-        if (!File.Exists(filePath))
-        {
-            return new T();
-        }
-
         try
         {
+            if (!File.Exists(filePath))
+            {
+                return new T();
+            }
+
             using var stream = new FileStream(
                 filePath,
                 FileMode.Open,
@@ -37,35 +37,44 @@ public class DataPersistenceService : IDataPersistenceService
                 FileOptions.SequentialScan | FileOptions.Asynchronous  // Optimize for sequential read + async
             );
             using var reader = new StreamReader(stream);
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            cts.CancelAfter(TimeSpan.FromSeconds(5));
             var jsonString = await reader.ReadToEndAsync(cts.Token).ConfigureAwait(false);
 
             return JsonSerializer.Deserialize<T>(jsonString, _jsonOptions) ?? new T();
         }
-        catch (Exception)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
             return new T();
         }
     }
 
-    public async Task SaveAsync<T>(T data, string filePath, bool ensureDirectory = true) where T : class
+    public async Task SaveAsync<T>(T data, string filePath, bool ensureDirectory = true, CancellationToken cancellationToken = default) where T : class
     {
-        if (data is null)
+        try
         {
-            throw new ArgumentNullException(nameof(data), "Data cannot be null.");
-        }
-
-        if (ensureDirectory)
-        {
-            string? directory = Path.GetDirectoryName(filePath);
-            // Only create directory if it's not empty (empty string means file is in current directory)
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            if (data is null)
             {
-                Directory.CreateDirectory(directory);
+                throw new ArgumentNullException(nameof(data), "Data cannot be null.");
             }
-        }
 
-        var jsonString = JsonSerializer.Serialize(data, _jsonOptions);
-        await File.WriteAllTextAsync(filePath, jsonString).ConfigureAwait(false);
+            if (ensureDirectory)
+            {
+                string? directory = Path.GetDirectoryName(filePath);
+                // Only create directory if it's not empty (empty string means file is in current directory)
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+            }
+
+            var jsonString = JsonSerializer.Serialize(data, _jsonOptions);
+            await File.WriteAllTextAsync(filePath, jsonString, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            // Log the exception or handle it as needed
+            throw new IOException($"Failed to save data to {filePath}.", ex);
+        }
     }
 }
