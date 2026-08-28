@@ -50,22 +50,5 @@
             HorizontalAlignment="Left"
             IsHitTestVisible="False"
             Visibility="{Binding IsStarred, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
-
-        <!-- Floating Canvas Overlay for drag feedback -->
-        <Canvas
-            Panel.ZIndex="10000"
-            Visibility="{Binding IsDragging, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
-            IsHitTestVisible="False"
-        >
-            <Image
-                Canvas.Left="{Binding DragX}"
-                Canvas.Top="{Binding DragY}"
-                Width="{Binding DragWidth}"
-                Height="{Binding DragHeight}"
-                Stretch="Fill"
-                Opacity="{Binding Opacity}"
-                Source="{Binding ImageResourceKey, Converter={StaticResource ResourceKeyConverter}}"
-            />
-        </Canvas>
     </Grid>
 </UserControl>

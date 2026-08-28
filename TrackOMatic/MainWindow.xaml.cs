@@ -38,6 +38,8 @@ namespace TrackOMatic
 
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
 
+        public UiItemViewModel? CurrentDragViewModel { get; private set; }
+
         private IAutotrackerService Autotracker { get; init; }
         private IUserSettingsService UserSettings { get; init; }
         private IApplicationStateService AppState { get; init; }
@@ -61,6 +63,7 @@ namespace TrackOMatic
         )
         {
             InitializeComponent();
+
             UserSettings = settingsSergice;
             AppState = appStateService;
             DataSaverService = dataSaverService;
@@ -112,6 +115,105 @@ namespace TrackOMatic
                     Dispatcher.BeginInvoke(() => BroadcastView?.Close());
                 }
             }
+        }
+
+        /// <summary>
+        /// Registers a ViewModel as the currently dragging item and updates the drag preview canvas.
+        /// </summary>
+        public void RegisterDragPreview(UiItemViewModel dragViewModel)
+        {
+            CurrentDragViewModel = dragViewModel;
+            UpdateDragPreviewCanvas();
+        }
+
+        /// <summary>
+        /// Clears the currently dragging ViewModel and updates the drag preview canvas.
+        /// </summary>
+        public void ClearDragPreview()
+        {
+            CurrentDragViewModel = null;
+            UpdateDragPreviewCanvas();
+        }
+
+        /// <summary>
+        /// Updates the drag preview canvas with the current drag ViewModel's state.
+        /// </summary>
+        private void UpdateDragPreviewCanvas()
+        {
+            var dragPreviewCanvas = (Canvas?)FindName("DragPreviewCanvas");
+            if (dragPreviewCanvas == null)
+            {
+                return;
+            }
+
+            dragPreviewCanvas.Children.Clear();
+
+            if (CurrentDragViewModel?.IsDragging == true)
+            {
+                // Create an Image element and bind it to the ViewModel properties
+                var dragImage = new Image
+                {
+                    Stretch = System.Windows.Media.Stretch.Fill
+                };
+
+                // Bind Width
+                var widthBinding = new System.Windows.Data.Binding("DragWidth")
+                {
+                    Source = CurrentDragViewModel,
+                    Mode = System.Windows.Data.BindingMode.OneWay
+                };
+                dragImage.SetBinding(Image.WidthProperty, widthBinding);
+
+                // Bind Height
+                var heightBinding = new System.Windows.Data.Binding("DragHeight")
+                {
+                    Source = CurrentDragViewModel,
+                    Mode = System.Windows.Data.BindingMode.OneWay
+                };
+                dragImage.SetBinding(Image.HeightProperty, heightBinding);
+
+                // Bind Opacity
+                var opacityBinding = new System.Windows.Data.Binding("Opacity")
+                {
+                    Source = CurrentDragViewModel,
+                    Mode = System.Windows.Data.BindingMode.OneWay
+                };
+                dragImage.SetBinding(Image.OpacityProperty, opacityBinding);
+
+                // Set up binding for the image source using the converter
+                var sourceBinding = new System.Windows.Data.Binding("ImageResourceKey")
+                {
+                    Source = CurrentDragViewModel,
+                    Converter = (System.Windows.Data.IValueConverter?)Resources["ResourceKeyConverter"],
+                    Mode = System.Windows.Data.BindingMode.OneWay
+                };
+                dragImage.SetBinding(Image.SourceProperty, sourceBinding);
+
+                dragPreviewCanvas.Children.Add(dragImage);
+
+                // Bind Canvas position using attached properties
+                var leftBinding = new System.Windows.Data.Binding("DragX")
+                {
+                    Source = CurrentDragViewModel,
+                    Mode = System.Windows.Data.BindingMode.OneWay
+                };
+                dragImage.SetBinding(Canvas.LeftProperty, leftBinding);
+
+                var topBinding = new System.Windows.Data.Binding("DragY")
+                {
+                    Source = CurrentDragViewModel,
+                    Mode = System.Windows.Data.BindingMode.OneWay
+                };
+                dragImage.SetBinding(Canvas.TopProperty, topBinding);
+            }
+        }
+
+        /// <summary>
+        /// Public method for UiItem to call when drag position or state changes.
+        /// </summary>
+        public void UpdateDragPreview()
+        {
+            UpdateDragPreviewCanvas();
         }
 
         /// <summary>

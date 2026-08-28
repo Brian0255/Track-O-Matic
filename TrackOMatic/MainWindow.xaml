@@ -45,6 +45,7 @@
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
             <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
@@ -103,248 +104,251 @@
             <MenuItem Header="Version 3.0.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition x:Name="HintsColumn" Width="{Binding HintColumnWidth, Converter={StaticResource CountToRelativeWidthConverter}}" />
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height=".007*"/>
-                    <RowDefinition Height=".1*"/>
-                    <RowDefinition Height="14"/>
-                    <RowDefinition Height=".4*"/>
-                    <RowDefinition Height="14"/>
-                    <RowDefinition Height=".1*"/>
-                    <RowDefinition>
-                        <RowDefinition.Style>
-                            <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value=".01*" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot}" Value="False">
-                                        <Setter Property="Height" Value="0"  />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RowDefinition.Style>
-                    </RowDefinition>
-                    <RowDefinition>
-                        <RowDefinition.Style>
-                            <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value=".12*" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot}" Value="False">
-                                        <Setter Property="Height" Value="0"  />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RowDefinition.Style>
-                    </RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="1">
-                    <Rectangle Fill="{StaticResource BaseBG}" />
-                </Grid>
-                <Grid Grid.Row="3">
-                    <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
-                </Grid>
-                <Grid Grid.Row="5">
-                    <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
-                </Grid>
-                <!-- Region Grid -->
-                <Grid Grid.Row="0"  Background="{StaticResource BaseBG}">
-                    <Grid.Resources>
-                        <Style TargetType="{x:Type regions:UiRegion}">
-                            <Setter Property="Margin" Value="1"/>
-                        </Style>
-                    </Grid.Resources>
+            <!-- Wrapper grid for content and drag overlay canvas -->
+            <!-- Primary Content Grid -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition x:Name="HintsColumn" Width="{Binding HintColumnWidth, Converter={StaticResource CountToRelativeWidthConverter}}" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
+                        <RowDefinition Height=".007*"/>
+                        <RowDefinition Height=".1*"/>
+                        <RowDefinition Height="14"/>
+                        <RowDefinition Height=".4*"/>
+                        <RowDefinition Height="14"/>
+                        <RowDefinition Height=".1*"/>
+                        <RowDefinition>
+                            <RowDefinition.Style>
+                                <Style TargetType="{x:Type RowDefinition}">
+                                    <Setter Property="Height" Value=".01*" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot}" Value="False">
+                                            <Setter Property="Height" Value="0"  />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RowDefinition.Style>
+                        </RowDefinition>
+                        <RowDefinition>
+                            <RowDefinition.Style>
+                                <Style TargetType="{x:Type RowDefinition}">
+                                    <Setter Property="Height" Value=".12*" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot}" Value="False">
+                                            <Setter Property="Height" Value="0"  />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RowDefinition.Style>
+                        </RowDefinition>
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="1">
+                        <Rectangle Fill="{StaticResource BaseBG}" />
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
+                    </Grid>
+                    <Grid Grid.Row="5">
+                        <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
+                    </Grid>
+                    <!-- Region Grid -->
+                    <Grid Grid.Row="0"  Background="{StaticResource BaseBG}">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type regions:UiRegion}">
+                                <Setter Property="Margin" Value="1"/>
+                            </Style>
+                        </Grid.Resources>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-                        <regions:UiRegion Grid.Row="0" Grid.Column="0" RegionName="START" />
-                        <regions:UiRegion Grid.Row="1" Grid.Column="0" RegionName="JUNGLE_JAPES" />
-                        <regions:UiRegion Grid.Row="2" Grid.Column="0" RegionName="ANGRY_AZTEC" />
-                        <regions:UiRegion Grid.Row="3" Grid.Column="0" RegionName="FRANTIC_FACTORY" />
-                        <regions:UiRegion Grid.Row="4" Grid.Column="0" RegionName="GLOOMY_GALLEON" />
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <regions:UiRegion Grid.Row="0" Grid.Column="0" RegionName="START" />
+                            <regions:UiRegion Grid.Row="1" Grid.Column="0" RegionName="JUNGLE_JAPES" />
+                            <regions:UiRegion Grid.Row="2" Grid.Column="0" RegionName="ANGRY_AZTEC" />
+                            <regions:UiRegion Grid.Row="3" Grid.Column="0" RegionName="FRANTIC_FACTORY" />
+                            <regions:UiRegion Grid.Row="4" Grid.Column="0" RegionName="GLOOMY_GALLEON" />
 
-                        <regions:UiRegion Grid.Row="0" Grid.Column="1" RegionName="DK_ISLES" />
-                        <regions:UiRegion Grid.Row="1" Grid.Column="1" RegionName="FUNGI_FOREST" />
-                        <regions:UiRegion Grid.Row="2" Grid.Column="1" RegionName="CRYSTAL_CAVES" />
-                        <regions:UiRegion Grid.Row="3" Grid.Column="1" RegionName="CREEPY_CASTLE" />
-                        <regions:UiRegion Grid.Row="4" Grid.Column="1" RegionName="HIDEOUT_HELM" />
+                            <regions:UiRegion Grid.Row="0" Grid.Column="1" RegionName="DK_ISLES" />
+                            <regions:UiRegion Grid.Row="1" Grid.Column="1" RegionName="FUNGI_FOREST" />
+                            <regions:UiRegion Grid.Row="2" Grid.Column="1" RegionName="CRYSTAL_CAVES" />
+                            <regions:UiRegion Grid.Row="3" Grid.Column="1" RegionName="CREEPY_CASTLE" />
+                            <regions:UiRegion Grid.Row="4" Grid.Column="1" RegionName="HIDEOUT_HELM" />
+                        </Grid>
                     </Grid>
-                </Grid>
 
-                <!--GB/other stuff display-->
-                <local:CollectiblesGridRow Grid.Row="2" />
-                <!-- Items -->
-                <Grid Grid.Row="4" Visibility="Visible"  Margin="0" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Name="ItemsSeparator" Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Name="ShopkeeperColumn" Width="1*" />
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Kong 1 -->
-                    <local:UiItem Grid.Row="0" Grid.Column="0" ItemName="DONKEY" />
-                    <local:UiItem Grid.Row="0" Grid.Column="1" ItemName="COCONUT_GUN" />
-                    <local:UiItem Grid.Row="0" Grid.Column="2" ItemName="BONGO_BLAST" />
-                    <local:UiItem Grid.Row="0" Grid.Column="3" ItemName="GORILLA_GRAB" />
-                    <local:UiItem Grid.Row="0" Grid.Column="4" ItemName="STRONG_KONG" />
-                    <local:UiItem Grid.Row="0" Grid.Column="5" ItemName="BABOON_BLAST" />
-
-                    <!-- Kong 2 -->
-                    <local:UiItem Grid.Row="1" Grid.Column="0" ItemName="DIDDY" />
-                    <local:UiItem Grid.Row="1" Grid.Column="1" ItemName="PEANUT_POPGUNS" />
-                    <local:UiItem Grid.Row="1" Grid.Column="2" ItemName="GUITAR_GAZUMP" />
-                    <local:UiItem Grid.Row="1" Grid.Column="3" ItemName="CHIMPY_CHARGE" />
-                    <local:UiItem Grid.Row="1" Grid.Column="4" ItemName="ROCKETBARREL_BOOST" />
-                    <local:UiItem Grid.Row="1" Grid.Column="5" ItemName="SIMIAN_SPRING" />
-
-                    <!-- Kong 3 -->
-                    <local:UiItem Grid.Row="2" Grid.Column="0" ItemName="LANKY" />
-                    <local:UiItem Grid.Row="2" Grid.Column="1" ItemName="GRAPE_SHOOTER" />
-                    <local:UiItem Grid.Row="2" Grid.Column="2" ItemName="TROMBONE_TREMOR" />
-                    <local:UiItem Grid.Row="2" Grid.Column="3" ItemName="ORANGSTAND" />
-                    <local:UiItem Grid.Row="2" Grid.Column="4" ItemName="ORANGSTAND_SPRINT" />
-                    <local:UiItem Grid.Row="2" Grid.Column="5" ItemName="BABOON_BALLOON" />
-
-                    <!-- Kong 4 -->
-                    <local:UiItem Grid.Row="3" Grid.Column="0" ItemName="TINY" />
-                    <local:UiItem Grid.Row="3" Grid.Column="1" ItemName="FEATHER_BOW" />
-                    <local:UiItem Grid.Row="3" Grid.Column="2" ItemName="SAXOPHONE_SLAM" />
-                    <local:UiItem Grid.Row="3" Grid.Column="3" ItemName="PONYTAIL_TWIRL" />
-                    <local:UiItem Grid.Row="3" Grid.Column="4" ItemName="MINI_MONKEY" />
-                    <local:UiItem Grid.Row="3" Grid.Column="5" ItemName="MONKEYPORT" />
-
-                    <!-- Kong 5 -->
-                    <local:UiItem Grid.Row="4" Grid.Column="0" ItemName="CHUNKY" />
-                    <local:UiItem Grid.Row="4" Grid.Column="1" ItemName="PINEAPPLE_LAUNCHER" />
-                    <local:UiItem Grid.Row="4" Grid.Column="2" ItemName="TRIANGLE_TRAMPLE" />
-                    <local:UiItem Grid.Row="4" Grid.Column="3" ItemName="PRIMATE_PUNCH" />
-                    <local:UiItem Grid.Row="4" Grid.Column="4" ItemName="HUNKY_CHUNKY" />
-                    <local:UiItem Grid.Row="4" Grid.Column="5" ItemName="GORILLA_GONE" />
-
-                    <!--Blueprints-->
-                    <local:KongBlueprint Grid.Row="0" Grid.Column="6" CollectedType="DONKEY_BLUEPRINT" TurnedInType="DONKEY_BLUEPRINT_TURNED" />
-                    <local:KongBlueprint Grid.Row="1" Grid.Column="6" CollectedType="DIDDY_BLUEPRINT" TurnedInType="DIDDY_BLUEPRINT_TURNED" />
-                    <local:KongBlueprint Grid.Row="2" Grid.Column="6" CollectedType="LANKY_BLUEPRINT" TurnedInType="LANKY_BLUEPRINT_TURNED" />
-                    <local:KongBlueprint Grid.Row="3" Grid.Column="6" CollectedType="TINY_BLUEPRINT" TurnedInType="TINY_BLUEPRINT_TURNED" />
-                    <local:KongBlueprint Grid.Row="4" Grid.Column="6" CollectedType="CHUNKY_BLUEPRINT" TurnedInType="CHUNKY_BLUEPRINT_TURNED" />
-
-                    <!-- Keys-->
-                    <local:UiItem Grid.Row="0" Grid.Column="8" ItemName="KEY_1" />
-                    <local:UiItem Grid.Row="0" Grid.Column="9" ItemName="KEY_2" />
-                    <local:UiItem Grid.Row="0" Grid.Column="10" ItemName="KEY_3" />
-                    <local:UiItem Grid.Row="0" Grid.Column="11" ItemName="KEY_4" />
-                    <local:UiItem Grid.Row="1" Grid.Column="8" ItemName="KEY_5" />
-                    <local:UiItem Grid.Row="1" Grid.Column="9" ItemName="KEY_6" />
-                    <local:UiItem Grid.Row="1" Grid.Column="10" ItemName="KEY_7" />
-                    <local:UiItem Grid.Row="1" Grid.Column="11" ItemName="KEY_8" />
-
-                    <!--Slams/Bean-->
-                    <local:UiItem Grid.Row="2" Grid.Column="8" ItemName="PROGRESSIVE_SLAM_1" />
-                    <local:UiItem Grid.Row="2" Grid.Column="9" ItemName="PROGRESSIVE_SLAM_2" />
-                    <local:UiItem Grid.Row="2" Grid.Column="10" ItemName="PROGRESSIVE_SLAM_3" />
-                    <local:UiItem Grid.Row="2" Grid.Column="11" ItemName="BEAN" />
-
-                    <!--Training Moves-->
-                    <local:UiItem Grid.Row="4" Grid.Column="8" ItemName="DIVING" />
-                    <local:UiItem Grid.Row="4" Grid.Column="9" ItemName="ORANGE_THROWING" />
-                    <local:UiItem Grid.Row="4" Grid.Column="10" ItemName="BARREL_THROWING" />
-                    <local:UiItem Grid.Row="4" Grid.Column="11" ItemName="VINE_SWINGING" />
-                    <local:UiItem Grid.Row="4" Grid.Column="12" ItemName="CLIMBING" />
-
-                    <!--Sniper/Homing/Camera/Shockwave-->
-                    <local:UiItem Grid.Row="3" Grid.Column="8" ItemName="SNIPER_SCOPE" />
-                    <local:UiItem Grid.Row="3" Grid.Column="9" ItemName="HOMING_AMMO" />
-                    <local:UiItem Grid.Row="3" Grid.Column="10" ItemName="FAIRY_CAMERA" />
-                    <local:UiItem Grid.Row="3" Grid.Column="11" ItemName="SHOCKWAVE" />
-
-                    <!--Shopkeepers-->
-                    <local:UiItem Grid.Row="0" Grid.Column="12" ItemName="CRANKY" />
-                    <local:UiItem Grid.Row="1" Grid.Column="12" ItemName="CANDY" />
-                    <local:UiItem Grid.Row="2" Grid.Column="12" ItemName="FUNKY" />
-                    <local:UiItem Grid.Row="3" Grid.Column="12" ItemName="SNIDE" />
-                </Grid>
-                <!--K.Rool/Helm order-->
-                <Grid Grid.Row="6" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Margin="8,1,0,6">
+                    <!--GB/other stuff display-->
+                    <local:CollectiblesGridRow Grid.Row="2" />
+                    <!-- Items -->
+                    <Grid Grid.Row="4" Visibility="Visible"  Margin="0" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width=".3*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Name="ItemsSeparator" Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Name="ShopkeeperColumn" Width="1*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Kong 1 -->
+                        <local:UiItem Grid.Row="0" Grid.Column="0" ItemName="DONKEY" />
+                        <local:UiItem Grid.Row="0" Grid.Column="1" ItemName="COCONUT_GUN" />
+                        <local:UiItem Grid.Row="0" Grid.Column="2" ItemName="BONGO_BLAST" />
+                        <local:UiItem Grid.Row="0" Grid.Column="3" ItemName="GORILLA_GRAB" />
+                        <local:UiItem Grid.Row="0" Grid.Column="4" ItemName="STRONG_KONG" />
+                        <local:UiItem Grid.Row="0" Grid.Column="5" ItemName="BABOON_BLAST" />
+
+                        <!-- Kong 2 -->
+                        <local:UiItem Grid.Row="1" Grid.Column="0" ItemName="DIDDY" />
+                        <local:UiItem Grid.Row="1" Grid.Column="1" ItemName="PEANUT_POPGUNS" />
+                        <local:UiItem Grid.Row="1" Grid.Column="2" ItemName="GUITAR_GAZUMP" />
+                        <local:UiItem Grid.Row="1" Grid.Column="3" ItemName="CHIMPY_CHARGE" />
+                        <local:UiItem Grid.Row="1" Grid.Column="4" ItemName="ROCKETBARREL_BOOST" />
+                        <local:UiItem Grid.Row="1" Grid.Column="5" ItemName="SIMIAN_SPRING" />
+
+                        <!-- Kong 3 -->
+                        <local:UiItem Grid.Row="2" Grid.Column="0" ItemName="LANKY" />
+                        <local:UiItem Grid.Row="2" Grid.Column="1" ItemName="GRAPE_SHOOTER" />
+                        <local:UiItem Grid.Row="2" Grid.Column="2" ItemName="TROMBONE_TREMOR" />
+                        <local:UiItem Grid.Row="2" Grid.Column="3" ItemName="ORANGSTAND" />
+                        <local:UiItem Grid.Row="2" Grid.Column="4" ItemName="ORANGSTAND_SPRINT" />
+                        <local:UiItem Grid.Row="2" Grid.Column="5" ItemName="BABOON_BALLOON" />
+
+                        <!-- Kong 4 -->
+                        <local:UiItem Grid.Row="3" Grid.Column="0" ItemName="TINY" />
+                        <local:UiItem Grid.Row="3" Grid.Column="1" ItemName="FEATHER_BOW" />
+                        <local:UiItem Grid.Row="3" Grid.Column="2" ItemName="SAXOPHONE_SLAM" />
+                        <local:UiItem Grid.Row="3" Grid.Column="3" ItemName="PONYTAIL_TWIRL" />
+                        <local:UiItem Grid.Row="3" Grid.Column="4" ItemName="MINI_MONKEY" />
+                        <local:UiItem Grid.Row="3" Grid.Column="5" ItemName="MONKEYPORT" />
+
+                        <!-- Kong 5 -->
+                        <local:UiItem Grid.Row="4" Grid.Column="0" ItemName="CHUNKY" />
+                        <local:UiItem Grid.Row="4" Grid.Column="1" ItemName="PINEAPPLE_LAUNCHER" />
+                        <local:UiItem Grid.Row="4" Grid.Column="2" ItemName="TRIANGLE_TRAMPLE" />
+                        <local:UiItem Grid.Row="4" Grid.Column="3" ItemName="PRIMATE_PUNCH" />
+                        <local:UiItem Grid.Row="4" Grid.Column="4" ItemName="HUNKY_CHUNKY" />
+                        <local:UiItem Grid.Row="4" Grid.Column="5" ItemName="GORILLA_GONE" />
+
+                        <!--Blueprints-->
+                        <local:KongBlueprint Grid.Row="0" Grid.Column="6" CollectedType="DONKEY_BLUEPRINT" TurnedInType="DONKEY_BLUEPRINT_TURNED" />
+                        <local:KongBlueprint Grid.Row="1" Grid.Column="6" CollectedType="DIDDY_BLUEPRINT" TurnedInType="DIDDY_BLUEPRINT_TURNED" />
+                        <local:KongBlueprint Grid.Row="2" Grid.Column="6" CollectedType="LANKY_BLUEPRINT" TurnedInType="LANKY_BLUEPRINT_TURNED" />
+                        <local:KongBlueprint Grid.Row="3" Grid.Column="6" CollectedType="TINY_BLUEPRINT" TurnedInType="TINY_BLUEPRINT_TURNED" />
+                        <local:KongBlueprint Grid.Row="4" Grid.Column="6" CollectedType="CHUNKY_BLUEPRINT" TurnedInType="CHUNKY_BLUEPRINT_TURNED" />
+
+                        <!-- Keys-->
+                        <local:UiItem Grid.Row="0" Grid.Column="8" ItemName="KEY_1" />
+                        <local:UiItem Grid.Row="0" Grid.Column="9" ItemName="KEY_2" />
+                        <local:UiItem Grid.Row="0" Grid.Column="10" ItemName="KEY_3" />
+                        <local:UiItem Grid.Row="0" Grid.Column="11" ItemName="KEY_4" />
+                        <local:UiItem Grid.Row="1" Grid.Column="8" ItemName="KEY_5" />
+                        <local:UiItem Grid.Row="1" Grid.Column="9" ItemName="KEY_6" />
+                        <local:UiItem Grid.Row="1" Grid.Column="10" ItemName="KEY_7" />
+                        <local:UiItem Grid.Row="1" Grid.Column="11" ItemName="KEY_8" />
+
+                        <!--Slams/Bean-->
+                        <local:UiItem Grid.Row="2" Grid.Column="8" ItemName="PROGRESSIVE_SLAM_1" />
+                        <local:UiItem Grid.Row="2" Grid.Column="9" ItemName="PROGRESSIVE_SLAM_2" />
+                        <local:UiItem Grid.Row="2" Grid.Column="10" ItemName="PROGRESSIVE_SLAM_3" />
+                        <local:UiItem Grid.Row="2" Grid.Column="11" ItemName="BEAN" />
+
+                        <!--Training Moves-->
+                        <local:UiItem Grid.Row="4" Grid.Column="8" ItemName="DIVING" />
+                        <local:UiItem Grid.Row="4" Grid.Column="9" ItemName="ORANGE_THROWING" />
+                        <local:UiItem Grid.Row="4" Grid.Column="10" ItemName="BARREL_THROWING" />
+                        <local:UiItem Grid.Row="4" Grid.Column="11" ItemName="VINE_SWINGING" />
+                        <local:UiItem Grid.Row="4" Grid.Column="12" ItemName="CLIMBING" />
+
+                        <!--Sniper/Homing/Camera/Shockwave-->
+                        <local:UiItem Grid.Row="3" Grid.Column="8" ItemName="SNIPER_SCOPE" />
+                        <local:UiItem Grid.Row="3" Grid.Column="9" ItemName="HOMING_AMMO" />
+                        <local:UiItem Grid.Row="3" Grid.Column="10" ItemName="FAIRY_CAMERA" />
+                        <local:UiItem Grid.Row="3" Grid.Column="11" ItemName="SHOCKWAVE" />
+
+                        <!--Shopkeepers-->
+                        <local:UiItem Grid.Row="0" Grid.Column="12" ItemName="CRANKY" />
+                        <local:UiItem Grid.Row="1" Grid.Column="12" ItemName="CANDY" />
+                        <local:UiItem Grid.Row="2" Grid.Column="12" ItemName="FUNKY" />
+                        <local:UiItem Grid.Row="3" Grid.Column="12" ItemName="SNIDE" />
+                    </Grid>
+                    <!--K.Rool/Helm order-->
+                    <Grid Grid.Row="6" >
+                        <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Image x:Name="HelmLabel" Source="Images/dk64/lanky_bp.png" Grid.Column="0" Margin="-1"/>
-                        <local:HelmSlot Grid.Column="2" Opacity="1" Margin="1" SlotNumber="0" />
-                        <local:HelmSlot Grid.Column="3" Opacity="1" Margin="1" SlotNumber="1" />
-                        <local:HelmSlot Grid.Column="4" Opacity="1" Margin="1" SlotNumber="2" />
-                        <local:HelmSlot Grid.Column="5" Opacity="1" Margin="1" SlotNumber="3" />
-                        <local:HelmSlot Grid.Column="6" Opacity="1" Margin="1" SlotNumber="4" />
+                        <Grid Grid.Column="0" Margin="8,1,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width=".3*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="HelmLabel" Source="Images/dk64/lanky_bp.png" Grid.Column="0" Margin="-1"/>
+                            <local:HelmSlot Grid.Column="2" Opacity="1" Margin="1" SlotNumber="0" />
+                            <local:HelmSlot Grid.Column="3" Opacity="1" Margin="1" SlotNumber="1" />
+                            <local:HelmSlot Grid.Column="4" Opacity="1" Margin="1" SlotNumber="2" />
+                            <local:HelmSlot Grid.Column="5" Opacity="1" Margin="1" SlotNumber="3" />
+                            <local:HelmSlot Grid.Column="6" Opacity="1" Margin="1" SlotNumber="4" />
+                        </Grid>
+                        <Grid Grid.Column="1" Margin="8,1,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width=".3*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="KRoolLabel" Source="Images/dk64/krool.png" Grid.Column="0" Margin="-1"/>
+                            <local:BossSlot Grid.Column="2" Opacity="1" Margin="1" SlotNumber="0" />
+                            <local:BossSlot Grid.Column="3" Opacity="1" Margin="1" SlotNumber="1" />
+                            <local:BossSlot Grid.Column="4" Opacity="1" Margin="1" SlotNumber="2" />
+                            <local:BossSlot Grid.Column="5" Opacity="1" Margin="1" SlotNumber="3" />
+                            <local:BossSlot Grid.Column="6" Opacity="1" Margin="1" SlotNumber="4" />
+                        </Grid>
                     </Grid>
-                    <Grid Grid.Column="1" Margin="8,1,0,6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width=".3*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Image x:Name="KRoolLabel" Source="Images/dk64/krool.png" Grid.Column="0" Margin="-1"/>
-                        <local:BossSlot Grid.Column="2" Opacity="1" Margin="1" SlotNumber="0" />
-                        <local:BossSlot Grid.Column="3" Opacity="1" Margin="1" SlotNumber="1" />
-                        <local:BossSlot Grid.Column="4" Opacity="1" Margin="1" SlotNumber="2" />
-                        <local:BossSlot Grid.Column="5" Opacity="1" Margin="1" SlotNumber="3" />
-                        <local:BossSlot Grid.Column="6" Opacity="1" Margin="1" SlotNumber="4" />
-                    </Grid>
+                    <!-- Song Display -->
+                    <local:Song Grid.Row="8" Background="Transparent" Margin="3,-2,-1,3" Visibility="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
                 </Grid>
-                <!-- Song Display -->
-                <local:Song Grid.Row="8" Background="Transparent" Margin="3,-2,-1,3" Visibility="{Binding DataContext.IsSongDisplayEnabled, ElementName=MainWindowRoot, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
+                <hints:Main Grid.Column="1" Margin="2" />
             </Grid>
-            <hints:Main
-                Grid.Column="1"
-                Margin="2"
-            />
+            <!-- Canvas overlay for dragging items (above content, below menu) -->
+            <Canvas x:Name="DragPreviewCanvas" Panel.ZIndex="10000" IsHitTestVisible="False" Background="Transparent" />
         </Grid>
     </DockPanel>
 </Window>

@@ -125,6 +125,12 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
                 PressedLeft = false;
                 Mouse.Capture(control);
                 viewModel.BeginDrag(MouseDragType.Left, width, height);
+
+                // Register this ViewModel as the current drag preview in MainWindow
+                if (Window.GetWindow(this) is MainWindow mainWindow)
+                {
+                    mainWindow.RegisterDragPreview(viewModel);
+                }
             }
         }
         else if (PressedRight && !viewModel.IsDragging)
@@ -134,13 +140,37 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
                 PressedRight = false;
                 Mouse.Capture(control);
                 viewModel.BeginDrag(MouseDragType.Right, width, height);
+
+                // Register this ViewModel as the current drag preview in MainWindow
+                if (Window.GetWindow(this) is MainWindow mainWindow)
+                {
+                    mainWindow.RegisterDragPreview(viewModel);
+                }
             }
         }
 
         if (viewModel.IsDragging)
         {
-            viewModel.DragX = currentPoint.X + 5;
-            viewModel.DragY = currentPoint.Y + 5;
+            // Convert local coordinates to main window coordinates
+            Window? mainWindow = Window.GetWindow(this);
+            if (mainWindow != null)
+            {
+                Point windowPoint = this.TransformToAncestor(mainWindow).Transform(currentPoint);
+                viewModel.DragX = windowPoint.X;
+                viewModel.DragY = windowPoint.Y;
+
+                // Update the drag preview canvas
+                if (mainWindow is MainWindow mw)
+                {
+                    mw.UpdateDragPreview();
+                }
+            }
+            else
+            {
+                // Fallback to local coordinates if main window is not available
+                viewModel.DragX = currentPoint.X + 5;
+                viewModel.DragY = currentPoint.Y + 5;
+            }
         }
     }
 
@@ -205,6 +235,12 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
             else
             {
                 viewModel.EndDrag();
+
+                // Clear the drag preview from MainWindow
+                if (Window.GetWindow(this) is MainWindow mainWindow)
+                {
+                    mainWindow.ClearDragPreview();
+                }
             }
 
             return;
@@ -251,6 +287,12 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
         else
         {
             viewModel.EndDrag();
+        }
+
+        // Clear the drag preview from MainWindow
+        if (Window.GetWindow(this) is MainWindow mainWindow)
+        {
+            mainWindow.ClearDragPreview();
         }
     }
 
