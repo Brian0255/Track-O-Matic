@@ -1,7 +1,5 @@
 using System.ComponentModel;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
@@ -19,7 +17,7 @@ public class UserSettingsService : IUserSettingsService
 {
     private const string SettingsFileName = "user-settings.json";
     private readonly string _settingsFilePath;
-    private UserSettingsData _settingsData;
+    private readonly UserSettingsData _settingsData;
     private readonly IDataPersistenceService _dataPersistenceService;
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -38,7 +36,7 @@ public class UserSettingsService : IUserSettingsService
     /// <param name="settingsFilePath">Optional custom path for settings file. If null, uses default app data folder.</param>
     internal UserSettingsService(string? settingsFilePath, IDataPersistenceService dataPersistenceService)
     {
-        _dataPersistenceService = dataPersistenceService;
+        _dataPersistenceService = dataPersistenceService ?? throw new ArgumentNullException(nameof(dataPersistenceService));
         // Determine platform-specific app data folder or use provided path
         if (string.IsNullOrEmpty(settingsFilePath))
         {
@@ -51,30 +49,21 @@ public class UserSettingsService : IUserSettingsService
             _settingsFilePath = settingsFilePath;
         }
 
-        // Initialize data with defaults
-        _settingsData = new UserSettingsData();
-
-        // Try to load from file, use defaults if file doesn't exist
-        _ = LoadFromFileAsync();
-    }
-
-    /// <summary>
-    /// Loads settings from the JSON file.
-    /// </summary>
-    private async Task LoadFromFileAsync()
-    {
+        // Load settings from file synchronously.
+        // Constructors cannot be async, so we block on the async load.
+        // GetAwaiter().GetResult() preserves exception stack traces (unlike .Wait()).
         try
         {
-            UserSettingsData? data = await _dataPersistenceService.LoadAsync<UserSettingsData>(_settingsFilePath);
-            if (data is not null)
-            {
-                _settingsData = data;
-            }
+            var data = _dataPersistenceService.LoadAsync<UserSettingsData>(_settingsFilePath)
+                .GetAwaiter()
+                .GetResult();
+
+            _settingsData = data;
         }
         catch (Exception ex)
         {
-            // Log or handle error - for now, silently fall back to defaults
             System.Diagnostics.Debug.WriteLine($"Failed to load settings from {_settingsFilePath}: {ex.Message}");
+            _settingsData = new();
         }
     }
 

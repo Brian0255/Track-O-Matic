@@ -14,7 +14,7 @@ public interface IDataPersistenceService
     /// A task that represents the asynchronous operation. The task result contains the loaded data,
     /// or null if the file does not exist or could not be loaded.
     /// </returns>
-    Task<T?> LoadAsync<T>(string filePath) where T : class;
+    Task<T> LoadAsync<T>(string filePath) where T : class, new();
 
     /// <summary>
     /// Asynchronously save data to a JSON file.

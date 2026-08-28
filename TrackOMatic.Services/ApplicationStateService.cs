@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 
 using TrackOMatic.Logic.Enums;
 
@@ -12,7 +11,7 @@ public class ApplicationStateService : IApplicationStateService
 {
     private const string StateFileName = "app-state.json";
     private readonly string _stateFilePath;
-    private ApplicationStateData _stateData;
+    private readonly ApplicationStateData _stateData;
     private readonly IDataPersistenceService _dataPersistenceService;
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -49,25 +48,19 @@ public class ApplicationStateService : IApplicationStateService
         _stateData = new ApplicationStateData();
 
         // Try to load from file, use defaults if file doesn't exist
-        _ = LoadFromFileAsync();
-    }
-    /// <summary>
-    /// Loads application state from the JSON file.
-    /// </summary>
-    private async Task LoadFromFileAsync()
-    {
         try
         {
-            ApplicationStateData? data = await _dataPersistenceService.LoadAsync<ApplicationStateData>(_stateFilePath);
-            if (data is not null)
-            {
-                _stateData = data;
-            }
+            var data = _dataPersistenceService.LoadAsync<ApplicationStateData>(_stateFilePath)
+                .GetAwaiter()
+                .GetResult();
+
+            _stateData = data;
         }
         catch (Exception ex)
         {
             // Log or handle error - for now, silently fall back to defaults
             System.Diagnostics.Debug.WriteLine($"Failed to load settings from {_stateFilePath}: {ex.Message}");
+            _stateData = new();
         }
     }
 

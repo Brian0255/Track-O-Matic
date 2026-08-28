@@ -19,15 +19,33 @@ public class DataPersistenceService : IDataPersistenceService
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    public async Task<T?> LoadAsync<T>(string filePath) where T : class
+    public async Task<T> LoadAsync<T>(string filePath) where T : class, new()
     {
         if (!File.Exists(filePath))
         {
-            return default;
+            return new T();
         }
 
-        var jsonString = await File.ReadAllTextAsync(filePath);
-        return JsonSerializer.Deserialize<T>(jsonString, _jsonOptions);
+        try
+        {
+            using var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.ReadWrite | FileShare.Delete,  // Allow concurrent reads and deletes
+                bufferSize: 4096,
+                FileOptions.SequentialScan | FileOptions.Asynchronous  // Optimize for sequential read + async
+            );
+            using var reader = new StreamReader(stream);
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var jsonString = await reader.ReadToEndAsync(cts.Token).ConfigureAwait(false);
+
+            return JsonSerializer.Deserialize<T>(jsonString, _jsonOptions) ?? new T();
+        }
+        catch (Exception)
+        {
+            return new T();
+        }
     }
 
     public async Task SaveAsync<T>(T data, string filePath, bool ensureDirectory = true) where T : class
@@ -48,6 +66,6 @@ public class DataPersistenceService : IDataPersistenceService
         }
 
         var jsonString = JsonSerializer.Serialize(data, _jsonOptions);
-        await File.WriteAllTextAsync(filePath, jsonString);
+        await File.WriteAllTextAsync(filePath, jsonString).ConfigureAwait(false);
     }
 }
