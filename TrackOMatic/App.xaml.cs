@@ -15,7 +15,7 @@ namespace TrackOMatic;
 public partial class App : Application
 {
     private readonly IServiceProvider _serviceProvider;
-    private IResourceDictionaryProvider? _resourceDictionaryProvider;
+    private WpfResourceDictionaryProvider? _resourceDictionaryProvider;
 
     public App()
     {
@@ -65,7 +65,6 @@ public partial class App : Application
             appStateService,
             spoilerService,
             parsedSpoilerDataService,
-            levelOrderService,
             autotrackingService,
             themeService,
             savedProgressProvider,

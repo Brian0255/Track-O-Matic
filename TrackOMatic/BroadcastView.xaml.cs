@@ -4,196 +4,154 @@ using System.Windows;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
 
-namespace TrackOMatic
+namespace TrackOMatic;
+
+/// <summary>
+/// Interaction logic for HintItemSelectionDialog.xaml
+/// </summary>
+public partial class BroadcastView : Window, INotifyPropertyChanged
 {
-    /// <summary>
-    /// Interaction logic for HintItemSelectionDialog.xaml
-    /// </summary>
-    public partial class BroadcastView : Window, INotifyPropertyChanged
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void OnPropertyChanged(string propertyName)
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 
-        protected void OnPropertyChanged(string propertyName)
+    #region Proxy Properties for User Settings
+
+    private IUserSettingsService UserSettings { get; init; }
+    private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
+
+    /// <summary>
+    /// Proxy property for XAML binding to TopMost setting.
+    /// </summary>
+    public bool TopMostSetting
+    {
+        get => UserSettings.TopMost;
+        set
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #region Proxy Properties for User Settings
-
-        private IUserSettingsService UserSettings { get; init; }
-        private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
-
-        /// <summary>
-        /// Proxy property for XAML binding to TopMost setting.
-        /// </summary>
-        public bool TopMostSetting
-        {
-            get => UserSettings.TopMost;
-            set
+            if (UserSettings.TopMost != value)
             {
-                if (UserSettings.TopMost != value)
-                {
-                    UserSettings.TopMost = value;
-                    OnPropertyChanged(nameof(TopMostSetting));
-                }
+                UserSettings.TopMost = value;
+                OnPropertyChanged(nameof(TopMostSetting));
             }
         }
+    }
 
-        /// <summary>
-        /// Proxy property for XAML binding to Helm & K. Rool broadcast setting.
-        /// </summary>
-        public bool BroadcastHelmKRoolSetting
+    /// <summary>
+    /// Proxy property for XAML binding to Helm & K. Rool broadcast setting.
+    /// </summary>
+    public bool BroadcastHelmKRoolSetting
+    {
+        get => UserSettings.BroadcastHelmKRool;
+        set
         {
-            get => UserSettings.BroadcastHelmKRool;
-            set
+            if (UserSettings.BroadcastHelmKRool != value)
             {
-                if (UserSettings.BroadcastHelmKRool != value)
-                {
-                    UserSettings.BroadcastHelmKRool = value;
-                    OnPropertyChanged(nameof(BroadcastHelmKRoolSetting));
-                }
+                UserSettings.BroadcastHelmKRool = value;
+                OnPropertyChanged(nameof(BroadcastHelmKRoolSetting));
             }
         }
+    }
 
-        /// <summary>
-        /// Proxy property for XAML binding to shopkeepers broadcast setting.
-        /// </summary>
-        public bool BroadcastShopkeepersSetting
+    /// <summary>
+    /// Proxy property for XAML binding to shopkeepers broadcast setting.
+    /// </summary>
+    public bool BroadcastShopkeepersSetting
+    {
+        get => UserSettings.BroadcastShopkeepers;
+        set
         {
-            get => UserSettings.BroadcastShopkeepers;
-            set
+            if (UserSettings.BroadcastShopkeepers != value)
             {
-                if (UserSettings.BroadcastShopkeepers != value)
-                {
-                    UserSettings.BroadcastShopkeepers = value;
-                    OnPropertyChanged(nameof(BroadcastShopkeepersSetting));
-                }
+                UserSettings.BroadcastShopkeepers = value;
+                OnPropertyChanged(nameof(BroadcastShopkeepersSetting));
             }
         }
+    }
 
-        /// <summary>
-        /// Proxy property for XAML binding to song display broadcast setting.
-        /// </summary>
-        public bool BroadcastSongDisplaySetting
+    /// <summary>
+    /// Proxy property for XAML binding to song display broadcast setting.
+    /// </summary>
+    public bool BroadcastSongDisplaySetting
+    {
+        get => UserSettings.BroadcastSongDisplay;
+        set
         {
-            get => UserSettings.BroadcastSongDisplay;
-            set
+            if (UserSettings.BroadcastSongDisplay != value)
             {
-                if (UserSettings.BroadcastSongDisplay != value)
-                {
-                    UserSettings.BroadcastSongDisplay = value;
-                    OnPropertyChanged(nameof(BroadcastSongDisplaySetting));
-                }
+                UserSettings.BroadcastSongDisplay = value;
+                OnPropertyChanged(nameof(BroadcastSongDisplaySetting));
             }
         }
+    }
 
-        /// <summary>
-        /// Proxy property for XAML binding to the broadcast number label setting.
-        /// </summary>
-        public BroadcastNumberLabel BroadcastNumberLabelSetting
+    /// <summary>
+    /// Proxy property for XAML binding to the broadcast number label setting.
+    /// </summary>
+    public BroadcastNumberLabel BroadcastNumberLabelSetting
+    {
+        get => UserSettings.BroadcastNumberLabel;
+        set
         {
-            get => UserSettings.BroadcastNumberLabel;
-            set
+            if (UserSettings.BroadcastNumberLabel != value)
             {
-                if (UserSettings.BroadcastNumberLabel != value)
-                {
-                    UserSettings.BroadcastNumberLabel = value;
-                    OnPropertyChanged(nameof(BroadcastNumberLabelSetting));
-                }
+                UserSettings.BroadcastNumberLabel = value;
+                OnPropertyChanged(nameof(BroadcastNumberLabelSetting));
             }
         }
+    }
 
-        #endregion
+    #endregion
 
-        public BroadcastView(IUserSettingsService userSettings, IParsedSpoilerDataService parsedSpoilerDataService)
+    public BroadcastView(IUserSettingsService userSettings, IParsedSpoilerDataService parsedSpoilerDataService)
+    {
+        UserSettings = userSettings;
+        ParsedSpoilerDataService = parsedSpoilerDataService;
+        UserSettings.PropertyChanged += (s, e) =>
         {
-            UserSettings = userSettings;
-            ParsedSpoilerDataService = parsedSpoilerDataService;
-            UserSettings.PropertyChanged += (s, e) =>
+            if (e.PropertyName == nameof(IUserSettingsService.TopMost))
             {
-                if (e.PropertyName == nameof(IUserSettingsService.TopMost))
-                {
-                    OnPropertyChanged(nameof(TopMostSetting));
-                }
-                else if (e.PropertyName == nameof(IUserSettingsService.BroadcastHelmKRool))
-                {
-                    OnPropertyChanged(nameof(BroadcastHelmKRoolSetting));
-                }
-                else if (e.PropertyName == nameof(IUserSettingsService.BroadcastShopkeepers))
-                {
-                    OnPropertyChanged(nameof(BroadcastShopkeepersSetting));
-                }
-                else if (e.PropertyName == nameof(IUserSettingsService.BroadcastSongDisplay))
-                {
-                    OnPropertyChanged(nameof(BroadcastSongDisplaySetting));
-                }
-                else if (e.PropertyName == nameof(IUserSettingsService.BroadcastNumberLabel))
-                {
-                    OnPropertyChanged(nameof(BroadcastNumberLabelSetting));
-                    AdjustLayout();
-                }
-            };
-            ParsedSpoilerDataService.ParsedSpoilerDataChanged += (s, e) => AdjustLayout();
-
-            InitializeComponent();
-        }
-
-        private void OnClosing(object? sender, CancelEventArgs e)
-        {
-            // Cancel the close if the setting is still true (user didn't toggle it off)
-            // This prevents the cascade: window closing → setting false → handler tries to close again
-            if (UserSettings.BroadcastViewActive)
-            {
-                e.Cancel = true;
-                UserSettings.BroadcastViewActive = false;
+                OnPropertyChanged(nameof(TopMostSetting));
             }
-        }
-
-        public void AdjustLayout()
-        {
-            var pointsEnabled = ParsedSpoilerDataService.HasItemPoints();
-            var hoardEnabled = ParsedSpoilerDataService.HasHoardPoints();
-            var bothEnabled = pointsEnabled && hoardEnabled;
-            var displayOption = UserSettings.BroadcastNumberLabel;
-
-            var pointsCanDisplay = pointsEnabled && (!bothEnabled || displayOption == BroadcastNumberLabel.Points);
-            var hoardCanDisplay = hoardEnabled && (!bothEnabled || displayOption == BroadcastNumberLabel.WothCount);
-
-            MovesWidth.Width = new GridLength(pointsEnabled ? 315 : 345, GridUnitType.Pixel);
-        }
-
-        private ItemBackground? GetMatchingItem(ItemName item)
-        {
-            var name = item.ToString();
-            if (name.StartsWith("KEY"))
+            else if (e.PropertyName == nameof(IUserSettingsService.BroadcastHelmKRool))
             {
-                return (ItemBackground)FindName(item.ToString().ToLower());
+                OnPropertyChanged(nameof(BroadcastHelmKRoolSetting));
             }
-
-            return null;
-        }
-
-        public void ActivateTooltip(ItemName item, string hoverText)
-        {
-            var match = GetMatchingItem(item);
-            if (match == null)
+            else if (e.PropertyName == nameof(IUserSettingsService.BroadcastShopkeepers))
             {
-                return;
+                OnPropertyChanged(nameof(BroadcastShopkeepersSetting));
             }
-
-            match.ToolTip.Content = hoverText;
-            match.ToolTip.Visibility = Visibility.Visible;
-        }
-
-        public void DisableTooltip(ItemName item)
-        {
-            var match = GetMatchingItem(item);
-            if (match == null)
+            else if (e.PropertyName == nameof(IUserSettingsService.BroadcastSongDisplay))
             {
-                return;
+                OnPropertyChanged(nameof(BroadcastSongDisplaySetting));
             }
+            else if (e.PropertyName == nameof(IUserSettingsService.BroadcastNumberLabel))
+            {
+                OnPropertyChanged(nameof(BroadcastNumberLabelSetting));
+                AdjustLayout();
+            }
+        };
+        ParsedSpoilerDataService.ParsedSpoilerDataChanged += (s, e) => AdjustLayout();
 
-            match.ToolTip.Visibility = Visibility.Collapsed;
+        InitializeComponent();
+    }
+
+    private void OnClosing(object? sender, CancelEventArgs e)
+    {
+        // Cancel the close if the setting is still true (user didn't toggle it off)
+        // This prevents the cascade: window closing → setting false → handler tries to close again
+        if (UserSettings.BroadcastViewActive)
+        {
+            e.Cancel = true;
+            UserSettings.BroadcastViewActive = false;
         }
+    }
+
+    public void AdjustLayout()
+    {
+        var pointsEnabled = ParsedSpoilerDataService.HasItemPoints();
+        MovesWidth.Width = new GridLength(pointsEnabled ? 315 : 345, GridUnitType.Pixel);
     }
 }

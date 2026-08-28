@@ -55,6 +55,7 @@ public class SavedHint
     public SavedHint()
     {
         // This constructor is used by JSON deserialization and allows all properties to be set via initializers.
+        HintId = SavedHintDto.GenerateHintIdIfNeeded("");
     }
 
     /// <summary>

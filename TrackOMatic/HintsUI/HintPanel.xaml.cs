@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.ViewModels.Hints;
 
 namespace TrackOMatic.HintsUI;
@@ -51,19 +52,18 @@ public partial class HintPanel : UserControl
             return;
         }
 
-        var dialog = new HintItemSelectionDialog(viewModel.ItemsToFilterBy.ToList())
-        {
-            Title = "Select Items to Prioritize"
-        };
+        var dialog = new HintMultiSelectionDialog(HintDialogMapping.HintDialogMappings, [.. viewModel.ItemsToFilterBy], "Select Items to Prioritize");
+
         var mousePosition = Mouse.GetPosition(this);
         mousePosition = PointToScreen(mousePosition);
         UIUtils.MoveWindowAndEnsureVisible(dialog, mousePosition.X - 20, mousePosition.Y - 10);
         dialog.ShowDialog();
+        var selectedItems = dialog.GetSelectedItems().Select(x => x.ItemName).ToList();
 
         // Pass selected items to ViewModel command
-        if (viewModel.ApplyFilterCommand.CanExecute(dialog.SelectedItems.Keys.ToList()))
+        if (viewModel.ApplyFilterCommand.CanExecute(selectedItems))
         {
-            viewModel.ApplyFilterCommand.Execute(dialog.SelectedItems.Keys.ToList());
+            viewModel.ApplyFilterCommand.Execute(selectedItems);
         }
     }
 
