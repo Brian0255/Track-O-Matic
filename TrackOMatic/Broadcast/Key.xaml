@@ -10,14 +10,13 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:KeyViewModel}"
              d:DesignHeight="32"
              d:DesignWidth="32"
-             Unloaded="OnUnloaded"
  >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
@@ -29,7 +28,7 @@
             ToolTipService.InitialShowDelay="500"
         >
             <Border.ToolTip>
-                <ToolTip Content="{Binding HoverText}" Visibility="{Binding HasHoverText, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" Placement="Mouse" />
+                <ToolTip Content="{Binding HoverText}" Visibility="{Binding HasHoverText, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" Placement="Mouse" />
             </Border.ToolTip>
             <Border.Effect>
                 <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
@@ -44,6 +43,6 @@
             Margin="0,0,4,4"
             Source="{StaticResource star_complex}"
             HorizontalAlignment="Left"
-            Visibility="{Binding IsStarred, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
+            Visibility="{Binding IsStarred, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
     </Grid>
 </UserControl>

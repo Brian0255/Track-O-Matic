@@ -8,10 +8,12 @@
     xmlns:broadcast="clr-namespace:TrackOMatic.Broadcast"
     xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
     xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
     mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainBroadcastViewModel}"
     Width="470"
     SizeToContent="Height"
-    Topmost ="{Binding TopMostSetting, RelativeSource={RelativeSource Self}, Mode=TwoWay}"
+    Topmost="{Binding TopMostSetting}"
     Title="Broadcast View"
     ResizeMode="NoResize"
     Background="{StaticResource VeryDark}"
@@ -20,12 +22,15 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Dictionary1.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="Image">
                 <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
             </Style>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+            <ItemsPanelTemplate x:Key="SlotGridPanelTemplate">
+                <UniformGrid Rows="1" Columns="5" />
+            </ItemsPanelTemplate>
         </ResourceDictionary>
     </Window.Resources>
     <StackPanel Orientation="Vertical" VerticalAlignment="Top">
@@ -39,7 +44,7 @@
         <!-- Consider doing so when we have a dedicated broadcast view model. -->
         <Grid Name="MovesLevels">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Name="MovesWidth" Width="345"/>
+                <ColumnDefinition Width="{Binding MovesWidth}"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" Margin="7,7,13,7">
@@ -52,7 +57,7 @@
                             <Style TargetType="{x:Type RowDefinition}">
                                 <Setter Property="Height" Value="0" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding BroadcastShopkeepersSetting, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                    <DataTrigger Binding="{Binding BroadcastShopkeepersSetting}" Value="True">
                                         <Setter Property="Height" Value="47" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -60,7 +65,8 @@
                         </RowDefinition.Style>
                     </RowDefinition>
                 </Grid.RowDefinitions>
-                <Grid Name="MainKongMoves" Grid.Row="0" Visibility="Visible"  Margin="0" >
+                <!-- Main Kong Moves -->
+                <Grid Grid.Row="0" Visibility="Visible"  Margin="0" >
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
@@ -125,7 +131,8 @@
                     <broadcast:KongBlueprint Grid.Row="3" Grid.Column="6" CollectedType="TINY_BLUEPRINT" TurnedInType="TINY_BLUEPRINT_TURNED" />
                     <broadcast:KongBlueprint Grid.Row="4" Grid.Column="6" CollectedType="CHUNKY_BLUEPRINT" TurnedInType="CHUNKY_BLUEPRINT_TURNED" />
                 </Grid>
-                <Grid Name="TrainingMovesGrid" Grid.Row="2" Margin="2">
+                <!-- Training Moves Grid -->
+                <Grid Grid.Row="2" Margin="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -143,6 +150,7 @@
                     <broadcast:CameraShockwave Grid.Column="5" />
                     <broadcast:HomingScope Grid.Column="6" />
                 </Grid>
+                <!-- Shopkeepers Grid -->
                 <Grid Name="ShopkeepersGrid" Grid.Row="3" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -162,19 +170,18 @@
             </Grid>
             <!-- Broadcast Levels here. -->
             <StackPanel Grid.Column="1" Margin="-6,3,3,3" Height="284" VerticalAlignment="Top">
-                <broadcast:Level LevelNumber="1" />
-                <broadcast:Level LevelNumber="2" />
-                <broadcast:Level LevelNumber="3" />
-                <broadcast:Level LevelNumber="4" />
-                <broadcast:Level LevelNumber="5" />
-                <broadcast:Level LevelNumber="6" />
-                <broadcast:Level LevelNumber="7" />
-                <broadcast:Level LevelNumber="8" />
+                <ItemsControl ItemsSource="{Binding Levels}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:LevelViewModel}">
+                            <broadcast:Level />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <broadcast:Isles />
             </StackPanel>
         </Grid>
         <!-- End Game items: Blast-O-Matic & Final Boss Order -->
-        <Grid Margin="6,1,0,0" Height="47" Visibility="{Binding BroadcastHelmKRoolSetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
+        <Grid Margin="6,1,0,0" Height="47" Visibility="{Binding BroadcastHelmKRoolSetting, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -184,38 +191,34 @@
                     <ColumnDefinition Width=".2*"/>
                     <ColumnDefinition Width="1.2*"/>
                     <ColumnDefinition Width=".2*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width=".5*"/>
                 </Grid.ColumnDefinitions>
                 <Image Source="Images/dk64/lanky_bp.png" Grid.Column="1" Margin="0"/>
-                <broadcast:HelmSlot Grid.Column="3" Opacity="1" Margin="0" SlotNumber="0" />
-                <broadcast:HelmSlot Grid.Column="4" Opacity="1" Margin="0" SlotNumber="1" />
-                <broadcast:HelmSlot Grid.Column="5" Opacity="1" Margin="0" SlotNumber="2" />
-                <broadcast:HelmSlot Grid.Column="6" Opacity="1" Margin="0" SlotNumber="3" />
-                <broadcast:HelmSlot Grid.Column="7" Opacity="1" Margin="0" SlotNumber="4" />
+                <ItemsControl Grid.Column="3" Margin="0" ItemsSource="{Binding HelmSlots}" ItemsPanel="{StaticResource SlotGridPanelTemplate}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:HelmSlotViewModel}">
+                            <broadcast:HelmSlot Opacity="1" Margin="0" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
             <Grid Grid.Column="1" Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width=".2*"/>
                     <ColumnDefinition Width="1.2*"/>
                     <ColumnDefinition Width=".2*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width=".5*"/>
                 </Grid.ColumnDefinitions>
                 <Image Source="Images/dk64/krool.png" Grid.Column="1" Margin="0,0,0,0"/>
-                <broadcast:BossSlot Grid.Column="3" Opacity="1" Margin="0" SlotNumber="0" />
-                <broadcast:BossSlot Grid.Column="4" Opacity="1" Margin="0" SlotNumber="1" />
-                <broadcast:BossSlot Grid.Column="5" Opacity="1" Margin="0" SlotNumber="2" />
-                <broadcast:BossSlot Grid.Column="6" Opacity="1" Margin="0" SlotNumber="3" />
-                <broadcast:BossSlot Grid.Column="7" Opacity="1" Margin="0" SlotNumber="4" />
+                <ItemsControl Grid.Column="3" Margin="0" ItemsSource="{Binding BossSlots}" ItemsPanel="{StaticResource SlotGridPanelTemplate}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:BossSlotViewModel}">
+                            <broadcast:BossSlot Opacity="1" Margin="0" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
         </Grid>
         <!-- Filler Rectangle -->
@@ -240,6 +243,8 @@
             <broadcast:Countable Grid.Column="6" ItemType="GOLDEN_BANANA" />
         </Grid>
         <!-- Song Display -->
-        <broadcast:Song Background="Transparent" Margin="3,1,3,5" Height="52" Visibility="{Binding BroadcastSongDisplaySetting, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
+        <Grid Background="Transparent" Margin="3,1,3,5" Height="52" Visibility="{Binding BroadcastSongDisplaySetting, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
+            <broadcast:Song />
+        </Grid>
     </StackPanel>
 </Window>

@@ -1,16 +1,16 @@
-<UserControl x:Class="TrackOMatic.Broadcast.Level"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TrackOMatic.Broadcast"
-             xmlns:converters="clr-namespace:TrackOMatic.Converters"
-             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=viewmodels:LevelViewModel}"
-             d:DesignHeight="60"
-             d:DesignWidth="100"
-             Unloaded="OnUnloaded"
+<UserControl
+    x:Class="TrackOMatic.Broadcast.Level"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.Broadcast"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:LevelViewModel}"
+    d:DesignHeight="60"
+    d:DesignWidth="100"
 >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -32,7 +32,7 @@
             Grid.Column="0"
             Margin="0,0,0,0"
             Panel.ZIndex="0"
-            LevelNumber="{Binding LevelNumber, RelativeSource={RelativeSource AncestorType=local:Level}}"
+            DataContext="{Binding KeyViewModel}"
         />
 
         <!-- Image showing the number of the key gotten. ...why not just use the same icon as in UiItem? -->

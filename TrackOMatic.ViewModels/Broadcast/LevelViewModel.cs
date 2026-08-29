@@ -11,7 +11,7 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// <summary>
 /// A view model for displaying data about a specific numbered level in the broadcast view.
 /// </summary>
-public class LevelViewModel : IslesViewModel, INotifyPropertyChanged
+public partial class LevelViewModel : IslesViewModel, IEquatable<LevelViewModel>, INotifyPropertyChanged
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LevelViewModel"/> class with the specified services and selected level.
@@ -25,9 +25,12 @@ public class LevelViewModel : IslesViewModel, INotifyPropertyChanged
         IItemTrackingService itemTrackingService,
         ILevelOrderService levelOrderService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        IUserSettingsService userSettingsService
+        IUserSettingsService userSettingsService,
+        ISavedProgressProvider savedProgressProvider
     ) : base(selectedLevel, itemTrackingService, levelOrderService, parsedSpoilerDataService, userSettingsService)
     {
+        KeyViewModel = new(selectedLevel, itemTrackingService, parsedSpoilerDataService, savedProgressProvider);
+
         // Initialize state from service (if level exists)
         InitializeState();
     }
@@ -47,18 +50,13 @@ public class LevelViewModel : IslesViewModel, INotifyPropertyChanged
 
     #region Proxy Properties
 
+    public KeyViewModel KeyViewModel { get; private init; }
+
     private string _numberResourceKey = "";
     public string NumberResourceKey
     {
         get => _numberResourceKey;
-        protected set
-        {
-            if (_numberResourceKey != value)
-            {
-                _numberResourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _numberResourceKey, value);
     }
 
     // Key-level image resource (for the level's key display)
@@ -66,14 +64,7 @@ public class LevelViewModel : IslesViewModel, INotifyPropertyChanged
     public string ImageResourceKey
     {
         get => _imageResourceKey;
-        private set
-        {
-            if (_imageResourceKey != value)
-            {
-                _imageResourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _imageResourceKey, value);
     }
 
     // Whether the level's key is starred
@@ -81,14 +72,7 @@ public class LevelViewModel : IslesViewModel, INotifyPropertyChanged
     public bool IsStarred
     {
         get => _isStarred;
-        private set
-        {
-            if (_isStarred != value)
-            {
-                _isStarred = value;
-                OnPropertyChanged();
-            }
-        }
+        private set => SetProperty(ref _isStarred, value);
     }
 
     #endregion
@@ -192,7 +176,13 @@ public class LevelViewModel : IslesViewModel, INotifyPropertyChanged
         ImageResourceKey = $"{baseKey}_bw";
     }
 
-    public override bool Equals(object? obj) => obj is LevelViewModel other && other._selectedLevel == _selectedLevel;
+    #region Object Overrides
+
+    public bool Equals(LevelViewModel? other) => other is not null && other._selectedLevel == _selectedLevel;
+
+    public override bool Equals(object? obj) => Equals(obj as LevelViewModel);
 
     public override int GetHashCode() => _selectedLevel.GetHashCode();
+
+    #endregion
 }

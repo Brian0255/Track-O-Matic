@@ -72,12 +72,20 @@ public class IslesViewModel : ObservableObject, IDisposable
 
     private void InitializeState()
     {
+        LevelNumber = _selectedLevel;
         RegionResourceKey = "dk_isles_label";
         ShowRegionImage = false;
         UpdateRegionData();
     }
 
     #region Proxy Properties
+
+    private int _levelNumber = int.MinValue;
+    public int LevelNumber
+    {
+        get => _levelNumber;
+        protected set => SetProperty(ref _levelNumber, value);
+    }
 
     private string _keyResourceKey = "";
     public string RegionResourceKey

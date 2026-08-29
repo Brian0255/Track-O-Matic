@@ -43,6 +43,14 @@ public partial class MainWindow : Window
     private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
     private IDataSaverService DataSaverService { get; init; }
 
+    private IItemTrackingService ItemTrackingService { get; init; }
+
+    private ILevelOrderService LevelOrderService { get; init; }
+
+    private ISavedProgressProvider SavedProgressProvider { get; init; }
+
+    private IEndGameProgressionService EndGameProgressionService { get; init; }
+
     // Timer to save the data every minute.
     private Timer _saveTimer { get; init; }
 
@@ -54,17 +62,24 @@ public partial class MainWindow : Window
         IAutotrackerService autotrackerService,
         IThemeService themeService,
         ISavedProgressProvider savedProgressProvider,
-        IDataSaverService dataSaverService
+        IDataSaverService dataSaverService,
+        IItemTrackingService itemTrackingService,
+        ILevelOrderService levelOrderService,
+        IEndGameProgressionService endGameProgressionService
     )
     {
         InitializeComponent();
 
         UserSettings = settingsSergice;
+        ItemTrackingService = itemTrackingService;
+        LevelOrderService = levelOrderService;
         AppState = appStateService;
         DataSaverService = dataSaverService;
         SpoilerService = spoilerService;
         ParsedSpoilerDataService = parsedSpoilerDataService;
+        SavedProgressProvider = savedProgressProvider;
         Autotracker = autotrackerService;
+        EndGameProgressionService = endGameProgressionService;
         DataContext = new MainWindowViewModel(settingsSergice, themeService, autotrackerService, savedProgressProvider);
 
         _saveTimer = new Timer(_saveInterval);
@@ -501,7 +516,14 @@ public partial class MainWindow : Window
     {
         if (BroadcastView == null)
         {
-            BroadcastView = new BroadcastView(UserSettings, ParsedSpoilerDataService);
+            BroadcastView = new(
+                UserSettings,
+                ParsedSpoilerDataService,
+                ItemTrackingService,
+                LevelOrderService,
+                SavedProgressProvider,
+                EndGameProgressionService
+            );
             // Wire up the Closed event so we can clean up when the window closes
             BroadcastView.Closed += ClosedBroadcastWindow;
         }
