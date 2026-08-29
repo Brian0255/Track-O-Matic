@@ -61,6 +61,8 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
 
     public ObservableCollection<KongBlueprintViewModel> KongBlueprints { get; } = [];
 
+    public ObservableCollection<BroadcastItemViewModel> ShopkeepItems { get; } = [];
+
     #endregion
 
     protected ItemName[] KongItemNames { get; } =
@@ -149,6 +151,17 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
         foreach (var itemName in KongItemNames)
         {
             KongItems.Add(new(
+                itemName,
+                itemTrackingService,
+                parsedSpoilerDataService,
+                savedProgressProvider,
+                themeService
+            ));
+        }
+
+        foreach (var itemName in new List<ItemName> { ItemName.CRANKY, ItemName.FUNKY, ItemName.CANDY, ItemName.SNIDE, ItemName.CLIMBING })
+        {
+            ShopkeepItems.Add(new(
                 itemName,
                 itemTrackingService,
                 parsedSpoilerDataService,

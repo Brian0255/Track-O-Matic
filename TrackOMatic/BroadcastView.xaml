@@ -111,22 +111,18 @@
                     <broadcast:HomingScope Grid.Column="6" />
                 </Grid>
                 <!-- Shopkeepers Grid -->
-                <Grid Name="ShopkeepersGrid" Grid.Row="3" Margin="0,0,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <broadcast:Item Grid.Column="0" ItemName="CRANKY" />
-                    <broadcast:Item Grid.Column="1" ItemName="FUNKY" />
-                    <broadcast:Item Grid.Column="2" ItemName="CANDY" />
-                    <broadcast:Item Grid.Column="3" ItemName="SNIDE" />
-                    <broadcast:Item Grid.Column="4" ItemName="CLIMBING" />
-                </Grid>
+                <ItemsControl Grid.Row="3" Margin="0,0,0,0" ItemsSource="{Binding ShopkeepItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:BroadcastItemViewModel}">
+                            <broadcast:Item />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
             <!-- Broadcast Levels here. -->
             <StackPanel Grid.Column="1" Margin="-6,3,3,3" Height="284" VerticalAlignment="Top">
