@@ -5,7 +5,7 @@ using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
-namespace TrackOMatic.ViewModels;
+namespace TrackOMatic.ViewModels.Regions;
 
 public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionLevelViewModel>, IDisposable
 {

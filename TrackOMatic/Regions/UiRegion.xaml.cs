@@ -5,7 +5,7 @@ using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events.Autotracking;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
-using TrackOMatic.ViewModels;
+using TrackOMatic.ViewModels.Regions;
 
 namespace TrackOMatic.Regions;
 /// <summary>

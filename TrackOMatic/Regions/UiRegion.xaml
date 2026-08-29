@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:TrackOMatic.Regions"
              xmlns:converters="clr-namespace:TrackOMatic.Converters"
-             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels;assembly=TrackOMatic.ViewModels"
+             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Regions;assembly=TrackOMatic.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewmodels:RegionViewModel}"
              d:DesignHeight="200"

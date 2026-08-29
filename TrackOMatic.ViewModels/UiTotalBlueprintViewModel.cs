@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
@@ -137,4 +134,13 @@ public partial class UiTotalBlueprintViewModel: ObservableObject, IDisposable
         }
         ImageResourceKey = baseKey;
     }
+
+    #region Object Overrides
+
+    public override string ToString()
+    {
+        return $"Total blueprints: {Count}";
+    }
+
+    #endregion
 }

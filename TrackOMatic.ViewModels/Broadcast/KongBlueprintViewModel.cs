@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
@@ -11,7 +8,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public class KongBlueprintViewModel : ObservableObject, IDisposable
+public class KongBlueprintViewModel : ObservableObject, IEquatable<KongBlueprintViewModel>, IDisposable
 {
     private readonly ICollectiblesService _collectiblesService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
@@ -155,4 +152,36 @@ public class KongBlueprintViewModel : ObservableObject, IDisposable
         }
         ImageResourceKey = baseKey;
     }
+
+    #region Object Overrides
+
+    public bool Equals(KongBlueprintViewModel? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return _collectedType == other._collectedType && _turnedInType == other._turnedInType;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return base.Equals(obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_collectedType, _turnedInType);
+    }
+
+    public override string ToString()
+    {
+        return $"KongBlueprintViewModel: {Count} of the {_collectedType} blueprints on hand.";
+    }
+
+    #endregion
 }

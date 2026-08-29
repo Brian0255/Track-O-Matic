@@ -36,7 +36,7 @@
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <Image x:Name="Image" Source="{Binding ImageResourceKey, Converter={StaticResource ResourceKeyConverter}}"/>
+                <Image Source="{Binding ImageResourceKey, Converter={StaticResource ResourceKeyConverter}}"/>
             </Border>
         </Grid>
     </ContentControl.Content>

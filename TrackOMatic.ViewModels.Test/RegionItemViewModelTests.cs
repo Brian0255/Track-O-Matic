@@ -1,9 +1,10 @@
 using Moq;
+
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
-using TrackOMatic.ViewModels;
+using TrackOMatic.ViewModels.Regions;
 
 namespace TrackOMatic.ViewModels.Test;
 

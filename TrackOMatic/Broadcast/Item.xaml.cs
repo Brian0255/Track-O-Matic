@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
-using TrackOMatic.ViewModels;
+using TrackOMatic.ViewModels.Broadcast;
 
 namespace TrackOMatic.Broadcast;
 

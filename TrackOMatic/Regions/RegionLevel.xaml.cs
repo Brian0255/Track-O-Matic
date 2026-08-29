@@ -1,7 +1,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using TrackOMatic.ViewModels;
+using TrackOMatic.ViewModels.Regions;
 
 namespace TrackOMatic.Regions;
 

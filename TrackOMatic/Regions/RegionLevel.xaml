@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:TrackOMatic.Regions"
-             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels;assembly=TrackOMatic.ViewModels"
+             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Regions;assembly=TrackOMatic.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewmodels:RegionLevelViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="32"

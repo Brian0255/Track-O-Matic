@@ -14,7 +14,7 @@ using TrackOMatic.Services.TrackerState;
 
 [assembly: InternalsVisibleTo("TrackOMatic.ViewModels.Test")]
 
-namespace TrackOMatic.ViewModels;
+namespace TrackOMatic.ViewModels.Regions;
 
 public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewModel>, IDisposable, IRegionSlotProvider
 {

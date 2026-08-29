@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 using TrackOMatic.Logic.Enums;
 
-namespace TrackOMatic.ViewModels;
+namespace TrackOMatic.ViewModels.Regions;
 
 /// <summary>
 /// A contract interface indicating what each specialized view model is allowed to do.

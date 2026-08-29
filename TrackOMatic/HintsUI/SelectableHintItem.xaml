@@ -20,7 +20,7 @@
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
                 </Border.Effect>
-                <Image x:Name="Image" Source="{Binding HintItemImage, RelativeSource={RelativeSource AncestorType=local:SelectableHintItem}}"/>
+                <Image Source="{Binding HintItemImage, RelativeSource={RelativeSource AncestorType=local:SelectableHintItem}}"/>
             </Border>
         </Grid>
     </ContentControl.Content>

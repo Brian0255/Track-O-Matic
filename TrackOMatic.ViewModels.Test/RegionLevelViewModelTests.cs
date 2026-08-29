@@ -4,6 +4,7 @@ using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models.Spoilers;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
+using TrackOMatic.ViewModels.Regions;
 
 namespace TrackOMatic.ViewModels.Test;
 

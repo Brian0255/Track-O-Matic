@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
@@ -10,7 +7,7 @@ using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
-namespace TrackOMatic.ViewModels;
+namespace TrackOMatic.ViewModels.Broadcast;
 
 /// <summary>
 /// A view model for an item that users can see with the dedicated broadcast view.
@@ -19,7 +16,7 @@ namespace TrackOMatic.ViewModels;
 /// This is meant to be a base class version.
 ///Additional view models can extend this for write functionality.
 /// </remarks>
-public class BroadcastItemViewModel : ObservableObject, IDisposable
+public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItemViewModel>, IDisposable
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
@@ -255,4 +252,36 @@ public class BroadcastItemViewModel : ObservableObject, IDisposable
         // Otherwise, item is in ItemGrid or unknown region, show B&W
         ImageResourceKey = $"{baseKey}_bw";
     }
+
+    #region Object Overrides
+
+    public bool Equals(BroadcastItemViewModel? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return _itemName == other._itemName;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as BroadcastItemViewModel);
+    }
+
+    public override int GetHashCode()
+    {
+        return _itemName.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return $"BroadcastItemViewModel: {_itemName}{(IsStarred ? "*" : "")}";
+    }
+
+    #endregion
 }

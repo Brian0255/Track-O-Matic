@@ -4,7 +4,7 @@ using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 
-namespace TrackOMatic.ViewModels;
+namespace TrackOMatic.ViewModels.Regions;
 
 /// <summary>
 /// A view model representing a vial item by default, only to be covered by a real item when found in a region.

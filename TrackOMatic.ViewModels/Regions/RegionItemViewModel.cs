@@ -7,7 +7,7 @@ using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 
-namespace TrackOMatic.ViewModels;
+namespace TrackOMatic.ViewModels.Regions;
 
 /// <summary>
 /// A view model representing an item in a specific region, providing properties and methods for UI binding and interaction.

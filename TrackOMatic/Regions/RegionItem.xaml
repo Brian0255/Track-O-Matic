@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:TrackOMatic"
              xmlns:converters="clr-namespace:TrackOMatic.Converters"
-             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels;assembly=TrackOMatic.ViewModels"
+             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Regions;assembly=TrackOMatic.ViewModels"
              Background="Transparent"
              PreviewMouseDown="RegionItem_PreviewMouseButtonDown"
              PreviewMouseWheel="RegionItem_PreviewMouseWheel"
