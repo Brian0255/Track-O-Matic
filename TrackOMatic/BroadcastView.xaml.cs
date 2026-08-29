@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Windows;
 
-using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels.Broadcast;
@@ -11,36 +10,9 @@ namespace TrackOMatic;
 /// <summary>
 /// Interaction logic for HintItemSelectionDialog.xaml
 /// </summary>
-public partial class BroadcastView : Window, INotifyPropertyChanged
+public partial class BroadcastView : Window
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    #region Proxy Properties for User Settings
-
     private IUserSettingsService UserSettings { get; init; }
-
-    /// <summary>
-    /// Proxy property for XAML binding to the broadcast number label setting.
-    /// </summary>
-    public BroadcastNumberLabel BroadcastNumberLabelSetting
-    {
-        get => UserSettings.BroadcastNumberLabel;
-        set
-        {
-            if (UserSettings.BroadcastNumberLabel != value)
-            {
-                UserSettings.BroadcastNumberLabel = value;
-                OnPropertyChanged(nameof(BroadcastNumberLabelSetting));
-            }
-        }
-    }
-
-    #endregion
 
     public BroadcastView(
         IUserSettingsService userSettings,
@@ -48,7 +20,9 @@ public partial class BroadcastView : Window, INotifyPropertyChanged
         IItemTrackingService itemTrackingService,
         ILevelOrderService levelOrderService,
         ISavedProgressProvider savedProgressProvider,
-        IEndGameProgressionService endGameProgressionService
+        IEndGameProgressionService endGameProgressionService,
+        IThemeService themeService,
+        ICollectiblesService collectiblesService
     )
     {
 
@@ -59,17 +33,11 @@ public partial class BroadcastView : Window, INotifyPropertyChanged
             itemTrackingService,
             levelOrderService,
             savedProgressProvider,
-            endGameProgressionService
+            endGameProgressionService,
+            themeService,
+            collectiblesService
         );
         UserSettings = userSettings;
-
-        UserSettings.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(IUserSettingsService.BroadcastNumberLabel))
-            {
-                OnPropertyChanged(nameof(BroadcastNumberLabelSetting));
-            }
-        };
     }
 
     private void OnClosing(object? sender, CancelEventArgs e)

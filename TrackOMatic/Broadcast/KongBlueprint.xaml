@@ -9,7 +9,6 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:KongBlueprintViewModel}"
              d:DesignHeight="64"
              d:DesignWidth="64"
-             Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
         <ResourceDictionary>

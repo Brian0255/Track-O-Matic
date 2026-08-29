@@ -66,70 +66,30 @@
                     </RowDefinition>
                 </Grid.RowDefinitions>
                 <!-- Main Kong Moves -->
-                <Grid Grid.Row="0" Visibility="Visible"  Margin="0" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="6*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-
-                    <!-- Kong 1 -->
-                    <broadcast:Item Grid.Row="0" Grid.Column="0" ItemName="DONKEY" />
-                    <broadcast:Item Grid.Row="0" Grid.Column="1" ItemName="COCONUT_GUN" />
-                    <broadcast:Item Grid.Row="0" Grid.Column="2" ItemName="BONGO_BLAST" />
-                    <broadcast:Item Grid.Row="0" Grid.Column="3" ItemName="GORILLA_GRAB" />
-                    <broadcast:Item Grid.Row="0" Grid.Column="4" ItemName="STRONG_KONG" />
-                    <broadcast:Item Grid.Row="0" Grid.Column="5" ItemName="BABOON_BLAST" />
-
-                    <!-- Kong 2 -->
-                    <broadcast:Item Grid.Row="1" Grid.Column="0" ItemName="DIDDY" />
-                    <broadcast:Item Grid.Row="1" Grid.Column="1" ItemName="PEANUT_POPGUNS" />
-                    <broadcast:Item Grid.Row="1" Grid.Column="2" ItemName="GUITAR_GAZUMP" />
-                    <broadcast:Item Grid.Row="1" Grid.Column="3" ItemName="CHIMPY_CHARGE" />
-                    <broadcast:Item Grid.Row="1" Grid.Column="4" ItemName="ROCKETBARREL_BOOST" />
-                    <broadcast:Item Grid.Row="1" Grid.Column="5" ItemName="SIMIAN_SPRING" />
-
-                    <!-- Kong 3 -->
-                    <broadcast:Item Grid.Row="2" Grid.Column="0" ItemName="LANKY" />
-                    <broadcast:Item Grid.Row="2" Grid.Column="1" ItemName="GRAPE_SHOOTER" />
-                    <broadcast:Item Grid.Row="2" Grid.Column="2" ItemName="TROMBONE_TREMOR" />
-                    <broadcast:Item Grid.Row="2" Grid.Column="3" ItemName="ORANGSTAND" />
-                    <broadcast:Item Grid.Row="2" Grid.Column="4" ItemName="ORANGSTAND_SPRINT" />
-                    <broadcast:Item Grid.Row="2" Grid.Column="5" ItemName="BABOON_BALLOON" />
-
-                    <!-- Kong 4 -->
-                    <broadcast:Item Grid.Row="3" Grid.Column="0" ItemName="TINY" />
-                    <broadcast:Item Grid.Row="3" Grid.Column="1" ItemName="FEATHER_BOW" />
-                    <broadcast:Item Grid.Row="3" Grid.Column="2" ItemName="SAXOPHONE_SLAM" />
-                    <broadcast:Item Grid.Row="3" Grid.Column="3" ItemName="PONYTAIL_TWIRL" />
-                    <broadcast:Item Grid.Row="3" Grid.Column="4" ItemName="MINI_MONKEY" />
-                    <broadcast:Item Grid.Row="3" Grid.Column="5" ItemName="MONKEYPORT" />
-
-                    <!-- Kong 5 -->
-                    <broadcast:Item Grid.Row="4" Grid.Column="0" ItemName="CHUNKY" />
-                    <broadcast:Item Grid.Row="4" Grid.Column="1" ItemName="PINEAPPLE_LAUNCHER" />
-                    <broadcast:Item Grid.Row="4" Grid.Column="2" ItemName="TRIANGLE_TRAMPLE" />
-                    <broadcast:Item Grid.Row="4" Grid.Column="3" ItemName="PRIMATE_PUNCH" />
-                    <broadcast:Item Grid.Row="4" Grid.Column="4" ItemName="HUNKY_CHUNKY" />
-                    <broadcast:Item Grid.Row="4" Grid.Column="5" ItemName="GORILLA_GONE" />
-
-                    <!--Blueprints-->
-                    <broadcast:KongBlueprint Grid.Row="0" Grid.Column="6" CollectedType="DONKEY_BLUEPRINT" TurnedInType="DONKEY_BLUEPRINT_TURNED" />
-                    <broadcast:KongBlueprint Grid.Row="1" Grid.Column="6" CollectedType="DIDDY_BLUEPRINT" TurnedInType="DIDDY_BLUEPRINT_TURNED" />
-                    <broadcast:KongBlueprint Grid.Row="2" Grid.Column="6" CollectedType="LANKY_BLUEPRINT" TurnedInType="LANKY_BLUEPRINT_TURNED" />
-                    <broadcast:KongBlueprint Grid.Row="3" Grid.Column="6" CollectedType="TINY_BLUEPRINT" TurnedInType="TINY_BLUEPRINT_TURNED" />
-                    <broadcast:KongBlueprint Grid.Row="4" Grid.Column="6" CollectedType="CHUNKY_BLUEPRINT" TurnedInType="CHUNKY_BLUEPRINT_TURNED" />
+                    <ItemsControl Grid.Column="0" Margin="0" ItemsSource="{Binding KongItems}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="5" Columns="6" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:BroadcastItemViewModel}">
+                                <broadcast:Item />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl Grid.Column="1" Margin="0" ItemsSource="{Binding KongBlueprints}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:KongBlueprintViewModel}">
+                                <broadcast:KongBlueprint />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
                 <!-- Training Moves Grid -->
                 <Grid Grid.Row="2" Margin="2">

@@ -55,6 +55,7 @@ public partial class App : Application
         var dataSaverService = _serviceProvider.GetRequiredService<IDataSaverService>();
         var itemTrackingService = _serviceProvider.GetRequiredService<IItemTrackingService>();
         var endGameProgressionService = _serviceProvider.GetRequiredService<IEndGameProgressionService>();
+        var collectiblesService = _serviceProvider.GetRequiredService<ICollectiblesService>();
 
         _resourceDictionaryProvider = new WpfResourceDictionaryProvider(themeService);
         _resourceDictionaryProvider.UpdateResourceDictionaries();
@@ -73,7 +74,8 @@ public partial class App : Application
             dataSaverService,
             itemTrackingService,
             levelOrderService,
-            endGameProgressionService
+            endGameProgressionService,
+            collectiblesService
         );
         mainWindow.Show();
     }

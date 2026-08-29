@@ -51,6 +51,10 @@ public partial class MainWindow : Window
 
     private IEndGameProgressionService EndGameProgressionService { get; init; }
 
+    private IThemeService ThemeService { get; init; }
+
+    private ICollectiblesService CollectiblesService { get; init; }
+
     // Timer to save the data every minute.
     private Timer _saveTimer { get; init; }
 
@@ -65,7 +69,8 @@ public partial class MainWindow : Window
         IDataSaverService dataSaverService,
         IItemTrackingService itemTrackingService,
         ILevelOrderService levelOrderService,
-        IEndGameProgressionService endGameProgressionService
+        IEndGameProgressionService endGameProgressionService,
+        ICollectiblesService collectiblesService
     )
     {
         InitializeComponent();
@@ -80,6 +85,8 @@ public partial class MainWindow : Window
         SavedProgressProvider = savedProgressProvider;
         Autotracker = autotrackerService;
         EndGameProgressionService = endGameProgressionService;
+        ThemeService = themeService;
+        CollectiblesService = collectiblesService;
         DataContext = new MainWindowViewModel(settingsSergice, themeService, autotrackerService, savedProgressProvider);
 
         _saveTimer = new Timer(_saveInterval);
@@ -522,7 +529,9 @@ public partial class MainWindow : Window
                 ItemTrackingService,
                 LevelOrderService,
                 SavedProgressProvider,
-                EndGameProgressionService
+                EndGameProgressionService,
+                ThemeService,
+                CollectiblesService
             );
             // Wire up the Closed event so we can clean up when the window closes
             BroadcastView.Closed += ClosedBroadcastWindow;
