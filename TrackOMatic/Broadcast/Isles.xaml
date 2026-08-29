@@ -1,23 +1,23 @@
-<UserControl x:Class="TrackOMatic.Broadcast.Isles"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TrackOMatic.Broadcast"
-             xmlns:converters="clr-namespace:TrackOMatic.Converters"
-             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=viewmodels:IslesViewModel}"
-             d:DesignHeight="60"
-             d:DesignWidth="100"
-             Unloaded="OnUnloaded"
+<UserControl
+    x:Class="TrackOMatic.Broadcast.Isles"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.Broadcast"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:IslesViewModel}"
+    d:DesignHeight="60"
+    d:DesignWidth="100"
 >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
@@ -36,7 +36,7 @@
             HorizontalAlignment="Left"
             Height="16"
             Source="{Binding RegionResourceKey, Converter={StaticResource ResourceKeyConverter}}"
-            Visibility="{Binding ShowRegionImage, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+            Visibility="{Binding ShowRegionImage, Converter={StaticResource BooleanToVisibilityConverter}}"
         />
 
         <!-- Number of points (only relevant for games with point based spoiler logs) -->

@@ -22,7 +22,8 @@ public partial class BroadcastView : Window
         ISavedProgressProvider savedProgressProvider,
         IEndGameProgressionService endGameProgressionService,
         IThemeService themeService,
-        ICollectiblesService collectiblesService
+        ICollectiblesService collectiblesService,
+        ISongService songService
     )
     {
 
@@ -35,7 +36,8 @@ public partial class BroadcastView : Window
             savedProgressProvider,
             endGameProgressionService,
             themeService,
-            collectiblesService
+            collectiblesService,
+            songService
         );
         UserSettings = userSettings;
     }

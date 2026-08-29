@@ -1,22 +1,22 @@
-<UserControl x:Class="TrackOMatic.Broadcast.Countable"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
-             xmlns:converters="clr-namespace:TrackOMatic.Converters"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=viewmodels:CountableViewModel}"
-             d:DesignHeight="64"
-             d:DesignWidth="64"
-             Unloaded="OnUnloaded"
+<UserControl
+    x:Class="TrackOMatic.Broadcast.Countable"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:CountableViewModel}"
+    d:DesignHeight="64"
+    d:DesignWidth="64"
 >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </UserControl.Resources>

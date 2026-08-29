@@ -102,13 +102,13 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <broadcast:ProgressiveSlam Grid.Column="0" />
-                    <broadcast:Item Grid.Column="1" ItemName="DIVING" />
-                    <broadcast:Item Grid.Column="2" ItemName="ORANGE_THROWING" />
-                    <broadcast:Item Grid.Column="3" ItemName="BARREL_THROWING" />
-                    <broadcast:Item Grid.Column="4" ItemName="VINE_SWINGING" />
-                    <broadcast:CameraShockwave Grid.Column="5" />
-                    <broadcast:HomingScope Grid.Column="6" />
+                    <broadcast:ProgressiveSlam Grid.Column="0" DataContext="{Binding Slams}" />
+                    <broadcast:Item Grid.Column="1" DataContext="{Binding Diving}"/>
+                    <broadcast:Item Grid.Column="2" DataContext="{Binding Oranges}" />
+                    <broadcast:Item Grid.Column="3" DataContext="{Binding Barrels}" />
+                    <broadcast:Item Grid.Column="4" DataContext="{Binding Vines}" />
+                    <broadcast:CameraShockwave Grid.Column="5" DataContext="{Binding CameraShockwave}" />
+                    <broadcast:HomingScope Grid.Column="6" DataContext="{Binding HomingScope}" />
                 </Grid>
                 <!-- Shopkeepers Grid -->
                 <ItemsControl Grid.Row="3" Margin="0,0,0,0" ItemsSource="{Binding ShopkeepItems}">
@@ -133,7 +133,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <broadcast:Isles />
+                <broadcast:Isles DataContext="{Binding Isles}" />
             </StackPanel>
         </Grid>
         <!-- End Game items: Blast-O-Matic & Final Boss Order -->
@@ -180,27 +180,28 @@
         <!-- Filler Rectangle -->
         <Rectangle Fill="#131414" Margin="10,6,10,6" Height="5" />
         <!-- Collectibles Grid -->
-        <Grid Name="CollectiblesGrid" Margin="30,2,30,9" Height="52">
+        <Grid Margin="30,2,30,9" Height="52">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
-            <broadcast:Item Grid.Column="0" ItemName="BEAN" />
-            <broadcast:Countable Grid.Column="1" ItemType="PEARL" />
-            <broadcast:Countable Grid.Column="2" ItemType="BATTLE_CROWN" />
-            <broadcast:Countable Grid.Column="3" ItemType="BANANA_MEDAL" />
-            <broadcast:Countable Grid.Column="4" ItemType="RAINBOW_COIN" />
-            <broadcast:Countable Grid.Column="5" ItemType="FAIRY" />
-            <broadcast:Countable Grid.Column="6" ItemType="GOLDEN_BANANA" />
+            <broadcast:Item Grid.Column="0" DataContext="{Binding Bean}" />
+            <ItemsControl Grid.Column="1" ItemsSource="{Binding Countables}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="1" Columns="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:CountableViewModel}">
+                        <broadcast:Countable />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
         <!-- Song Display -->
         <Grid Background="Transparent" Margin="3,1,3,5" Height="52" Visibility="{Binding BroadcastSongDisplaySetting, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
-            <broadcast:Song />
+            <broadcast:Song DataContext="{Binding Song}" />
         </Grid>
     </StackPanel>
 </Window>

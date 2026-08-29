@@ -56,6 +56,7 @@ public partial class App : Application
         var itemTrackingService = _serviceProvider.GetRequiredService<IItemTrackingService>();
         var endGameProgressionService = _serviceProvider.GetRequiredService<IEndGameProgressionService>();
         var collectiblesService = _serviceProvider.GetRequiredService<ICollectiblesService>();
+        var songService = _serviceProvider.GetRequiredService<ISongService>();
 
         _resourceDictionaryProvider = new WpfResourceDictionaryProvider(themeService);
         _resourceDictionaryProvider.UpdateResourceDictionaries();
@@ -75,7 +76,8 @@ public partial class App : Application
             itemTrackingService,
             levelOrderService,
             endGameProgressionService,
-            collectiblesService
+            collectiblesService,
+            songService
         );
         mainWindow.Show();
     }

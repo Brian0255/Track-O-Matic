@@ -51,6 +51,7 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
         private set => SetProperty(ref _movesWidth, value);
     }
 
+    public IslesViewModel Isles { get; init; }
     public ObservableCollection<LevelViewModel> Levels { get; } = [];
 
     public ObservableCollection<HelmSlotViewModel> HelmSlots { get; } = [];
@@ -62,6 +63,19 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
     public ObservableCollection<KongBlueprintViewModel> KongBlueprints { get; } = [];
 
     public ObservableCollection<BroadcastItemViewModel> ShopkeepItems { get; } = [];
+
+    public ObservableCollection<CountableViewModel> Countables { get; } = [];
+
+    public BroadcastItemViewModel Bean { get; init; }
+    public BroadcastItemViewModel Diving { get; init; }
+    public BroadcastItemViewModel Oranges { get; init; }
+    public BroadcastItemViewModel Barrels { get; init; }
+    public BroadcastItemViewModel Vines { get; init; }
+    public ProgressiveSlamViewModel Slams { get; init; }
+    public CameraShockwaveViewModel CameraShockwave { get; init; }
+    public HomingScopeViewModel HomingScope { get; init; }
+    public SongViewModel Song { get; init; }
+
 
     #endregion
 
@@ -107,7 +121,8 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
         ISavedProgressProvider savedProgressProvider,
         IEndGameProgressionService endGameProgressionService,
         IThemeService themeService,
-        ICollectiblesService collectiblesService
+        ICollectiblesService collectiblesService,
+        ISongService songService
     )
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
@@ -122,6 +137,12 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
         _userSettingsService.PropertyChanged += OnSettingChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
 
+        Isles = new(
+            itemTrackingService,
+            levelOrderService,
+            parsedSpoilerDataService,
+            userSettingsService
+        );
         for (int i = 1; i <= 8; ++i)
         {
             Levels.Add(new(
@@ -170,6 +191,15 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
             ));
         }
 
+        foreach (var itemName in new List<ItemType> {  ItemType.PEARL, ItemType.BATTLE_CROWN, ItemType.BANANA_MEDAL, ItemType.RAINBOW_COIN, ItemType.FAIRY, ItemType.GOLDEN_BANANA})
+        {
+            Countables.Add(new(
+                itemName,
+                collectiblesService,
+                parsedSpoilerDataService
+            ));
+        }
+
         var startingItem = (int)ItemType.DONKEY_BLUEPRINT;
         for (int i = startingItem; i < startingItem + 10; i += 2)
         {
@@ -181,6 +211,59 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
                 savedProgressProvider
             ));
         }
+
+        Bean = new(
+            ItemName.BEAN,
+            itemTrackingService,
+            parsedSpoilerDataService,
+            savedProgressProvider,
+            themeService
+        );
+        Diving = new(
+            ItemName.DIVING,
+            itemTrackingService,
+            parsedSpoilerDataService,
+            savedProgressProvider,
+            themeService
+        );
+        Oranges = new(
+            ItemName.ORANGE_THROWING,
+            itemTrackingService,
+            parsedSpoilerDataService,
+            savedProgressProvider,
+            themeService
+        );
+        Barrels = new(
+            ItemName.BARREL_THROWING,
+            itemTrackingService,
+            parsedSpoilerDataService,
+            savedProgressProvider,
+            themeService
+        );
+        Vines = new(
+            ItemName.VINE_SWINGING,
+            itemTrackingService,
+            parsedSpoilerDataService,
+            savedProgressProvider,
+            themeService
+        );
+        Slams = new(
+            itemTrackingService,
+            parsedSpoilerDataService,
+            savedProgressProvider
+        );
+        CameraShockwave = new(
+            itemTrackingService,
+            parsedSpoilerDataService,
+            savedProgressProvider
+        );
+        HomingScope = new(
+            itemTrackingService,
+            parsedSpoilerDataService,
+            savedProgressProvider
+        );
+
+        Song = new(songService);
 
         AdjustLayout();
     }

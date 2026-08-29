@@ -41,7 +41,6 @@
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="CaretBrush" Value="White"/>
             </Style>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
             <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
