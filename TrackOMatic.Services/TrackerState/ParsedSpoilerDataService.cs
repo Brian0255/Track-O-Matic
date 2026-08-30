@@ -14,6 +14,9 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
 {
     private readonly ISavedProgressProvider _progressProvider;
     private ParsedSpoilerData? _currentData;
+    private bool _isBatchingUpdates;
+    private ParsedSpoilerData? _deferredOldData;
+    private ParsedSpoilerData? _deferredNewData;
 
     public event EventHandler<ParsedSpoilerDataChangedEventArgs>? ParsedSpoilerDataChanged;
 
@@ -25,19 +28,25 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
     {
         _progressProvider = progressProvider ?? throw new ArgumentNullException(nameof(progressProvider));
         _currentData = null;
+        _isBatchingUpdates = false;
+        _deferredOldData = null;
+        _deferredNewData = null;
         // Set up listener for SavedProgress changes (e.g., reset or load)
         _progressProvider.ProgressChanged += OnProgressChanged;
     }
 
     /// <summary>
     /// Handles progress state changes by clearing the parsed spoiler data.
-    /// This ensures that when tracker state is reset or loaded, the parsed data
-    /// reflects the new state (empty until a new spoiler is loaded).
+    /// However, if we're already in a batch update scope (e.g., during spoiler load),
+    /// this is handled by the LoadAsync/InitWithSpoilerAsync methods and we should not
+    /// interfere with their deferred updates.
     /// </summary>
     private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e)
     {
-        // Clear the parsed data when progress changes (reset or load from file)
-        UpdateParsedData(null);
+        if (!_isBatchingUpdates)
+        {
+            UpdateParsedData(null);
+        }
     }
 
     #region IParsedSpoilerDataService Implementation
@@ -49,8 +58,15 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
         var oldData = _currentData;
         _currentData = data;
 
-        // Notify subscribers that the data has changed
-        ParsedSpoilerDataChanged?.Invoke(this, new ParsedSpoilerDataChangedEventArgs(oldData, data));
+        if (_isBatchingUpdates)
+        {
+            _deferredOldData = oldData;
+            _deferredNewData = data;
+        }
+        else
+        {
+            ParsedSpoilerDataChanged?.Invoke(this, new ParsedSpoilerDataChangedEventArgs(oldData, data));
+        }
     }
 
     public int GetPointsForItem(ItemName itemName)
@@ -113,5 +129,46 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
 
     public bool HasRegionBarrier() => CurrentData?.RegionBarrierInfo is not null && CurrentData.RegionBarrierInfo.Count > 0;
 
+    public IDisposable BeginBatchUpdate()
+    {
+        return new BatchUpdateScope(this);
+    }
+
     #endregion
+
+    /// <summary>
+    /// A private helper class that manages the batch update scope lifecycle for parsed spoiler data.
+    /// When this is disposed, all of the changes fire in one <see cref="ParsedSpoilerDataChanged"/> event.
+    /// </summary>
+    private class BatchUpdateScope : IDisposable
+    {
+        private readonly ParsedSpoilerDataService _service;
+        private bool _disposed;
+        public BatchUpdateScope(ParsedSpoilerDataService service)
+        {
+            _service = service;
+            _service._isBatchingUpdates = true;
+            _service._deferredOldData = null;
+            _service._deferredNewData = null;
+        }
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+            _disposed = true;
+            // Exit batch mode and process all deferred updates
+            _service._isBatchingUpdates = false;
+            if (_service._deferredOldData != null || _service._deferredNewData != null)
+            {
+                var oldData = _service._deferredOldData;
+                var newData = _service._deferredNewData;
+                // Clear deferred data before firing the event to avoid re-entrancy issues
+                _service._deferredOldData = null;
+                _service._deferredNewData = null;
+                _service.ParsedSpoilerDataChanged?.Invoke(_service, new ParsedSpoilerDataChangedEventArgs(oldData, newData));
+            }
+        }
+    }
 }

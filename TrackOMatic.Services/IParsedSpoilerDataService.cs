@@ -89,19 +89,21 @@ public interface IParsedSpoilerDataService
     /// </summary>
     /// <returns></returns>
     bool HasRegionBarrier();
+
+    /// <summary>
+    /// Beigns a new scope where parsed data changes are batched.
+    /// When the return scope is disposed, all collected changes will fire a single
+    /// <see cref="ParsedSpoilerDataChanged"/> event.
+    /// </summary>
+    /// <returns></returns>
+    IDisposable BeginBatchUpdate();
 }
 
 /// <summary>
 /// Event args for when parsed spoiler data changes.
 /// </summary>
-public class ParsedSpoilerDataChangedEventArgs : EventArgs
+public class ParsedSpoilerDataChangedEventArgs(ParsedSpoilerData? oldData, ParsedSpoilerData? newData) : EventArgs
 {
-    public ParsedSpoilerData? OldData { get; }
-    public ParsedSpoilerData? NewData { get; }
-
-    public ParsedSpoilerDataChangedEventArgs(ParsedSpoilerData? oldData, ParsedSpoilerData? newData)
-    {
-        OldData = oldData;
-        NewData = newData;
-    }
+    public ParsedSpoilerData? OldData { get; } = oldData;
+    public ParsedSpoilerData? NewData { get; } = newData;
 }

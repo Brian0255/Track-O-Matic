@@ -9,7 +9,7 @@ namespace TrackOMatic.ViewModels.Regions;
 /// <summary>
 /// A view model representing a vial item by default, only to be covered by a real item when found in a region.
 /// </summary>
-public class VialItemViewModel : RegionItemViewModel, IVialSlot
+public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewModel>, IVialSlot
 {
     private readonly VialColor _vialColor;
     private readonly bool _isStartRegion;
@@ -308,6 +308,45 @@ public class VialItemViewModel : RegionItemViewModel, IVialSlot
     {
         var itemState = ItemTrackingService.GetItemState(itemName);
         return itemState?.Autotracked ?? false;
+    }
+
+    #endregion
+
+    #region Object Overrides
+
+    public bool Equals(VialItemViewModel? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (RegionName != other.RegionName)
+        {
+            return false;
+        }
+
+        return _vialColor == other._vialColor;
+    }
+
+    public override bool Equals(object? obj) => Equals(obj as VialItemViewModel);
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_vialColor, _regionName);
+    }
+
+    public override string ToString()
+    {
+        if (CurrentItemName.HasValue)
+        {
+            return $"{CurrentItemName.Value}{(IsStarred ? "*" : "")} ({VialColor}) in {RegionName}";
+        }
+
+        return $"{VialColor}{(IsVialStarred ? "*" : "")} in {RegionName}";
     }
 
     #endregion

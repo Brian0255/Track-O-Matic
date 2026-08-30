@@ -26,7 +26,6 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     private readonly IRegionPlacementOrchestrator _regionPlacementOrchestrator;
     private readonly RegionSlotProviderRegistry? _slotProviderRegistry;
     private readonly SynchronizationContext _syncContext;
-    private CancellationTokenSource? _refreshDebounceToken = null;
 
 
     public RegionViewModel(
@@ -99,62 +98,88 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             item.PropertyChanged -= OnPlacedVialPropertyChanged;
         }
 
+        // Get the star state from the existing vials. ...except the star isn't defined here?
+        Dictionary<int, bool> oldVialStars = [];
+        foreach (var (vial, index) in PlacedItems.OfType<VialItemViewModel>().Where(v => v is not null).Select((v, i) => (v, i)))
+        {
+            oldVialStars[index] = vial.IsStarred;
+        }
+
         PlacedItems.Clear();
 
-        // Special handling for START region - it uses StartingItems from spoiler data, not RegionData vials
-        if (_regionName == RegionName.START && _parsedSpoilerDataService.CurrentData?.StartingItems.Count > 0)
+        // We may be coming in here from many sources. Best to batch the item events to be safe.
+        using (_itemTrackingService.BeginBatchUpdate())
         {
-            // Create vial slots for starting items (excluding UNHINTABLE_MOVES)
-            var startingItemsForDisplay = _parsedSpoilerDataService.CurrentData.StartingItems
-                            .Where(kvp => kvp.Value == RegionName.START)
-                            .ToList();
-
-            for (int slotIndex = 0; slotIndex < startingItemsForDisplay.Count; slotIndex++)
+            // Special handling for START region - it uses StartingItems from spoiler data, not RegionData vials
+            if (_regionName == RegionName.START && _parsedSpoilerDataService.CurrentData?.StartingItems.Count > 0)
             {
-                var itemName = startingItemsForDisplay[slotIndex].Key;
-                var vialColor = itemName.ToVialColor();
+                // Create vial slots for starting items (excluding UNHINTABLE_MOVES)
+                var startingItemsForDisplay = _parsedSpoilerDataService.CurrentData.StartingItems
+                                .Where(kvp => kvp.Value == RegionName.START)
+                                .ToList();
 
-                var vial = new VialItemViewModel(
-                    itemName, // Fixed item name for START slots
-                    RegionName.START,
-                    vialColor,
-                    _itemTrackingService,
-                    _parsedSpoilerDataService,
-                    _themeService);
-
-                vial.PropertyChanged += OnPlacedVialPropertyChanged;
-                PlacedItems.Add(vial);
-            }
-        }
-        else
-        {
-            var spoilerData = _parsedSpoilerDataService.CurrentData;
-            var regionData = spoilerData?.RegionData.GetValueOrDefault(_regionName);
-            if (regionData != null && spoilerData?.SpoilerSettings?.VialsEnabled == true)
-            {
-                for (int slotIndex = 0; slotIndex < regionData.VialColors.Count; slotIndex++)
+                for (int slotIndex = 0; slotIndex < startingItemsForDisplay.Count; slotIndex++)
                 {
-                    var vialColor = regionData.VialColors[slotIndex];
+                    var itemName = startingItemsForDisplay[slotIndex].Key;
+                    var vialColor = itemName.ToVialColor();
+
                     var vial = new VialItemViewModel(
-                        null,
-                        _regionName,
+                        itemName, // Fixed item name for START slots
+                        RegionName.START,
                         vialColor,
                         _itemTrackingService,
                         _parsedSpoilerDataService,
                         _themeService);
 
+                    if (oldVialStars.TryGetValue(slotIndex, out bool wasStarred) && wasStarred)
+                    {
+                        vial.ToggleStar();
+                    }
+
                     vial.PropertyChanged += OnPlacedVialPropertyChanged;
                     PlacedItems.Add(vial);
                 }
             }
-
             else
             {
-                // Materialize the enumerable before iterating
-                var itemsInRegion = _itemTrackingService.GetItemsInRegion(_regionName).ToList();
-                foreach (var item in itemsInRegion)
+                var spoilerData = _parsedSpoilerDataService.CurrentData;
+                var regionData = spoilerData?.RegionData.GetValueOrDefault(_regionName);
+                if (regionData != null && HasVials)
                 {
-                    PlacedItems.Add(new RegionItemViewModel(item.ItemName, _regionName, _itemTrackingService, _parsedSpoilerDataService, _themeService));
+                    for (int slotIndex = 0; slotIndex < regionData.VialColors.Count; slotIndex++)
+                    {
+                        var vialColor = regionData.VialColors[slotIndex];
+                        var vial = new VialItemViewModel(
+                            null,
+                            _regionName,
+                            vialColor,
+                            _itemTrackingService,
+                            _parsedSpoilerDataService,
+                            _themeService);
+
+                        if (oldVialStars.TryGetValue(slotIndex, out bool wasStarred) && wasStarred)
+                        {
+                            vial.ToggleStar();
+                        }
+
+                        vial.PropertyChanged += OnPlacedVialPropertyChanged;
+                        PlacedItems.Add(vial);
+                    }
+                }
+                else
+                {
+                    // Materialize the enumerable before iterating
+                    var itemsInRegion = _itemTrackingService.GetItemsInRegion(_regionName).ToList();
+                    foreach (var item in itemsInRegion)
+                    {
+                        PlacedItems.Add(new RegionItemViewModel(
+                            item.ItemName,
+                            _regionName,
+                            _itemTrackingService,
+                            _parsedSpoilerDataService,
+                            _themeService
+                        ));
+                    }
                 }
             }
         }
@@ -308,11 +333,6 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         {
             if (disposing)
             {
-                // Cancel any pending debounced refresh
-                _refreshDebounceToken?.Cancel();
-                _refreshDebounceToken?.Dispose();
-                _refreshDebounceToken = null;
-
                 // Unregister from slot provider registry
                 _slotProviderRegistry?.UnregisterRegionProvider(_regionName);
 
@@ -361,60 +381,33 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             return;
         }
 
-        // In vial enabled mode, update hoard text based on starred items
-        if (HasVials)
-        {
-            UpdateHoardText(e.UpdatedItem);
-        }
-        else
-        {
-            // In non-vial mode, debounce the refresh to batch multiple rapid events
-            DebounceRefresh();
-        }
+        // The problem issue!!!
+        // If this line is removed, the UI cannot refresh items when dragged in.
+        // If this line is kept, the stars in the START region go away.
+        RefreshPlacedItems();
+
+        UpdateHoardText(e.UpdatedItem);
+        UpdateItemPointText();
     }
 
-    private void OnParsedSpoilerDataChanged(object? sender, EventArgs e) => DebounceRefresh();
-
-    private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e) => DebounceRefresh();
-
-    /// <summary>
-    /// Debounce refresh requests: if multiple events fire rapidly, batch them into a single refresh.
-    /// This prevents re-entrancy issues when autotracker places many items at once.
-    /// Only applies debouncing to event handlers, not constructor initialization.
-    /// </summary>
-    private void DebounceRefresh()
+    private void OnParsedSpoilerDataChanged(object? sender, EventArgs e)
     {
-        // Cancel the previous debounce timer if it exists
-        _refreshDebounceToken?.Cancel();
-        _refreshDebounceToken = new CancellationTokenSource();
-
-        // Schedule refresh after a short delay (50ms), allowing events to batch
-        var token = _refreshDebounceToken.Token;
-        Task.Delay(50, token).ContinueWith(_ =>
+        _syncContext.Post(_ =>
         {
-            if (!token.IsCancellationRequested)
-            {
-                // In tests (SynchronizationContext.Current == null when constructed),
-                // _syncContext will be a default SynchronizationContext() with no message pump.
-                // Detect this and run directly instead of posting, to avoid deadlock.
-                if (SynchronizationContext.Current == _syncContext)
-                {
-                    // We're on the same context already - run directly
-                    InitializeState();
-                }
-                else
-                {
-                    // Try to post to the captured context (UI thread in production, or test default context)
-                    _syncContext.Post(_ =>
-                    {
-                        if (!token.IsCancellationRequested)
-                        {
-                            InitializeState();
-                        }
-                    }, null);
-                }
-            }
-        }, TaskScheduler.Default);
+            RefreshPlacedItems();
+            UpdateHoardText();
+            UpdateItemPointText();
+        }, null);
+    }
+
+    private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e)
+    {
+        _syncContext.Post(_ =>
+        {
+            RefreshPlacedItems();
+            UpdateHoardText();
+            UpdateItemPointText();
+        }, null);
     }
 
     /// <summary>
@@ -433,7 +426,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     private void UpdateHoardText(SavedItem? changedItem = null)
     {
         var wothPoints = _parsedSpoilerDataService.GetWothPointsForRegion(_regionName);
-        if (!HasVials || wothPoints < 0)
+        if (wothPoints < 0)
         {
             WothPoints = -1;
             HasWothPoints = false;

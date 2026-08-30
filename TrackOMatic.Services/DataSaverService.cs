@@ -14,16 +14,24 @@ public class DataSaverService : IDataSaverService
 
     private readonly IDataPersistenceService _dataPersistenceService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
+    private readonly IItemTrackingService _itemTrackingService;
+    private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly ISpoilerService _spoilerService;
-
-    private readonly object _lockObject = new();
 
     private SavedProgress CurrentSavedProgress { get; set; }
 
-    public DataSaverService(IDataPersistenceService dataPersistenceService, IParsedSpoilerDataService parsedSpoilerDataService, ISpoilerService spoilerService)
+    public DataSaverService(
+        IDataPersistenceService dataPersistenceService,
+        IParsedSpoilerDataService parsedSpoilerDataService,
+        IItemTrackingService itemTrackingService,
+        ISavedProgressProvider savedProgressProvider,
+        ISpoilerService spoilerService
+    )
     {
         _dataPersistenceService = dataPersistenceService;
         _parsedSpoilerDataService = parsedSpoilerDataService;
+        _itemTrackingService = itemTrackingService;
+        _savedProgressProvider = savedProgressProvider;
         _spoilerService = spoilerService;
         CurrentSavedProgress = new();
     }
@@ -33,19 +41,29 @@ public class DataSaverService : IDataSaverService
 
     public async Task InitWithSpoilerAsync(string spoilerFilePath)
     {
-        Reset();
+        CurrentSavedProgress = new();
 
         try
         {
-            var spoilerData = await ParseSpoilerLogAsync(spoilerFilePath);
-            _parsedSpoilerDataService.UpdateParsedData(spoilerData);
-            CurrentSavedProgress.SpoilerPath = spoilerFilePath;
+            // Perform two batch updates at once to minimize issues with a new load.
+            using (_parsedSpoilerDataService.BeginBatchUpdate())
+            using (_itemTrackingService.BeginBatchUpdate())
+            {
+                var spoilerData = await ParseSpoilerLogAsync(spoilerFilePath);
+                _parsedSpoilerDataService.UpdateParsedData(spoilerData);
+                CurrentSavedProgress.SpoilerPath = spoilerFilePath;
+
+                // Sync fresh progress WITHIN the batch scopes
+                // This ensures OnProgressChanged doesn't trigger secondary UpdateParsedData(null) or item-change events
+                _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
+            }
 
             // We probably do want the AutotrackerService to observe here...
         }
         catch (Exception)
         {
-            Reset(); // safety precaution in case the data got corrupted.
+            CurrentSavedProgress = new();
+            _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
             throw;
         }
     }
@@ -59,31 +77,36 @@ public class DataSaverService : IDataSaverService
         }
 
         CurrentSavedProgress = loadedProgress;
-        if (!string.IsNullOrEmpty(CurrentSavedProgress.SpoilerPath))
+
+        using (_parsedSpoilerDataService.BeginBatchUpdate())
+        using (_itemTrackingService.BeginBatchUpdate())
         {
-            try
+            if (!string.IsNullOrEmpty(CurrentSavedProgress.SpoilerPath))
             {
-                var spoilerData = await ParseSpoilerLogAsync(CurrentSavedProgress.SpoilerPath);
+                try
+                {
+                    var spoilerData = await ParseSpoilerLogAsync(CurrentSavedProgress.SpoilerPath);
+                    _parsedSpoilerDataService.UpdateParsedData(spoilerData);
+                }
+                catch (Exception)
+                {
+                    // Handle the exception or log it as needed
+                }
             }
-            catch (Exception)
+            else
             {
-                // Handle the exception or log it as needed
+                // No spoiler path set: this is fine. Just make sure the parsed data is cleared.
+                _parsedSpoilerDataService.UpdateParsedData(null);
             }
+            // Sync SavedProgress with provider after loading from file
+            _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
         }
-        // Sync SavedProgress with provider after loading from file
-        var provider = ServiceLocator.GetService<ISavedProgressProvider>();
-        provider?.UpdateProgress(CurrentSavedProgress);
     }
 
     public void Reset()
     {
         CurrentSavedProgress = new();
-        // Sync fresh SavedProgress with provider. ...should this be initialized via the constructor?
-        var provider = ServiceLocator.GetService<ISavedProgressProvider>();
-        if (provider != null && CurrentSavedProgress != null)
-        {
-            provider.UpdateProgress(CurrentSavedProgress);
-        }
+        _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
     }
 
     public async Task SaveAsync(string filePath = "autosave.json")
