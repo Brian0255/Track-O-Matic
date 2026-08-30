@@ -138,6 +138,8 @@ public partial class MainWindow : Window
         }
     }
 
+    #region Drag Drop Chaos
+
     /// <summary>
     /// Registers a ViewModel as the currently dragging item and updates the drag preview canvas.
     /// </summary>
@@ -159,6 +161,7 @@ public partial class MainWindow : Window
     /// <summary>
     /// Updates the drag preview canvas with the current drag ViewModel's state.
     /// </summary>
+    /// <remarks>This method is ugly, but will hopefully be replaced with something cleaner in the future.</remarks>
     private void UpdateDragPreviewCanvas()
     {
         var dragPreviewCanvas = (Canvas?)FindName("DragPreviewCanvas");
@@ -236,6 +239,8 @@ public partial class MainWindow : Window
     {
         UpdateDragPreviewCanvas();
     }
+
+    #endregion
 
     /// <summary>
     /// Updates the UI based on the current HintDisplay setting.
@@ -319,28 +324,6 @@ public partial class MainWindow : Window
         Keyboard.ClearFocus();
     }
 
-    public async Task ParseSpoiler(string fileName)
-    {
-        try
-        {
-            SpoilerSettings = await SpoilerParser.ParseSpoilerAsync(fileName);
-
-            if (!SpoilerSettings.Empty())
-            {
-                Autotracker.SetStartingItems(SpoilerParser.StartingItems);
-            }
-            else
-            {
-                Reset();
-            }
-        }
-        catch (Exception)
-        {
-            // No matter what the exception is, treat it as a reset situation.
-            Reset();
-        }
-    }
-
     private async void DropFile(object sender, DragEventArgs e)
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -397,7 +380,7 @@ public partial class MainWindow : Window
         await DataSaverService.InitWithSpoilerAsync(filePath);
     }
 
-    public void Reset()
+    private void Reset()
     {
         SpoilerLoaded = false;
         SpoilerSettings = new SpoilerSettings();
