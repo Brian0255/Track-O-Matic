@@ -91,6 +91,12 @@ public interface IParsedSpoilerDataService
     bool HasRegionBarrier();
 
     /// <summary>
+    /// Gets the starting items from the current parsed spoiler data.
+    /// </summary>
+    /// <returns></returns>
+    Dictionary<ItemName, RegionName> GetStartingItems();
+
+    /// <summary>
     /// Beigns a new scope where parsed data changes are batched.
     /// When the return scope is disposed, all collected changes will fire a single
     /// <see cref="ParsedSpoilerDataChanged"/> event.

@@ -295,7 +295,7 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
             // Set image based on item state
             string baseKey = CurrentItemName.Value.ToString().ToLower();
             ImageResourceKey = itemState.Hinted ? $"{baseKey}_bw" : baseKey;
-            IsStarred = itemState.Starred != ItemVisibilityState.Hidden;
+            IsStarred = itemState.IsStarred;
             Opacity = itemState.Opacity;
         }
     }

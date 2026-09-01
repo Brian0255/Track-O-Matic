@@ -1,7 +1,5 @@
-using System.Windows;
 using System.Windows.Controls;
 
-using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events.Autotracking;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -13,20 +11,6 @@ namespace TrackOMatic.Regions;
 /// </summary>
 public partial class UiRegion : UserControl
 {
-    public static readonly DependencyProperty RegionNameProperty =
-        DependencyProperty.Register(
-        nameof(RegionName),
-        typeof(RegionName),
-        typeof(UiRegion),
-        new PropertyMetadata(RegionName.UNKNOWN, OnRegionNameChanged)
-    );
-
-    public RegionName RegionName
-    {
-        get => (RegionName)GetValue(RegionNameProperty);
-        set => SetValue(RegionNameProperty, value);
-    }
-
     internal IParsedSpoilerDataService ParsedSpoilerDataService { get; private init; }
     internal ISavedProgressProvider SavedProgressProvider { get; private init; }
 
@@ -47,16 +31,6 @@ public partial class UiRegion : UserControl
 
         ParsedSpoilerDataService.ParsedSpoilerDataChanged += OnSpoilerDataChanged;
         AutotrackerService.RegionLightingChanged += OnAutotrackerRegionLightingChanged;
-    }
-
-    public bool TryDropItem(ItemName itemName, MouseDragType dragType)
-    {
-        if (DataContext is not RegionViewModel viewModel)
-        {
-            return false;
-        }
-
-        return viewModel.TryAcceptDrop(itemName, dragType);
     }
 
     private void OnSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e)
@@ -83,33 +57,10 @@ public partial class UiRegion : UserControl
 
     private void HandleRegionLightingChanged(AutotrackerRegionEventArgs e)
     {
-        if (e.Region == RegionName && DataContext is RegionViewModel viewModel)
+        if (DataContext is not RegionViewModel viewModel)
         {
-            viewModel.SetLighting(e.LightUp);
+            return;
         }
-    }
-
-    private static void OnRegionNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is UiRegion control && e.NewValue is RegionName regionName)
-        {
-            // Update the DataContext or any other properties based on the new RegionName
-            var itemTrackingService = ServiceLocator.GetService<IItemTrackingService>();
-            var orchestrator = ServiceLocator.GetService<IRegionPlacementOrchestrator>();
-            var themeService = ServiceLocator.GetService<IThemeService>();
-            var slotProviderRegistry = ServiceLocator.GetService<RegionSlotProviderRegistry>();
-
-            if (itemTrackingService != null && orchestrator != null && control.ParsedSpoilerDataService != null && control.SavedProgressProvider != null && themeService != null)
-            {
-                control.DataContext = new RegionViewModel(
-                    regionName,
-                    itemTrackingService,
-                    control.ParsedSpoilerDataService,
-                    control.SavedProgressProvider,
-                    orchestrator,
-                    themeService,
-                    slotProviderRegistry);
-            }
-        }
+        viewModel.SetLighting(e.Region == viewModel.RegionName);
     }
 }

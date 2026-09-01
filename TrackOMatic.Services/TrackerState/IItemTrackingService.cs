@@ -51,6 +51,18 @@ public interface IItemTrackingService
     void ToggleStar(ItemName itemName);
 
     /// <summary>
+    /// Get all items in the order they were added, preserving the linked list order.
+    /// </summary>
+    /// <remarks>If a user removes an item and then adds it back, that item goes to the end of the list.</remarks>
+    IEnumerable<SavedItem> GetAllItemsInOrder();
+
+    /// <summary>
+    /// Rebuilds the dictionary of <see cref="SavedItem">SavedItems</see> to match the new linked list order.
+    /// </summary>
+    /// <remarks>This should be called before saving to preserve the order of items found.</remarks>
+    void SyncSavedItemsOrder();
+
+    /// <summary>
     /// Fired when any item state changes.
     /// </summary>
     event EventHandler<ItemStateChangedEventArgs>? ItemStateChanged;

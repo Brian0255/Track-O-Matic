@@ -10,6 +10,7 @@ using TrackOMatic.Regions;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels;
+using TrackOMatic.ViewModels.Regions;
 
 namespace TrackOMatic;
 /// <summary>
@@ -279,14 +280,32 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
         viewModel.IsDragging = false;
 
         UiRegion? foundUiRegion = UIUtils.HitTestAt<UiRegion>(rootVisualContainer, dropPoint);
-
-        if (foundUiRegion is not null && foundUiRegion.TryDropItem(ItemName, viewModel.MouseDragType))
+        RegionItems? foundRegionItems = UIUtils.HitTestAt<RegionItems>(rootVisualContainer, dropPoint);
+        VialItems? foundVialItems = UIUtils.HitTestAt<VialItems>(rootVisualContainer, dropPoint);
+        if (foundUiRegion is null || foundUiRegion.DataContext is not RegionViewModel regionViewModel)
         {
-            viewModel.CompleteDrag(foundUiRegion.RegionName);
+            viewModel.EndDrag();
         }
         else
         {
-            viewModel.EndDrag();
+            var regionName = regionViewModel.RegionName;
+            var canDropInRegionItems = foundRegionItems is not null;
+            if (canDropInRegionItems)
+            {
+                viewModel.CompleteDrag(regionName);
+            }
+            else
+            {
+                var canDropInVialItems = foundVialItems is not null && foundVialItems.TryDropItem(ItemName, viewModel.MouseDragType);
+                if (canDropInVialItems)
+                {
+                    viewModel.CompleteDrag(regionName);
+                }
+                else
+                {
+                    viewModel.EndDrag();
+                }
+            }
         }
 
         // Clear the drag preview from MainWindow

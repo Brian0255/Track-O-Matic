@@ -121,6 +121,8 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
         return CurrentData.RegionData.Any(kvp => kvp.Value.WothCount > 0);
     }
 
+    public Dictionary<ItemName, RegionName> GetStartingItems() => _currentData?.StartingItems ?? [];
+
     public SpoilerSettings GetSpoilerSettings() => _currentData?.SpoilerSettings ?? new();
 
     public bool HasHelmOrder() => CurrentData?.HelmOrder is not null && CurrentData.HelmOrder.Count > 0;

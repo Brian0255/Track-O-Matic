@@ -154,10 +154,10 @@ public class ProgressiveSlamViewModel : ObservableObject, IDisposable
         var slam2 = _itemTrackingService.GetItemState(_slam2);
         var slam3 = _itemTrackingService.GetItemState(_slam3);
         IsStarred =
-        (slam1 is not null && slam1.Starred == ItemVisibilityState.Visible) ||
-        (slam2 is not null && slam2.Starred == ItemVisibilityState.Visible) ||
-        (slam3 is not null && slam3.Starred == ItemVisibilityState.Visible);
-    }
+            (slam1 is not null && slam1.IsStarred) ||
+            (slam2 is not null && slam2.IsStarred) ||
+            (slam3 is not null && slam3.IsStarred);
+        }
 
     protected virtual void UpdateImageResourceKey()
     {

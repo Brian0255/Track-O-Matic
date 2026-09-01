@@ -225,7 +225,7 @@ public class IslesViewModel : ObservableObject, IDisposable
         }
 
         var itemsInRegion = _itemTrackingService.GetItemsInRegion(regionName);
-        var hoardPoints = itemsInRegion.Sum(i => i.Starred == ItemVisibilityState.Visible ? 1 : 0);
+        var hoardPoints = itemsInRegion.Sum(i => i.IsStarred ? 1 : 0);
         var points = maxHoardPoints - hoardPoints;
         return (true, true, points, "RequiredChecksColor");
     }

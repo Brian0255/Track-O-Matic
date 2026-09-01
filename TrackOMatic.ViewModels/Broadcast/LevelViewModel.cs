@@ -93,7 +93,7 @@ public partial class LevelViewModel : IslesViewModel, IEquatable<LevelViewModel>
                 {
                     // Update the key's display properties
                     UpdateImageResourceKey(itemChangeEvent.UpdatedItem, targetKey);
-                    IsStarred = itemChangeEvent.UpdatedItem.Starred == ItemVisibilityState.Visible;
+                    IsStarred = itemChangeEvent.UpdatedItem.IsStarred;
                     UpdateRegionData();
                 }
             }

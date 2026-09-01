@@ -1,5 +1,4 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
@@ -12,7 +11,7 @@ namespace TrackOMatic.ViewModels.Regions;
 /// <summary>
 /// A view model representing an item in a specific region, providing properties and methods for UI binding and interaction.
 /// </summary>
-public class RegionItemViewModel : IRegionItemViewModel, INotifyPropertyChanged, IVialSlot
+public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionItemViewModel>, IRegionItemViewModel, IVialSlot
 {
     protected ItemName? _itemName;
     protected readonly RegionName _regionName;
@@ -24,14 +23,7 @@ public class RegionItemViewModel : IRegionItemViewModel, INotifyPropertyChanged,
     public virtual ItemName? CurrentItemName
     {
         get => _itemName;
-        protected set
-        {
-            if (_itemName != value)
-            {
-                _itemName = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _itemName, value);
     }
     protected internal IItemTrackingService ItemTrackingService => _itemTrackingService;
     public virtual RegionName RegionName => _regionName;
@@ -42,70 +34,35 @@ public class RegionItemViewModel : IRegionItemViewModel, INotifyPropertyChanged,
     public string ImageResourceKey
     {
         get => _imageResourceKey;
-        protected set
-        {
-            if (_imageResourceKey != value)
-            {
-                _imageResourceKey = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _imageResourceKey, value);
     }
 
     private bool _isStarred = false;
     public bool IsStarred
     {
         get => _isStarred;
-        protected set
-        {
-            if (_isStarred != value)
-            {
-                _isStarred = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _isStarred, value);
     }
 
     private double _opacity = 1.0;
     public double Opacity
     {
         get => _opacity;
-        protected set
-        {
-            if (_opacity != value)
-            {
-                _opacity = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _opacity, value);
     }
 
     private string _hoverText = "";
     public string HoverText
     {
         get => _hoverText;
-        protected set
-        {
-            if (_hoverText != value)
-            {
-                _hoverText = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _hoverText, value);
     }
 
     private bool _hasHoverText = false;
     public bool HasHoverText
     {
         get => _hasHoverText;
-        protected set
-        {
-            if (_hasHoverText != value)
-            {
-                _hasHoverText = value;
-                OnPropertyChanged();
-            }
-        }
+        protected set => SetProperty(ref _hasHoverText, value);
     }
 
     #endregion
@@ -192,7 +149,7 @@ public class RegionItemViewModel : IRegionItemViewModel, INotifyPropertyChanged,
         {
             return 0;
         }
-        return itemState.Starred == ItemVisibilityState.Visible ? 1 : 0;
+        return itemState.IsStarred ? 1 : 0;
     }
 
     public int GetItemPoints()
@@ -247,7 +204,7 @@ public class RegionItemViewModel : IRegionItemViewModel, INotifyPropertyChanged,
             // Set image based on item state
             string baseKey = _itemName.Value.ToString().ToLower();
             ImageResourceKey = itemState.Hinted ? $"{baseKey}_bw" : baseKey;
-            IsStarred = itemState.Starred != ItemVisibilityState.Hidden;
+            IsStarred = itemState.IsStarred;
             Opacity = itemState.Opacity;
         }
 
@@ -275,10 +232,6 @@ public class RegionItemViewModel : IRegionItemViewModel, INotifyPropertyChanged,
         OnPropertyChanged(nameof(HoverText));
         OnPropertyChanged(nameof(HasHoverText));
     }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     #region IDisposable
 
@@ -345,6 +298,35 @@ public class RegionItemViewModel : IRegionItemViewModel, INotifyPropertyChanged,
     {
         // Write the autotracked item to the service; this will trigger ItemStateChanged
         _itemTrackingService.SetItemState(itemToPlace, itemState, ChangeReason.AutoTracked);
+    }
+
+    #endregion
+
+    #region Object Overrides
+
+    public bool Equals(RegionItemViewModel? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return _regionName == other._regionName;
+    }
+
+    public override bool Equals(object? obj) => Equals(obj as RegionItemViewModel);
+
+    public override int GetHashCode()
+    {
+        return _regionName.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return $"{CurrentItemName}{(IsStarred ? "*" : "")} in {RegionName}";
     }
 
     #endregion

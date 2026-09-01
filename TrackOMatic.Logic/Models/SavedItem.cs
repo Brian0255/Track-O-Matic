@@ -21,8 +21,46 @@ public record SavedItem(
     bool Hinted = false
 )
 {
+    /// <summary>
+    /// A helper porperty to see if the item is empty (not starred, not in any region, and not hinted).
+    /// </summary>
     [JsonIgnore]
-    public bool IsEmpty => Starred == ItemVisibilityState.Hidden && Region == RegionName.UNKNOWN && !Hinted;
+    public bool IsEmpty => !IsStarred && Region == RegionName.UNKNOWN && !Hinted;
+
+    /// <summary>
+    /// A helper property to see if we have a starting item provided by a spoiler log.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsStartingAutotracked
+    {
+        get
+        {
+            if (Region != RegionName.START && Region != RegionName.UNHINTABLE_MOVES)
+            {
+                return false;
+            }
+            if (!Autotracked)
+            {
+                return false;
+            }
+            if (Hinted)
+            {
+                return false;
+            }
+            if (Opacity != 1)
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// A helper property to see if the item is starred (visible) in the tracker.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsStarred => Starred == ItemVisibilityState.Visible;
 
     /// <summary>
     /// Creates a default <see cref="SavedItem"/> for a given <see cref="ItemName"/>
@@ -37,7 +75,7 @@ public record SavedItem(
 
     public override string ToString()
     {
-        return $"{ItemName}{(Starred == ItemVisibilityState.Visible ? "*" : "")} in the {Region} Region, Autotracked: {Autotracked}, Opacity: {Opacity}, Hinted: {Hinted}";
+        return $"{ItemName}{(IsStarred ? "*" : "")} in the {Region} Region, Autotracked: {Autotracked}, Opacity: {Opacity}, Hinted: {Hinted}";
     }
 
     #endregion

@@ -74,7 +74,7 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
         if (itemState != null)
         {
             UpdateImageResourceKey(itemState);
-            IsStarred = itemState.Starred != ItemVisibilityState.Hidden;
+            IsStarred = itemState.IsStarred;
         }
         else
         {
@@ -154,7 +154,7 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
         {
             // Update the ImageResourceKey based on the new state of the item.
             UpdateImageResourceKey(e.UpdatedItem);
-            IsStarred = e.UpdatedItem.Starred != ItemVisibilityState.Hidden;
+            IsStarred = e.UpdatedItem.IsStarred;
 
             // Update hover text from spoiler service if available
             UpdateHoverText();
@@ -220,6 +220,13 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
             spoiledRegion = _parsedSpoilerDataService.CurrentData.StartingItems[_itemName];
         }
 
+        // If item is in a valid region, show full-color
+        if (spoiledRegion != RegionName.UNKNOWN || EndGameMappings.ValidMoveRegions.Contains(item?.Region ?? RegionName.UNKNOWN))
+        {
+            ImageResourceKey = baseKey;
+            return;
+        }
+
         // If no item state, show default B&W variant
         if (item == null && spoiledRegion == RegionName.UNKNOWN)
         {
@@ -239,13 +246,6 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
         if (item?.Opacity != 1.0)
         {
             ImageResourceKey = $"{baseKey}_bw";
-            return;
-        }
-
-        // If item is in a valid region, show full-color
-        if (spoiledRegion != RegionName.UNKNOWN || EndGameMappings.ValidMoveRegions.Contains(item?.Region ?? RegionName.UNKNOWN))
-        {
-            ImageResourceKey = baseKey;
             return;
         }
 

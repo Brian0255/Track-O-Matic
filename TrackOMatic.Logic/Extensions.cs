@@ -48,7 +48,7 @@ public static class Extensions
     public static bool ShouldKeepSavedItem(this SavedItem item)
     {
         // Rule 1: Starred items always kept
-        if (item.Starred == ItemVisibilityState.Visible)
+        if (item.IsStarred)
         {
             return true;
         }

@@ -112,29 +112,36 @@
         <ItemsControl
             Grid.Column="1"
             Margin="3"
-            ItemsSource="{Binding PlacedItems}"
+            ItemsSource="{Binding SelectedItemList}"
+            Visibility="{Binding HasVials, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
         >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:VialItemViewModel}">
+                    <local:VialItem />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <local:RegionItems
-                        IsItemsHost="True"
-                    />
+                    <local:VialItems IsItemsHost="True" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplateSelector>
-                <local:RegionItemTemplateSelector>
-                    <local:RegionItemTemplateSelector.VialItemTemplate>
-                        <DataTemplate DataType="{x:Type viewmodels:VialItemViewModel}">
-                            <local:VialItem />
-                        </DataTemplate>
-                    </local:RegionItemTemplateSelector.VialItemTemplate>
-                    <local:RegionItemTemplateSelector.SimpleItemTemplate>
-                        <DataTemplate DataType="{x:Type viewmodels:RegionItemViewModel}">
-                            <local:RegionItem />
-                        </DataTemplate>
-                    </local:RegionItemTemplateSelector.SimpleItemTemplate>
-                </local:RegionItemTemplateSelector>
-            </ItemsControl.ItemTemplateSelector>
+        </ItemsControl>
+        <ItemsControl
+            Grid.Column="1"
+            Margin="3"
+            ItemsSource="{Binding SelectedItemList}"
+            Visibility="{Binding HasVials, Converter={StaticResource BooleanToCollapsedVisibilityConverter}, ConverterParameter=Invert}"
+        >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:RegionItemViewModel}">
+                    <local:RegionItem />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <local:RegionItems IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
         </ItemsControl>
     </Grid>
 </UserControl>

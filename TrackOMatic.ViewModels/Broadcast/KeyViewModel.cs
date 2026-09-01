@@ -48,7 +48,7 @@ public class KeyViewModel : ObservableObject, IDisposable
         var itemState = _itemTrackingService.GetItemState(itemName);
         UpdateImageResourceKey(itemState, itemName);
 
-        IsStarred = itemState is not null && itemState.Starred == ItemVisibilityState.Visible;
+        IsStarred = itemState is not null && itemState.IsStarred;
         UpdateHoverText();
 
     }
@@ -127,7 +127,7 @@ public class KeyViewModel : ObservableObject, IDisposable
         if (e.UpdatedItem.ItemName == itemName)
         {
             UpdateImageResourceKey(e.UpdatedItem, itemName);
-            IsStarred = e.UpdatedItem.Starred == ItemVisibilityState.Visible;
+            IsStarred = e.UpdatedItem.IsStarred;
             UpdateHoverText();
         }
     }

@@ -152,8 +152,9 @@ public class HomingScopeViewModel : ObservableObject, IDisposable
         var leftItem = _itemTrackingService.GetItemState(_leftItem);
         var rightItem = _itemTrackingService.GetItemState(_rightItem);
 
-        IsStarred = (leftItem is not null && leftItem.Starred == ItemVisibilityState.Visible) ||
-        (rightItem is not null && rightItem.Starred == ItemVisibilityState.Visible);
+        IsStarred =
+            (leftItem is not null && leftItem.IsStarred) ||
+            (rightItem is not null && rightItem.IsStarred);
     }
 
     protected virtual void UpdateImageResourceKey()

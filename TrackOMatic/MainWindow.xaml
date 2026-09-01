@@ -154,40 +154,7 @@
                         <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
                     </Grid>
                     <!-- Region Grid -->
-                    <Grid Grid.Row="0"  Background="{StaticResource BaseBG}">
-                        <Grid.Resources>
-                            <Style TargetType="{x:Type regions:UiRegion}">
-                                <Setter Property="Margin" Value="1"/>
-                            </Style>
-                        </Grid.Resources>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <regions:UiRegion Grid.Row="0" Grid.Column="0" RegionName="START" />
-                            <regions:UiRegion Grid.Row="1" Grid.Column="0" RegionName="JUNGLE_JAPES" />
-                            <regions:UiRegion Grid.Row="2" Grid.Column="0" RegionName="ANGRY_AZTEC" />
-                            <regions:UiRegion Grid.Row="3" Grid.Column="0" RegionName="FRANTIC_FACTORY" />
-                            <regions:UiRegion Grid.Row="4" Grid.Column="0" RegionName="GLOOMY_GALLEON" />
-
-                            <regions:UiRegion Grid.Row="0" Grid.Column="1" RegionName="DK_ISLES" />
-                            <regions:UiRegion Grid.Row="1" Grid.Column="1" RegionName="FUNGI_FOREST" />
-                            <regions:UiRegion Grid.Row="2" Grid.Column="1" RegionName="CRYSTAL_CAVES" />
-                            <regions:UiRegion Grid.Row="3" Grid.Column="1" RegionName="CREEPY_CASTLE" />
-                            <regions:UiRegion Grid.Row="4" Grid.Column="1" RegionName="HIDEOUT_HELM" />
-                        </Grid>
-                    </Grid>
+                    <regions:RegionGrid Grid.Row="0" />
 
                     <!--GB/other stuff display-->
                     <local:CollectiblesGridRow Grid.Row="2" />

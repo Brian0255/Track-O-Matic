@@ -56,6 +56,11 @@ public class DataSaverService : IDataSaverService
                 // Sync fresh progress WITHIN the batch scopes
                 // This ensures OnProgressChanged doesn't trigger secondary UpdateParsedData(null) or item-change events
                 _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
+
+                foreach (var item in _parsedSpoilerDataService.GetStartingItems())
+                {
+                    _itemTrackingService.SetItemState(item.Key, new(item.Key, item.Value, Autotracked: true));
+                }
             }
 
             // We probably do want the AutotrackerService to observe here...
@@ -87,6 +92,15 @@ public class DataSaverService : IDataSaverService
                 {
                     var spoilerData = await ParseSpoilerLogAsync(CurrentSavedProgress.SpoilerPath);
                     _parsedSpoilerDataService.UpdateParsedData(spoilerData);
+
+                    // Sync SavedProgress with provider BEFORE adding spoiler items
+                    // This ensures InitializeCache runs before GetStartingItems
+                    _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
+
+                    foreach (var item in _parsedSpoilerDataService.GetStartingItems())
+                    {
+                        _itemTrackingService.SetItemState(item.Key, new(item.Key, item.Value, Autotracked: true));
+                    }
                 }
                 catch (Exception)
                 {
@@ -97,9 +111,8 @@ public class DataSaverService : IDataSaverService
             {
                 // No spoiler path set: this is fine. Just make sure the parsed data is cleared.
                 _parsedSpoilerDataService.UpdateParsedData(null);
+                _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
             }
-            // Sync SavedProgress with provider after loading from file
-            _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
         }
     }
 
@@ -119,10 +132,11 @@ public class DataSaverService : IDataSaverService
 
         try
         {
+            // Ensure the order of saved items is consistent before saving
+            _itemTrackingService.SyncSavedItemsOrder();
             // If only a filename is provided, resolve it to the app data directory
             string resolvedPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(AppDataDirectory, filePath);
-
-            await _dataPersistenceService.SaveAsync(CurrentSavedProgress, resolvedPath);
+            await _dataPersistenceService.SaveAsync(CreateFilteredProgressSnapshot(), resolvedPath);
             SaveCompleted?.Invoke(this, new() { FilePath = resolvedPath, Success = true });
         }
         catch (Exception ex)
@@ -139,5 +153,32 @@ public class DataSaverService : IDataSaverService
             throw new InvalidOperationException($"Failed to parse spoiler: {result.ErrorMessage}");
         }
         return result.Data;
+    }
+
+    private SavedProgress CreateFilteredProgressSnapshot()
+    {
+        var snapshot = new SavedProgress
+        {
+            SaveFileVersion = CurrentSavedProgress.SaveFileVersion,
+            SavedItems = new(), // Fresh dict, build from ItemTrackingService order
+            SavedGBCounts = CurrentSavedProgress.SavedGBCounts,
+            BLockerImageIndexes = CurrentSavedProgress.BLockerImageIndexes,
+            // ... copy other collections
+            SpoilerPath = CurrentSavedProgress.SpoilerPath,
+            // ... HelmKongs, BossKongs, etc.
+        };
+
+        // Build SavedItems in insertion order, filtered
+        var itemsInOrder = _itemTrackingService.GetAllItemsInOrder(); // New service method
+        foreach (var item in itemsInOrder)
+        {
+            // Filter: exclude non-starred autotracked items
+            if (!item.IsStartingAutotracked || item.IsStarred)
+            {
+                snapshot.SavedItems[item.ItemName] = item;
+            }
+        }
+
+        return snapshot;
     }
 }

@@ -16,9 +16,17 @@ internal record DeferredItemChange(ItemName ItemName, SavedItem? CurrentState, S
 public class ItemTrackingService : IItemTrackingService
 {
     private readonly ISavedProgressProvider _progressProvider;
-    private readonly Dictionary<ItemName, SavedItem> _itemCache;
     private bool _isBatchingUpdates;
     private readonly List<DeferredItemChange> _deferredUpdates;
+
+    /// <summary>
+    /// A list that maintains the order of items as they are added to the cache.
+    /// </summary>
+    private readonly LinkedList<SavedItem> _itemOrder;
+    /// <summary>
+    /// A mapping from ItemName to the corresponding LinkedListNode in _itemOrder for quick access and reordering.
+    /// </summary>
+    private readonly Dictionary<ItemName, LinkedListNode<SavedItem>> _nodeMap;
 
     public event EventHandler<ItemStateChangedEventArgs>? ItemStateChanged;
 
@@ -33,7 +41,8 @@ public class ItemTrackingService : IItemTrackingService
         // If created on a background thread, this will be null (and we'll use beacons to the current context).
         _uiContext = SynchronizationContext.Current;
 
-        _itemCache = [];
+        _itemOrder = new();
+        _nodeMap = [];
         _isBatchingUpdates = false;
         _deferredUpdates = [];
         InitializeCache();
@@ -44,13 +53,16 @@ public class ItemTrackingService : IItemTrackingService
 
     private void InitializeCache()
     {
-        _itemCache.Clear();
+        _itemOrder.Clear();
+        _nodeMap.Clear();
         foreach (var item in _progressProvider.CurrentProgress.SavedItems)
         {
-            _itemCache[item.Key] = item.Value with
+            var cleanItem = item.Value with
             {
                 ItemName = item.Key // Ensure the ItemName is consistent with the dictionary string key
             };
+            var node = _itemOrder.AddLast(cleanItem);
+            _nodeMap[cleanItem.ItemName] = node;
         }
     }
 
@@ -90,8 +102,7 @@ public class ItemTrackingService : IItemTrackingService
 
     public SavedItem? GetItemState(ItemName itemName)
     {
-        _itemCache.TryGetValue(itemName, out var item);
-        return item;
+        return _nodeMap.TryGetValue(itemName, out var node) ? node.Value : null;
     }
 
     public void SetItemState(ItemName itemName, SavedItem state)
@@ -106,16 +117,30 @@ public class ItemTrackingService : IItemTrackingService
             throw new ArgumentException($"SavedItem.ItemName ({state.ItemName}) does not match itemName parameter ({itemName})", nameof(state));
         }
 
-        SavedItem? previousState = null;
-        if (_itemCache.TryGetValue(itemName, out var existing))
+        // If the new state is empty (no region, not starred, not hinted), clear it instead of storing
+        if (state.IsEmpty)
         {
-            previousState = existing;
+            ClearItemState(itemName);
+            return;
         }
 
-        // Update cache
-        _itemCache[itemName] = state;
+        SavedItem? previousState = null;
 
-        // Update SavedProgress
+        // See if the item already exists.
+        if (_nodeMap.TryGetValue(itemName, out var existingNode))
+        {
+            previousState = existingNode.Value;
+            // Update the existing node's value to the new state
+            existingNode.Value = state;
+        }
+        else
+        {
+            // We have a new item, so add to the end of the list.
+            var newNode = _itemOrder.AddLast(state);
+            _nodeMap[itemName] = newNode;
+        }
+
+        // Update SavedProgress (for serialization purposes)
         _progressProvider.CurrentProgress.SavedItems[itemName] = state;
 
         // If batching, defer the event; otherwise fire immediately
@@ -131,19 +156,14 @@ public class ItemTrackingService : IItemTrackingService
 
     public void ClearItemState(ItemName itemName)
     {
-        if (!_itemCache.ContainsKey(itemName))
+        if (!_nodeMap.TryGetValue(itemName, out var node))
         {
             return;
         }
 
-        SavedItem? removedState = null;
-        if (_itemCache.TryGetValue(itemName, out var existing))
-        {
-            removedState = existing;
-        }
-
-        // Remove from cache
-        _itemCache.Remove(itemName);
+        SavedItem removedState = node.Value;
+        _itemOrder.Remove(node);
+        _nodeMap.Remove(itemName);
 
         // Remove from SavedProgress
         _progressProvider.CurrentProgress.SavedItems.Remove(itemName);
@@ -162,19 +182,32 @@ public class ItemTrackingService : IItemTrackingService
             // Broadcast controls need to know to update their display
             if (removedState != null)
             {
-                RaiseItemStateChanged(removedState, removedState, ChangeReason.UserModified);
+                RaiseItemStateChanged(removedState with
+                {
+                    Region = RegionName.UNKNOWN,
+                    Opacity = 1,
+                    Starred = ItemVisibilityState.Hidden,
+                }, removedState, ChangeReason.UserModified);
             }
         }
     }
 
     public IEnumerable<SavedItem> GetItemsInRegion(RegionName region)
     {
-        return _itemCache.Values.Where(item => item is not null && item.Region == region);
+        // Dictionary preserves insertion order in .NET 4.7.2+, so items appear in the order they were added
+        var result = _itemOrder.Where(item => item is not null && item.Region == region).ToList();
+        return result;
     }
 
     public IEnumerable<SavedItem> GetItemsByVisibility(ItemVisibilityState state)
     {
-        return _itemCache.Values.Where(item => item is not null && item.Starred == state);
+        // Well, we have to traverse anyway, so let's use the linked list here.
+        return _itemOrder.Where(item => item is not null && item.Starred == state);
+    }
+
+    public IEnumerable<SavedItem> GetAllItemsInOrder()
+    {
+        return _itemOrder.ToList().AsReadOnly();
     }
 
     /// <summary>
@@ -187,12 +220,23 @@ public class ItemTrackingService : IItemTrackingService
     {
         var currentItem = GetItemState(itemName) ?? SavedItem.CreateEmpty(itemName);
 
-        var newStarred = currentItem.Starred == ItemVisibilityState.Visible
+        var newStarred = currentItem.IsStarred
             ? ItemVisibilityState.Hidden
             : ItemVisibilityState.Visible;
 
         SavedItem updatedItem = new(currentItem.ItemName, currentItem.Region, newStarred, currentItem.Autotracked, currentItem.Opacity, currentItem.Hinted);
         SetItemState(itemName, updatedItem);
+    }
+
+    public void SyncSavedItemsOrder()
+    {
+        var oldItems = _progressProvider.CurrentProgress.SavedItems;
+        _progressProvider.CurrentProgress.SavedItems = [];
+
+        foreach (var item in _itemOrder)
+        {
+            _progressProvider.CurrentProgress.SavedItems[item.ItemName] = item;
+        }
     }
 
     /// <summary>
@@ -241,7 +285,12 @@ public class ItemTrackingService : IItemTrackingService
                     // For each deferred change, fire an event
                     // Note: CurrentState is null only for cleared items; PreviousState is always present
                     // because we only defer changes that actually occurred.
-                    var itemToReport = change.CurrentState ?? change.PreviousState;
+                    var itemToReport = change.CurrentState ?? change.PreviousState! with
+                    {
+                        Region = RegionName.UNKNOWN,
+                        Opacity = 1,
+                        Starred = ItemVisibilityState.Hidden,
+                    };
                     ArgumentNullException.ThrowIfNull(itemToReport, nameof(itemToReport));
 
                     _service.RaiseItemStateChanged(itemToReport, change.PreviousState, ChangeReason.Batched);

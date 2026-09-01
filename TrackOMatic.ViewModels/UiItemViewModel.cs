@@ -45,7 +45,7 @@ public class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
         if (itemState != null)
         {
             UpdateImageResourceKey(itemState);
-            IsStarred = itemState.Starred != ItemVisibilityState.Hidden;
+            IsStarred = itemState.IsStarred;
             Opacity = itemState.Opacity;
         }
         else
@@ -202,8 +202,6 @@ public class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
             Autotracked = previousItem.Autotracked,
         });
         MouseDragType = MouseDragType.None;
-        // Don't call UpdateImageResourceKey here - let the ItemStateChanged event fire naturally
-        // to update the image based on the new region
     }
 
     public void ToggleStar()
@@ -216,13 +214,7 @@ public class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
         var item = _itemTrackingService.GetItemState(_itemName);
         if (item is not null)
         {
-            _itemTrackingService.SetItemState(_itemName, item with
-            {
-                Region = RegionName.UNKNOWN,
-                Opacity = 1,
-                Starred = item.Starred,
-                Autotracked = item.Autotracked,
-            });
+            _itemTrackingService.ClearItemState(_itemName);
         }
     }
 
@@ -233,7 +225,7 @@ public class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
         {
             // Update the ImageResourceKey based on the new state of the item.
             UpdateImageResourceKey(e.UpdatedItem);
-            IsStarred = e.UpdatedItem.Starred != ItemVisibilityState.Hidden;
+            IsStarred = e.UpdatedItem.IsStarred;
             Opacity = e.UpdatedItem.Opacity;
 
             // Update hover text from spoiler service if available
@@ -268,6 +260,14 @@ public class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
             ImageResourceKey = $"{baseKey}_bw";
             return;
         }
+
+        // If the item is empty (not a part of any real region), show default B&W variant.
+        if (item?.IsEmpty == true)
+        {
+            ImageResourceKey = $"{baseKey}_bw";
+            return;
+        }
+
 
         // If item is hinted, always show B&W
         // This logic may need to be revised.
