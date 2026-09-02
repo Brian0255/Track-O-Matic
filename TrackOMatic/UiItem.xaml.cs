@@ -290,14 +290,15 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
         {
             var regionName = regionViewModel.RegionName;
             var canDropInRegionItems = foundRegionItems is not null;
-            if (canDropInRegionItems)
+            var vialsEnabled = ParsedSpoilerDataService.GetSpoilerSettings().VialsEnabled;
+            if (!vialsEnabled && canDropInRegionItems)
             {
                 viewModel.CompleteDrag(regionName);
             }
             else
             {
                 var canDropInVialItems = foundVialItems is not null && foundVialItems.TryDropItem(ItemName, viewModel.MouseDragType);
-                if (canDropInVialItems)
+                if (vialsEnabled && canDropInVialItems)
                 {
                     viewModel.CompleteDrag(regionName);
                 }
