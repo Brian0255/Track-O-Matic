@@ -97,6 +97,13 @@ public interface IParsedSpoilerDataService
     Dictionary<ItemName, RegionName> GetStartingItems();
 
     /// <summary>
+    /// Gets the vial colors for a specific region from the current parsed spoiler data.
+    /// </summary>
+    /// <param name="regionName"></param>
+    /// <returns></returns>
+    IEnumerable<VialColor> GetVialColorsForRegion(RegionName regionName);
+
+    /// <summary>
     /// Beigns a new scope where parsed data changes are batched.
     /// When the return scope is disposed, all collected changes will fire a single
     /// <see cref="ParsedSpoilerDataChanged"/> event.

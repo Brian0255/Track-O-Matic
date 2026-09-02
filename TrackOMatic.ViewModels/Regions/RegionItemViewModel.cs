@@ -214,7 +214,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
     protected virtual void UpdateHoverText()
     {
         var spoilerData = _parsedSpoilerDataService.CurrentData;
-        if (spoilerData is null || _itemName is null)
+        if (spoilerData is null || _itemName is null || !spoilerData.SpoilerSettings.PointsEnabled)
         {
             HoverText = "";
             HasHoverText = false;

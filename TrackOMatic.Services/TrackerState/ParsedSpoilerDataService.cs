@@ -123,6 +123,15 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
 
     public Dictionary<ItemName, RegionName> GetStartingItems() => _currentData?.StartingItems ?? [];
 
+    public IEnumerable<VialColor> GetVialColorsForRegion(RegionName regionName)
+    {
+        if (CurrentData?.RegionData.TryGetValue(regionName, out var regionData) == true)
+        {
+            return regionData.VialColors.AsReadOnly();
+        }
+        return [];
+    }
+
     public SpoilerSettings GetSpoilerSettings() => _currentData?.SpoilerSettings ?? new();
 
     public bool HasHelmOrder() => CurrentData?.HelmOrder is not null && CurrentData.HelmOrder.Count > 0;

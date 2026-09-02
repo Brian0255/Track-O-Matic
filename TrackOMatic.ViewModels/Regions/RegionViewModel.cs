@@ -124,6 +124,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             _regionName,
             _itemTrackingService,
             _parsedSpoilerDataService,
+            _savedProgressProvider,
             _themeService
         );
         _regionItemListViewModel = new RegionItemListViewModel(
@@ -131,8 +132,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             _itemTrackingService,
             _parsedSpoilerDataService,
             _savedProgressProvider,
-            _themeService,
-            _regionPlacementOrchestrator
+            _themeService
         );
 
         // Registry is optional for backwards compatibility with existing tests/code
@@ -147,6 +147,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnProgressChanged;
+        _vialItemListViewModel.VialItemStateChanged += OnVialStateChanged;
 
         // Initialize state directly (not debounced) in constructor
         InitializeState();
@@ -249,6 +250,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
             UpdateHoardText();
             UpdateItemPointText();
+            OnPropertyChanged(nameof(SelectedItemList));
         }, null);
     }
 
@@ -257,6 +259,25 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         _syncContext.Post(_ =>
         {
             HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
+            UpdateHoardText();
+            UpdateItemPointText();
+            OnPropertyChanged(nameof(SelectedItemList));
+        }, null);
+    }
+
+    private void OnVialStateChanged(object? sender, VialItemStateChangedEventArgs e)
+    {
+        if (!HasVials)
+        {
+            return;
+        }
+        if (_regionName != e.RegionName)
+        {
+            return;
+        }
+
+        _syncContext.Post(_ =>
+        {
             UpdateHoardText();
             UpdateItemPointText();
         }, null);
@@ -416,6 +437,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
                 _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnProgressChanged;
+                _vialItemListViewModel.VialItemStateChanged -= OnVialStateChanged;
             }
             _disposed = true;
         }

@@ -192,7 +192,7 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
     private void UpdateHoverText()
     {
         var spoilerData = _parsedSpoilerDataService.CurrentData;
-        if (spoilerData is null)
+        if (spoilerData is null || !spoilerData.SpoilerSettings.PointsEnabled)
         {
             HoverText = "";
             HasHoverText = false;

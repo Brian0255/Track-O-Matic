@@ -19,6 +19,8 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
     /// </summary>
     public override VialColor VialColor => _vialColor;
 
+    public event EventHandler<VialItemStateChangedEventArgs>? VialItemStateChanged;
+
     #region Proxy Properties
     private bool _isVialStarred = false;
     /// <summary>
@@ -228,6 +230,7 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
         });
         CurrentItemName = null;
         UpdateProperties(null);
+        RaiseVialItemStateChanged();
     }
 
     /// <summary>
@@ -255,6 +258,7 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
             // even if IsVialStarred was already false before
             OnPropertyChanged(nameof(IsVialStarred));
         }
+        RaiseVialItemStateChanged();
     }
 
     /// <summary>
@@ -272,6 +276,8 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
             // Update the IsStarred property to reflect the vial star state
             UpdateProperties(null);
         }
+
+        RaiseVialItemStateChanged();
     }
 
     protected override void UpdateProperties(SavedItem? itemState)
@@ -303,6 +309,16 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
     #endregion
 
     #region Helper Methods
+
+    private void RaiseVialItemStateChanged()
+    {
+        VialItemStateChanged?.Invoke(this, new(
+            RegionName,
+            _vialColor,
+            CurrentItemName,
+            CurrentItemName.HasValue ? IsStarred : IsVialStarred
+        ));
+    }
 
     private bool IsItemAutotracked(ItemName itemName)
     {

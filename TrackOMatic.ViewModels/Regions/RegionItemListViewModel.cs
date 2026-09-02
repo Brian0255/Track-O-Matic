@@ -15,13 +15,11 @@ public partial class RegionItemListViewModel : ObservableObject, IEquatable<Regi
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IThemeService _themeService;
-    private readonly IRegionPlacementOrchestrator _regionPlacementOrchestrator;
-    private readonly SynchronizationContext _syncContext;
     private readonly RegionName _regionName;
 
     #region Proxy Properties
 
-    private ObservableCollection<RegionItemViewModel> _items = new();
+    private ObservableCollection<RegionItemViewModel> _items = [];
     public ObservableCollection<RegionItemViewModel> Items
     {
         get => _items;
@@ -37,8 +35,7 @@ public partial class RegionItemListViewModel : ObservableObject, IEquatable<Regi
         IItemTrackingService itemTrackingService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         ISavedProgressProvider savedProgressProvider,
-        IThemeService themeService,
-        IRegionPlacementOrchestrator regionPlacementOrchestrator
+        IThemeService themeService
     )
     {
         _regionName = regionName;
@@ -46,8 +43,6 @@ public partial class RegionItemListViewModel : ObservableObject, IEquatable<Regi
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
-        _regionPlacementOrchestrator = regionPlacementOrchestrator ?? throw new ArgumentNullException(nameof(regionPlacementOrchestrator));
-        _syncContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null. Ensure this ViewModel is created on the UI thread.");
 
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _savedProgressProvider.ProgressChanged += OnDataReset;
