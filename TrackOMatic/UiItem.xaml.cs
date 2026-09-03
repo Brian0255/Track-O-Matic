@@ -282,31 +282,35 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
         UiRegion? foundUiRegion = UIUtils.HitTestAt<UiRegion>(rootVisualContainer, dropPoint);
         RegionItems? foundRegionItems = UIUtils.HitTestAt<RegionItems>(rootVisualContainer, dropPoint);
         VialItems? foundVialItems = UIUtils.HitTestAt<VialItems>(rootVisualContainer, dropPoint);
+
         if (foundUiRegion is null || foundUiRegion.DataContext is not RegionViewModel regionViewModel)
         {
             viewModel.EndDrag();
+            return;
+        }
+
+        bool canDrop = false;
+        var vialsEnabled = ParsedSpoilerDataService.GetSpoilerSettings().VialsEnabled;
+        var regionName = regionViewModel.RegionName;
+
+        var canDropInRegionItems = foundRegionItems is not null;
+        var canDropInVialItems = foundVialItems is not null;
+
+        if (!vialsEnabled && canDropInRegionItems)
+        {
+            canDrop = regionViewModel.RegionItemListViewModel!.TryAcceptDrop(ItemName, viewModel.MouseDragType);
+        }
+        else if (vialsEnabled && canDropInVialItems)
+        {
+            canDrop = regionViewModel.VialItemListViewModel!.TryAcceptDrop(ItemName, viewModel.MouseDragType);
+        }
+        if (canDrop)
+        {
+            viewModel.CompleteDrag(regionName);
         }
         else
         {
-            var regionName = regionViewModel.RegionName;
-            var canDropInRegionItems = foundRegionItems is not null;
-            var vialsEnabled = ParsedSpoilerDataService.GetSpoilerSettings().VialsEnabled;
-            if (!vialsEnabled && canDropInRegionItems)
-            {
-                viewModel.CompleteDrag(regionName);
-            }
-            else
-            {
-                var canDropInVialItems = foundVialItems is not null && foundVialItems.TryDropItem(ItemName, viewModel.MouseDragType);
-                if (vialsEnabled && canDropInVialItems)
-                {
-                    viewModel.CompleteDrag(regionName);
-                }
-                else
-                {
-                    viewModel.EndDrag();
-                }
-            }
+            viewModel.EndDrag();
         }
 
         // Clear the drag preview from MainWindow

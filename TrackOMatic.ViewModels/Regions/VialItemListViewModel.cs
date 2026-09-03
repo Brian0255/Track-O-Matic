@@ -12,7 +12,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Regions;
 
-public partial class VialItemListViewModel : ObservableObject, IEquatable<VialItemListViewModel>, IDisposable
+public partial class VialItemListViewModel : ObservableObject, IItemListViewModel, IEquatable<VialItemListViewModel>, IDisposable
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;

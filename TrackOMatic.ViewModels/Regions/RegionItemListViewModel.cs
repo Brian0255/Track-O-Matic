@@ -9,7 +9,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Regions;
 
-public partial class RegionItemListViewModel : ObservableObject, IEquatable<RegionItemListViewModel>, IDisposable
+public partial class RegionItemListViewModel : ObservableObject, IItemListViewModel, IEquatable<RegionItemListViewModel>, IDisposable
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
@@ -77,6 +77,8 @@ public partial class RegionItemListViewModel : ObservableObject, IEquatable<Regi
 
         OnPropertyChanged(nameof(Items));
     }
+
+    public bool TryAcceptDrop(ItemName itemName, MouseDragType dragType) => true;
 
     /// <summary>
     /// Handle item state changes from the item tracking service.
