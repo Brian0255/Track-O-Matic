@@ -437,7 +437,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
                 _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnProgressChanged;
-                _vialItemListViewModel.VialItemStateChanged -= OnVialStateChanged;
+                _vialItemListViewModel?.VialItemStateChanged -= OnVialStateChanged;
             }
             _disposed = true;
         }

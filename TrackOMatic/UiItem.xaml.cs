@@ -114,6 +114,7 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
             return;
         }
 
+        var dragService = ServiceLocator.GetService<IDragPreviewService>();
         var currentPoint = e.GetPosition(this);
         var control = (UIElement)sender;
         double width = control.RenderSize.Width;
@@ -126,12 +127,7 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
                 PressedLeft = false;
                 Mouse.Capture(control);
                 viewModel.BeginDrag(MouseDragType.Left, width, height);
-
-                // Register this ViewModel as the current drag preview in MainWindow
-                if (Window.GetWindow(this) is MainWindow mainWindow)
-                {
-                    mainWindow.RegisterDragPreview(viewModel);
-                }
+                dragService.RegisterDragPreview(viewModel);
             }
         }
         else if (PressedRight && !viewModel.IsDragging)
@@ -141,12 +137,7 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
                 PressedRight = false;
                 Mouse.Capture(control);
                 viewModel.BeginDrag(MouseDragType.Right, width, height);
-
-                // Register this ViewModel as the current drag preview in MainWindow
-                if (Window.GetWindow(this) is MainWindow mainWindow)
-                {
-                    mainWindow.RegisterDragPreview(viewModel);
-                }
+                dragService.RegisterDragPreview(viewModel);
             }
         }
 
@@ -156,15 +147,12 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
             Window? mainWindow = Window.GetWindow(this);
             if (mainWindow != null)
             {
-                Point windowPoint = this.TransformToAncestor(mainWindow).Transform(currentPoint);
+                Point windowPoint = TransformToAncestor(mainWindow).Transform(currentPoint);
                 viewModel.DragX = windowPoint.X;
                 viewModel.DragY = windowPoint.Y;
 
                 // Update the drag preview canvas
-                if (mainWindow is MainWindow mw)
-                {
-                    mw.UpdateDragPreview();
-                }
+                dragService.UpdateDragPreview();
             }
             else
             {
@@ -236,12 +224,7 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
             else
             {
                 viewModel.EndDrag();
-
-                // Clear the drag preview from MainWindow
-                if (Window.GetWindow(this) is MainWindow mainWindow)
-                {
-                    mainWindow.ClearDragPreview();
-                }
+                ServiceLocator.GetService<IDragPreviewService>().ClearDragPreview();
             }
 
             return;
@@ -280,44 +263,30 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
         viewModel.IsDragging = false;
 
         UiRegion? foundUiRegion = UIUtils.HitTestAt<UiRegion>(rootVisualContainer, dropPoint);
-        RegionItems? foundRegionItems = UIUtils.HitTestAt<RegionItems>(rootVisualContainer, dropPoint);
-        VialItems? foundVialItems = UIUtils.HitTestAt<VialItems>(rootVisualContainer, dropPoint);
-
-        if (foundUiRegion is null || foundUiRegion.DataContext is not RegionViewModel regionViewModel)
+        if (foundUiRegion?.DataContext is not RegionViewModel regionViewModel)
         {
             viewModel.EndDrag();
-            return;
-        }
-
-        bool canDrop = false;
-        var vialsEnabled = ParsedSpoilerDataService.GetSpoilerSettings().VialsEnabled;
-        var regionName = regionViewModel.RegionName;
-
-        var canDropInRegionItems = foundRegionItems is not null;
-        var canDropInVialItems = foundVialItems is not null;
-
-        if (!vialsEnabled && canDropInRegionItems)
-        {
-            canDrop = regionViewModel.RegionItemListViewModel!.TryAcceptDrop(ItemName, viewModel.MouseDragType);
-        }
-        else if (vialsEnabled && canDropInVialItems)
-        {
-            canDrop = regionViewModel.VialItemListViewModel!.TryAcceptDrop(ItemName, viewModel.MouseDragType);
-        }
-        if (canDrop)
-        {
-            viewModel.CompleteDrag(regionName);
         }
         else
         {
-            viewModel.EndDrag();
+            // Pass the RegionViewModel directly
+            bool canDrop = ServiceLocator.GetService<IDragDropCoordinator>().TryExecuteDrop(
+                ItemName,
+                regionViewModel,
+                viewModel.MouseDragType
+            );
+
+            if (canDrop)
+            {
+                viewModel.CompleteDrag(regionViewModel.RegionName);
+            }
+            else
+            {
+                viewModel.EndDrag();
+            }
         }
 
-        // Clear the drag preview from MainWindow
-        if (Window.GetWindow(this) is MainWindow mainWindow)
-        {
-            mainWindow.ClearDragPreview();
-        }
+        ServiceLocator.GetService<IDragPreviewService>().ClearDragPreview();
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

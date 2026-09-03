@@ -6,6 +6,7 @@ using TrackOMatic.AutoTracking.Windows;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.Ui;
+using TrackOMatic.ViewModels;
 
 namespace TrackOMatic;
 
@@ -26,6 +27,8 @@ public partial class App : Application
         // Register WPF UI services
         services.AddSingleton<IItemSelectorService, ItemSelectorServiceWpf>();
         services.AddSingleton<IHintItemSelectionService, HintItemSelectionServiceWpf>();
+        services.AddSingleton<IDragDropCoordinator, DragDropCoordinator>();
+        services.AddSingleton<IDragPreviewService, DragPreviewServiceWpf>();
 
         _serviceProvider = services.BuildServiceProvider();
         ServiceLocator.Initialize(_serviceProvider);
