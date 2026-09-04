@@ -157,7 +157,7 @@
                     <regions:RegionGrid Grid.Row="0" />
 
                     <!--GB/other stuff display-->
-                    <local:CollectiblesGridRow Grid.Row="2" />
+                    <local:CollectiblesGridRow Grid.Row="2" DataContext="{Binding CollectiblesGridRowViewModel}" />
                     <!-- Items -->
                     <Grid Grid.Row="4" Visibility="Visible"  Margin="0" >
                         <Grid.RowDefinitions>

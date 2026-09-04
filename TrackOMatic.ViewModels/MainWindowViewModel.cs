@@ -18,19 +18,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
 
     #region Child ViewModels
 
-    private CollectiblesGridRowViewModel? _collectiblesGridRowViewModel;
-    public CollectiblesGridRowViewModel CollectiblesGridRowViewModel
-    {
-        get
-        {
-            _collectiblesGridRowViewModel ??= new CollectiblesGridRowViewModel(
-                _userSettingsService,
-                _autotrackerService,
-                _savedProgressProvider
-            );
-            return _collectiblesGridRowViewModel;
-        }
-    }
+    public CollectiblesGridRowViewModel CollectiblesGridRowViewModel { get; private init; }
 
     #endregion
 
@@ -338,6 +326,13 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
         _autotrackerService = autotrackerService ?? throw new ArgumentNullException(nameof(autotrackerService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+
+        CollectiblesGridRowViewModel = new CollectiblesGridRowViewModel(
+            _userSettingsService,
+            _autotrackerService,
+            _savedProgressProvider
+        );
+
         InitializeState();
         _userSettingsService.PropertyChanged += OnSettingChanged;
     }
@@ -595,7 +590,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
             if (disposing)
             {
                 _userSettingsService.PropertyChanged -= OnSettingChanged;
-                (_collectiblesGridRowViewModel as IDisposable)?.Dispose();
+                CollectiblesGridRowViewModel.Dispose();
             }
             _disposed = true;
         }

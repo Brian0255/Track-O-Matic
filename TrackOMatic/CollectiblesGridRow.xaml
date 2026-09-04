@@ -24,7 +24,7 @@
             <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Background="{StaticResource RegionBG}" Margin="0,5,0,0" DataContext="{Binding DataContext.CollectiblesGridRowViewModel, RelativeSource={RelativeSource AncestorType=local:MainWindow}}">
+    <Grid Background="{StaticResource RegionBG}" Margin="0,5,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".1*" />
             <ColumnDefinition Width="1.7*" />
@@ -97,7 +97,7 @@
             <ItemsControl Grid.Column="1" ItemsSource="{Binding Collectibles}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="1" Columns="{Binding DataContext.VisibleCount, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                        <UniformGrid Rows="1" Columns="{Binding VisibleCount}" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplateSelector>
