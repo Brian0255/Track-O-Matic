@@ -16,12 +16,8 @@ public partial class BLockerPanelViewModel(
     IItemSelectorService itemSelectorService
 ) : ObservableObject
 {
-    private string _lineColor = lineColor;
-    public string LineColor
-    {
-        get => _lineColor;
-        private set => SetProperty(ref _lineColor, value);
-    }
+    [ObservableProperty]
+    public partial string LineColor { get; set; } = lineColor;
 
     public ObservableCollection<BLockerHintViewModel> Hints { get; init; } =
     [

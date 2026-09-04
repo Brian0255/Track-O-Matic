@@ -39,42 +39,22 @@ public partial class FoundHintItemListViewModel : ObservableObject, IDisposable
         }
     }
 
-    private ObservableCollection<FoundHintItemViewModel> _topRowItems = [];
-    public ObservableCollection<FoundHintItemViewModel> TopRowItems
-    {
-        get => _topRowItems;
-        private set => SetProperty(ref _topRowItems, value);
-    }
+    [ObservableProperty]
+    public partial ObservableCollection<FoundHintItemViewModel> TopRowItems { get; set; } = [];
 
-    private ObservableCollection<FoundHintItemViewModel> _bottomRowItems = [];
-    public ObservableCollection<FoundHintItemViewModel> BottomRowItems
-    {
-        get => _bottomRowItems;
-        private set => SetProperty(ref _bottomRowItems, value);
-    }
+    [ObservableProperty]
+    public partial ObservableCollection<FoundHintItemViewModel> BottomRowItems { get; set; } = [];
 
-    private bool _shouldShowSecondRow;
-    public bool ShouldShowSecondRow
-    {
-        get => _shouldShowSecondRow;
-        private set => SetProperty(ref _shouldShowSecondRow, value);
-    }
+    [ObservableProperty]
+    public partial bool ShouldShowSecondRow { get; set; }
 
-    private int _rowsToShow = 0;
-    public int RowsToShow
-    {
-        get => _rowsToShow;
-        private set => SetProperty(ref _rowsToShow, value);
-    }
+    [ObservableProperty]
+    public partial int RowsToShow { get; set; } = 0;
 
     public bool IsHintInfoNotFoolish => _hintPanelType != HintPanelType.Foolish;
 
-    private bool _shouldShowFocusList = false;
-    public bool ShouldShowFocusList
-    {
-        get => _shouldShowFocusList;
-        private set => SetProperty(ref _shouldShowFocusList, value);
-    }
+    [ObservableProperty]
+    public partial bool ShouldShowFocusList { get; set; } = false;
 
     #endregion
 

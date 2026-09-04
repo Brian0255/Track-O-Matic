@@ -210,25 +210,25 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     private HintSuggestionConfig? HintSuggestionConfig { get; set; }
 
     [ObservableProperty]
-    private bool _isFocusRequested = false;
+    public partial bool IsFocusRequested { get; set; } = false;
 
     [ObservableProperty]
-    private bool _shouldFocusLocation = false;
+    public partial bool ShouldFocusLocation { get; set; } = false;
 
     [ObservableProperty]
-    private bool _locationIsFocused = false;
+    public partial bool LocationIsFocused { get; set; } = false;
 
     [ObservableProperty]
-    private bool _shouldFocusSuggestionsFirst = false;
+    public partial bool ShouldFocusSuggestionsFirst { get; set; } = false;
 
     [ObservableProperty]
-    private string? _selectedSuggestion = null;
+    public partial string? SelectedSuggestion { get; set; } = null;
 
     [ObservableProperty]
-    private int _selectedSuggestionIndex = -1;
+    public partial int SelectedSuggestionIndex { get; set; } = -1;
 
     [ObservableProperty]
-    private bool _isSuggestionBoxFocused = false;
+    public partial bool IsSuggestionBoxFocused { get; set; } = false;
 
     /// <summary>
     /// Tracks whether PotionCount has already been focused for the current location entry.

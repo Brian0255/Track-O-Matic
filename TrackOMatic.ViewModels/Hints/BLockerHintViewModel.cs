@@ -36,19 +36,11 @@ public partial class BLockerHintViewModel : ObservableObject, IDisposable
         }
     }
 
-    private string _barrierCount = "";
-    public string BarrierCount
-    {
-        get => _barrierCount;
-        set => SetProperty(ref _barrierCount, value);
-    }
+    [ObservableProperty]
+    public partial string BarrierCount { get; set; } = "";
 
-    private string _regionResourceKey = "";
-    public string RegionResourceKey
-    {
-        get => _regionResourceKey;
-        set => SetProperty(ref _regionResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string RegionResourceKey { get; set; } = "";
 
     public bool IsLocked
     {
