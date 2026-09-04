@@ -1,10 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
-using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
@@ -33,19 +31,11 @@ public partial class HelmDoorSlotViewModel : ObservableObject, IDisposable
 
     #region Proxy Properties
 
-    private int _barrierValue = -1; // always overridden at the start.
-    public int BarrierValue
-    {
-        get => _barrierValue;
-        private set => SetProperty(ref _barrierValue, value);
-    }
+    [ObservableProperty]
+    public partial int BarrierValue { get; set; } = -1;
 
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        set => SetProperty(ref _imageResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
 
     #endregion
 

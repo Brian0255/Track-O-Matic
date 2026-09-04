@@ -9,33 +9,21 @@ public partial class HintDialogItemViewModel : ObservableObject
 {
     #region Proxy Properties
 
-    private HintGridCell _cell;
-    public HintGridCell Cell
-    {
-        get => _cell;
-        set => SetProperty(ref _cell, value);
-    }
+    [ObservableProperty]
+    public partial HintGridCell Cell { get; set; }
 
-    private bool _isSelected = false;
-    public bool IsSelected
-    {
-        get => _isSelected;
-        internal set => SetProperty(ref _isSelected, value);
-    }
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; } = false;
 
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        private set => SetProperty(ref _imageResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
 
     #endregion
 
     public HintDialogItemViewModel(HintGridCell cell, bool isSelected)
     {
-        _cell = cell;
-        _isSelected = isSelected;
+        Cell = cell;
+        IsSelected = isSelected;
         UpdateResourceKey();
     }
 

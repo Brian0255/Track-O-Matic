@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
-using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
@@ -34,19 +33,11 @@ public partial class HelmDoorHintViewModel : ObservableObject, IDisposable
         }
     }
 
-    private string _barrierCount = "";
-    public string BarrierCount
-    {
-        get => _barrierCount;
-        set => SetProperty(ref _barrierCount, value);
-    }
+    [ObservableProperty]
+    public partial string BarrierCount { get; set; } = "";
 
-    private string _labelText = "";
-    public string LabelText
-    {
-        get => _labelText;
-        set => SetProperty(ref _labelText, value);
-    }
+    [ObservableProperty]
+    public partial string LabelText { get; set; } = "";
 
     #endregion
 

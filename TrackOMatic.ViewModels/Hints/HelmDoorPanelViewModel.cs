@@ -12,12 +12,8 @@ public partial class HelmDoorPanelViewModel : ObservableObject
 {
     private readonly IUserSettingsService _userSettingsService;
 
-    private string _lineColor = string.Empty;
-    public string LineColor
-    {
-        get => _lineColor;
-        private set => SetProperty(ref _lineColor, value);
-    }
+    [ObservableProperty]
+    public partial string LineColor { get; set; } = string.Empty;
 
     public HelmDoorHintViewModel FirstDoor { get; }
     public HelmDoorHintViewModel SecondDoor { get; }

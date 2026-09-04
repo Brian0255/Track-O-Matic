@@ -25,51 +25,27 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
 
     #region Proxy Properties
 
-    private string _lineColor = "";
-    public string LineColor
-    {
-        get => _lineColor;
-        private set => SetProperty(ref _lineColor, value);
-    }
+    [ObservableProperty]
+    public partial string LineColor { get; set; } = "";
 
-    private ObservableCollection<HintInfoViewModel> _hintInfoViewModels = [];
-    public ObservableCollection<HintInfoViewModel> HintInfoViewModels
-    {
-        get => _hintInfoViewModels;
-        private set => SetProperty(ref _hintInfoViewModels, value);
-    }
+    [ObservableProperty]
+    public partial ObservableCollection<HintInfoViewModel> HintInfoViewModels { get; set; } = [];
 
-    private string _filterResourceKey = "";
-    public string FilterResourceKey
-    {
-        get => _filterResourceKey;
-        private set => SetProperty(ref _filterResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string FilterResourceKey { get; set; } = "";
 
-    private string _sortResourceKey = "";
-    public string SortResourceKey
-    {
-        get => _sortResourceKey;
-        private set => SetProperty(ref _sortResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string SortResourceKey { get; set; } = "";
 
-    private string _heading = "";
-    public string Heading
-    {
-        get => _heading;
-        set => SetProperty(ref _heading, value);
-    }
+    [ObservableProperty]
+    public partial string Heading { get; set; } = "";
 
     public bool IsPathHintPanel => _hintPanelType == HintPanelType.Paths;
 
     public int HintCount => HintInfoViewModels.Count;
 
-    private ObservableCollection<ItemName> _itemsToFilterBy = [];
-    public ObservableCollection<ItemName> ItemsToFilterBy
-    {
-        get => _itemsToFilterBy;
-        private set => SetProperty(ref _itemsToFilterBy, value);
-    }
+    [ObservableProperty]
+    public partial ObservableCollection<ItemName> ItemsToFilterBy { get; set; } = [];
 
     #endregion
 

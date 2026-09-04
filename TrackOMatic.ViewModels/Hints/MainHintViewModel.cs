@@ -203,10 +203,22 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            if (IsDirectHintCompactMode) return "DirectCompact";
-            if (IsDirectHintStandardMode) return "DirectStandard";
-            if (IsMultipathCompactMode) return "MultipathCompact";
-            if (IsMultipathStandardMode) return "MultipathStandard";
+            if (IsDirectHintCompactMode)
+            {
+                return "DirectCompact";
+            }
+            if (IsDirectHintStandardMode)
+            {
+                return "DirectStandard";
+            }
+            if (IsMultipathCompactMode)
+            {
+                return "MultipathCompact";
+            }
+            if (IsMultipathStandardMode)
+            {
+                return "MultipathStandard";
+            }
             return "None";
         }
     }

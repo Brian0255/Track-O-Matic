@@ -16,8 +16,6 @@ public partial class MultiGridItemSelectorViewModel : ObservableObject, IDisposa
 
     public event EventHandler? CloseRequested;
 
-    private PropertyChangedEventHandler? _itemPropertyChangedHandler;
-
     public MultiGridItemSelectorViewModel(IReadOnlyList<HintDialogItemViewModel> items)
     {
         if (items == null || items.Count == 0)
@@ -30,20 +28,20 @@ public partial class MultiGridItemSelectorViewModel : ObservableObject, IDisposa
         AllItems = new ObservableCollection<HintDialogItemViewModel>(items);
         _selectedItems = [];
 
-        _itemPropertyChangedHandler = (s, e) =>
-        {
-            if (e.PropertyName == nameof(HintDialogItemViewModel.IsSelected))
-            {
-                if (s is HintDialogItemViewModel item)
-                {
-                    UpdatedSelectedItem(item);
-                }
-            }
-        };
-
         foreach (var item in items)
         {
-            item.PropertyChanged += _itemPropertyChangedHandler;
+            item.PropertyChanged += OnHintItemSelected;
+        }
+    }
+
+    private void OnHintItemSelected(object? s, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(HintDialogItemViewModel.IsSelected))
+        {
+            if (s is HintDialogItemViewModel item)
+            {
+                UpdatedSelectedItem(item);
+            }
         }
     }
 
@@ -116,12 +114,9 @@ public partial class MultiGridItemSelectorViewModel : ObservableObject, IDisposa
         {
             if (!_disposed)
             {
-                if (_itemPropertyChangedHandler is not null)
+                foreach (var item in AllItems)
                 {
-                    foreach (var item in AllItems)
-                    {
-                        item.PropertyChanged -= _itemPropertyChangedHandler;
-                    }
+                    item.PropertyChanged -= OnHintItemSelected;
                 }
             }
             _disposed = true;

@@ -15,41 +15,25 @@ public partial class PathHintItemViewModel : ObservableObject, IEquatable<PathHi
 
     #region Proxy Properties
 
-    private ItemName _itemName;
-    public ItemName ItemName
-    {
-        get => _itemName;
-        private set => SetProperty(ref _itemName, value);
-    }
+    [ObservableProperty]
+    public partial ItemName ItemName { get; set; }
 
-    private bool _isFound;
-    public bool IsFound
-    {
-        get => _isFound;
-        private set => SetProperty(ref _isFound, value);
-    }
+    [ObservableProperty]
+    public partial bool IsFound { get; set; }
 
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        private set => SetProperty(ref _imageResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
 
-    private string _checkmarkKey = "";
-    public string CheckmarkKey
-    {
-        get => _checkmarkKey;
-        private set => SetProperty(ref _checkmarkKey, value);
-    }
+    [ObservableProperty]
+    public partial string CheckmarkKey { get; set; } = "";
 
     #endregion
 
     public PathHintItemViewModel(HintId hintId, ItemName itemName, bool isFound, IHintService hintService)
     {
         _hintId = hintId;
-        _itemName = itemName;
-        _isFound = isFound;
+        ItemName = itemName;
+        IsFound = isFound;
         _hintService = hintService ?? throw new ArgumentNullException(nameof(hintService));
         _hintService.HintPathItemToggled += OnHintPathItemToggled;
         UpdateResourceKey();
@@ -71,7 +55,7 @@ public partial class PathHintItemViewModel : ObservableObject, IEquatable<PathHi
 
     private void OnHintPathItemToggled(object? sender, HintItemToggleEventArgs e)
     {
-        if (e.HintId == _hintId && e.ItemName == _itemName)
+        if (e.HintId == _hintId && e.ItemName == ItemName)
         {
             IsFound = e.IsFound;
         }
