@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -29,7 +26,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _pathsHintPanelViewModel ??= CreateViewModel(HintPanelType.Paths);
+            _pathsHintPanelViewModel ??= CreateViewModel(HintPanelType.Paths, "#dba512");
             return _pathsHintPanelViewModel;
         }
     }
@@ -39,7 +36,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _foolishHintPanelViewModel ??= CreateViewModel(HintPanelType.Foolish);
+            _foolishHintPanelViewModel ??= CreateViewModel(HintPanelType.Foolish, "#e02f2f");
             return _foolishHintPanelViewModel;
         }
     }
@@ -49,7 +46,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _kongsHintPanelViewModel ??= CreateViewModel(HintPanelType.Kongs);
+            _kongsHintPanelViewModel ??= CreateViewModel(HintPanelType.Kongs, "#ff59e1");
             return _kongsHintPanelViewModel;
         }
     }
@@ -59,7 +56,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _hoardHintPanelViewModel ??= CreateViewModel(HintPanelType.WayOfTheHoard);
+            _hoardHintPanelViewModel ??= CreateViewModel(HintPanelType.WayOfTheHoard, "#2652ff");
             return _hoardHintPanelViewModel;
         }
     }
@@ -69,7 +66,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _potionHintPanelViewModel ??= CreateViewModel(HintPanelType.PotionCounts);
+            _potionHintPanelViewModel ??= CreateViewModel(HintPanelType.PotionCounts, "#d0d0d0");
             return _potionHintPanelViewModel;
         }
     }
@@ -79,7 +76,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _unhintedHintPanelViewModel ??= CreateViewModel(HintPanelType.Unhinted);
+            _unhintedHintPanelViewModel ??= CreateViewModel(HintPanelType.Unhinted, "#36f77d");
             return _unhintedHintPanelViewModel;
         }
     }
@@ -89,7 +86,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _islesHintPanelViewModel ??= CreateViewModel(HintPanelType.Isles);
+            _islesHintPanelViewModel ??= CreateViewModel(HintPanelType.Isles, "#fff67a");
             return _islesHintPanelViewModel;
         }
     }
@@ -99,7 +96,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _japesHintPanelViewModel ??= CreateViewModel(HintPanelType.Japes);
+            _japesHintPanelViewModel ??= CreateViewModel(HintPanelType.Japes, "#59ff64");
             return _japesHintPanelViewModel;
         }
     }
@@ -109,7 +106,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _aztecHintPanelViewModel ??= CreateViewModel(HintPanelType.Aztec);
+            _aztecHintPanelViewModel ??= CreateViewModel(HintPanelType.Aztec, "#ffb01f");
             return _aztecHintPanelViewModel;
         }
     }
@@ -119,7 +116,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _factoryHintPanelViewModel ??= CreateViewModel(HintPanelType.Factory);
+            _factoryHintPanelViewModel ??= CreateViewModel(HintPanelType.Factory, "#eeeeee");
             return _factoryHintPanelViewModel;
         }
     }
@@ -129,7 +126,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _galleonHintPanelViewModel ??= CreateViewModel(HintPanelType.Galleon);
+            _galleonHintPanelViewModel ??= CreateViewModel(HintPanelType.Galleon, "#216fff");
             return _galleonHintPanelViewModel;
         }
     }
@@ -139,7 +136,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _forestHintPanelViewModel ??= CreateViewModel(HintPanelType.Forest);
+            _forestHintPanelViewModel ??= CreateViewModel(HintPanelType.Forest, "#006b3e");
             return _forestHintPanelViewModel;
         }
     }
@@ -149,7 +146,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _cavesHintPanelViewModel ??= CreateViewModel(HintPanelType.Caves);
+            _cavesHintPanelViewModel ??= CreateViewModel(HintPanelType.Caves, "#42ddf5");
             return _cavesHintPanelViewModel;
         }
     }
@@ -159,7 +156,7 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _castleHintPanelViewModel ??= CreateViewModel(HintPanelType.Castle);
+            _castleHintPanelViewModel ??= CreateViewModel(HintPanelType.Castle, "#99a3ad");
             return _castleHintPanelViewModel;
         }
     }
@@ -169,12 +166,16 @@ public class MainHintViewModel : ObservableObject
     {
         get
         {
-            _helmHintPanelViewModel ??= CreateViewModel(HintPanelType.Helm);
+            _helmHintPanelViewModel ??= CreateViewModel(HintPanelType.Helm, "#b580ff");
             return _helmHintPanelViewModel;
         }
     }
 
     #endregion
+
+    public BLockerPanelViewModel BLockerPanelViewModel { get; init; }
+
+    public HelmDoorPanelViewModel HelmDoorPanelViewModel { get; init; }
 
     #region Proxy Properties
 
@@ -218,7 +219,10 @@ public class MainHintViewModel : ObservableObject
         IHintItemSelectionService hintItemSelectionService,
         IItemTrackingService itemTrackingService,
         IUserSettingsService userSettingsService,
-        ISavedProgressProvider savedProgressProvider
+        ISavedProgressProvider savedProgressProvider,
+        IBarrierService barrierService,
+        IParsedSpoilerDataService parsedSpoilerDataService,
+        IItemSelectorService itemSelectorService
     )
     {
         _hintService = hintService ?? throw new ArgumentNullException(nameof(hintService));
@@ -228,11 +232,27 @@ public class MainHintViewModel : ObservableObject
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
 
+        BLockerPanelViewModel = new(
+            "#f0f000",
+            barrierService,
+            parsedSpoilerDataService,
+            _savedProgressProvider,
+            itemSelectorService
+        );
+        HelmDoorPanelViewModel = new(
+            "#7d3cbd",
+            userSettingsService,
+            barrierService,
+            savedProgressProvider,
+            itemSelectorService
+        );
+
         _userSettingsService.PropertyChanged += OnSettingChanged;
     }
 
-    private HintPanelViewModel CreateViewModel(HintPanelType hintPanelType) => new(
+    private HintPanelViewModel CreateViewModel(HintPanelType hintPanelType, string lineColor) => new(
         hintPanelType,
+        lineColor,
         _hintService,
         _shortcutService,
         _hintItemSelectionService,

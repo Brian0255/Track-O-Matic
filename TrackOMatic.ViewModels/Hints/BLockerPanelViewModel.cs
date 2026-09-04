@@ -9,12 +9,20 @@ using TrackOMatic.Services.TrackerState;
 namespace TrackOMatic.ViewModels.Hints;
 
 public partial class BLockerPanelViewModel(
+    string lineColor,
     IBarrierService barrierService,
     IParsedSpoilerDataService parsedSpoilerDataService,
     ISavedProgressProvider savedProgressProvider,
     IItemSelectorService itemSelectorService
-    ) : ObservableObject
+) : ObservableObject
 {
+    private string _lineColor = lineColor;
+    public string LineColor
+    {
+        get => _lineColor;
+        private set => SetProperty(ref _lineColor, value);
+    }
+
     public ObservableCollection<BLockerHintViewModel> Hints { get; init; } =
     [
         new(RegionName.JUNGLE_JAPES, barrierService, parsedSpoilerDataService, savedProgressProvider, itemSelectorService),

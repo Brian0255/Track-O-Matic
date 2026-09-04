@@ -25,6 +25,13 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
 
     #region Proxy Properties
 
+    private string _lineColor = "";
+    public string LineColor
+    {
+        get => _lineColor;
+        private set => SetProperty(ref _lineColor, value);
+    }
+
     private ObservableCollection<HintInfoViewModel> _hintInfoViewModels = [];
     public ObservableCollection<HintInfoViewModel> HintInfoViewModels
     {
@@ -68,6 +75,7 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
 
     public HintPanelViewModel(
         HintPanelType hintPanelType,
+        string lineColor,
         IHintService hintService,
         IShortcutService shortcutService,
         IHintItemSelectionService hintItemSelectionService,
@@ -82,6 +90,7 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        LineColor = lineColor;
         _hintPanelType = hintPanelType;
         // Subscribe to progress changes to update hints when the game state changes.
         _savedProgressProvider.ProgressChanged += OnProgressChanged;

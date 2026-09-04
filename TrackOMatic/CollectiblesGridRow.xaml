@@ -8,7 +8,7 @@
     xmlns:converters="clr-namespace:TrackOMatic.Converters"
     xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels;assembly=TrackOMatic.ViewModels"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance Type=viewmodels:CollectiblesGridRowViewModel, IsDesignTimeCreatable=True}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:CollectiblesGridRowViewModel}"
     d:DesignHeight="100"
     d:DesignWidth="400"
 >

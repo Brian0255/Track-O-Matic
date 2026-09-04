@@ -75,8 +75,8 @@
         <Border CornerRadius="2" BorderThickness="3">
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
-                    <GradientStop Color="{Binding LineColor, RelativeSource={RelativeSource AncestorType=local:HintPanel}}" Offset="0"/>
-                    <GradientStop Color="{Binding LineColor, RelativeSource={RelativeSource AncestorType=local:HintPanel}}" Offset="0.007"/>
+                    <GradientStop Color="{Binding LineColor}" Offset="0"/>
+                    <GradientStop Color="{Binding LineColor}" Offset="0.007"/>
                     <GradientStop Color="Transparent" Offset="0.008"/>
                     <GradientStop Color="Transparent" Offset="1"/>
                 </LinearGradientBrush>

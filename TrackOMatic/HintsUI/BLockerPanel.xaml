@@ -8,7 +8,7 @@
     xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
     Background="Transparent"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance Type=viewmodels:BLockerPanelViewModel, IsDesignTimeCreatable=True}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:BLockerPanelViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="200"
     Unloaded="OnUnloaded"
@@ -27,7 +27,7 @@
                     Foreground="White"
                     Grid.Row="0"
                     FontFamily="{DynamicResource DK64Font}"
-                    Text="{Binding Heading, RelativeSource={RelativeSource AncestorType=local:BLockerPanel}}"
+                    Text="B. LOCKERS"
                     VerticalAlignment="Center"/>
                 <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
                     <!-- Slightly more ocmplicated ItemsControl but handles the view models better. -->
@@ -49,8 +49,8 @@
         <Border CornerRadius="2" BorderThickness="3">
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
-                    <GradientStop Color="{Binding LineColor, RelativeSource={RelativeSource AncestorType=local:BLockerPanel}}" Offset="0"/>
-                    <GradientStop Color="{Binding LineColor, RelativeSource={RelativeSource AncestorType=local:BLockerPanel}}" Offset="0.007"/>
+                    <GradientStop Color="{Binding LineColor}" Offset="0"/>
+                    <GradientStop Color="{Binding LineColor}" Offset="0.007"/>
                     <GradientStop Color="Transparent" Offset="0.008"/>
                     <GradientStop Color="Transparent" Offset="1"/>
                 </LinearGradientBrush>

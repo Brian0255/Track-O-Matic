@@ -1,10 +1,6 @@
-using System.Diagnostics;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
-using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.ViewModels.Hints;
 
@@ -12,21 +8,6 @@ namespace TrackOMatic.HintsUI;
 
 public partial class HintPanel : UserControl
 {
-    public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register(nameof(LineColor), typeof(Color), typeof(HintPanel));
-    public static readonly DependencyProperty HintPanelTypeProperty = DependencyProperty.Register(nameof(HintPanelType), typeof(HintPanelType), typeof(HintPanel));
-
-    public Color LineColor
-    {
-        get { return (Color)GetValue(LineColorProperty); }
-        set { SetValue(LineColorProperty, value); }
-    }
-
-    public HintPanelType HintPanelType
-    {
-        get => (HintPanelType)GetValue(HintPanelTypeProperty);
-        set => SetValue(HintPanelTypeProperty, value);
-    }
-
     public HintPanel()
     {
         InitializeComponent();

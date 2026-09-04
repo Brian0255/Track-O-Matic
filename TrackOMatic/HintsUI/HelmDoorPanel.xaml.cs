@@ -1,8 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
-using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels.Hints;
@@ -11,21 +9,6 @@ namespace TrackOMatic.HintsUI;
 
 public partial class HelmDoorPanel : UserControl
 {
-    public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register("Heading", typeof(string), typeof(HelmDoorPanel));
-    public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register("LineColor", typeof(Color), typeof(HelmDoorPanel));
-
-    public string Heading
-    {
-        get { return (string)GetValue(HeadingProperty); }
-        set { SetValue(HeadingProperty, value); }
-    }
-
-    public Color LineColor
-    {
-        get { return (Color)GetValue(LineColorProperty); }
-        set { SetValue(LineColorProperty, value); }
-    }
-
     public HelmDoorPanel()
     {
         InitializeComponent();
@@ -36,6 +19,7 @@ public partial class HelmDoorPanel : UserControl
         var userSettingsService = ServiceLocator.GetService<IUserSettingsService>();
 
         DataContext = new HelmDoorPanelViewModel(
+            "#7d3cbd",
             userSettingsService,
             barrierService,
             savedProgressProvider,

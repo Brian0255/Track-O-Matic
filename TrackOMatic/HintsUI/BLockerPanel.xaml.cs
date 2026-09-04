@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -10,20 +9,6 @@ namespace TrackOMatic.HintsUI;
 
 public partial class BLockerPanel : UserControl
 {
-    public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register(nameof(Heading), typeof(string), typeof(BLockerPanel));
-    public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register(nameof(LineColor), typeof(Color), typeof(BLockerPanel));
-    public string Heading
-    {
-        get { return (string)GetValue(HeadingProperty); }
-        set { SetValue(HeadingProperty, value); }
-    }
-
-    public Color LineColor
-    {
-        get { return (Color)GetValue(LineColorProperty); }
-        set { SetValue(LineColorProperty, value); }
-    }
-
     public BLockerPanel()
     {
         InitializeComponent();
@@ -34,6 +19,7 @@ public partial class BLockerPanel : UserControl
         var itemSelectorService = ServiceLocator.GetService<IItemSelectorService>();
 
         DataContext = new BLockerPanelViewModel(
+            "#f0f000",
             barrierService,
             parsedSpoilerDataService,
             savedProgressProvider,

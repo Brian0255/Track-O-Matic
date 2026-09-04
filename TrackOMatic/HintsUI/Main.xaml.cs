@@ -4,6 +4,7 @@ using System.ComponentModel;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels.Hints;
+using System.Windows;
 
 namespace TrackOMatic.HintsUI;
 /// <summary>
@@ -11,7 +12,7 @@ namespace TrackOMatic.HintsUI;
 /// </summary>
 public partial class Main : UserControl
 {
-    private MainHintViewModel? _currentViewModel;
+    private readonly MainHintViewModel _currentViewModel;
 
     public Main()
     {
@@ -23,7 +24,10 @@ public partial class Main : UserControl
             ServiceLocator.GetService<IHintItemSelectionService>(),
             ServiceLocator.GetService<IItemTrackingService>(),
             ServiceLocator.GetService<IUserSettingsService>(),
-            ServiceLocator.GetService<ISavedProgressProvider>()
+            ServiceLocator.GetService<ISavedProgressProvider>(),
+            ServiceLocator.GetService<IBarrierService>(),
+            ServiceLocator.GetService<IParsedSpoilerDataService>(),
+            ServiceLocator.GetService<IItemSelectorService>()
         );
         DataContext = _currentViewModel;
 
@@ -40,5 +44,15 @@ public partial class Main : UserControl
             ModeContentPresenter.Content = null;
             ModeContentPresenter.Content = vm;
         }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (_currentViewModel is not null)
+        {
+            _currentViewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            _currentViewModel.Dispose();
+        }
+        DataContext = null;
     }
 }
