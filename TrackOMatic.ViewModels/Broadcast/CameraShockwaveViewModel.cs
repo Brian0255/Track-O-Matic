@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
@@ -19,6 +16,23 @@ public partial class CameraShockwaveViewModel : ObservableObject, IDisposable
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    [ObservableProperty]
+    public partial bool IsStarred { get; set; } = false;
+
+    [ObservableProperty]
+    public partial string HoverText { get; set; } = "";
+
+    [ObservableProperty]
+    public partial bool HasHoverText { get; set; } = false;
+
+    #endregion
 
     public CameraShockwaveViewModel(
         IItemTrackingService itemTrackingService,
@@ -42,38 +56,6 @@ public partial class CameraShockwaveViewModel : ObservableObject, IDisposable
         UpdateImageResourceKey();
         UpdateHoverText();
     }
-
-    #region Proxy Properties
-
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        protected set => SetProperty(ref _imageResourceKey, value);
-    }
-
-    private bool _isStarred = false;
-    public bool IsStarred
-    {
-        get => _isStarred;
-        protected set => SetProperty(ref _isStarred, value);
-    }
-
-    private string _hoverText = "";
-    public string HoverText
-    {
-        get => _hoverText;
-        protected set => SetProperty(ref _hoverText, value);
-    }
-
-    private bool _hasHoverText = false;
-    public bool HasHoverText
-    {
-        get => _hasHoverText;
-        protected set => SetProperty(ref _hasHoverText, value);
-    }
-
-    #endregion
 
     #region IDisposable
 

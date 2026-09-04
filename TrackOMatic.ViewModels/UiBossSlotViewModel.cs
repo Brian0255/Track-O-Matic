@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 
+using Humanizer;
+
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels.Broadcast;
@@ -79,4 +81,13 @@ public class UiBossSlotViewModel : BossSlotViewModel
     }
 
     private bool CanExecuteCyclePrevious() => !_parsedSpoilerDataService.HasBossOrder();
+
+    #region Object Overrides
+
+    public override string ToString()
+    {
+        return $"The {(_slotNumber + 1).Ordinalize()} final boss is {GetBossName()}.";
+    }
+
+    #endregion
 }

@@ -1,5 +1,7 @@
 using System.ComponentModel;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
@@ -13,6 +15,23 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// </summary>
 public partial class LevelViewModel : IslesViewModel, IEquatable<LevelViewModel>, INotifyPropertyChanged
 {
+    #region Proxy Properties
+
+    public KeyViewModel KeyViewModel { get; private init; }
+
+    [ObservableProperty]
+    public partial string NumberResourceKey { get; set; } = "";
+
+    // Key-level image resource (for the level's key display)
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    // Whether the level's key is starred
+    [ObservableProperty]
+    public partial bool IsStarred { get; set; } = false;
+
+    #endregion
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LevelViewModel"/> class with the specified services and selected level.
     /// </summary>
@@ -47,35 +66,6 @@ public partial class LevelViewModel : IslesViewModel, IEquatable<LevelViewModel>
 
         UpdateRegionData();
     }
-
-    #region Proxy Properties
-
-    public KeyViewModel KeyViewModel { get; private init; }
-
-    private string _numberResourceKey = "";
-    public string NumberResourceKey
-    {
-        get => _numberResourceKey;
-        protected set => SetProperty(ref _numberResourceKey, value);
-    }
-
-    // Key-level image resource (for the level's key display)
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        private set => SetProperty(ref _imageResourceKey, value);
-    }
-
-    // Whether the level's key is starred
-    private bool _isStarred = false;
-    public bool IsStarred
-    {
-        get => _isStarred;
-        private set => SetProperty(ref _isStarred, value);
-    }
-
-    #endregion
 
     /// <summary>
     /// Override to filter item state changes to only those relevant to this level's key.

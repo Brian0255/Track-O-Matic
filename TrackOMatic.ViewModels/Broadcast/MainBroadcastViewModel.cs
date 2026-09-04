@@ -16,40 +16,20 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
 
     #region Proxy Properties
 
-    private bool _topMostSetting;
-    public bool TopMostSetting
-    {
-        get => _topMostSetting;
-        private set => SetProperty(ref _topMostSetting, value);
-    }
+    [ObservableProperty]
+    public partial bool TopMostSetting { get; set; }
 
-    private bool _broadcastHelmKRoolSetting;
-    public bool BroadcastHelmKRoolSetting
-    {
-        get => _broadcastHelmKRoolSetting;
-        private set => SetProperty(ref _broadcastHelmKRoolSetting, value);
-    }
+    [ObservableProperty]
+    public partial bool BroadcastHelmKRoolSetting { get; set; }
 
-    private bool _broadcastShopkeepersSetting;
-    public bool BroadcastShopkeepersSetting
-    {
-        get => _broadcastShopkeepersSetting;
-        private set => SetProperty(ref _broadcastShopkeepersSetting, value);
-    }
+    [ObservableProperty]
+    public partial bool BroadcastShopkeepersSetting { get; set; }
 
-    private bool _broadcastSongDisplaySetting;
-    public bool BroadcastSongDisplaySetting
-    {
-        get => _broadcastSongDisplaySetting;
-        private set => SetProperty(ref _broadcastSongDisplaySetting, value);
-    }
+    [ObservableProperty]
+    public partial bool BroadcastSongDisplaySetting { get; set; }
 
-    private double _movesWidth;
-    public double MovesWidth
-    {
-        get => _movesWidth;
-        private set => SetProperty(ref _movesWidth, value);
-    }
+    [ObservableProperty]
+    public partial double MovesWidth { get; set; }
 
     public IslesViewModel Isles { get; init; }
     public ObservableCollection<LevelViewModel> Levels { get; } = [];

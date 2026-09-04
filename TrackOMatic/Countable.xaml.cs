@@ -63,17 +63,27 @@ public partial class Countable : UserControl
 
     private void UserControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is UiCountableViewModel viewModel)
+        if (DataContext is not UiCountableViewModel viewModel)
         {
-            viewModel.IncrementCount();
+            return;
+        }
+
+        if (viewModel.IncrementCountCommand.CanExecute(null))
+        {
+            viewModel.IncrementCountCommand.Execute(null);
         }
     }
 
     private void UserControl_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is UiCountableViewModel viewModel)
+        if (DataContext is not UiCountableViewModel viewModel)
         {
-            viewModel.DecrementCount();
+            return;
+        }
+
+        if (viewModel.DecrementCountCommand.CanExecute(null))
+        {
+            viewModel.DecrementCountCommand.Execute(null);
         }
     }
 
@@ -85,11 +95,18 @@ public partial class Countable : UserControl
         }
         if (e.Delta > 0)
         {
-            viewModel.IncrementCount();
+            if (viewModel.IncrementCountCommand.CanExecute(null))
+            {
+                viewModel.IncrementCountCommand.Execute(null);
+            }
         }
         else if (e.Delta < 0)
         {
-            viewModel.DecrementCount();
+            if (viewModel.DecrementCountCommand.CanExecute(null))
+            {
+                viewModel.DecrementCountCommand.Execute(null);
+            }
+
         }
         e.Handled = true;
     }

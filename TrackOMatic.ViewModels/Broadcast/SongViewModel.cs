@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic.Events.Autotracking;
@@ -13,13 +10,19 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// Can be injected into MainWindow or BroadcastView independently.
 /// Handles synchronization context marshaling for UI updates from background threads.
 /// </summary>
-public class SongViewModel : ObservableObject, IDisposable
+public partial class SongViewModel : ObservableObject, IDisposable
 {
     private readonly ISongService _songService;
     private readonly SynchronizationContext? _uiContext;
-    private string _songGame = string.Empty;
-    private string _songName = string.Empty;
-    private string _resourceKey = string.Empty;
+
+    [ObservableProperty]
+    public partial string SongGame { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string SongName { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string ResourceKey { get; set; } = string.Empty;
 
     public SongViewModel(ISongService songService)
     {
@@ -32,24 +35,6 @@ public class SongViewModel : ObservableObject, IDisposable
 
         // Subscribe to changes
         _songService.SongChanged += OnSongChanged;
-    }
-
-    public string SongGame
-    {
-        get => _songGame;
-        private set => SetProperty(ref _songGame, value);
-    }
-
-    public string SongName
-    {
-        get => _songName;
-        private set => SetProperty(ref _songName, value);
-    }
-
-    public string ResourceKey
-    {
-        get => _resourceKey;
-        private set => SetProperty(ref _resourceKey, value);
     }
 
     private void InitializeState()

@@ -1,19 +1,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using Humanizer;
+
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public class HelmSlotViewModel: ObservableObject, IDisposable
+public partial class HelmSlotViewModel: ObservableObject, IEquatable<HelmSlotViewModel>, IDisposable
 {
-    private readonly IEndGameProgressionService _endGameProgressionService;
-    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
-    private readonly ISavedProgressProvider _savedProgressProvider;
-    private readonly SynchronizationContext _uiContext;
-    private readonly int _slotNumber;
-
     protected static readonly List<ItemGridCell> _helmKongMappings =
     [
         new(0, 0, "unknown_kong_bw"),
@@ -23,6 +19,26 @@ public class HelmSlotViewModel: ObservableObject, IDisposable
         new(0, 4, "tiny"),
         new(0, 5, "chunky")
     ];
+
+    private readonly IEndGameProgressionService _endGameProgressionService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
+    private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly SynchronizationContext _uiContext;
+    private readonly int _slotNumber;
+
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial bool ShowsSlot { get; set; } = true;
+
+    [ObservableProperty]
+    public partial int HelmValue { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    #endregion
 
     public HelmSlotViewModel(
         int slotNumber,
@@ -55,31 +71,6 @@ public class HelmSlotViewModel: ObservableObject, IDisposable
         OnPropertyChanged(nameof(ShowsSlot));
         UpdateImageResourceKey();
     }
-
-    #region Proxy Properties
-
-    private bool _showsSlot = true;
-    public bool ShowsSlot
-    {
-        get => _showsSlot;
-        protected set => SetProperty(ref _showsSlot, value);
-    }
-
-    private int _helmValue = 0;
-    public int HelmValue
-    {
-        get => _helmValue;
-        protected set => SetProperty(ref _helmValue, value);
-    }
-
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        protected set => SetProperty(ref _imageResourceKey, value);
-    }
-
-    #endregion
 
     private void OnBlastStateChanged(object? sender, BlastStateChangedEventArgs e)
     {
@@ -133,6 +124,48 @@ public class HelmSlotViewModel: ObservableObject, IDisposable
     {
         ImageResourceKey = _helmKongMappings[HelmValue].ResourceKey;
     }
+
+    protected string GetHelmName()
+    {
+        return HelmValue switch
+        {
+            0 => "Unknown",
+            1 => "Donkey",
+            2 => "Diddy",
+            3 => "Lanky",
+            4 => "Tiny",
+            5 => "Chunky",
+            _ => throw new InvalidOperationException($"Invalid HelmValue: {HelmValue}"),
+        };
+    }
+
+    #region Object Overrides
+
+    public bool Equals(HelmSlotViewModel? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return _slotNumber == other._slotNumber;
+    }
+
+    public override bool Equals(object? obj) => Equals(obj as HelmSlotViewModel);
+
+    public override int GetHashCode() => _slotNumber.GetHashCode();
+
+    public override string ToString()
+    {
+        return $"Broadcast: The {(_slotNumber + 1).Ordinalize()} Kong to destroy the Blast-O-Matic is {GetHelmName()}.";
+    }
+
+    #endregion
 
     #region IDisposable Pattern
 

@@ -1,19 +1,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using Humanizer;
+
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public class BossSlotViewModel: ObservableObject, IDisposable
+public partial class BossSlotViewModel: ObservableObject, IEquatable<BossSlotViewModel>, IDisposable
 {
-    private readonly IEndGameProgressionService _endGameProgressionService;
-    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
-    private readonly ISavedProgressProvider _savedProgressProvider;
-    private readonly SynchronizationContext _uiContext;
-    private readonly int _slotNumber;
-
     protected static readonly List<ItemGridCell> _bossKongMappings =
     [
         new(0, 0, "unknown_kong_bw"),
@@ -30,6 +26,25 @@ public class BossSlotViewModel: ObservableObject, IDisposable
         new(1, 5, "army2"),
         new(1, 6, "kutout"),
     ];
+
+    private readonly IEndGameProgressionService _endGameProgressionService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
+    private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly SynchronizationContext _uiContext;
+    private readonly int _slotNumber;
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial bool ShowsSlot { get; set; } = true;
+
+    [ObservableProperty]
+    public partial int BossValue { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    #endregion
 
     public BossSlotViewModel(
         int slotNumber,
@@ -62,31 +77,6 @@ public class BossSlotViewModel: ObservableObject, IDisposable
         OnPropertyChanged(nameof(ShowsSlot));
         UpdateImageResourceKey();
     }
-
-    #region Proxy Properties
-
-    private bool _showsSlot = true;
-    public bool ShowsSlot
-    {
-        get => _showsSlot;
-        protected set => SetProperty(ref _showsSlot, value);
-    }
-
-    private int _bossValue = 0;
-    public int BossValue
-    {
-        get => _bossValue;
-        protected set => SetProperty(ref _bossValue, value);
-    }
-
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        protected set => SetProperty(ref _imageResourceKey, value);
-    }
-
-    #endregion
 
     private void OnBossStateChanged(object? sender, GauntletStateChangedEventArgs e)
     {
@@ -140,6 +130,42 @@ public class BossSlotViewModel: ObservableObject, IDisposable
     {
         ImageResourceKey = _bossKongMappings[BossValue].ResourceKey;
     }
+
+    protected string GetBossName()
+    {
+        return BossValue switch
+        {
+            0 => "Unknown",
+            1 => "Donkey Phase",
+            2 => "Diddy Phase",
+            3 => "Lanky Phase",
+            4 => "Tiny Phase",
+            5 => "Chunky Phase",
+            6 => "Army 1",
+            7 => "Doga 1",
+            8 => "Mad Jack",
+            9 => "Puftoss",
+            10 => "Doga 2",
+            11 => "Army 2",
+            12 => "Kutout",
+            _ => throw new InvalidOperationException($"Invalid BossValue: {BossValue}"),
+        };
+    }
+
+    #region Object Overrides
+
+    public bool Equals(BossSlotViewModel? other) => other is not null && _slotNumber == other._slotNumber;
+
+    public override bool Equals(object? obj) => Equals(obj as BossSlotViewModel);
+
+    public override int GetHashCode() => _slotNumber.GetHashCode();
+
+    public override string ToString()
+    {
+        return $"Broadcast: The {(_slotNumber + 1).Ordinalize()} final boss is {GetBossName()}.";
+    }
+
+    #endregion
 
     #region IDisposable Pattern
 

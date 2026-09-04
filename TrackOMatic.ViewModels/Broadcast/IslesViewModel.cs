@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -15,13 +14,35 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// A view model for displaying data about the DK Isles region in the broadcast view.
 /// </summary>
 /// <remarks>This view model only changes based on point totals, but sub classes can watch for additional items.</remarks>
-public class IslesViewModel : ObservableObject, IDisposable
+public partial class IslesViewModel : ObservableObject, IDisposable
 {
     protected readonly IItemTrackingService _itemTrackingService;
     protected readonly ILevelOrderService _levelOrderService;
     protected readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     protected readonly IUserSettingsService _userSettingsService;
     protected readonly int _selectedLevel;
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial int LevelNumber { get; set; } = int.MinValue;
+
+    [ObservableProperty]
+    public partial string RegionResourceKey { get; set; } = "";
+
+    [ObservableProperty]
+    public partial bool ShowRegionImage { get; set; } = false;
+
+    [ObservableProperty]
+    public partial bool ShowRemainingPoints { get; set; } = false;
+
+    [ObservableProperty]
+    public partial string PointsText { get; set; } = "";
+
+    [ObservableProperty]
+    public partial string PointColorResource { get; set; } = "RegionInProgress";
+
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="IslesViewModel"/> class with the specified services.
@@ -77,52 +98,6 @@ public class IslesViewModel : ObservableObject, IDisposable
         ShowRegionImage = false;
         UpdateRegionData();
     }
-
-    #region Proxy Properties
-
-    private int _levelNumber = int.MinValue;
-    public int LevelNumber
-    {
-        get => _levelNumber;
-        protected set => SetProperty(ref _levelNumber, value);
-    }
-
-    private string _keyResourceKey = "";
-    public string RegionResourceKey
-    {
-        get => _keyResourceKey;
-        protected set => SetProperty(ref _keyResourceKey, value);
-    }
-
-    private bool _showRegionImage = false;
-    public bool ShowRegionImage
-    {
-        get => _showRegionImage;
-        protected set => SetProperty(ref _showRegionImage, value);
-    }
-
-    private bool _showRemainingPoints = false;
-    public bool ShowRemainingPoints
-    {
-        get => _showRemainingPoints;
-        protected set => SetProperty(ref _showRemainingPoints, value);
-    }
-
-    private string _pointsText = "";
-    public string PointsText
-    {
-        get => _pointsText;
-        protected set => SetProperty(ref _pointsText, value);
-    }
-
-    private string _pointColorResource = "RegionInProgress";
-    public string PointColorResource
-    {
-        get => _pointColorResource;
-        protected set => SetProperty(ref _pointColorResource, value);
-    }
-
-    #endregion
 
     #region IDisposable
 

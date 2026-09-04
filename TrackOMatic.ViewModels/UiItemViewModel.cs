@@ -1,5 +1,7 @@
 using System.ComponentModel;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
@@ -9,13 +11,40 @@ using TrackOMatic.ViewModels.Broadcast;
 
 namespace TrackOMatic.ViewModels;
 
-public class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
+public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ItemName _itemName;
 
     public MouseDragType MouseDragType { get; private set; }
+
+
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial bool IsDragging { get; set; } = false;
+
+    [ObservableProperty]
+    public partial double DragX { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial double DragY { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial double DragWidth { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial double DragHeight { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial double Opacity { get; set; } = 1.0;
+
+    [ObservableProperty]
+    public partial RegionName RegionName { get; set; } = RegionName.UNKNOWN;
+
+    #endregion
 
     public UiItemViewModel(
         ItemName itemName,
@@ -58,108 +87,6 @@ public class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
 
         UpdateHoverText();
     }
-
-    #region Proxy Properties
-
-    private bool _isDragging = false;
-    public bool IsDragging
-    {
-        get => _isDragging;
-        set
-        {
-            if (_isDragging != value)
-            {
-                _isDragging = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    private double _dragX = 0;
-    public double DragX
-    {
-        get => _dragX;
-        set
-        {
-            if (_dragX != value)
-            {
-                _dragX = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    private double _dragY = 0;
-    public double DragY
-    {
-        get => _dragY;
-        set
-        {
-            if (_dragY != value)
-            {
-                _dragY = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    private double _dragWidth = 0;
-    public double DragWidth
-    {
-        get => _dragWidth;
-        set
-        {
-            if (_dragWidth != value)
-            {
-                _dragWidth = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    private double _dragHeight = 0;
-    public double DragHeight
-    {
-        get => _dragHeight;
-        set
-        {
-            if (_dragHeight != value)
-            {
-                _dragHeight = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    private double _opacity = 1.0;
-    public double Opacity
-    {
-        get => _opacity;
-        protected set
-        {
-            if (_opacity != value)
-            {
-                _opacity = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    private RegionName _regionName = RegionName.UNKNOWN;
-    public RegionName RegionName
-    {
-        get => _regionName;
-        protected set
-        {
-            if (_regionName != value)
-            {
-                _regionName = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    #endregion
 
     public void BeginDrag(MouseDragType dragType, double width, double height)
     {

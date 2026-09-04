@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
@@ -29,6 +26,17 @@ public partial class CountableViewModel : ObservableObject, IDisposable
         ItemType.COMPANY_COIN
     ];
 
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial int Count { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    #endregion
+
     public CountableViewModel(
         ItemType itemType,
         ICollectiblesService collectiblesService,
@@ -56,24 +64,6 @@ public partial class CountableViewModel : ObservableObject, IDisposable
         Count = _collectiblesService.GetCollectibleCount(_itemType);
         UpdateImageResourceKey();
     }
-
-    #region Proxy Properties
-
-    private int _count = 0;
-    public int Count
-    {
-        get => _count;
-        protected set => SetProperty(ref _count, value);
-    }
-
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        protected set => SetProperty(ref _imageResourceKey, value);
-    }
-
-    #endregion
 
     #region IDisposable Implementation
 

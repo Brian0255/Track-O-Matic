@@ -16,16 +16,10 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// This is meant to be a base class version.
 ///Additional view models can extend this for write functionality.
 /// </remarks>
-public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItemViewModel>, IDisposable
+public partial class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItemViewModel>, IDisposable
 {
-    private readonly IItemTrackingService _itemTrackingService;
-    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
-    private readonly ISavedProgressProvider _savedProgressProvider;
-    private readonly IThemeService _themeService;
-    private readonly ItemName _itemName;
-
-    private static readonly HashSet<ItemName> BarrelPadItems = new()
-    {
+    private static readonly HashSet<ItemName> _barrelPadItems =
+    [
         ItemName.STRONG_KONG,
         ItemName.ROCKETBARREL_BOOST,
         ItemName.ORANGSTAND,
@@ -35,7 +29,29 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
         ItemName.SIMIAN_SPRING,
         ItemName.MONKEYPORT,
         ItemName.GORILLA_GONE
-    };
+    ];
+
+    private readonly IItemTrackingService _itemTrackingService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
+    private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IThemeService _themeService;
+    private readonly ItemName _itemName;
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    [ObservableProperty]
+    public partial bool IsStarred { get; set; } = false;
+
+    [ObservableProperty]
+    public partial string HoverText { get; set; } = "";
+
+    [ObservableProperty]
+    public partial bool HasHoverText { get; set; } = false;
+
+    #endregion
 
     public BroadcastItemViewModel(
         ItemName itemName,
@@ -54,7 +70,7 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnSavedProgressChanged;
 
-        if (BarrelPadItems.Contains(_itemName))
+        if (_barrelPadItems.Contains(_itemName))
         {
             _themeService.BarrelPadThemeChanged += OnBarrelPadThemeChanged;
         }
@@ -86,38 +102,6 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
         UpdateHoverText();
     }
 
-    #region Proxy Properties
-
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        protected set => SetProperty(ref _imageResourceKey, value);
-    }
-
-    private bool _isStarred = false;
-    public bool IsStarred
-    {
-        get => _isStarred;
-        protected set => SetProperty(ref _isStarred, value);
-    }
-
-    private string _hoverText = "";
-    public string HoverText
-    {
-        get => _hoverText;
-        protected set => SetProperty(ref _hoverText, value);
-    }
-
-    private bool _hasHoverText = false;
-    public bool HasHoverText
-    {
-        get => _hasHoverText;
-        protected set => SetProperty(ref _hasHoverText, value);
-    }
-
-    #endregion
-
     #region IDisposable
 
     public void Dispose()
@@ -133,7 +117,7 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
             // Unsubscribe from events to prevent memory leaks
             _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
             _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
-            if (BarrelPadItems.Contains(_itemName))
+            if (_barrelPadItems.Contains(_itemName))
             {
                 _themeService.BarrelPadThemeChanged -= OnBarrelPadThemeChanged;
             }
@@ -220,30 +204,37 @@ public class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItem
             spoiledRegion = _parsedSpoilerDataService.CurrentData.StartingItems[_itemName];
         }
 
-        // If item is in a valid region, show full-color
-        if (spoiledRegion != RegionName.UNKNOWN || EndGameMappings.ValidMoveRegions.Contains(item?.Region ?? RegionName.UNKNOWN))
+        // If the spoiled region is a valid move region, show full-color
+        if (spoiledRegion != RegionName.UNKNOWN)
         {
             ImageResourceKey = baseKey;
             return;
         }
 
         // If no item state, show default B&W variant
-        if (item == null && spoiledRegion == RegionName.UNKNOWN)
-        {
-            ImageResourceKey = $"{baseKey}_bw";
-            return;
-        }
-
-        // If item is hinted, always show B&W
-        // This logic may need to be revised.
-        if (item?.Hinted == true)
+        if (item == null)
         {
             ImageResourceKey = $"{baseKey}_bw";
             return;
         }
 
         // If item has a non standard opacity, it's user hinted. Show as B&W.
-        if (item?.Opacity != 1.0)
+        if (item.Opacity != 1.0)
+        {
+            ImageResourceKey = $"{baseKey}_bw";
+            return;
+        }
+
+        // If item is in a valid region, show full-color
+        if (EndGameMappings.ValidMoveRegions.Contains(item.Region))
+        {
+            ImageResourceKey = baseKey;
+            return;
+        }
+
+        // If item is hinted, always show B&W
+        // This logic may need to be revised.
+        if (item.Hinted == true)
         {
             ImageResourceKey = $"{baseKey}_bw";
             return;

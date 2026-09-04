@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 
+using Humanizer;
+
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels.Broadcast;
@@ -79,4 +81,13 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
     }
 
     private bool CanExecuteCyclePrevious() => !_parsedSpoilerDataService.HasHelmOrder();
+
+    #region Object Overrides
+
+    public override string ToString()
+    {
+        return $"The {(_slotNumber + 1).Ordinalize()} Kong to destroy the Blast-O-Matic is {GetHelmName()}.";
+    }
+
+    #endregion
 }

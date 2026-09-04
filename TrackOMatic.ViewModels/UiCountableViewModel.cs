@@ -1,5 +1,7 @@
 using System.ComponentModel;
 
+using CommunityToolkit.Mvvm.Input;
+
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -7,7 +9,7 @@ using TrackOMatic.ViewModels.Broadcast;
 
 namespace TrackOMatic.ViewModels;
 
-public partial class UiCountableViewModel: CountableViewModel, INotifyPropertyChanged
+public partial class UiCountableViewModel : CountableViewModel, INotifyPropertyChanged
 {
     private readonly IUserSettingsService _userSettingsService;
     private readonly ICollectiblesService _collectiblesService;
@@ -25,21 +27,23 @@ public partial class UiCountableViewModel: CountableViewModel, INotifyPropertyCh
         _itemType = itemType;
     }
 
-    public void IncrementCount()
+    #region Commands
+
+    [RelayCommand(CanExecute = nameof(CanChangeCount))]
+    private void IncrementCount()
     {
-        if (!_userSettingsService.Autotracking)
-        {
-            var count = _collectiblesService.GetCollectibleCount(_itemType);
-            _collectiblesService.SetCollectibleCount(_itemType, ++count);
-        }
+        var count = _collectiblesService.GetCollectibleCount(_itemType);
+        _collectiblesService.SetCollectibleCount(_itemType, ++count);
     }
 
-    public void DecrementCount()
+    [RelayCommand(CanExecute = nameof(CanChangeCount))]
+    private void DecrementCount()
     {
-        if (!_userSettingsService.Autotracking)
-        {
-            var count = _collectiblesService.GetCollectibleCount( _itemType);
-            _collectiblesService.SetCollectibleCount(_itemType, Math.Max(count - 1, 0));
-        }
+        var count = _collectiblesService.GetCollectibleCount(_itemType);
+        _collectiblesService.SetCollectibleCount(_itemType, Math.Max(count - 1, 0));
     }
+
+    private bool CanChangeCount() => !_userSettingsService.Autotracking;
+
+    #endregion
 }

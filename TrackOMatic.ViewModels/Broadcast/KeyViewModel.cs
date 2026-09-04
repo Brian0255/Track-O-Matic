@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
@@ -12,12 +9,27 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public class KeyViewModel : ObservableObject, IDisposable
+public partial class KeyViewModel : ObservableObject, IDisposable
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly int _selectedKey;
+
+    #region Proxy Properties
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    [ObservableProperty]
+    public partial bool IsStarred { get; set; } = false;
+
+    [ObservableProperty]
+    public partial string HoverText { get; set; } = "";
+
+    [ObservableProperty]
+    public partial bool HasHoverText { get; set; } = false;
+
+    #endregion
 
     public KeyViewModel(
         int selectedKey,
@@ -52,37 +64,6 @@ public class KeyViewModel : ObservableObject, IDisposable
         UpdateHoverText();
 
     }
-
-    #region Proxy Properties
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        private set => SetProperty(ref _imageResourceKey, value);
-    }
-
-    private bool _isStarred = false;
-    public bool IsStarred
-    {
-        get => _isStarred;
-        private set => SetProperty(ref _isStarred, value);
-    }
-
-    private string _hoverText = "";
-    public string HoverText
-    {
-        get => _hoverText;
-        private set => SetProperty(ref _hoverText, value);
-    }
-
-    private bool _hasHoverText = false;
-    public bool HasHoverText
-    {
-        get => _hasHoverText;
-        protected set => SetProperty(ref _hasHoverText, value);
-    }
-
-    #endregion
 
     #region IDisposable
 

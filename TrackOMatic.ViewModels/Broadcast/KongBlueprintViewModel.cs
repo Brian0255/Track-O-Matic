@@ -8,7 +8,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public class KongBlueprintViewModel : ObservableObject, IEquatable<KongBlueprintViewModel>, IDisposable
+public partial class KongBlueprintViewModel : ObservableObject, IEquatable<KongBlueprintViewModel>, IDisposable
 {
     private readonly ICollectiblesService _collectiblesService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
@@ -36,6 +36,17 @@ public class KongBlueprintViewModel : ObservableObject, IEquatable<KongBlueprint
         ItemType.TINY_BLUEPRINT_TURNED,
         ItemType.CHUNKY_BLUEPRINT_TURNED
     ];
+
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial int Count { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    #endregion
 
     public KongBlueprintViewModel(
         ItemType collectedType,
@@ -72,24 +83,6 @@ public class KongBlueprintViewModel : ObservableObject, IEquatable<KongBlueprint
         Count = _collectedCount - _turnedInCount;
         UpdateImageResourceKey();
     }
-
-    #region Proxy Properties
-
-    private int _count = 0;
-    public int Count
-    {
-        get => _count;
-        protected set => SetProperty(ref _count, value);
-    }
-
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        protected set => SetProperty(ref _imageResourceKey, value);
-    }
-
-    #endregion
 
     #region IDisposable Implementation
 
