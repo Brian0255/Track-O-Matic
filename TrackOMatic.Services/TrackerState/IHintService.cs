@@ -34,6 +34,17 @@ public interface IHintService
 
     #endregion
 
+    #region Batch Operations
+
+    /// <summary>
+    /// Begins a batch update scope where multiple hint changes are deferred.
+    /// When the returned scope is disposed, the cache is refreshed to reflect all loaded hints.
+    /// </summary>
+    /// <remarks>This is useful when loading hints from a save file to prevent multiple UI refresh events.</remarks>
+    IDisposable BeginBatchUpdate();
+
+    #endregion
+
     #region Creation
 
     /// <summary>

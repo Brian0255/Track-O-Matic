@@ -29,14 +29,15 @@ public static class ServiceRegistryExtensions
         // reinitialize their caches.
         services.AddSingleton<ISavedProgressProvider>(sp => new SavedProgressProvider(new SavedProgress()));
         services.AddSingleton<IItemTrackingService, ItemTrackingService>();
+        services.AddSingleton<IHintService>(sp => new HintService(sp.GetRequiredService<IItemTrackingService>(), sp.GetRequiredService<ISavedProgressProvider>()));
         services.AddSingleton<IDataSaverService>(sp => new DataSaverService(
             sp.GetRequiredService<IDataPersistenceService>(),
             sp.GetRequiredService<IParsedSpoilerDataService>(),
             sp.GetRequiredService<IItemTrackingService>(),
+            sp.GetRequiredService<IHintService>(),
             sp.GetRequiredService<ISavedProgressProvider>(),
             sp.GetRequiredService<ISpoilerService>()
         ));
-        services.AddSingleton<IHintService>(sp => new HintService(sp.GetRequiredService<IItemTrackingService>(), sp.GetRequiredService<ISavedProgressProvider>()));
         services.AddSingleton<ICollectiblesService, CollectiblesService>();
         services.AddSingleton<IBarrierService, BarrierService>();
         services.AddSingleton<ITrackerStateService, TrackerStateService>();

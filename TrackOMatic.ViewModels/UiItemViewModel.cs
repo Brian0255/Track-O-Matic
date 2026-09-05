@@ -14,10 +14,6 @@ namespace TrackOMatic.ViewModels;
 
 public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
 {
-    private readonly IItemTrackingService _itemTrackingService;
-    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
-    private readonly ItemName _itemName;
-
     public MouseDragType MouseDragType { get; private set; }
 
     #region Proxy Properties
@@ -53,38 +49,21 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         IThemeService themeService
     ) : base(itemName, itemTrackingService, parsedSpoilerDataService, savedProgressProvider, themeService)
     {
-        _itemName = itemName;
-        _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
-        _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
-        _itemTrackingService.ItemStateChanged += OnItemStateChanged;
-        _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
-        // Initialize state from service (if item exists)
-        InitializeState();
+        // Base constructor handles all service initialization and event registration
+        // No additional initialization needed here - base has already called InitializeState()
     }
 
     /// <summary>
-    /// Initialize properties from current service state.
+    /// Initialize properties from current service state, including opacity for UI rendering.
     /// Called on construction and when state needs to be refreshed.
     /// </summary>
-    private void InitializeState()
+    protected override void InitializeState()
     {
         var itemState = _itemTrackingService.GetItemState(_itemName);
-
-        if (itemState != null)
-        {
-            UpdateImageResourceKey(itemState);
-            IsStarred = itemState.Starred;
-            Opacity = itemState.Opacity;
-        }
-        else
-        {
-            // No saved state yet - show default B&W variant
-            UpdateImageResourceKey(null);
-            IsStarred = false;
-            Opacity = 1;
-        }
-
-        UpdateHoverText();
+        UpdateImageResourceKey(itemState);
+        IsStarred = itemState?.Starred == true;
+        Opacity = itemState?.Opacity ?? 1.0;
+        RegionName = itemState?.Region ?? RegionName.UNKNOWN;
     }
 
     /// <summary>
@@ -168,7 +147,7 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
 
     #endregion
 
-    private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
+    protected internal override void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
         // Handle the item state change event here.
         if (e.UpdatedItem.ItemName == _itemName)
@@ -183,7 +162,7 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         }
     }
 
-    private void UpdateImageResourceKey(SavedItem? item)
+    protected internal override void UpdateImageResourceKey(SavedItem? item)
     {
         string baseKey = _itemName.ToString().ToLower();
         RegionName spoiledRegion = RegionName.UNKNOWN;
@@ -200,14 +179,14 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         }
 
         // If no item state, show default B&W variant
-        if (item == null && spoiledRegion == RegionName.UNKNOWN)
+        if (item == null)
         {
             ImageResourceKey = $"{baseKey}_bw";
             return;
         }
 
         // If the item is empty (not a part of any real region), show default B&W variant.
-        if (item?.IsEmpty == true)
+        if (item.IsEmpty == true)
         {
             ImageResourceKey = $"{baseKey}_bw";
             return;
@@ -216,7 +195,7 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
 
         // If item is hinted, always show B&W
         // This logic may need to be revised.
-        if (item?.Hinted == true)
+        if (item.Hinted == true)
         {
             ImageResourceKey = $"{baseKey}_bw";
             return;
@@ -230,7 +209,7 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         }
 
         // If item is in a valid region (but not ItemGrid/UNKNOWN), show full-color
-        var itemRegion = item?.Region ?? RegionName.UNKNOWN;
+        var itemRegion = item.Region;
         if (itemRegion != RegionName.UNKNOWN && EndGameMappings.ValidMoveRegions.Contains(itemRegion))
         {
             ImageResourceKey = baseKey;

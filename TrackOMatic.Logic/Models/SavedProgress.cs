@@ -63,4 +63,29 @@ public class SavedProgress
         LevelOrder = [ 0, 0, 0, 0, 0, 0, 0, 0 ];
         SpoilerPath = "";
     }
+
+    /// <summary>
+    /// Creates a shallow copy of this SavedProgress instance.
+    /// Collection references are copied (new Dictionary/List objects), but items within are not deep-cloned.
+    /// This is safe for saving because SavedItem, SavedHint, and other items are immutable or value types.
+    /// </summary>
+    /// <returns>A new SavedProgress instance with copied collections.</returns>
+    public SavedProgress CreateShallowCopy()
+    {
+        return new SavedProgress
+        {
+            SaveFileVersion = SaveFileVersion,
+            SavedItems = new Dictionary<ItemName, SavedItem>(SavedItems),
+            SavedGBCounts = new Dictionary<RegionName, string>(SavedGBCounts),
+            BLockerImageIndexes = new Dictionary<RegionName, int>(BLockerImageIndexes),
+            HelmDoorImageIndexes = [.. HelmDoorImageIndexes],
+            HelmDoorCounts = [.. HelmDoorCounts],
+            SavedHints = [.. SavedHints],
+            HelmKongs = [.. HelmKongs],
+            BossKongs = [.. BossKongs],
+            LevelOrder = [.. LevelOrder],
+            SpoilerPath = SpoilerPath,
+            Collectibles = new Dictionary<ItemType, int>(Collectibles),
+        };
+    }
 }

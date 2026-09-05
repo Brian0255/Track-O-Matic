@@ -77,5 +77,17 @@ public class SavedHint
         HintId = SavedHintDto.GenerateHintIdIfNeeded(hintId);
     }
 
+    public override string ToString()
+    {
+        return HintPanelType switch
+        {
+            HintPanelType.Foolish => $"Hint: {LocationText} is foolish.",
+            HintPanelType.PotionCounts => $"Hint: {LocationText} has {PotionCountText} potions.",
+            HintPanelType.Paths => $"Path Hint: {LocationText} is on the path to {string.Join(", ", FoundItems.Keys)}",
+            HintPanelType.WayOfTheHoard => $"Hint: {LocationText} is on the way of the hoard.",
+            _ => $"{HintPanelType} Hint: {LocationText}"
+        };
+    }
+
     public static SavedHint CreateFromPanel(HintPanelType hintPanelType) => new(hintPanelType, "", "", [], [], SavedHintDto.GenerateHintIdIfNeeded(""));
 }

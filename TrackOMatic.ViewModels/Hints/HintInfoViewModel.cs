@@ -56,6 +56,12 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     /// </summary>
     private bool _foundItemsDialogOpened = false;
 
+    /// <summary>
+    /// Tracks whether the ViewModel is initializing from loaded hint data.
+    /// Prevents suggestion dropdown from opening during initialization.
+    /// </summary>
+    private bool _isInitializing = true;
+
     public RegionName RegionName { get; private set; }
 
     /// <summary>
@@ -215,6 +221,10 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
             HintPanelType = hint.HintPanelType;
             RegionName = HintPanelType.ToRegion();
             HintTypeSettings = HintTypeSettingsList.SETTINGS[HintPanelType.ToHintType()];
+
+            // Populate initial values from the loaded hint
+            LocationText = hint.LocationText;
+            PotionCountText = hint.PotionCountText;
         }
 
         // Get suggestion config if applicable
@@ -228,6 +238,9 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
 
         // Build initial suggestions
         UpdateSuggestions();
+
+        // Mark initialization as complete; subsequent text changes are user edits
+        _isInitializing = false;
     }
 
     private void OnPotionCountUpdated(object? sender, HintUpdatedEventArgs e)
@@ -496,13 +509,16 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
             }
         }
 
-        // Update dropdown visibility
-        bool shouldBeOpen = LocationText != ""
-            && Suggestions.Count > 0
-            && HintPanelType != HintPanelType.Kongs;
+        // Update dropdown visibility only if not initializing
+        // This prevents dropdowns from opening on load; they only open for user-initiated edits
+        if (!_isInitializing)
+        {
+            bool shouldBeOpen = LocationText != ""
+                && Suggestions.Count > 0
+                && HintPanelType != HintPanelType.Kongs;
 
-
-        SuggestionBoxIsOpen = shouldBeOpen;
+            SuggestionBoxIsOpen = shouldBeOpen;
+        }
     }
 
     /// <summary>

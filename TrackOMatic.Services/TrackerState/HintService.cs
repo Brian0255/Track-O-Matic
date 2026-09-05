@@ -19,6 +19,7 @@ public class HintService : IHintService
     private readonly ISavedProgressProvider _progressProvider;
     private readonly List<SavedHint> _hintCache;
     private readonly SynchronizationContext _uiContext;
+    private bool _isBatchingUpdates;
 
     #region IHintService Events
 
@@ -191,7 +192,22 @@ public class HintService : IHintService
 
     #endregion
 
-    private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e) => InitializeCache();
+    /// <summary>
+    /// Begins a batch update scope where the cache refresh is deferred.
+    /// When the returned scope is disposed, the cache is refreshed to reflect all loaded hints.
+    /// </summary>
+    public IDisposable BeginBatchUpdate()
+    {
+        return new BatchUpdateScope(this);
+    }
+
+    private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e)
+    {
+        if (!_isBatchingUpdates)
+        {
+            InitializeCache();
+        }
+    }
 
     private void InitializeCache()
     {
@@ -199,6 +215,35 @@ public class HintService : IHintService
         foreach (var hint in _progressProvider.CurrentProgress.SavedHints)
         {
             _hintCache.Add(hint);
+        }
+    }
+
+    /// <summary>
+    /// Private helper class that manages the batch update scope lifecycle.
+    /// </summary>
+    private class BatchUpdateScope : IDisposable
+    {
+        private readonly HintService _service;
+        private bool _disposed;
+
+        public BatchUpdateScope(HintService service)
+        {
+            _service = service;
+            _service._isBatchingUpdates = true;
+        }
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+
+            // Exit batch mode and refresh the cache with all loaded hints
+            _service._isBatchingUpdates = false;
+            _service.InitializeCache();
         }
     }
 }

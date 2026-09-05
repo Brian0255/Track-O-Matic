@@ -95,7 +95,9 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
     private void LoadHintsForPanel()
     {
         HintInfoViewModels.Clear();
-        var hintsForThisPanel = _savedProgressProvider.CurrentProgress.SavedHints.Where(h => h.HintPanelType == _hintPanelType);
+        var hintsForThisPanel = _savedProgressProvider.CurrentProgress.SavedHints
+            .Where(h => h.HintPanelType == _hintPanelType)
+            .ToList();
         foreach (var hint in hintsForThisPanel)
         {
             HintInfoViewModel vm = new(

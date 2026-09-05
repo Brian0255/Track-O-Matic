@@ -92,10 +92,7 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
         }
     }
 
-    private void OnDataReset(object? sender, ProgressReplacedEventArgs e)
-    {
-        Items.Clear();
-    }
+    private void OnDataReset(object? sender, ProgressReplacedEventArgs e) => RefreshPlacedItems();
 
     /// <summary>
     /// Refresh the item list when the parsed spoiler data changes, as the items in this region may have changed.

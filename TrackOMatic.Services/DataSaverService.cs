@@ -15,6 +15,7 @@ public class DataSaverService : IDataSaverService
     private readonly IDataPersistenceService _dataPersistenceService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly IItemTrackingService _itemTrackingService;
+    private readonly IHintService _hintService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly ISpoilerService _spoilerService;
 
@@ -24,6 +25,7 @@ public class DataSaverService : IDataSaverService
         IDataPersistenceService dataPersistenceService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         IItemTrackingService itemTrackingService,
+        IHintService hintService,
         ISavedProgressProvider savedProgressProvider,
         ISpoilerService spoilerService
     )
@@ -31,6 +33,7 @@ public class DataSaverService : IDataSaverService
         _dataPersistenceService = dataPersistenceService;
         _parsedSpoilerDataService = parsedSpoilerDataService;
         _itemTrackingService = itemTrackingService;
+        _hintService = hintService;
         _savedProgressProvider = savedProgressProvider;
         _spoilerService = spoilerService;
         CurrentSavedProgress = new();
@@ -45,9 +48,10 @@ public class DataSaverService : IDataSaverService
 
         try
         {
-            // Perform two batch updates at once to minimize issues with a new load.
+            // Perform batch updates to minimize issues with a new load.
             using (_parsedSpoilerDataService.BeginBatchUpdate())
             using (_itemTrackingService.BeginBatchUpdate())
+            using (_hintService.BeginBatchUpdate())
             {
                 var spoilerData = await ParseSpoilerLogAsync(spoilerFilePath);
                 _parsedSpoilerDataService.UpdateParsedData(spoilerData);
@@ -83,8 +87,11 @@ public class DataSaverService : IDataSaverService
 
         CurrentSavedProgress = loadedProgress;
 
+        // Perform all initializations in batch mode FIRST, then notify subscribers
+        // This ensures all caches are populated before OnProgressChanged handlers fire
         using (_parsedSpoilerDataService.BeginBatchUpdate())
         using (_itemTrackingService.BeginBatchUpdate())
+        using (_hintService.BeginBatchUpdate())
         {
             if (!string.IsNullOrEmpty(CurrentSavedProgress.SpoilerPath))
             {
@@ -92,10 +99,6 @@ public class DataSaverService : IDataSaverService
                 {
                     var spoilerData = await ParseSpoilerLogAsync(CurrentSavedProgress.SpoilerPath);
                     _parsedSpoilerDataService.UpdateParsedData(spoilerData);
-
-                    // Sync SavedProgress with provider BEFORE adding spoiler items
-                    // This ensures InitializeCache runs before GetStartingItems
-                    _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
 
                     foreach (var item in _parsedSpoilerDataService.GetStartingItems())
                     {
@@ -111,9 +114,13 @@ public class DataSaverService : IDataSaverService
             {
                 // No spoiler path set: this is fine. Just make sure the parsed data is cleared.
                 _parsedSpoilerDataService.UpdateParsedData(null);
-                _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
             }
         }
+        // Exit batch scopes here - all caches are now populated
+
+        // NOW notify subscribers that progress has been replaced
+        // This ensures HintPanelViewModel.OnProgressChanged fires AFTER HintService cache is ready
+        _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
     }
 
     public void Reset()
@@ -157,19 +164,12 @@ public class DataSaverService : IDataSaverService
 
     private SavedProgress CreateFilteredProgressSnapshot()
     {
-        var snapshot = new SavedProgress
-        {
-            SaveFileVersion = CurrentSavedProgress.SaveFileVersion,
-            SavedItems = new(), // Fresh dict, build from ItemTrackingService order
-            SavedGBCounts = CurrentSavedProgress.SavedGBCounts,
-            BLockerImageIndexes = CurrentSavedProgress.BLockerImageIndexes,
-            // ... copy other collections
-            SpoilerPath = CurrentSavedProgress.SpoilerPath,
-            // ... HelmKongs, BossKongs, etc.
-        };
+        // Start with a shallow copy of CurrentSavedProgress (new collection objects, same items)
+        var snapshot = CurrentSavedProgress.CreateShallowCopy();
 
-        // Build SavedItems in insertion order, filtered
-        var itemsInOrder = _itemTrackingService.GetAllItemsInOrder(); // New service method
+        // Rebuild SavedItems in insertion order with filtering applied
+        snapshot.SavedItems.Clear();
+        var itemsInOrder = _itemTrackingService.GetAllItemsInOrder();
         foreach (var item in itemsInOrder)
         {
             // Filter: exclude non-starred autotracked items

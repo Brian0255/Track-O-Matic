@@ -69,7 +69,8 @@ public partial class PathHintItemListViewModel : ObservableObject, IDisposable
         _hintService.HintPathItemsUpdated += OnPathItemsUpdated;
         _savedProgressProvider.ProgressChanged += OnProgressChanged;
 
-        RefreshRow();
+        // Load initial path items from the hint service
+        UpdateItemsFromService(_hintId);
     }
 
     private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e) => UpdateItemsFromService(_hintId);

@@ -14,7 +14,7 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// </summary>
 /// <remarks>
 /// This is meant to be a base class version.
-///Additional view models can extend this for write functionality.
+/// Additional view models can extend this for write functionality.
 /// </remarks>
 public partial class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItemViewModel>, IDisposable
 {
@@ -31,11 +31,11 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
         ItemName.GORILLA_GONE
     ];
 
-    private readonly IItemTrackingService _itemTrackingService;
-    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
-    private readonly ISavedProgressProvider _savedProgressProvider;
-    private readonly IThemeService _themeService;
-    private readonly ItemName _itemName;
+    protected internal readonly IItemTrackingService _itemTrackingService;
+    protected internal readonly IParsedSpoilerDataService _parsedSpoilerDataService;
+    protected internal readonly ISavedProgressProvider _savedProgressProvider;
+    protected internal readonly IThemeService _themeService;
+    protected internal readonly ItemName _itemName;
 
     #region Proxy Properties
 
@@ -83,7 +83,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
     /// Initialize properties from current service state.
     /// Called on construction and when state needs to be refreshed.
     /// </summary>
-    private void InitializeState()
+    protected virtual void InitializeState()
     {
         var itemState = _itemTrackingService.GetItemState(_itemName);
 
@@ -131,7 +131,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
 
     #endregion
 
-    private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
+    protected internal virtual void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
         // Handle the item state change event here.
         if (e.UpdatedItem.ItemName == _itemName)
@@ -195,7 +195,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
         OnPropertyChanged(nameof(HasHoverText));
     }
 
-    private void UpdateImageResourceKey(SavedItem? item)
+    protected internal virtual void UpdateImageResourceKey(SavedItem? item)
     {
         string baseKey = _itemName.ToString().ToLower();
         RegionName spoiledRegion = RegionName.UNKNOWN;
