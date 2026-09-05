@@ -70,8 +70,7 @@ public partial class HintInfo : UserControl
 
     private void Location_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        var viewModel = DataContext as HintInfoViewModel;
-        if (viewModel is null)
+        if (DataContext is not HintInfoViewModel viewModel)
         {
             return;
         }
@@ -81,12 +80,13 @@ public partial class HintInfo : UserControl
             string locationText = viewModel.LocationText ?? "";
 
             // Check if focus is in the SuggestionBox (dropdown) and an item is selected
-            if (viewModel.IsSuggestionBoxFocused == true && viewModel.SelectedSuggestion is string selectedSuggestion)
+            if (_cachedPopup?.Child is ListBox listBox && listBox.IsKeyboardFocusWithin &&
+                viewModel.SelectedSuggestion is string selectedSuggestion)
             {
                 // Use the selected item from the dropdown
                 locationText = selectedSuggestion;
             }
-            else if (viewModel.Suggestions.Count > 0 && (sender as TextBox)?.IsFocused == true)
+            else if (viewModel.Suggestions.Count > 0 && sender is TextBox { IsFocused: true })
             {
                 // Focus is in the TextBox and there are suggestions - use first suggestion
                 locationText = viewModel.Suggestions[0];
@@ -144,7 +144,7 @@ public partial class HintInfo : UserControl
     /// Confirms the currently selected suggestion and triggers the appropriate action.
     /// Used by both keyboard (Enter) and mouse (double-click) selection paths.
     /// </summary>
-    private void ConfirmSuggestedLocation(HintInfoViewModel viewModel, RoutedEventArgs e)
+    private static void ConfirmSuggestedLocation(HintInfoViewModel viewModel, RoutedEventArgs e)
     {
         int selectedIndex = viewModel.SelectedSuggestionIndex;
         if (selectedIndex >= 0 && selectedIndex < viewModel.Suggestions.Count)
@@ -167,8 +167,7 @@ public partial class HintInfo : UserControl
 
     private void SuggestionBox_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        var viewModel = DataContext as HintInfoViewModel;
-        if (viewModel is null)
+        if (DataContext is not HintInfoViewModel viewModel)
         {
             return;
         }
@@ -214,8 +213,7 @@ public partial class HintInfo : UserControl
             return;
         }
 
-        var viewModel = DataContext as HintInfoViewModel;
-        if (viewModel is null)
+        if (DataContext is not HintInfoViewModel viewModel)
         {
             return;
         }
@@ -229,15 +227,14 @@ public partial class HintInfo : UserControl
     /// </summary>
     private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        var viewModel = DataContext as HintInfoViewModel;
-        if (viewModel is null)
+        if (DataContext is not HintInfoViewModel viewModel)
         {
             return;
         }
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
             // Invoke the command to confirm potion count and prepare to save
-            if (viewModel?.ConfirmPotionCountCommand.CanExecute(null) == true)
+            if (viewModel.ConfirmPotionCountCommand.CanExecute(null))
             {
                 viewModel.ConfirmPotionCountCommand.Execute(null);
             }

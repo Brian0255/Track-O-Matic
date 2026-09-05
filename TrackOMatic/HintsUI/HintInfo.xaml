@@ -37,6 +37,10 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="ContextMenu" Value="{x:Null}"/>
+        </Style>
     </UserControl.Resources>
     <Border Background="{StaticResource RegionBG}" CornerRadius="0" Padding="4,3,3,3" BorderBrush="Black" BorderThickness=".5">
         <Grid>
@@ -71,13 +75,63 @@
                 <ColumnDefinition Width="7*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <TextBox ContextMenu="{x:Null}" Margin="1,0,0,0" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown" PreviewKeyDown="Location_PreviewKeyDown" x:Name="Location" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource BoldText}" Text="{Binding LocationText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" behaviors:FocusLocationBehavior.FocusRequest="{Binding ShouldFocusLocation}"/>
-            <TextBox ContextMenu="{x:Null}" PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown" Margin="0,0,3,0" Grid.Column="1" HorizontalContentAlignment="Right" Style="{StaticResource BoldText}" VerticalAlignment="Center" Visibility="{Binding IsHintInfoPotionCount, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" Text="{Binding PotionCountText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="PotionCount_PreviewKeyDown" behaviors:FocusOnCommandBehavior.FocusRequest="{Binding IsFocusRequested}"/>
+            <TextBox
+                Grid.Column="0"
+                x:Name="Location"
+                Margin="1,0,0,0"
+                PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"
+                PreviewKeyDown="Location_PreviewKeyDown"
+                Style="{StaticResource BoldText}"
+                Text="{Binding LocationText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                behaviors:FocusLocationBehavior.FocusRequest="{Binding ShouldFocusLocation}"
+            />
+            <TextBox
+                Grid.Column="1"
+                Margin="0,0,3,0"
+                HorizontalContentAlignment="Right"
+                PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"
+                PreviewKeyDown="PotionCount_PreviewKeyDown"
+                Style="{StaticResource BoldText}"
+                Visibility="{Binding IsHintInfoPotionCount, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+                Text="{Binding PotionCountText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                behaviors:FocusOnCommandBehavior.FocusRequest="{Binding IsFocusRequested}"
+            />
 
-            <local:FoundHintItemList Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" DataContext="{Binding FoundHintItemListViewModel}" Visibility="{Binding ShouldShowFocusList, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"/>
-            <local:PathHintItemList Margin="1,0,0,0" Grid.Row="1" DataContext="{Binding PathHintItemListViewModel}" Visibility="{Binding IsHintInfoPath, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"/>
-            <Popup x:Name="SuggestionPopup" Height="120" Width="250" Placement="Bottom" AllowsTransparency="True" IsOpen="{Binding SuggestionBoxIsOpen, Mode=TwoWay}">
-                <ListBox Margin="0,0,0,0" FontFamily="Roboto" FontSize="14" Foreground="White" Background="{StaticResource RegionImageBG}" ItemsSource="{Binding Suggestions}" SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}" SelectedIndex="{Binding SelectedSuggestionIndex, Mode=TwoWay}" SelectionChanged="SuggestionBox_SelectionChanged" PreviewKeyDown="SuggestionBox_PreviewKeyDown" PreviewMouseDoubleClick="SuggestionBox_PreviewMouseDoubleClick" behaviors:SuggestionListFocusBehavior.FocusFirstItem="{Binding ShouldFocusSuggestionsFirst}" behaviors:TrackFocusWithinBehavior.IsFocusedWithin="{Binding IsSuggestionBoxFocused}"/>
+            <local:FoundHintItemList
+                Grid.Row="0"
+                Grid.Column="1"
+                Grid.RowSpan="2"
+                DataContext="{Binding FoundHintItemListViewModel}"
+                Visibility="{Binding ShouldShowFocusList, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+            />
+            <local:PathHintItemList
+                Grid.Row="1"
+                Margin="1,0,0,0"
+                DataContext="{Binding PathHintItemListViewModel}"
+                Visibility="{Binding IsHintInfoPath, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+            />
+            <Popup
+                x:Name="SuggestionPopup"
+                Height="120"
+                Width="250"
+                Placement="Bottom"
+                AllowsTransparency="True"
+                IsOpen="{Binding SuggestionBoxIsOpen, Mode=TwoWay}"
+            >
+                <ListBox
+                    Margin="0,0,0,0"
+                    FontFamily="Roboto"
+                    FontSize="14"
+                    Foreground="White"
+                    Background="{StaticResource RegionImageBG}"
+                    ItemsSource="{Binding Suggestions}"
+                    SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
+                    SelectedIndex="{Binding SelectedSuggestionIndex, Mode=TwoWay}"
+                    SelectionChanged="SuggestionBox_SelectionChanged"
+                    PreviewKeyDown="SuggestionBox_PreviewKeyDown"
+                    PreviewMouseDoubleClick="SuggestionBox_PreviewMouseDoubleClick"
+                    behaviors:SuggestionListFocusBehavior.FocusFirstItem="{Binding ShouldFocusSuggestionsFirst}"
+                />
             </Popup>
         </Grid>
     </Border>

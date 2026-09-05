@@ -29,12 +29,12 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     /// <summary>
     /// Mapping of HintSuggestion types to their configurations.
     /// </summary>
-    private static readonly Dictionary<HintSuggestion, HintSuggestionConfig> SuggestionToConfigMap = new()
+    private static readonly Dictionary<HintSuggestion, HintSuggestionConfig> _suggestionToConfigMap = new()
     {
         {HintSuggestion.REGION, new HintSuggestionConfig(["Hint Regions"], HintRegion.All)},
         {HintSuggestion.CHECK, new HintSuggestionConfig(["Item Locations"], HintLocation.All)},
         {HintSuggestion.MOVE, new HintSuggestionConfig(["Moves"], HintMove.All)},
-        {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions", "Moves"], HintRegion.All.Concat(HintMove.All).ToList())}
+        {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions", "Moves"], [.. HintRegion.All, .. HintMove.All])}
     };
 
     private readonly HintId _hintId;
@@ -116,7 +116,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         get
         {
             _foundHintItemListViewModel ??= new FoundHintItemListViewModel(
-HintPanelType,
+                HintPanelType,
                 _hintId,
                 $"Select Found Items - {HintPanelType}",
                 _itemTrackingService,
@@ -137,7 +137,7 @@ HintPanelType,
         get
         {
             _pathHintItemListViewModel ??= new PathHintItemListViewModel(
-HintPanelType,
+                HintPanelType,
                 _hintId,
                 "Select Path Items",
                 _hintService,
@@ -184,9 +184,6 @@ HintPanelType,
     [ObservableProperty]
     public partial int SelectedSuggestionIndex { get; set; } = -1;
 
-    [ObservableProperty]
-    public partial bool IsSuggestionBoxFocused { get; set; } = false;
-
     /// <summary>
     /// Tracks whether PotionCount has already been focused for the current location entry.
     /// Prevents re-focusing when user presses Enter in PotionCount field.
@@ -221,7 +218,7 @@ HintPanelType,
         }
 
         // Get suggestion config if applicable
-        if (SuggestionToConfigMap.TryGetValue(HintTypeSettings.HintSuggestion, out var config))
+        if (_suggestionToConfigMap.TryGetValue(HintTypeSettings.HintSuggestion, out var config))
         {
             HintSuggestionConfig = config;
         }
@@ -574,19 +571,14 @@ HintPanelType,
 
     public override string ToString()
     {
-        switch (HintPanelType)
+        return HintPanelType switch
         {
-            case HintPanelType.Paths:
-                return $"Hint {_hintId}: {LocationText} is on the Path";
-            case HintPanelType.Foolish:
-                return $"Hint {_hintId}: {LocationText} is Foolish";
-            case HintPanelType.PotionCounts:
-                return $"Hint {_hintId}: {LocationText} has {PotionCountText} Potion[s]";
-            case HintPanelType.Kongs:
-                return $"Kong Hint {_hintId}: {LocationText}";
-            default:
-                return $"Hint {_hintId}: {LocationText}";
-        }
+            HintPanelType.Paths => $"Hint {_hintId}: {LocationText} is on the Path",
+            HintPanelType.Foolish => $"Hint {_hintId}: {LocationText} is Foolish",
+            HintPanelType.PotionCounts => $"Hint {_hintId}: {LocationText} has {PotionCountText} Potion[s]",
+            HintPanelType.Kongs => $"Kong Hint {_hintId}: {LocationText}",
+            _ => $"Hint {_hintId}: {LocationText}"
+        };
     }
 
     #endregion
