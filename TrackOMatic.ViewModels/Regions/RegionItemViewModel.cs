@@ -165,7 +165,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
         {
             return 0;
         }
-        return itemState.IsStarred ? 1 : 0;
+        return itemState.Starred ? 1 : 0;
     }
 
     public int GetItemPoints()
@@ -211,7 +211,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
             // Set image based on item state
             string baseKey = _itemName.Value.ToString().ToLower();
             ImageResourceKey = itemState.Hinted ? $"{baseKey}_bw" : baseKey;
-            IsStarred = itemState.IsStarred;
+            IsStarred = itemState.Starred;
             Opacity = itemState.Opacity;
         }
 

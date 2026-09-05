@@ -186,7 +186,7 @@ public class ItemTrackingService : IItemTrackingService
                 {
                     Region = RegionName.UNKNOWN,
                     Opacity = 1,
-                    Starred = ItemVisibilityState.Hidden,
+                    Starred = false,
                 }, removedState, ChangeReason.UserModified);
             }
         }
@@ -197,12 +197,6 @@ public class ItemTrackingService : IItemTrackingService
         // Dictionary preserves insertion order in .NET 4.7.2+, so items appear in the order they were added
         var result = _itemOrder.Where(item => item is not null && item.Region == region).ToList();
         return result;
-    }
-
-    public IEnumerable<SavedItem> GetItemsByVisibility(ItemVisibilityState state)
-    {
-        // Well, we have to traverse anyway, so let's use the linked list here.
-        return _itemOrder.Where(item => item is not null && item.Starred == state);
     }
 
     public IEnumerable<SavedItem> GetAllItemsInOrder()
@@ -220,9 +214,7 @@ public class ItemTrackingService : IItemTrackingService
     {
         var currentItem = GetItemState(itemName) ?? SavedItem.CreateEmpty(itemName);
 
-        var newStarred = currentItem.IsStarred
-            ? ItemVisibilityState.Hidden
-            : ItemVisibilityState.Visible;
+        var newStarred = !currentItem.Starred;
 
         SavedItem updatedItem = new(currentItem.ItemName, currentItem.Region, newStarred, currentItem.Autotracked, currentItem.Opacity, currentItem.Hinted);
         SetItemState(itemName, updatedItem);
@@ -289,7 +281,7 @@ public class ItemTrackingService : IItemTrackingService
                     {
                         Region = RegionName.UNKNOWN,
                         Opacity = 1,
-                        Starred = ItemVisibilityState.Hidden,
+                        Starred = false,
                     };
                     ArgumentNullException.ThrowIfNull(itemToReport, nameof(itemToReport));
 

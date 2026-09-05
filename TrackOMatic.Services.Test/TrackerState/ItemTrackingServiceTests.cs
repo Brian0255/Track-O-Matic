@@ -31,7 +31,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -71,7 +71,7 @@ public class ItemTrackingServiceTests
         var newItem = new SavedItem(
             ItemName.DIDDY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -97,7 +97,7 @@ public class ItemTrackingServiceTests
         var originalItem = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -107,7 +107,7 @@ public class ItemTrackingServiceTests
         var updatedItem = new SavedItem(
             ItemName.DONKEY,
             RegionName.ANGRY_AZTEC,
-            ItemVisibilityState.Hidden,
+            false,
             true,
             0.5,
             false
@@ -123,7 +123,7 @@ public class ItemTrackingServiceTests
             Assert.NotNull(retrieved);
             Assert.Equal(ItemName.DONKEY, retrieved.ItemName);
             Assert.Equal(RegionName.ANGRY_AZTEC, retrieved.Region);
-            Assert.Equal(ItemVisibilityState.Hidden, retrieved.Starred);
+            Assert.False(retrieved.Starred);
             Assert.True(retrieved.Autotracked);
             Assert.Equal(0.5, retrieved.Opacity);
         });
@@ -136,7 +136,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -164,7 +164,7 @@ public class ItemTrackingServiceTests
         var newItem = new SavedItem(
             ItemName.DIDDY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -190,7 +190,7 @@ public class ItemTrackingServiceTests
         var originalItem = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -203,7 +203,7 @@ public class ItemTrackingServiceTests
         var updatedItem = new SavedItem(
             ItemName.DONKEY,
             RegionName.ANGRY_AZTEC,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -234,7 +234,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -263,7 +263,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -288,8 +288,8 @@ public class ItemTrackingServiceTests
     public void GetItemsInRegion_ReturnsItemsInRegion()
     {
         // Arrange
-        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
-        var item2 = new SavedItem(ItemName.DIDDY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
+        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
+        var item2 = new SavedItem(ItemName.DIDDY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
         _sut.SetItemState(ItemName.DONKEY, item1);
         _sut.SetItemState(ItemName.DIDDY, item2);
 
@@ -322,30 +322,20 @@ public class ItemTrackingServiceTests
     public void GetItemsByVisibility_ReturnsItemsWithVisibility()
     {
         // Arrange
-        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
-        var item2 = new SavedItem(ItemName.DIDDY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
+        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
+        var item2 = new SavedItem(ItemName.DIDDY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
         _sut.SetItemState(ItemName.DONKEY, item1);
         _sut.SetItemState(ItemName.DIDDY, item2);
 
         // Act
-        var visibleItems = _sut.GetItemsByVisibility(ItemVisibilityState.Visible).ToList();
+        var visibleItems = _sut.GetAllItemsInOrder().Where(i => i.Starred).ToList();
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.Equal(2, visibleItems.Count);
-            Assert.All(visibleItems, item => Assert.Equal(ItemVisibilityState.Visible, item.Starred));
+            Assert.All(visibleItems, item => Assert.True(item.Starred));
         });
-    }
-
-    [Fact]
-    public void GetItemsByVisibility_WithNoItemsWithVisibility_ReturnsEmpty()
-    {
-        // Act
-        var hiddenItems = _sut.GetItemsByVisibility(ItemVisibilityState.Hidden).ToList();
-
-        // Assert
-        Assert.Empty(hiddenItems);
     }
 
     #endregion
@@ -357,7 +347,7 @@ public class ItemTrackingServiceTests
     {
         // Arrange
         var newProgress = new SavedProgress();
-        var newItem = new SavedItem(ItemName.LANKY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
+        var newItem = new SavedItem(ItemName.LANKY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
         newProgress.SavedItems[ItemName.LANKY] = newItem;
 
         // Act
@@ -385,7 +375,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -400,7 +390,7 @@ public class ItemTrackingServiceTests
         Assert.Multiple(() =>
         {
             Assert.NotNull(retrieved);
-            Assert.Equal(ItemVisibilityState.Hidden, retrieved.Starred);
+            Assert.False(retrieved.Starred);
         });
     }
 
@@ -411,7 +401,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             1.0,
             false
@@ -426,7 +416,7 @@ public class ItemTrackingServiceTests
         Assert.Multiple(() =>
         {
             Assert.NotNull(retrieved);
-            Assert.Equal(ItemVisibilityState.Visible, retrieved.Starred);
+            Assert.True(retrieved.Starred);
         });
     }
 
@@ -443,7 +433,7 @@ public class ItemTrackingServiceTests
             Assert.NotNull(retrieved);
             Assert.Equal(ItemName.DIDDY, retrieved.ItemName);
             Assert.Equal(RegionName.UNKNOWN, retrieved.Region);
-            Assert.Equal(ItemVisibilityState.Visible, retrieved.Starred);
+            Assert.True(retrieved.Starred);
             Assert.False(retrieved.Autotracked);
             Assert.Equal(1.0, retrieved.Opacity);
             Assert.False(retrieved.Hinted);
@@ -457,7 +447,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             true,
             0.75,
             true
@@ -474,7 +464,7 @@ public class ItemTrackingServiceTests
             Assert.NotNull(retrieved);
             Assert.Equal(ItemName.DONKEY, retrieved.ItemName);
             Assert.Equal(RegionName.JUNGLE_JAPES, retrieved.Region);
-            Assert.Equal(ItemVisibilityState.Hidden, retrieved.Starred);
+            Assert.False(retrieved.Starred);
             Assert.True(retrieved.Autotracked);
             Assert.Equal(0.75, retrieved.Opacity);
             Assert.True(retrieved.Hinted);
@@ -488,7 +478,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -512,9 +502,9 @@ public class ItemTrackingServiceTests
             Assert.True(eventFired);
             Assert.NotNull(eventArgs);
             Assert.NotNull(eventArgs.UpdatedItem);
-            Assert.Equal(ItemVisibilityState.Hidden, eventArgs.UpdatedItem.Starred);
+            Assert.False(eventArgs.UpdatedItem.Starred);
             Assert.NotNull(eventArgs.PreviousState);
-            Assert.Equal(ItemVisibilityState.Visible, eventArgs.PreviousState.Starred);
+            Assert.True(eventArgs.PreviousState.Starred);
         });
     }
 
@@ -525,7 +515,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -553,7 +543,7 @@ public class ItemTrackingServiceTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0,
             false
@@ -563,17 +553,17 @@ public class ItemTrackingServiceTests
         // Act & Assert - First toggle
         _sut.ToggleStar(ItemName.DONKEY);
         var afterFirstToggle = _sut.GetItemState(ItemName.DONKEY);
-        Assert.Equal(ItemVisibilityState.Hidden, afterFirstToggle!.Starred);
+        Assert.False(afterFirstToggle!.Starred);
 
         // Act & Assert - Second toggle
         _sut.ToggleStar(ItemName.DONKEY);
         var afterSecondToggle = _sut.GetItemState(ItemName.DONKEY);
-        Assert.Equal(ItemVisibilityState.Visible, afterSecondToggle!.Starred);
+        Assert.True(afterSecondToggle!.Starred);
 
         // Act & Assert - Third toggle
         _sut.ToggleStar(ItemName.DONKEY);
         var afterThirdToggle = _sut.GetItemState(ItemName.DONKEY);
-        Assert.Equal(ItemVisibilityState.Hidden, afterThirdToggle!.Starred);
+        Assert.False(afterThirdToggle!.Starred);
     }
 
     #endregion
@@ -584,8 +574,8 @@ public class ItemTrackingServiceTests
     public void BeginBatchUpdate_MultipleSetItemState_DeferRedUntilDispose()
     {
         // Arrange
-        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
-        var item2 = new SavedItem(ItemName.DIDDY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
+        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
+        var item2 = new SavedItem(ItemName.DIDDY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
         var eventCount = 0;
         _sut.ItemStateChanged += (sender, args) => eventCount++;
 
@@ -606,7 +596,7 @@ public class ItemTrackingServiceTests
     public void BeginBatchUpdate_WithClearedItem_FiresDeferredEvent()
     {
         // Arrange
-        var item = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
+        var item = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
         _sut.SetItemState(ItemName.DONKEY, item);
         var eventCount = 0;
         _sut.ItemStateChanged += (sender, args) => eventCount++;

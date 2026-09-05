@@ -48,7 +48,7 @@ public class SavedProgressTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             1.0
         );
@@ -69,17 +69,15 @@ public class SavedProgressTests
     {
         // Arrange
         var progress = new SavedProgress();
-        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0);
-        var item2 = new SavedItem(ItemName.TINY, RegionName.SHOPS, ItemVisibilityState.Hidden, false, 0.5);
-        var item3 = new SavedItem(ItemName.CHUNKY, RegionName.FUNGI_FOREST, ItemVisibilityState.Collapsed, true, 0.75);
+        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0);
+        var item2 = new SavedItem(ItemName.TINY, RegionName.SHOPS, false, false, 0.5);
 
         // Act
         progress.SavedItems[ItemName.DONKEY] = item1;
         progress.SavedItems[ItemName.TINY] = item2;
-        progress.SavedItems[ItemName.CHUNKY] = item3;
 
         // Assert
-        Assert.Equal(3, progress.SavedItems.Count);
+        Assert.Equal(2, progress.SavedItems.Count);
     }
 
     [Fact]
@@ -249,14 +247,14 @@ public class SavedProgressTests
         original.SavedItems[ItemName.DONKEY] = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             true,
             0.8
         );
         original.SavedItems[ItemName.TINY] = new SavedItem(
             ItemName.TINY,
             RegionName.SHOPS,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             0.5
         );
@@ -271,7 +269,7 @@ public class SavedProgressTests
             Assert.NotNull(restored);
             Assert.Equal(2, restored.SavedItems.Count);
             Assert.True(restored.SavedItems[ItemName.DONKEY].Autotracked);
-            Assert.Equal(ItemVisibilityState.Hidden, restored.SavedItems[ItemName.TINY].Starred);
+            Assert.False(restored.SavedItems[ItemName.TINY].Starred);
         });
     }
 
@@ -285,7 +283,7 @@ public class SavedProgressTests
         {
             SpoilerPath = testPath
         };
-        original.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0);
+        original.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0);
         original.SavedGBCounts[RegionName.JUNGLE_JAPES] = "15/20";
         original.BLockerImageIndexes[RegionName.SHOPS] = 3;
         original.HelmDoorImageIndexes.Add(0);
@@ -321,7 +319,7 @@ public class SavedProgressTests
         var progress2 = new SavedProgress();
 
         // Act
-        progress1.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0);
+        progress1.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0);
         progress1.SpoilerPath = "path1.json";
 
         progress2.SpoilerPath = "path2.json";

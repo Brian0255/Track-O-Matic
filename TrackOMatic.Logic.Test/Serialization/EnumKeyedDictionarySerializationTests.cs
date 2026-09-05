@@ -56,8 +56,8 @@ public class EnumKeyedDictionarySerializationTests
         // Arrange
         var original = new Dictionary<ItemName, SavedItem>
         {
-            { ItemName.DONKEY, new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0) },
-            { ItemName.TINY, new SavedItem(ItemName.TINY, RegionName.SHOPS, ItemVisibilityState.Hidden, false, 0.5) }
+            { ItemName.DONKEY, new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0) },
+            { ItemName.TINY, new SavedItem(ItemName.TINY, RegionName.SHOPS, false, false, 0.5) }
         };
 
         // Act
@@ -65,12 +65,15 @@ public class EnumKeyedDictionarySerializationTests
         var restored = JsonSerializer.Deserialize<Dictionary<ItemName, SavedItem>>(json);
 
         // Assert
-        Assert.NotNull(restored);
-        Assert.Equal(2, restored.Count);
-        Assert.True(restored.ContainsKey(ItemName.DONKEY));
-        Assert.True(restored.ContainsKey(ItemName.TINY));
-        Assert.Equal(ItemVisibilityState.Visible, restored[ItemName.DONKEY].Starred);
-        Assert.Equal(ItemVisibilityState.Hidden, restored[ItemName.TINY].Starred);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(restored);
+            Assert.Equal(2, restored.Count);
+            Assert.True(restored.ContainsKey(ItemName.DONKEY));
+            Assert.True(restored.ContainsKey(ItemName.TINY));
+            Assert.True(restored[ItemName.DONKEY].Starred);
+            Assert.False(restored[ItemName.TINY].Starred);
+        });
     }
 
     [Fact]

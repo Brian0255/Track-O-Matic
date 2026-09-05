@@ -10,7 +10,7 @@ namespace TrackOMatic.Logic.Models.Converters;
 /// during serialization.
 ///
 /// An item is considered empty if:
-/// - It is Hidden (not Starred)
+/// - It is not Starred
 /// - It is in the UNKNOWN region
 /// - It has not been Hinted
 ///

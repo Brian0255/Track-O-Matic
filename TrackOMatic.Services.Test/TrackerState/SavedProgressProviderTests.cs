@@ -119,7 +119,7 @@ public class SavedProgressProviderTests
         var initialWithData = new SavedProgress();
         // Add an item to SavedItems to simulate loaded data
         initialWithData.SavedItems[ItemName.DONKEY] =
-            new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0, false);
+            new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0, false);
 
         var provider = new SavedProgressProvider(initialWithData);
         var newProgress = new SavedProgress();

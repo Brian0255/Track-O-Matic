@@ -73,7 +73,7 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         if (itemState != null)
         {
             UpdateImageResourceKey(itemState);
-            IsStarred = itemState.IsStarred;
+            IsStarred = itemState.Starred;
             Opacity = itemState.Opacity;
         }
         else
@@ -175,7 +175,7 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         {
             // Update the ImageResourceKey based on the new state of the item.
             UpdateImageResourceKey(e.UpdatedItem);
-            IsStarred = e.UpdatedItem.IsStarred;
+            IsStarred = e.UpdatedItem.Starred;
             Opacity = e.UpdatedItem.Opacity;
 
             // Update hover text from spoiler service if available

@@ -59,7 +59,7 @@ public class DataSaverService : IDataSaverService
 
                 foreach (var item in _parsedSpoilerDataService.GetStartingItems())
                 {
-                    _itemTrackingService.SetItemState(item.Key, new(item.Key, item.Value, Autotracked: true));
+                    _itemTrackingService.SetItemState(item.Key, new(item.Key, item.Value, autotracked: true));
                 }
             }
 
@@ -99,7 +99,7 @@ public class DataSaverService : IDataSaverService
 
                     foreach (var item in _parsedSpoilerDataService.GetStartingItems())
                     {
-                        _itemTrackingService.SetItemState(item.Key, new(item.Key, item.Value, Autotracked: true));
+                        _itemTrackingService.SetItemState(item.Key, new(item.Key, item.Value, autotracked: true));
                     }
                 }
                 catch (Exception)
@@ -173,7 +173,7 @@ public class DataSaverService : IDataSaverService
         foreach (var item in itemsInOrder)
         {
             // Filter: exclude non-starred autotracked items
-            if (!item.IsStartingAutotracked || item.IsStarred)
+            if (!item.IsStartingAutotracked || item.Starred)
             {
                 snapshot.SavedItems[item.ItemName] = item;
             }

@@ -42,7 +42,7 @@ public class ProgressiveSlamViewModelTests
         return mock;
     }
 
-    private static SavedItem CreateItemState(ItemName itemName, RegionName region = RegionName.JUNGLE_JAPES, ItemVisibilityState starred = ItemVisibilityState.Hidden)
+    private static SavedItem CreateItemState(ItemName itemName, RegionName region = RegionName.JUNGLE_JAPES, bool starred = false)
     {
         return new SavedItem(itemName) with
         {
@@ -313,9 +313,9 @@ public class ProgressiveSlamViewModelTests
     [Fact]
     public void IsStarred_NoneStarred_ReturnsFalse()
     {
-        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: ItemVisibilityState.Hidden);
-        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: ItemVisibilityState.Hidden);
-        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: ItemVisibilityState.Hidden);
+        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: false);
+        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: false);
+        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(
             slam1State: slam1State,
             slam2State: slam2State,
@@ -335,9 +335,9 @@ public class ProgressiveSlamViewModelTests
     [Fact]
     public void IsStarred_Slam1Starred_ReturnsTrue()
     {
-        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: ItemVisibilityState.Visible);
-        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: ItemVisibilityState.Hidden);
-        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: ItemVisibilityState.Hidden);
+        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: true);
+        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: false);
+        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(
             slam1State: slam1State,
             slam2State: slam2State,
@@ -357,9 +357,9 @@ public class ProgressiveSlamViewModelTests
     [Fact]
     public void IsStarred_Slam2Starred_ReturnsTrue()
     {
-        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: ItemVisibilityState.Hidden);
-        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: ItemVisibilityState.Visible);
-        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: ItemVisibilityState.Hidden);
+        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: false);
+        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: true);
+        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(
             slam1State: slam1State,
             slam2State: slam2State,
@@ -379,9 +379,9 @@ public class ProgressiveSlamViewModelTests
     [Fact]
     public void IsStarred_Slam3Starred_ReturnsTrue()
     {
-        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: ItemVisibilityState.Hidden);
-        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: ItemVisibilityState.Hidden);
-        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: ItemVisibilityState.Visible);
+        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: false);
+        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: false);
+        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: true);
         var itemTrackingService = CreateMockItemTrackingService(
             slam1State: slam1State,
             slam2State: slam2State,
@@ -401,9 +401,9 @@ public class ProgressiveSlamViewModelTests
     [Fact]
     public void IsStarred_MultipleStarred_ReturnsTrue()
     {
-        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: ItemVisibilityState.Visible);
-        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: ItemVisibilityState.Visible);
-        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: ItemVisibilityState.Hidden);
+        var slam1State = CreateItemState(ItemName.PROGRESSIVE_SLAM_1, starred: true);
+        var slam2State = CreateItemState(ItemName.PROGRESSIVE_SLAM_2, starred: true);
+        var slam3State = CreateItemState(ItemName.PROGRESSIVE_SLAM_3, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(
             slam1State: slam1State,
             slam2State: slam2State,

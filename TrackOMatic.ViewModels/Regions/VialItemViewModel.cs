@@ -63,7 +63,7 @@ public partial class VialItemViewModel : RegionItemViewModel, IEquatable<VialIte
             itemTrackingService.SetItemState(itemName.Value, SavedItem.CreateEmpty(itemName.Value) with
             {
                 Region = regionName,
-                Starred = ItemVisibilityState.Hidden,
+                Starred = false,
                 Autotracked = false,
                 Opacity = 1.0,
                 Hinted = false
@@ -102,7 +102,7 @@ public partial class VialItemViewModel : RegionItemViewModel, IEquatable<VialIte
         var hasStarToTransfer = IsVialStarred;
         var cleanState = itemState with
         {
-            Starred = hasStarToTransfer ? ItemVisibilityState.Visible : itemState.Starred,
+            Starred = hasStarToTransfer ? true : itemState.Starred,
         };
 
         // Clear the vial star since we're transferring it to the item
@@ -178,7 +178,7 @@ public partial class VialItemViewModel : RegionItemViewModel, IEquatable<VialIte
         var newItemState = oldItemState with
         {
             Region = RegionName,
-            Starred = hasStarToTransfer ? ItemVisibilityState.Visible : oldItemState.Starred,
+            Starred = hasStarToTransfer ? true : oldItemState.Starred,
         };
         ItemTrackingService.SetItemState(itemToPlace, newItemState);
         CurrentItemName = itemToPlace;
@@ -296,7 +296,7 @@ public partial class VialItemViewModel : RegionItemViewModel, IEquatable<VialIte
             // Set image based on item state
             string baseKey = CurrentItemName.Value.ToString().ToLower();
             ImageResourceKey = itemState.Hinted ? $"{baseKey}_bw" : baseKey;
-            IsStarred = itemState.IsStarred;
+            IsStarred = itemState.Starred;
             Opacity = itemState.Opacity;
         }
     }

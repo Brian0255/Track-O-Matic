@@ -39,7 +39,7 @@ public class CameraShockwaveViewModelTests
         return mock;
     }
 
-    private static SavedItem CreateItemState(ItemName itemName, RegionName region = RegionName.JUNGLE_JAPES, ItemVisibilityState starred = ItemVisibilityState.Hidden)
+    private static SavedItem CreateItemState(ItemName itemName, RegionName region = RegionName.JUNGLE_JAPES, bool starred = false)
     {
         return SavedItem.CreateEmpty(itemName) with
         {
@@ -259,8 +259,8 @@ public class CameraShockwaveViewModelTests
     [Fact]
     public void IsStarred_NeitherStarred_ReturnsFalse()
     {
-        var cameraState = CreateItemState(ItemName.FAIRY_CAMERA, starred: ItemVisibilityState.Hidden);
-        var shockwaveState = CreateItemState(ItemName.SHOCKWAVE, starred: ItemVisibilityState.Hidden);
+        var cameraState = CreateItemState(ItemName.FAIRY_CAMERA, starred: false);
+        var shockwaveState = CreateItemState(ItemName.SHOCKWAVE, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(
             cameraState: cameraState,
             shockwaveState: shockwaveState).Object;
@@ -279,8 +279,8 @@ public class CameraShockwaveViewModelTests
     [Fact]
     public void IsStarred_CameraStarred_ReturnsTrue()
     {
-        var cameraState = CreateItemState(ItemName.FAIRY_CAMERA, starred: ItemVisibilityState.Visible);
-        var shockwaveState = CreateItemState(ItemName.SHOCKWAVE, starred: ItemVisibilityState.Hidden);
+        var cameraState = CreateItemState(ItemName.FAIRY_CAMERA, starred: true);
+        var shockwaveState = CreateItemState(ItemName.SHOCKWAVE, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(
             cameraState: cameraState,
             shockwaveState: shockwaveState).Object;
@@ -298,8 +298,8 @@ public class CameraShockwaveViewModelTests
     [Fact]
     public void IsStarred_ShockwaveStarred_ReturnsTrue()
     {
-        var cameraState = CreateItemState(ItemName.FAIRY_CAMERA, starred: ItemVisibilityState.Hidden);
-        var shockwaveState = CreateItemState(ItemName.SHOCKWAVE, starred: ItemVisibilityState.Visible);
+        var cameraState = CreateItemState(ItemName.FAIRY_CAMERA, starred: false);
+        var shockwaveState = CreateItemState(ItemName.SHOCKWAVE, starred: true);
         var itemTrackingService = CreateMockItemTrackingService(
             cameraState: cameraState,
             shockwaveState: shockwaveState).Object;
@@ -317,8 +317,8 @@ public class CameraShockwaveViewModelTests
     [Fact]
     public void IsStarred_BothStarred_ReturnsTrue()
     {
-        var cameraState = CreateItemState(ItemName.FAIRY_CAMERA, starred: ItemVisibilityState.Visible);
-        var shockwaveState = CreateItemState(ItemName.SHOCKWAVE, starred: ItemVisibilityState.Visible);
+        var cameraState = CreateItemState(ItemName.FAIRY_CAMERA, starred: true);
+        var shockwaveState = CreateItemState(ItemName.SHOCKWAVE, starred: true);
         var itemTrackingService = CreateMockItemTrackingService(
             cameraState: cameraState,
             shockwaveState: shockwaveState).Object;

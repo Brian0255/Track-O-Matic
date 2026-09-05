@@ -37,7 +37,7 @@ public class KeyViewModelTests
     private static SavedItem CreateKeyItemState(
         int keyNumber,
         RegionName region = RegionName.JUNGLE_JAPES,
-        ItemVisibilityState starred = ItemVisibilityState.Hidden,
+        bool starred = false,
         bool hinted = false)
     {
         var itemName = Enum.Parse<ItemName>($"KEY_{keyNumber}");
@@ -130,7 +130,7 @@ public class KeyViewModelTests
     public void InitializeState_WithValidKeyState_SetsProperties()
     {
         // Arrange
-        var keyState = CreateKeyItemState(1, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible);
+        var keyState = CreateKeyItemState(1, RegionName.JUNGLE_JAPES, starred: true);
         var itemTrackingService = CreateMockItemTrackingService(keyState);
 
         // Act
@@ -250,17 +250,17 @@ public class KeyViewModelTests
     public void IsStarred_WhenChanged_RaisesPropertyChanged()
     {
         // Arrange
-        var keyState = CreateKeyItemState(1, starred: ItemVisibilityState.Hidden);
+        var keyState = CreateKeyItemState(1, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(keyState);
         var viewModel = CreateViewModel(selectedKey: 1, itemTrackingService: itemTrackingService);
         var currentIsStarred = viewModel.IsStarred;
 
         // Act - Change starred state
-        var newState = CreateKeyItemState(1, starred: ItemVisibilityState.Visible);
+        var newState = CreateKeyItemState(1, starred: true);
         var args = new ItemStateChangedEventArgs(newState);
         itemTrackingService.Raise(s => s.ItemStateChanged += null, args);
 
-        // Assert - IsStarred should have changed from Hidden to Visible
+        // Assert - IsStarred should have changed from false to true
         if (currentIsStarred != viewModel.IsStarred)
         {
             Assert.NotEqual(currentIsStarred, viewModel.IsStarred);
@@ -279,7 +279,7 @@ public class KeyViewModelTests
         var viewModel = CreateViewModel(selectedKey: 1, itemTrackingService: itemTrackingService);
 
         // Act - Raise an event with a Visible item
-        var newState = CreateKeyItemState(1, RegionName.DK_ISLES, ItemVisibilityState.Visible);
+        var newState = CreateKeyItemState(1, RegionName.DK_ISLES, starred: true);
         var args = new ItemStateChangedEventArgs(newState);
 
         // Call the event handler directly to test the behavior
@@ -294,13 +294,13 @@ public class KeyViewModelTests
     public void OnItemStateChanged_WithDifferentKey_DoesNotUpdateProperties()
     {
         // Arrange
-        var initialState = CreateKeyItemState(1, starred: ItemVisibilityState.Hidden);
+        var initialState = CreateKeyItemState(1, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(initialState);
         var viewModel = CreateViewModel(selectedKey: 1, itemTrackingService: itemTrackingService);
         var initialIsStarred = viewModel.IsStarred;
 
         // Act
-        var differentKeyState = CreateKeyItemState(2, starred: ItemVisibilityState.Visible);
+        var differentKeyState = CreateKeyItemState(2, starred: true);
         var args = new ItemStateChangedEventArgs(differentKeyState);
         itemTrackingService.Raise(s => s.ItemStateChanged += null, args);
 

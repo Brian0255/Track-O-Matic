@@ -48,7 +48,7 @@ public static class Extensions
     public static bool ShouldKeepSavedItem(this SavedItem item)
     {
         // Rule 1: Starred items always kept
-        if (item.IsStarred)
+        if (item.Starred)
         {
             return true;
         }

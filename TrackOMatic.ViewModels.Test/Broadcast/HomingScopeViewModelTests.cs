@@ -39,7 +39,7 @@ public class HomingScopeViewModelTests
         return mock;
     }
 
-    private static SavedItem CreateItemState(ItemName itemName, RegionName region = RegionName.JUNGLE_JAPES, ItemVisibilityState starred = ItemVisibilityState.Hidden)
+    private static SavedItem CreateItemState(ItemName itemName, RegionName region = RegionName.JUNGLE_JAPES, bool starred = false)
     {
         return new SavedItem(itemName) with
         {
@@ -259,8 +259,8 @@ public class HomingScopeViewModelTests
     [Fact]
     public void IsStarred_NeitherStarred_ReturnsFalse()
     {
-        var homingState = CreateItemState(ItemName.HOMING_AMMO, starred: ItemVisibilityState.Hidden);
-        var scopeState = CreateItemState(ItemName.SNIPER_SCOPE, starred: ItemVisibilityState.Hidden);
+        var homingState = CreateItemState(ItemName.HOMING_AMMO, starred: false);
+        var scopeState = CreateItemState(ItemName.SNIPER_SCOPE, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(
             homingState: homingState,
             scopeState: scopeState).Object;
@@ -279,8 +279,8 @@ public class HomingScopeViewModelTests
     [Fact]
     public void IsStarred_HomingStarred_ReturnsTrue()
     {
-        var homingState = CreateItemState(ItemName.HOMING_AMMO, starred: ItemVisibilityState.Visible);
-        var scopeState = CreateItemState(ItemName.SNIPER_SCOPE, starred: ItemVisibilityState.Hidden);
+        var homingState = CreateItemState(ItemName.HOMING_AMMO, starred: true);
+        var scopeState = CreateItemState(ItemName.SNIPER_SCOPE, starred: false);
         var itemTrackingService = CreateMockItemTrackingService(
             homingState: homingState,
             scopeState: scopeState).Object;
@@ -298,8 +298,8 @@ public class HomingScopeViewModelTests
     [Fact]
     public void IsStarred_ScopeStarred_ReturnsTrue()
     {
-        var homingState = CreateItemState(ItemName.HOMING_AMMO, starred: ItemVisibilityState.Hidden);
-        var scopeState = CreateItemState(ItemName.SNIPER_SCOPE, starred: ItemVisibilityState.Visible);
+        var homingState = CreateItemState(ItemName.HOMING_AMMO, starred: false);
+        var scopeState = CreateItemState(ItemName.SNIPER_SCOPE, starred: true);
         var itemTrackingService = CreateMockItemTrackingService(
             homingState: homingState,
             scopeState: scopeState).Object;
@@ -317,8 +317,8 @@ public class HomingScopeViewModelTests
     [Fact]
     public void IsStarred_BothStarred_ReturnsTrue()
     {
-        var homingState = CreateItemState(ItemName.HOMING_AMMO, starred: ItemVisibilityState.Visible);
-        var scopeState = CreateItemState(ItemName.SNIPER_SCOPE, starred: ItemVisibilityState.Visible);
+        var homingState = CreateItemState(ItemName.HOMING_AMMO, starred: true);
+        var scopeState = CreateItemState(ItemName.SNIPER_SCOPE, starred: true);
         var itemTrackingService = CreateMockItemTrackingService(
             homingState: homingState,
             scopeState: scopeState).Object;

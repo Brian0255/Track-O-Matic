@@ -255,7 +255,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         }
 
         var itemsinRegion = _itemTrackingService.GetItemsInRegion(_regionName);
-        var starredItems = itemsinRegion.Count(x => x.IsStarred);
+        var starredItems = itemsinRegion.Count(x => x.Starred);
 
         // If we have vials active, check the vials without items next.
         var starredPotions = VialItemListViewModel?.Items.Count(x => x.CurrentItemName is null && x.IsVialStarred) ?? 0;
@@ -305,9 +305,9 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             var savedItem = new SavedItem(
                 itemToPlace,
                 _regionName,
-                ItemVisibilityState.Hidden,
-                Autotracked: true,
-                Opacity: 1.0
+                starred: false,
+                autotracked: true,
+                opacity: 1.0
             );
 
             _itemTrackingService.SetItemState(itemToPlace, savedItem);

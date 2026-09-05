@@ -152,7 +152,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             0.0
         );
@@ -171,26 +171,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Hidden,
             false,
-            0.0
-        );
-
-        // Act
-        var result = item.ShouldKeepSavedItem();
-
-        // Assert
-        Assert.False(result);
-    }
-
-    [Fact]
-    public void ShouldKeepSavedItem_WithCollapsedNotStarred_ReturnsFalse()
-    {
-        // Arrange
-        var item = new SavedItem(
-            ItemName.DONKEY,
-            RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Collapsed,
             false,
             0.0
         );
@@ -209,7 +190,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DIDDY,
             RegionName.ANGRY_AZTEC,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             0.375
         );
@@ -228,7 +209,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DIDDY,
             RegionName.UNKNOWN,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             0.375
         );
@@ -247,7 +228,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.LANKY,
             RegionName.GLOOMY_GALLEON,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             1.0
         );
@@ -266,7 +247,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.TINY,
             RegionName.CRYSTAL_CAVES,
-            ItemVisibilityState.Hidden,
+            false,
             true,
             1.0
         );
@@ -285,7 +266,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.CHUNKY,
             RegionName.FRANTIC_FACTORY,
-            ItemVisibilityState.Hidden,
+            false,
             true,
             1.5
         );
@@ -304,7 +285,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.LANKY,
             RegionName.UNKNOWN,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             1.0
         );
@@ -323,7 +304,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             0.5
         );
@@ -342,7 +323,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.SHOPS,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             0.380  // Within 0.01 of 0.375
         );
@@ -361,7 +342,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.SHOPS,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             0.370
         );
@@ -380,7 +361,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.SHOPS,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             0.36
         );
@@ -403,7 +384,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.SHOPS,
-            ItemVisibilityState.Hidden,
+            false,
             false,
             opacity
         );
@@ -422,7 +403,7 @@ public class ExtensionsTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.DK_ISLES,
-            ItemVisibilityState.Visible,
+            true,
             false,
             0.1  // Low opacity, but starred
         );
@@ -440,11 +421,11 @@ public class ExtensionsTests
         // Arrange - Multiple items to test the rules
         SavedItem[] items =
         [
-            new(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 0.0), // Starred
-            new(ItemName.DIDDY, RegionName.ANGRY_AZTEC, ItemVisibilityState.Hidden, false, 0.375), // Hint (0.375)
-            new(ItemName.LANKY, RegionName.GLOOMY_GALLEON, ItemVisibilityState.Hidden, false, 1.0), // Found
-            new(ItemName.TINY, RegionName.CRYSTAL_CAVES, ItemVisibilityState.Hidden, true, 1.0), // Autotracked
-            new(ItemName.CHUNKY, RegionName.FRANTIC_FACTORY, ItemVisibilityState.Hidden, false, 0.5), // Low opacity - remove
+            new(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 0.0), // Starred
+            new(ItemName.DIDDY, RegionName.ANGRY_AZTEC, false, false, 0.375), // Hint (0.375)
+            new(ItemName.LANKY, RegionName.GLOOMY_GALLEON, false, false, 1.0), // Found
+            new(ItemName.TINY, RegionName.CRYSTAL_CAVES, false, true, 1.0), // Autotracked
+            new(ItemName.CHUNKY, RegionName.FRANTIC_FACTORY, false, false, 0.5), // Low opacity - remove
         ];
 
         // Act

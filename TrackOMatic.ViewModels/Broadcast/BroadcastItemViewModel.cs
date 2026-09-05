@@ -90,7 +90,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
         if (itemState != null)
         {
             UpdateImageResourceKey(itemState);
-            IsStarred = itemState.IsStarred;
+            IsStarred = itemState.Starred;
         }
         else
         {
@@ -138,7 +138,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
         {
             // Update the ImageResourceKey based on the new state of the item.
             UpdateImageResourceKey(e.UpdatedItem);
-            IsStarred = e.UpdatedItem.IsStarred;
+            IsStarred = e.UpdatedItem.Starred;
 
             // Update hover text from spoiler service if available
             UpdateHoverText();

@@ -38,11 +38,6 @@ public interface IItemTrackingService
     IEnumerable<SavedItem> GetItemsInRegion(RegionName region);
 
     /// <summary>
-    /// Get all items with a specific visibility state.
-    /// </summary>
-    IEnumerable<SavedItem> GetItemsByVisibility(ItemVisibilityState state);
-
-    /// <summary>
     /// Toggles the star visibility state of an item.
     /// If no SavedItem exists for the item, creates one with the star toggled to Visible.
     /// This method centralizes star toggle logic to ensure consistent behavior across all view models.

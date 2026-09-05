@@ -135,8 +135,8 @@ public partial class HomingScopeViewModel : ObservableObject, IDisposable
         var rightItem = _itemTrackingService.GetItemState(_rightItem);
 
         IsStarred =
-            (leftItem is not null && leftItem.IsStarred) ||
-            (rightItem is not null && rightItem.IsStarred);
+            (leftItem is not null && leftItem.Starred) ||
+            (rightItem is not null && rightItem.Starred);
     }
 
     protected virtual void UpdateImageResourceKey()
