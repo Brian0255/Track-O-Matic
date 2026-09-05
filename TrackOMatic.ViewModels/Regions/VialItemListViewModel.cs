@@ -1,12 +1,10 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
-using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
@@ -27,12 +25,8 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
 
     public RegionName RegionName => _regionName;
 
-    private ObservableCollection<VialItemViewModel> _items = [];
-    public ObservableCollection<VialItemViewModel> Items
-    {
-        get => _items;
-        set => SetProperty(ref _items, value);
-    }
+    [ObservableProperty]
+    public partial ObservableCollection<VialItemViewModel> Items { get; set; } = [];
 
     #endregion
 

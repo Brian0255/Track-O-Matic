@@ -8,37 +8,23 @@ using TrackOMatic.ViewModels.Broadcast;
 
 namespace TrackOMatic.ViewModels;
 
-public class UiHelmSlotViewModel : HelmSlotViewModel
+public partial class UiHelmSlotViewModel(
+    int slotNumber,
+    IEndGameProgressionService endGameProgressionService,
+    IParsedSpoilerDataService parsedSpoilerDataService,
+    ISavedProgressProvider savedProgressProvider,
+    IItemSelectorService itemSelectorService
+) : HelmSlotViewModel(slotNumber, endGameProgressionService, parsedSpoilerDataService, savedProgressProvider)
 {
-    private readonly IEndGameProgressionService _endGameProgressionService;
-    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
-    private readonly IItemSelectorService _itemSelectorService;
-    private readonly int _slotNumber;
+    private readonly IEndGameProgressionService _endGameProgressionService = endGameProgressionService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService = parsedSpoilerDataService;
+    private readonly IItemSelectorService _itemSelectorService = itemSelectorService;
+    private readonly int _slotNumber = slotNumber;
 
-    public IAsyncRelayCommand SelectItemCommand { get; init; }
-    public IRelayCommand CycleNextCommand { get; init; }
-    public IRelayCommand CyclePreviousCommand { get; init; }
+    #region Commands
 
-
-    public UiHelmSlotViewModel(
-        int slotNumber,
-        IEndGameProgressionService endGameProgressionService,
-        IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider,
-        IItemSelectorService itemSelectorService
-    ) : base(slotNumber, endGameProgressionService, parsedSpoilerDataService, savedProgressProvider)
-    {
-        _slotNumber = slotNumber;
-        _endGameProgressionService = endGameProgressionService;
-        _parsedSpoilerDataService = parsedSpoilerDataService;
-        _itemSelectorService = itemSelectorService;
-
-        SelectItemCommand = new AsyncRelayCommand<(double X, double Y)>(ExecuteSelectItem, CanExecuteSelectItem);
-        CycleNextCommand = new RelayCommand(ExecuteCycleNext, CanExecuteCycleNext);
-        CyclePreviousCommand = new RelayCommand(ExecuteCyclePrevious, CanExecuteCyclePrevious);
-    }
-
-    private async Task ExecuteSelectItem((double X, double Y) screenMousePosition)
+    [RelayCommand(CanExecute = nameof(CanSelectItem))]
+    private async Task SelectItem((double X, double Y) screenMousePosition)
     {
         var result = await _itemSelectorService.SelectItemAsync(
             _helmKongMappings.AsReadOnly(),
@@ -60,9 +46,10 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
         _endGameProgressionService.SetHelmKongs(helmKongs);
     }
 
-    private bool CanExecuteSelectItem((double X, double Y) screenMousePosition) => !_parsedSpoilerDataService.HasHelmOrder();
+    private bool CanSelectItem((double X, double Y) screenMousePosition) => CanCycle();
 
-    private void ExecuteCycleNext()
+    [RelayCommand(CanExecute = nameof(CanCycle))]
+    private void CycleNext()
     {
         var helmKongs = _endGameProgressionService.GetHelmKongs();
         var oldValue = helmKongs[_slotNumber];
@@ -70,9 +57,8 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
         _endGameProgressionService.SetHelmKongs(helmKongs);
     }
 
-    private bool CanExecuteCycleNext() => !_parsedSpoilerDataService.HasHelmOrder();
-
-    private void ExecuteCyclePrevious()
+    [RelayCommand(CanExecute = nameof(CanCycle))]
+    private void CyclePrevious()
     {
         var helmKongs = _endGameProgressionService.GetHelmKongs();
         var oldValue = helmKongs[_slotNumber];
@@ -80,7 +66,9 @@ public class UiHelmSlotViewModel : HelmSlotViewModel
         _endGameProgressionService.SetHelmKongs(helmKongs);
     }
 
-    private bool CanExecuteCyclePrevious() => !_parsedSpoilerDataService.HasHelmOrder();
+    private bool CanCycle() => !_parsedSpoilerDataService.HasHelmOrder();
+
+    #endregion
 
     #region Object Overrides
 

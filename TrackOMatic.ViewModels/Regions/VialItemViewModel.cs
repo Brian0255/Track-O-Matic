@@ -1,3 +1,6 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
@@ -9,7 +12,7 @@ namespace TrackOMatic.ViewModels.Regions;
 /// <summary>
 /// A view model representing a vial item by default, only to be covered by a real item when found in a region.
 /// </summary>
-public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewModel>, IVialSlot
+public partial class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewModel>, IVialSlot
 {
     private readonly VialColor _vialColor;
     private readonly bool _isStartRegion;
@@ -22,23 +25,9 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
     public event EventHandler<VialItemStateChangedEventArgs>? VialItemStateChanged;
 
     #region Proxy Properties
-    private bool _isVialStarred = false;
-    /// <summary>
-    /// Gets a value indicating whether the vial (and not the item itself) is starred.
-    /// </summary>
-    /// <remarks>This is UI-only state, and thus it's not persisted to SavedProgress.</remarks>
-    public bool IsVialStarred
-    {
-        get => _isVialStarred;
-        private set
-        {
-            if (_isVialStarred != value)
-            {
-                _isVialStarred = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+
+    [ObservableProperty]
+    public partial bool IsVialStarred { get; set; } = false;
 
     #endregion
 
@@ -110,7 +99,7 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
     public override void AcceptAutoTrackedItem(ItemName itemToPlace, SavedItem itemState)
     {
         // Prepare the itemState with any vial-specific adjustments (e.g., transfer vial star to item star)
-        var hasStarToTransfer = _isVialStarred;
+        var hasStarToTransfer = IsVialStarred;
         var cleanState = itemState with
         {
             Starred = hasStarToTransfer ? ItemVisibilityState.Visible : itemState.Starred,
@@ -182,7 +171,7 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
         }
 
         // Transfer the star over.
-        var hasStarToTransfer = _isVialStarred;
+        var hasStarToTransfer = IsVialStarred;
         IsVialStarred = false;
 
         var oldItemState = ItemTrackingService.GetItemState(itemToPlace) ?? SavedItem.CreateEmpty(itemToPlace);
@@ -202,34 +191,59 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
     /// Removes the item from the region if possible.
     /// </summary>
     /// <remarks>Any failures to remove the item are silently ignored.</remarks>
-    public override void RemoveFromRegion()
+    [RelayCommand(CanExecute = nameof(CanRemoveVialFromRegion))]
+    private void RemoveVialFromRegion()
     {
-        if (_isStartRegion)
-        {
-            return;
-        }
-        if (!CurrentItemName.HasValue)
-        {
-            return;
-        }
-
-        var currentState = ItemTrackingService.GetItemState(CurrentItemName.Value);
-        if (currentState is null)
-        {
-            return;
-        }
-        if (IsItemAutotracked(CurrentItemName.Value))
-        {
-            return;
-        }
-
-        ItemTrackingService.SetItemState(CurrentItemName.Value, currentState with
+        var currentState = ItemTrackingService.GetItemState(CurrentItemName!.Value);
+        ItemTrackingService.SetItemState(CurrentItemName.Value, currentState! with
         {
             Region = RegionName.UNKNOWN,
             Opacity = 1,
         });
         CurrentItemName = null;
         UpdateProperties(null);
+        RaiseVialItemStateChanged();
+    }
+
+    private bool CanRemoveVialFromRegion()
+    {
+        if (_isStartRegion)
+        {
+            return false;
+        }
+        if (!CurrentItemName.HasValue)
+        {
+            return false;
+        }
+        var currentState = ItemTrackingService.GetItemState(CurrentItemName.Value);
+        if (currentState is null)
+        {
+            return false;
+        }
+        if (IsItemAutotracked(CurrentItemName.Value))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Toggles the star state of the vial or the item, depending on whether an item is present.
+    /// </summary>
+    [RelayCommand]
+    private void ToggleVialStar()
+    {
+        if (CurrentItemName.HasValue)
+        {
+            ItemTrackingService.ToggleStar(CurrentItemName.Value);
+        }
+        else
+        {
+            IsVialStarred = !IsVialStarred;
+            // Update the IsStarred property to reflect the vial star state
+            UpdateProperties(null);
+        }
+
         RaiseVialItemStateChanged();
     }
 
@@ -258,25 +272,6 @@ public class VialItemViewModel : RegionItemViewModel, IEquatable<VialItemViewMod
             // even if IsVialStarred was already false before
             OnPropertyChanged(nameof(IsVialStarred));
         }
-        RaiseVialItemStateChanged();
-    }
-
-    /// <summary>
-    /// Toggles the star state of the vial or the item, depending on whether an item is present.
-    /// </summary>
-    public override void ToggleStar()
-    {
-        if (CurrentItemName.HasValue)
-        {
-            base.ToggleStar();
-        }
-        else
-        {
-            IsVialStarred = !IsVialStarred;
-            // Update the IsStarred property to reflect the vial star state
-            UpdateProperties(null);
-        }
-
         RaiseVialItemStateChanged();
     }
 

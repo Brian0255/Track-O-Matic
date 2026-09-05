@@ -23,19 +23,22 @@ public partial class VialItem : UserControl
         if (e.LeftButton == MouseButtonState.Pressed)
         {
             var isShiftPressed = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
-            if (isShiftPressed)
+            if (isShiftPressed && viewModel.ToggleVialStarCommand.CanExecute(null))
             {
-                viewModel.ToggleStar();
+                viewModel.ToggleVialStarCommand.Execute(null);
             }
-            else
+            else if (viewModel.RemoveVialFromRegionCommand.CanExecute(null))
             {
-                viewModel.RemoveFromRegion();
+                viewModel.RemoveVialFromRegionCommand.Execute(null);
             }
             e.Handled = true;
         }
         else if (e.MiddleButton == MouseButtonState.Pressed)
         {
-            viewModel.ToggleStar();
+            if (viewModel.ToggleVialStarCommand.CanExecute(null))
+            {
+                viewModel.ToggleVialStarCommand.Execute(null);
+            }
             e.Handled = true;
         }
     }
@@ -46,9 +49,9 @@ public partial class VialItem : UserControl
         {
             return;
         }
-        if (e.Delta != 0)
+        if (e.Delta != 0 && viewModel.ToggleVialStarCommand.CanExecute(null))
         {
-            viewModel.ToggleStar();
+            viewModel.ToggleVialStarCommand.Execute(null);
             e.Handled = true;
         }
     }

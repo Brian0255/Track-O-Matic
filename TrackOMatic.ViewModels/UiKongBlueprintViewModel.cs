@@ -1,4 +1,4 @@
-using System.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
@@ -7,43 +7,43 @@ using TrackOMatic.ViewModels.Broadcast;
 
 namespace TrackOMatic.ViewModels;
 
-public class UiKongBlueprintViewModel: KongBlueprintViewModel, IEquatable<UiKongBlueprintViewModel>, INotifyPropertyChanged
+public partial class UiKongBlueprintViewModel(
+    ItemType collectedType,
+    ItemType turnedInType,
+    ICollectiblesService collectiblesService,
+    IParsedSpoilerDataService parsedSpoilerDataService,
+    ISavedProgressProvider savedProgressProvider,
+    IUserSettingsService userSettingsService
+) : KongBlueprintViewModel(collectedType, turnedInType, collectiblesService, parsedSpoilerDataService, savedProgressProvider), IEquatable<UiKongBlueprintViewModel>
 {
-    private readonly IUserSettingsService _userSettingsService;
-    private readonly ICollectiblesService _collectibles;
-    private readonly ItemType _collectedType;
+    private readonly IUserSettingsService _userSettingsService = userSettingsService
+        ?? throw new ArgumentNullException(nameof(userSettingsService));
+    private readonly ICollectiblesService _collectibles = collectiblesService
+        ?? throw new ArgumentNullException(nameof(collectiblesService));
+    private readonly ItemType _collectedType = collectedType;
 
-    public UiKongBlueprintViewModel(
-        ItemType collectedType,
-        ItemType turnedInType,
-        ICollectiblesService collectiblesService,
-        IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider,
-        IUserSettingsService userSettingsService
-    ) : base(collectedType, turnedInType, collectiblesService, parsedSpoilerDataService, savedProgressProvider)
+    #region Commands
+
+    [RelayCommand(CanExecute = nameof(CanChangeCount))]
+    private void IncrementCount()
     {
-        _collectedType = collectedType;
-        _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
-        _collectibles = collectiblesService ?? throw new ArgumentNullException(nameof(collectiblesService));
+        var old = _collectibles.GetCollectibleCount(_collectedType);
+        _collectibles.SetCollectibleCount(_collectedType, int.Min(old + 1, 8));
     }
 
-    public void IncrementCount()
+    [RelayCommand(CanExecute = nameof(CanChangeCount))]
+    private void DecrementCount()
     {
-        if (!_userSettingsService.Autotracking)
-        {
-            var old = _collectibles.GetCollectibleCount(_collectedType);
-            _collectibles.SetCollectibleCount(_collectedType, int.Min(old + 1, 8));
-        }
+        var old = _collectibles.GetCollectibleCount(_collectedType);
+        _collectibles.SetCollectibleCount(_collectedType, int.Max(old - 1, 0));
     }
 
-    public void DecrementCount()
+    private bool CanChangeCount()
     {
-        if (!_userSettingsService.Autotracking)
-        {
-            var old = _collectibles.GetCollectibleCount(_collectedType);
-            _collectibles.SetCollectibleCount(_collectedType, int.Max(old - 1, 0));
-        }
+        return !_userSettingsService.Autotracking;
     }
+
+    #endregion
 
     #region Object Overrides
 

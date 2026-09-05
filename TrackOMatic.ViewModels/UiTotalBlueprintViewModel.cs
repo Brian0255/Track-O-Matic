@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
@@ -15,6 +16,17 @@ public partial class UiTotalBlueprintViewModel: ObservableObject, IDisposable
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IUserSettingsService _userSettingsService;
     private readonly SynchronizationContext _uiContext;
+
+
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial int Count { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
+
+    #endregion
 
     public UiTotalBlueprintViewModel(
         ICollectiblesService collectiblesService,
@@ -40,38 +52,25 @@ public partial class UiTotalBlueprintViewModel: ObservableObject, IDisposable
         UpdateImageResourceKey();
     }
 
-    public void IncrementCount()
+    #region Commands
+
+    [RelayCommand(CanExecute = nameof(CanChangeCount))]
+    private void IncrementCount()
     {
-        if (!_userSettingsService.Autotracking)
-        {
-            var count = _collectiblesService.GetCollectibleCount(ItemType.TOTAL_BLUEPRINTS);
-            _collectiblesService.SetCollectibleCount(ItemType.TOTAL_BLUEPRINTS, int.Min(count + 1, 40));
-        }
+        var count = _collectiblesService.GetCollectibleCount(ItemType.TOTAL_BLUEPRINTS);
+        _collectiblesService.SetCollectibleCount(ItemType.TOTAL_BLUEPRINTS, int.Min(count + 1, 40));
     }
 
-    public void DecrementCount()
+    [RelayCommand(CanExecute = nameof(CanChangeCount))]
+    private void DecrementCount()
     {
-        if (!_userSettingsService.Autotracking)
-        {
-            var count = _collectiblesService.GetCollectibleCount(ItemType.TOTAL_BLUEPRINTS);
-            _collectiblesService.SetCollectibleCount(ItemType.TOTAL_BLUEPRINTS, int.Max(count - 1, 0));
-        }
+        var count = _collectiblesService.GetCollectibleCount(ItemType.TOTAL_BLUEPRINTS);
+        _collectiblesService.SetCollectibleCount(ItemType.TOTAL_BLUEPRINTS, int.Max(count - 1, 0));
     }
 
-    #region Proxy Properties
-
-    private int _count = 0;
-    public int Count
+    private bool CanChangeCount()
     {
-        get => _count;
-        protected set => SetProperty(ref _count, value);
-    }
-
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        protected set => SetProperty(ref _imageResourceKey, value);
+        return !_userSettingsService.Autotracking;
     }
 
     #endregion

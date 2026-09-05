@@ -24,272 +24,172 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
 
     #region Proxy Properties
 
-    private bool _isTopMostEnabled;
-    public bool IsTopMostEnabled
+    [ObservableProperty]
+    public partial bool IsTopMostEnabled { get; set; }
+
+    partial void OnIsTopMostEnabledChanged(bool value)
     {
-        get => _isTopMostEnabled;
-        set
+        _userSettingsService.TopMost = value;
+    }
+
+    [ObservableProperty]
+    public partial bool IsAutotrackingEnabled { get; set; }
+
+    partial void OnIsAutotrackingEnabledChanged(bool value)
+    {
+        _userSettingsService.Autotracking = value;
+    }
+
+    [ObservableProperty]
+    public partial bool IsSongDisplayEnabled { get; set; }
+
+    partial void OnIsSongDisplayEnabledChanged(bool value)
+    {
+        _userSettingsService.SongDisplay = value;
+    }
+
+    [ObservableProperty]
+    public partial bool IsHelmInLevelOrderEnabled { get; set; }
+
+    partial void OnIsHelmInLevelOrderEnabledChanged(bool value)
+    {
+        _userSettingsService.HelmInLevelOrder = value;
+    }
+
+    [ObservableProperty]
+    public partial bool IsColoredBarrelPadMovesEnabled { get; set; }
+
+    partial void OnIsColoredBarrelPadMovesEnabledChanged(bool value)
+    {
+        _themeService.SetBarrelPadTheme(value);
+    }
+
+    [ObservableProperty]
+    public partial bool IsTotalBlueprintCollectibleEnabled { get; set; }
+
+    partial void OnIsTotalBlueprintCollectibleEnabledChanged(bool value)
+    {
+        _userSettingsService.ShowTotalBPs = value;
+    }
+
+    [ObservableProperty]
+    public partial bool IsCompanyCoinCollectibleEnabled { get; set; }
+
+    partial void OnIsCompanyCoinCollectibleEnabledChanged(bool value)
+    {
+        _userSettingsService.ShowCompanyCoins = value;
+    }
+
+    [ObservableProperty]
+    public partial bool IsShowingHelmSpoilerInfoEnabled { get; set; }
+
+    partial void OnIsShowingHelmSpoilerInfoEnabledChanged(bool value)
+    {
+        _userSettingsService.ShowHelmOrder = value;
+    }
+
+    [ObservableProperty]
+    public partial bool IsShowingBossSpoilerInfoEnabled { get; set; }
+
+    partial void OnIsShowingBossSpoilerInfoEnabledChanged(bool value)
+    {
+        _userSettingsService.ShowKRoolOrder = value;
+    }
+
+    [ObservableProperty]
+    public partial bool IsProgressiveHintCounterEnabled { get; set; }
+
+    partial void OnIsProgressiveHintCounterEnabledChanged(bool value)
+    {
+        _userSettingsService.ShowAmountForHints = value;
+    }
+
+    [ObservableProperty]
+    public partial HintDisplayMode HintDisplayMode { get; set; }
+
+    partial void OnHintDisplayModeChanged(HintDisplayMode oldValue, HintDisplayMode newValue)
+    {
+        bool wasVisible = oldValue != HintDisplayMode.Off;
+        bool isVisible = newValue != HintDisplayMode.Off;
+        _userSettingsService.HintDisplay = newValue;
+        if (wasVisible != isVisible)
         {
-            if (SetProperty(ref _isTopMostEnabled, value))
-            {
-                _userSettingsService.TopMost = value;
-            }
+            OnPropertyChanged(nameof(CurrentWindowWidth));
         }
     }
 
-    private bool _isAutotrackingEnabled;
-    public bool IsAutotrackingEnabled
+    [ObservableProperty]
+    public partial bool IsHelmDoorPanelEnabled { get; set; }
+
+    partial void OnIsHelmDoorPanelEnabledChanged(bool value)
     {
-        get => _isAutotrackingEnabled;
-        set
-        {
-            if (SetProperty(ref _isAutotrackingEnabled, value))
-            {
-                _userSettingsService.Autotracking = value;
-            }
-        }
+        _userSettingsService.HelmDoors = value;
     }
 
-    private bool _isSongDisplayEnabled;
-    public bool IsSongDisplayEnabled
+    [ObservableProperty]
+    public partial bool IsCompactModeEnabled { get; set; }
+
+    partial void OnIsCompactModeEnabledChanged(bool value)
     {
-        get => _isSongDisplayEnabled;
-        set
-        {
-            if (SetProperty(ref _isSongDisplayEnabled, value))
-            {
-                _userSettingsService.SongDisplay = value;
-            }
-        }
+        _userSettingsService.CompactMode = value;
+        OnPropertyChanged(nameof(HintColumnWidth));
+        OnPropertyChanged(nameof(CurrentWindowWidth));
     }
 
-    private bool _isHelmInLevelOrderEnabled;
-    public bool IsHelmInLevelOrderEnabled
+    [ObservableProperty]
+    public partial bool IsSortablePathHintsEnabled { get; set; } = false;
+
+    partial void OnIsSortablePathHintsEnabledChanged(bool value)
     {
-        get => _isHelmInLevelOrderEnabled;
-        set
-        {
-            if (SetProperty(ref _isHelmInLevelOrderEnabled, value))
-            {
-                _userSettingsService.HelmInLevelOrder = value;
-            }
-        }
+        _userSettingsService.AutoSortPathHints = value;
     }
 
-    private bool _isColoredBarrelPadMovesEnabled;
-    public bool IsColoredBarrelPadMovesEnabled
+    [ObservableProperty]
+    public partial bool IsEnemySearchEnabled { get; set; } = false;
+
+    partial void OnIsEnemySearchEnabledChanged(bool value)
     {
-        get => _isColoredBarrelPadMovesEnabled;
-        set
-        {
-            if (SetProperty(ref _isColoredBarrelPadMovesEnabled, value))
-            {
-                // The theme service handles updating the colored barrel/pad moves setting.
-                _themeService.SetBarrelPadTheme(value);
-            }
-        }
+        _userSettingsService.EnemiesInAutofill = value;
     }
 
-    private bool _isTotalBlueprintCollectibleEnabled;
-    public bool IsTotalBlueprintCollectibleEnabled
+    [ObservableProperty]
+    public partial bool IsBroadcastViewEnabled { get; set; } = false;
+
+    partial void OnIsBroadcastViewEnabledChanged(bool value)
     {
-        get => _isTotalBlueprintCollectibleEnabled;
-        set
-        {
-            if (SetProperty(ref _isTotalBlueprintCollectibleEnabled, value))
-            {
-                _userSettingsService.ShowTotalBPs = value;
-            }
-        }
+        _userSettingsService.BroadcastViewActive = value;
     }
 
-    private bool _isCompanyCoinCollectibleEnabled;
-    public bool IsCompanyCoinCollectibleEnabled
+    [ObservableProperty]
+    public partial bool IsBroadcastHelmKRoolEnabled { get; set; } = false;
+
+    partial void OnIsBroadcastHelmKRoolEnabledChanged(bool value)
     {
-        get => _isCompanyCoinCollectibleEnabled;
-        set
-        {
-            if (SetProperty(ref _isCompanyCoinCollectibleEnabled, value))
-            {
-                _userSettingsService.ShowCompanyCoins = value;
-            }
-        }
+        _userSettingsService.BroadcastHelmKRool = value;
     }
 
-    private bool _isShowingHelmSpoilerInfoEnabled;
-    public bool IsShowingHelmSpoilerInfoEnabled
+    [ObservableProperty]
+    public partial bool IsBroadcastShopkeepersEnabled { get; set; } = false;
+
+    partial void OnIsBroadcastShopkeepersEnabledChanged(bool value)
     {
-        get => _isShowingHelmSpoilerInfoEnabled;
-        set
-        {
-            if (SetProperty(ref _isShowingHelmSpoilerInfoEnabled, value))
-            {
-                _userSettingsService.ShowHelmOrder = value;
-            }
-        }
+        _userSettingsService.BroadcastShopkeepers = value;
     }
 
-    private bool _isShowingBossSpoilerInfoEnabled;
-    public bool IsShowingBossSpoilerInfoEnabled
+    [ObservableProperty]
+    public partial bool IsBroadcastSongDisplayEnabled { get; set; } = false;
+
+    partial void OnIsBroadcastSongDisplayEnabledChanged(bool value)
     {
-        get => _isShowingBossSpoilerInfoEnabled;
-        set
-        {
-            if (SetProperty(ref _isShowingBossSpoilerInfoEnabled, value))
-            {
-                _userSettingsService.ShowKRoolOrder = value;
-            }
-        }
+        _userSettingsService.BroadcastSongDisplay = value;
     }
 
-    private bool _isProgressiveHintCounterEnabled;
-    public bool IsProgressiveHintCounterEnabled
-    {
-        get => _isProgressiveHintCounterEnabled;
-        set
-        {
-            if (SetProperty(ref _isProgressiveHintCounterEnabled, value))
-            {
-                _userSettingsService.ShowAmountForHints = value;
-            }
-        }
-    }
+    [ObservableProperty]
+    public partial BroadcastNumberLabel BroadcastNumberLabel { get; set; }
 
-    private HintDisplayMode _hintDisplayMode;
-    public HintDisplayMode HintDisplayMode
+    partial void OnBroadcastNumberLabelChanged(BroadcastNumberLabel value)
     {
-        get => _hintDisplayMode;
-        set
-        {
-            bool wasVisible = _hintDisplayMode != HintDisplayMode.Off;
-            bool isVisible = value != HintDisplayMode.Off;
-
-            if (SetProperty(ref _hintDisplayMode, value))
-            {
-                _userSettingsService.HintDisplay = value;
-                if (wasVisible != isVisible)
-                {
-                    OnPropertyChanged(nameof(CurrentWindowWidth));
-                }
-            }
-        }
-    }
-
-    private bool _isHelmDoorPanelEnabled;
-    public bool IsHelmDoorPanelEnabled
-    {
-        get => _isHelmDoorPanelEnabled;
-        set
-        {
-            if (SetProperty(ref _isHelmDoorPanelEnabled, value))
-            {
-                _userSettingsService.HelmDoors = value;
-            }
-        }
-    }
-
-    private bool _isCompactModeEnabled;
-    public bool IsCompactModeEnabled
-    {
-        get => _isCompactModeEnabled;
-        set
-        {
-            if (SetProperty(ref _isCompactModeEnabled, value))
-            {
-                _userSettingsService.CompactMode = value;
-            }
-        }
-    }
-
-    private bool _isSortablePathHintsEnabled = false;
-    public bool IsSortablePathHintsEnabled
-    {
-        get => _isSortablePathHintsEnabled;
-        set
-        {
-            if (SetProperty(ref _isSortablePathHintsEnabled, value))
-            {
-                _userSettingsService.AutoSortPathHints = value;
-            }
-        }
-    }
-
-    private bool _isEnemySearchEnabled = false;
-    public bool IsEnemySearchEnabled
-    {
-        get => _isEnemySearchEnabled;
-        set
-        {
-            if (SetProperty(ref _isEnemySearchEnabled, value))
-            {
-                _userSettingsService.EnemiesInAutofill = value;
-            }
-        }
-    }
-
-    private bool _isBroadcastViewEnabled = false;
-    public bool IsBroadcastViewEnabled
-    {
-        get => _isBroadcastViewEnabled;
-        set
-        {
-            if (SetProperty(ref _isBroadcastViewEnabled, value))
-            {
-                _userSettingsService.BroadcastViewActive = value;
-            }
-        }
-    }
-
-    private bool _isBroadcastHelmKRoolEnabled = false;
-    public bool IsBroadcastHelmKRoolEnabled
-    {
-        get => _isBroadcastHelmKRoolEnabled;
-        set
-        {
-            if (SetProperty(ref _isBroadcastHelmKRoolEnabled, value))
-            {
-                _userSettingsService.BroadcastHelmKRool = value;
-            }
-        }
-    }
-
-    private bool _isBroadcastShopkeepersEnabled = false;
-    public bool IsBroadcastShopkeepersEnabled
-    {
-        get => _isBroadcastShopkeepersEnabled;
-        set
-        {
-            if (SetProperty(ref _isBroadcastShopkeepersEnabled, value))
-            {
-                _userSettingsService.BroadcastShopkeepers = value;
-            }
-        }
-    }
-
-    private bool _isBroadcastSongDisplayEnabled = false;
-    public bool IsBroadcastSongDisplayEnabled
-    {
-        get => _isBroadcastSongDisplayEnabled;
-        set
-        {
-            if (SetProperty(ref _isBroadcastSongDisplayEnabled, value))
-            {
-                _userSettingsService.BroadcastSongDisplay = value;
-            }
-        }
-    }
-
-    private BroadcastNumberLabel _broadcastNumberLabel;
-    public BroadcastNumberLabel BroadcastNumberLabel
-    {
-        get => _broadcastNumberLabel;
-        set
-        {
-            if (SetProperty(ref _broadcastNumberLabel, value))
-            {
-                _userSettingsService.BroadcastNumberLabel = value;
-            }
-        }
+        _userSettingsService.BroadcastNumberLabel = value;
     }
 
     /// <summary>

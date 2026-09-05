@@ -19,12 +19,8 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
 
     #region Proxy Properties
 
-    private ObservableCollection<RegionItemViewModel> _items = [];
-    public ObservableCollection<RegionItemViewModel> Items
-    {
-        get => _items;
-        set => SetProperty(ref _items, value);
-    }
+    [ObservableProperty]
+    public partial ObservableCollection<RegionItemViewModel> Items { get; set; } = [];
 
     public RegionName RegionName => _regionName;
 

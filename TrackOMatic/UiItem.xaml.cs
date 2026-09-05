@@ -86,7 +86,10 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
     {
         if (DataContext is UiItemViewModel viewModel)
         {
-            viewModel.ToggleStar();
+            if (viewModel.ToggleStarCommand.CanExecute(null))
+            {
+                viewModel.ToggleStarCommand.Execute(null);
+            }
         }
     }
 
@@ -242,12 +245,17 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
 
                 if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
                 {
-                    viewModel.ToggleStar();
+                    if (viewModel.ToggleStarCommand.CanExecute(null))
+                    {
+                        viewModel.ToggleStarCommand.Execute(null);
+                    }
                 }
                 else
                 {
-                    // Maybe consider autotrack protections here.
-                    viewModel.RemoveFromRegion();
+                    if (viewModel.RemoveFromRegionCommand.CanExecute(null))
+                    {
+                        viewModel.RemoveFromRegionCommand.Execute(null);
+                    }
                 }
             }
         }

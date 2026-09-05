@@ -1,6 +1,7 @@
 using System.ComponentModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
@@ -18,8 +19,6 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
     private readonly ItemName _itemName;
 
     public MouseDragType MouseDragType { get; private set; }
-
-
 
     #region Proxy Properties
 
@@ -88,6 +87,10 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         UpdateHoverText();
     }
 
+    /// <summary>
+    /// Initiates a drag operation with the specified drag type and dimensions.
+    /// This is called by drag event handlers in the view code-behind.
+    /// </summary>
     public void BeginDrag(MouseDragType dragType, double width, double height)
     {
         Opacity = dragType == MouseDragType.Right ? 0.375 : 1.0;
@@ -98,6 +101,10 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         UpdateImageResourceKey(null);
     }
 
+    /// <summary>
+    /// Ends the current drag operation and restores opacity.
+    /// This is called by drag event handlers in the view code-behind.
+    /// </summary>
     public void EndDrag()
     {
         IsDragging = false;
@@ -115,6 +122,10 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         UpdateImageResourceKey(savedItem);
     }
 
+    /// <summary>
+    /// Completes a drag operation by placing the item in the found region.
+    /// This is called by drag event handlers in the view code-behind.
+    /// </summary>
     public void CompleteDrag(RegionName foundRegion)
     {
         IsDragging = false;
@@ -131,12 +142,16 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
         MouseDragType = MouseDragType.None;
     }
 
-    public void ToggleStar()
+    #region Commands
+
+    [RelayCommand]
+    private void ToggleStar()
     {
         _itemTrackingService.ToggleStar(_itemName);
     }
 
-    public void RemoveFromRegion()
+    [RelayCommand(CanExecute = nameof(CanRemoveFromRegion))]
+    private void RemoveFromRegion()
     {
         var item = _itemTrackingService.GetItemState(_itemName);
         if (item is not null)
@@ -144,6 +159,14 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
             _itemTrackingService.ClearItemState(_itemName);
         }
     }
+
+    private bool CanRemoveFromRegion()
+    {
+        var item = _itemTrackingService.GetItemState(_itemName);
+        return item is not null && !item.Autotracked;
+    }
+
+    #endregion
 
     private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
@@ -158,11 +181,6 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
             // Update hover text from spoiler service if available
             UpdateHoverText();
         }
-    }
-
-    private void UpdateHoverText()
-    {
-        // TODO: Query _spoilerService for detailed hint/point information when available
     }
 
     private void UpdateImageResourceKey(SavedItem? item)

@@ -23,18 +23,22 @@ public partial class RegionItem : UserControl
         if (e.LeftButton == MouseButtonState.Pressed)
         {
             var isShiftPressed = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
-            if (isShiftPressed) {
-                viewModel.ToggleStar();
-            }
-            else
+            if (isShiftPressed && viewModel.ToggleStarCommand.CanExecute(null))
             {
-                viewModel.RemoveFromRegion();
+                viewModel.ToggleStarCommand.Execute(null);
+            }
+            else if (viewModel.RemoveFromRegionCommand.CanExecute(null))
+            {
+                viewModel.RemoveFromRegionCommand.Execute(null);
             }
             e.Handled = true;
         }
         else if (e.MiddleButton == MouseButtonState.Pressed)
         {
-            viewModel.ToggleStar();
+            if (viewModel.ToggleStarCommand.CanExecute(null))
+            {
+                viewModel.ToggleStarCommand.Execute(null);
+            }
             e.Handled = true;
         }
     }
@@ -45,9 +49,9 @@ public partial class RegionItem : UserControl
         {
             return;
         }
-        if ( e.Delta != 0)
+        if (e.Delta != 0 && viewModel.ToggleStarCommand.CanExecute(null))
         {
-            viewModel.ToggleStar();
+            viewModel.ToggleStarCommand.Execute(null);
             e.Handled = true;
         }
     }

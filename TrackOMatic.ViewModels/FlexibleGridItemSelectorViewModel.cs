@@ -9,16 +9,10 @@ namespace TrackOMatic.ViewModels;
 /// <summary>
 /// Represents a row of items in the flexible grid selector, grouped by row index.
 /// </summary>
-public class ItemGridRowGroup : ObservableObject
+public class ItemGridRowGroup(int rowIndex, IEnumerable<ItemGridCell> items) : ObservableObject
 {
-    private readonly int _rowIndex;
-    private ObservableCollection<ItemGridCell> _items;
-
-    public ItemGridRowGroup(int rowIndex, IEnumerable<ItemGridCell> items)
-    {
-        _rowIndex = rowIndex;
-        _items = new ObservableCollection<ItemGridCell>(items);
-    }
+    private readonly int _rowIndex = rowIndex;
+    private readonly ObservableCollection<ItemGridCell> _items = new(items);
 
     public int RowIndex => _rowIndex;
     public ObservableCollection<ItemGridCell> Items => _items;
@@ -31,7 +25,7 @@ public class ItemGridRowGroup : ObservableObject
 public class FlexibleGridItemSelectorViewModel : ObservableObject
 {
     private ItemGridCell? _selectedItem;
-    private ObservableCollection<ItemGridRowGroup> _itemGroups;
+    private readonly ObservableCollection<ItemGridRowGroup> _itemGroups;
 
     public FlexibleGridItemSelectorViewModel(IReadOnlyList<ItemGridCell> items)
     {

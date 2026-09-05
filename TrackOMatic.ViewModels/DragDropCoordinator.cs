@@ -1,8 +1,7 @@
 using TrackOMatic.Logic.Enums;
-using TrackOMatic.ViewModels;
 using TrackOMatic.ViewModels.Regions;
 
-namespace TrackOMatic.Ui;
+namespace TrackOMatic.ViewModels;
 
 public class DragDropCoordinator : IDragDropCoordinator
 {

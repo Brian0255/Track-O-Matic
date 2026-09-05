@@ -30,17 +30,17 @@ public partial class TotalBlueprint : UserControl
 
     private void UserControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is UiTotalBlueprintViewModel viewModel)
+        if (DataContext is UiTotalBlueprintViewModel viewModel && viewModel.IncrementCountCommand.CanExecute(null))
         {
-            viewModel.IncrementCount();
+            viewModel.IncrementCountCommand.Execute(null);
         }
     }
 
     private void UserControl_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is UiTotalBlueprintViewModel viewModel)
+        if (DataContext is UiTotalBlueprintViewModel viewModel && viewModel.DecrementCountCommand.CanExecute(null))
         {
-            viewModel.DecrementCount();
+            viewModel.DecrementCountCommand.Execute(null);
         }
     }
 
@@ -50,13 +50,13 @@ public partial class TotalBlueprint : UserControl
         {
             return;
         }
-        if (e.Delta > 0)
+        if (e.Delta > 0 && viewModel.IncrementCountCommand.CanExecute(null))
         {
-            viewModel.IncrementCount();
+            viewModel.IncrementCountCommand.Execute(null);
         }
-        else if (e.Delta < 0)
+        else if (e.Delta < 0 && viewModel.DecrementCountCommand.CanExecute(null))
         {
-            viewModel.DecrementCount();
+            viewModel.DecrementCountCommand.Execute(null);
         }
         e.Handled = true;
     }

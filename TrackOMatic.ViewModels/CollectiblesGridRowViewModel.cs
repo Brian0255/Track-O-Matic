@@ -21,40 +21,20 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
 
     #region Properties
 
-    private bool _isWrinklyVisible;
-    public bool IsWrinklyVisible
-    {
-        get => _isWrinklyVisible;
-        set => SetProperty(ref _isWrinklyVisible, value);
-    }
+    [ObservableProperty]
+    public partial bool IsWrinklyVisible { get; set; }
 
-    private string _wrinklyResourceKey = "";
-    public string WrinklyResourceKey
-    {
-        get => _wrinklyResourceKey;
-        set => SetProperty(ref _wrinklyResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string WrinklyResourceKey { get; set; } = "";
 
-    private string _hintResourceKey = "";
-    public string HintResourceKey
-    {
-        get => _hintResourceKey;
-        set => SetProperty(ref _hintResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string HintResourceKey { get; set; } = "";
 
-    private int _amountToNextHint = -1;
-    public int AmountToNextHint
-    {
-        get => _amountToNextHint;
-        set => SetProperty(ref _amountToNextHint, value);
-    }
+    [ObservableProperty]
+    public partial int AmountToNextHint { get; set; } = -1;
 
-    private int _hiddenCollectibleCount = -1;
-    public int HiddenCollectibleCount
-    {
-        get => _hiddenCollectibleCount;
-        set => SetProperty(ref _hiddenCollectibleCount, value);
-    }
+    [ObservableProperty]
+    public partial int HiddenCollectibleCount { get; set; } = -1;
 
     public int VisibleCount => 8 - HiddenCollectibleCount;
 

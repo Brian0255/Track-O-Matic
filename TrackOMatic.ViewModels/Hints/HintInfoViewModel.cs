@@ -56,24 +56,6 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     /// </summary>
     private bool _foundItemsDialogOpened = false;
 
-    private HintPanelType _hintPanelType = (HintPanelType)(-1); // Initialize to invalid value to ensure first assignment triggers notification
-
-    public HintPanelType HintPanelType
-    {
-        get => _hintPanelType;
-        private set
-        {
-            if (SetProperty(ref _hintPanelType, value))
-            {
-                // Update dependent properties when HintPanelType changes
-                IsHintInfoPath = value == HintPanelType.Paths;
-                IsHintInfoFoolish = value == HintPanelType.Foolish;
-                IsHintInfoPotionCount = value == HintPanelType.PotionCounts;
-                OnPropertyChanged(nameof(IsHintInfoNotFoolish));
-            }
-        }
-    }
-
     public RegionName RegionName { get; private set; }
 
     /// <summary>
@@ -88,54 +70,42 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     /// </summary>
     public event EventHandler? FoundItemsSelectionRequested;
 
-    private string _locationText = "";
-    public string LocationText
+    [ObservableProperty]
+    public partial HintPanelType HintPanelType { get; set; } = (HintPanelType)(-1);
+
+    partial void OnHintPanelTypeChanged(HintPanelType value)
     {
-        get => _locationText;
-        set
-        {
-            if (SetProperty(ref _locationText, value))
-            {
-                _hintService.UpdateHintLocation(_hintId, value);
-            }
-        }
+        // Update dependent properties when HintPanelType changes
+        IsHintInfoPath = value == HintPanelType.Paths;
+        IsHintInfoFoolish = value == HintPanelType.Foolish;
+        IsHintInfoPotionCount = value == HintPanelType.PotionCounts;
+        OnPropertyChanged(nameof(IsHintInfoNotFoolish));
     }
 
-    private string _potionCountText = "";
-    public string PotionCountText
+    [ObservableProperty]
+    public partial string LocationText { get; set; } = "";
+
+    partial void OnLocationTextChanged(string value)
     {
-        get => _potionCountText;
-        set
-        {
-            if (SetProperty(ref _potionCountText, value))
-            {
-                _hintService.UpdateHintPotionCount(_hintId, value);
-            }
-        }
+        _hintService.UpdateHintLocation(_hintId, value);
     }
 
-    private HintTypeSettings _hintTypeSettings = null!;
-    public HintTypeSettings HintTypeSettings
+    [ObservableProperty]
+    public partial string PotionCountText { get; set; } = "";
+
+    partial void OnPotionCountTextChanged(string value)
     {
-        get => _hintTypeSettings;
-        set => SetProperty(ref _hintTypeSettings, value);
+        _hintService.UpdateHintPotionCount(_hintId, value);
     }
 
+    [ObservableProperty]
+    public partial HintTypeSettings HintTypeSettings { get; set; } = null!;
 
+    [ObservableProperty]
+    public partial ObservableCollection<string> Suggestions { get; set; } = [];
 
-    private ObservableCollection<string> _suggestions = new();
-    public ObservableCollection<string> Suggestions
-    {
-        get => _suggestions;
-        set => SetProperty(ref _suggestions, value);
-    }
-
-    private bool _suggestionBoxIsOpen = false;
-    public bool SuggestionBoxIsOpen
-    {
-        get => _suggestionBoxIsOpen;
-        set => SetProperty(ref _suggestionBoxIsOpen, value);
-    }
+    [ObservableProperty]
+    public partial bool SuggestionBoxIsOpen { get; set; } = false;
 
 
     /// <summary>
@@ -146,9 +116,9 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         get
         {
             _foundHintItemListViewModel ??= new FoundHintItemListViewModel(
-                _hintPanelType,
+HintPanelType,
                 _hintId,
-                $"Select Found Items - {_hintPanelType}",
+                $"Select Found Items - {HintPanelType}",
                 _itemTrackingService,
                 _hintItemSelectionService,
                 _hintService,
@@ -167,7 +137,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         get
         {
             _pathHintItemListViewModel ??= new PathHintItemListViewModel(
-                _hintPanelType,
+HintPanelType,
                 _hintId,
                 "Select Path Items",
                 _hintService,
@@ -179,29 +149,16 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     }
     private PathHintItemListViewModel? _pathHintItemListViewModel;
 
+    [ObservableProperty]
+    public partial bool IsHintInfoPath { get; set; } = false;
 
-    private bool _isHintInfoPath = false;
-    public bool IsHintInfoPath
-    {
-        get => _isHintInfoPath;
-        private set => SetProperty(ref _isHintInfoPath, value);
-    }
-
-    private bool _isHintInfoFoolish = false;
-    public bool IsHintInfoFoolish
-    {
-        get => _isHintInfoFoolish;
-        private set => SetProperty(ref _isHintInfoFoolish, value);
-    }
+    [ObservableProperty]
+    public partial bool IsHintInfoFoolish { get; set; } = false;
 
     public bool IsHintInfoNotFoolish => !IsHintInfoPath;
 
-    private bool _isHintInfoPotionCount = false;
-    public bool IsHintInfoPotionCount
-    {
-        get => _isHintInfoPotionCount;
-        private set => SetProperty(ref _isHintInfoPotionCount, value);
-    }
+    [ObservableProperty]
+    public partial bool IsHintInfoPotionCount { get; set; } = false;
 
     /// <summary>
     /// Configuration for hint suggestions (if applicable to this hint type).
@@ -283,7 +240,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
             return;
         }
 
-        _potionCountText = e.UpdatedHint.PotionCountText;
+        PotionCountText = e.UpdatedHint.PotionCountText;
         OnPropertyChanged(nameof(PotionCountText));
     }
 
@@ -294,7 +251,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
             return;
         }
 
-        _locationText = e.UpdatedHint.LocationText;
+        LocationText = e.UpdatedHint.LocationText;
         OnPropertyChanged(nameof(LocationText));
         UpdateSuggestions();
     }
@@ -363,7 +320,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     public void ConfirmLocationAndItems((string locationText, double X, double Y) screenMousePosition)
     {
         // Try Kong hint parsing if applicable
-        if (_hintPanelType == HintPanelType.Kongs)
+        if (HintPanelType == HintPanelType.Kongs)
         {
             if (TryProcessKongHint(LocationText))
             {
@@ -411,7 +368,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     public void RemoveHint()
     {
         // Only process direct item hints that tie themselves to a region.
-        var targetRegion = _hintPanelType.ToRegion();
+        var targetRegion = HintPanelType.ToRegion();
         if (targetRegion.IsPlayableRegion())
         {
             foreach (var hint in FoundHintItemListViewModel.FoundItems)
@@ -444,7 +401,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     private bool CanFocusAndSelectPotionCount()
     {
         return LocationText.Length > 0
-            && _hintPanelType == HintPanelType.PotionCounts
+            && HintPanelType == HintPanelType.PotionCounts
             && !_potionCountFocusedForCurrentLocation;
     }
 
@@ -463,7 +420,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     private bool CanConfirmPotionCount()
     {
         // Allow confirm if we have both location and potion count text
-        return LocationText.Length > 0 && PotionCountText.Length > 0 && _hintPanelType == HintPanelType.PotionCounts;
+        return LocationText.Length > 0 && PotionCountText.Length > 0 && HintPanelType == HintPanelType.PotionCounts;
     }
 
     /// <summary>
@@ -497,7 +454,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         }
 
         // Priority 3: Kongs panel (special Kong hint parsing logic)
-        if (_hintPanelType == HintPanelType.Kongs)
+        if (HintPanelType == HintPanelType.Kongs)
         {
             if (TryProcessKongHint(LocationText))
             {
@@ -527,7 +484,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     {
         var matches = _shortcutService.FindMatches(
             LocationText,
-            _hintPanelType,
+            HintPanelType,
             HintSuggestionConfig
         ).ToList();
 
@@ -545,7 +502,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         // Update dropdown visibility
         bool shouldBeOpen = LocationText != ""
             && Suggestions.Count > 0
-            && _hintPanelType != HintPanelType.Kongs;
+            && HintPanelType != HintPanelType.Kongs;
 
 
         SuggestionBoxIsOpen = shouldBeOpen;
@@ -617,7 +574,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
 
     public override string ToString()
     {
-        switch (_hintPanelType)
+        switch (HintPanelType)
         {
             case HintPanelType.Paths:
                 return $"Hint {_hintId}: {LocationText} is on the Path";

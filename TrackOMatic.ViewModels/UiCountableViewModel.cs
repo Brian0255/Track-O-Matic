@@ -9,23 +9,18 @@ using TrackOMatic.ViewModels.Broadcast;
 
 namespace TrackOMatic.ViewModels;
 
-public partial class UiCountableViewModel : CountableViewModel, INotifyPropertyChanged
+public partial class UiCountableViewModel(
+    ItemType itemType,
+    ICollectiblesService collectiblesService,
+    IParsedSpoilerDataService parsedSpoilerDataService,
+    IUserSettingsService userSettingsService
+) : CountableViewModel(itemType, collectiblesService, parsedSpoilerDataService), INotifyPropertyChanged
 {
-    private readonly IUserSettingsService _userSettingsService;
-    private readonly ICollectiblesService _collectiblesService;
-    private readonly ItemType _itemType;
-
-    public UiCountableViewModel(
-        ItemType itemType,
-        ICollectiblesService collectiblesService,
-        IParsedSpoilerDataService parsedSpoilerDataService,
-        IUserSettingsService userSettingsService
-    ) : base(itemType, collectiblesService, parsedSpoilerDataService)
-    {
-        _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
-        _collectiblesService = collectiblesService ?? throw new ArgumentNullException(nameof(collectiblesService));
-        _itemType = itemType;
-    }
+    private readonly IUserSettingsService _userSettingsService = userSettingsService
+        ?? throw new ArgumentNullException(nameof(userSettingsService));
+    private readonly ICollectiblesService _collectiblesService = collectiblesService
+        ?? throw new ArgumentNullException(nameof(collectiblesService));
+    private readonly ItemType _itemType = itemType;
 
     #region Commands
 

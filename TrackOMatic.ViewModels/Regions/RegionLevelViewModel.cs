@@ -15,10 +15,15 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
 
-    internal int ToLevelOrderIndex()
-    {
-        return (int)_regionName - 2;
-    }
+    #region Proxy Properties
+
+    [ObservableProperty]
+    public partial int LevelOrderNumber { get; set; }
+
+    [ObservableProperty]
+    public partial string LevelText { get; set; } = "?";
+
+    #endregion
 
     public RegionLevelViewModel(
         RegionName regionName,
@@ -41,23 +46,7 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
         UpdateLevelOrderNumber();
     }
 
-    #region Proxy Properties
-
-    private int _levelOrderNumber;
-    public int LevelOrderNumber
-    {
-        get => _levelOrderNumber;
-        private set => SetProperty(ref _levelOrderNumber, value);
-    }
-
-    private string _levelText = "?";
-    public string LevelText
-    {
-        get => _levelText;
-        internal set => SetProperty(ref _levelText, value);
-    }
-
-    #endregion
+    #region Commands
 
     [RelayCommand(CanExecute = nameof(CanChangeLevelOrder))]
     private void IncrementLevelOrder()
@@ -115,6 +104,13 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
 
     private bool CanHandleMouseWheel(int _) => CanChangeLevelOrder();
 
+    #endregion
+
+    internal int ToLevelOrderIndex()
+    {
+        return (int)_regionName - 2;
+    }
+
     #region IDisposable
 
     private bool _disposed = false;
@@ -160,19 +156,19 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
         var spoiledLevelOrder = _parsedSpoilerDataService.CurrentData?.LevelOrder ?? [];
         if (spoiledLevelOrder.TryGetValue(_regionName, out int index))
         {
-            _levelOrderNumber = index;
+            LevelOrderNumber = index;
         }
         else
         {
             var levelOrders = _levelOrderService.GetLevelOrder();
             index = ToLevelOrderIndex();
-            _levelOrderNumber = (index >= 0 && index < levelOrders.Count) ? levelOrders[index] : 0;
+            LevelOrderNumber = (index >= 0 && index < levelOrders.Count) ? levelOrders[index] : 0;
         }
 
         // If Hideout Helm is not in level order (setting disabled), force it to level 8
         if (_regionName == RegionName.HIDEOUT_HELM && !_userSettingsService.HelmInLevelOrder)
         {
-            _levelOrderNumber = 8;
+            LevelOrderNumber = 8;
         }
 
         UpdateLevelText();

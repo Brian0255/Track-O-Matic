@@ -67,7 +67,7 @@ public partial class MultiGridItemSelectorViewModel : ObservableObject, IDisposa
     /// Command to close the dialog and finalize the selection.
     /// </summary>
     [RelayCommand]
-    public void ConfirmSelection()
+    private void ConfirmSelection()
     {
         // Collect all selected items
         var selected = new List<HintDialogItemViewModel>();

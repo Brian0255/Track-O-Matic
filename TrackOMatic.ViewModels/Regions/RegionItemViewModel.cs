@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
@@ -13,6 +14,20 @@ namespace TrackOMatic.ViewModels.Regions;
 /// </summary>
 public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionItemViewModel>, IRegionItemViewModel, IVialSlot
 {
+    // TODO: Maybe move this out of the view model specifically?
+    private static readonly HashSet<ItemName> _barrelPadItems =
+    [
+        ItemName.STRONG_KONG,
+        ItemName.ROCKETBARREL_BOOST,
+        ItemName.ORANGSTAND_SPRINT,
+        ItemName.MINI_MONKEY,
+        ItemName.HUNKY_CHUNKY,
+        ItemName.BABOON_BLAST,
+        ItemName.SIMIAN_SPRING,
+        ItemName.MONKEYPORT,
+        ItemName.GORILLA_GONE
+    ];
+
     protected ItemName? _itemName;
     protected readonly RegionName _regionName;
     private readonly IItemTrackingService _itemTrackingService;
@@ -30,56 +45,22 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
 
     #region Proxy Properties
 
-    private string _imageResourceKey = "";
-    public string ImageResourceKey
-    {
-        get => _imageResourceKey;
-        protected set => SetProperty(ref _imageResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string ImageResourceKey { get; set; } = "";
 
-    private bool _isStarred = false;
-    public bool IsStarred
-    {
-        get => _isStarred;
-        protected set => SetProperty(ref _isStarred, value);
-    }
+    [ObservableProperty]
+    public partial bool IsStarred { get; set; } = false;
 
-    private double _opacity = 1.0;
-    public double Opacity
-    {
-        get => _opacity;
-        protected set => SetProperty(ref _opacity, value);
-    }
+    [ObservableProperty]
+    public partial double Opacity { get; set; } = 1.0;
 
-    private string _hoverText = "";
-    public string HoverText
-    {
-        get => _hoverText;
-        protected set => SetProperty(ref _hoverText, value);
-    }
+    [ObservableProperty]
+    public partial string HoverText { get; set; } = "";
 
-    private bool _hasHoverText = false;
-    public bool HasHoverText
-    {
-        get => _hasHoverText;
-        protected set => SetProperty(ref _hasHoverText, value);
-    }
+    [ObservableProperty]
+    public partial bool HasHoverText { get; set; } = false;
 
     #endregion
-
-    // TODO: Maybe move this out of the view model specifically?
-    private static readonly HashSet<ItemName> BarrelPadItems =
-    [
-        ItemName.STRONG_KONG,
-        ItemName.ROCKETBARREL_BOOST,
-        ItemName.ORANGSTAND_SPRINT,
-        ItemName.MINI_MONKEY,
-        ItemName.HUNKY_CHUNKY,
-        ItemName.BABOON_BLAST,
-        ItemName.SIMIAN_SPRING,
-        ItemName.MONKEYPORT,
-        ItemName.GORILLA_GONE
-    ];
 
     public RegionItemViewModel(
         ItemName? itemName,
@@ -96,7 +77,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
         // Subscribe to events
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
-        if (_itemName.HasValue && BarrelPadItems.Contains(_itemName.Value))
+        if (_itemName.HasValue && _barrelPadItems.Contains(_itemName.Value))
         {
             _themeService.BarrelPadThemeChanged += OnBarrelPadThemeChanged;
         }
@@ -126,16 +107,51 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
     /// <returns></returns>
     public virtual bool AcceptDropAndMutate(ItemName itemToPlace, MouseDragType dragType) => false;
 
-    public virtual void RemoveFromRegion()
+    [RelayCommand(CanExecute = nameof(CanRemoveFromRegion))]
+    private void RemoveFromRegion()
     {
         var current = _itemName.HasValue ? _itemTrackingService.GetItemState(_itemName.Value) : null;
         if (current is not null)
         {
-            _itemTrackingService.SetItemState(_itemName!.Value, current with {
+            _itemTrackingService.SetItemState(_itemName!.Value, current with
+            {
                 Region = RegionName.UNKNOWN,
-                Opacity= 1,
+                Opacity = 1,
             });
         }
+    }
+
+    private bool CanRemoveFromRegion()
+    {
+        if (!CurrentItemName.HasValue)
+        {
+            return false;
+        }
+        var currentState = _itemTrackingService.GetItemState(CurrentItemName.Value);
+        if (currentState is null)
+        {
+            return false;
+        }
+        if (currentState.Autotracked)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanToggleStar))]
+    private void ToggleStar()
+    {
+        if (CurrentItemName is null)
+        {
+            return;
+        }
+        _itemTrackingService.ToggleStar(CurrentItemName.Value);
+    }
+
+    private bool CanToggleStar()
+    {
+        return CurrentItemName is not null && CurrentItemName.HasValue;
     }
 
     public int GetHoardPoints()
@@ -162,15 +178,6 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
         return _parsedSpoilerDataService.GetPointsForItem(CurrentItemName.Value);
     }
 
-    public virtual void ToggleStar()
-    {
-        if (CurrentItemName is null)
-        {
-            return;
-        }
-        _itemTrackingService.ToggleStar(CurrentItemName.Value);
-    }
-
     protected virtual void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
         if (e.UpdatedItem.ItemName == _itemName)
@@ -182,7 +189,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
     protected virtual void OnBarrelPadThemeChanged(object? sender, EventArgs e)
     {
         // If the item is a barrel pad, we need to update the image resource key to reflect the new theme.
-        if (_itemName.HasValue && BarrelPadItems.Contains(_itemName.Value))
+        if (_itemName.HasValue && _barrelPadItems.Contains(_itemName.Value))
         {
             var itemState = _itemTrackingService.GetItemState(_itemName.Value);
             // Force the frontend to re-evaluate the binding via temporary property change.
@@ -254,7 +261,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
             _disposed = true;
 
             _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
-            if (_itemName.HasValue && BarrelPadItems.Contains(_itemName.Value))
+            if (_itemName.HasValue && _barrelPadItems.Contains(_itemName.Value))
             {
                 _themeService.BarrelPadThemeChanged -= OnBarrelPadThemeChanged;
             }

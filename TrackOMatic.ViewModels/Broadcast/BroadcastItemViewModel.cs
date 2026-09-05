@@ -173,7 +173,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
         UpdateImageResourceKey(itemState);
     }
 
-    private void UpdateHoverText()
+    protected void UpdateHoverText()
     {
         var spoilerData = _parsedSpoilerDataService.CurrentData;
         if (spoilerData is null || !spoilerData.SpoilerSettings.PointsEnabled)

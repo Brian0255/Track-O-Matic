@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,8 +26,8 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     private readonly RegionSlotProviderRegistry? _slotProviderRegistry;
     private readonly SynchronizationContext _syncContext;
 
-    private VialItemListViewModel? _vialItemListViewModel;
-    private RegionItemListViewModel? _regionItemListViewModel;
+    private readonly VialItemListViewModel? _vialItemListViewModel;
+    private readonly RegionItemListViewModel? _regionItemListViewModel;
 
     #region Proxy Properties
 
@@ -38,54 +37,29 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     public VialItemListViewModel? VialItemListViewModel => _vialItemListViewModel;
 
     // Placed items in the grid
-    private ObservableCollection<IRegionItemViewModel> _placedItems = [];
-    public ObservableCollection<IRegionItemViewModel> PlacedItems
-    {
-        get => _placedItems;
-        private set => SetProperty(ref _placedItems, value);
-    }
+    [ObservableProperty]
+    public partial ObservableCollection<IRegionItemViewModel> PlacedItems { get; set; } = [];
 
-    private string _regionResourceKey = "";
-    public string RegionResourceKey
-    {
-        get => _regionResourceKey;
-        internal set => SetProperty(ref _regionResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string RegionResourceKey { get; set; } = "";
 
-    private string _backgroundResourceKey = "RegionBG";
-    public string BackgroundResourceKey
-    {
-        get => _backgroundResourceKey;
-        private set => SetProperty(ref _backgroundResourceKey, value);
-    }
+    [ObservableProperty]
+    public partial string BackgroundResourceKey { get; set; } = "RegionBG";
 
-    private bool _hasWothPoints = false;
-    public bool HasWothPoints
-    {
-        get => _hasWothPoints;
-        private set => SetProperty(ref _hasWothPoints, value);
-    }
+    [ObservableProperty]
+    public partial bool HasWothPoints { get; set; } = false;
 
-    private int _wothPoints = -1;
-    public int WothPoints
-    {
-        get => _wothPoints;
-        internal set => SetProperty(ref _wothPoints, value);
-    }
+    [ObservableProperty]
+    public partial int WothPoints { get; set; } = -1;
 
-    private bool _hasItemPoints = false;
-    public bool HasItemPoints
-    {
-        get => _hasItemPoints;
-        private set => SetProperty(ref _hasItemPoints, value);
-    }
+    [ObservableProperty]
+    public partial bool HasItemPoints { get; set; } = false;
 
-    private int _itemPoints = -1;
-    public int ItemPoints
-    {
-        get => _itemPoints;
-        private set => SetProperty(ref _itemPoints, value);
-    }
+    [ObservableProperty]
+    public partial int ItemPoints { get; set; } = -1;
+
+    [ObservableProperty]
+    public partial bool HasVials { get; set; } = false;
 
     public bool ShouldShowItemPoints
     {
@@ -139,10 +113,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         _slotProviderRegistry = slotProviderRegistry;
 
         // Register this region's vial slots with the registry (if available)
-        if (_slotProviderRegistry != null)
-        {
-            _slotProviderRegistry.RegisterRegionProvider(_regionName, this);
-        }
+        _slotProviderRegistry?.RegisterRegionProvider(_regionName, this);
 
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
@@ -176,16 +147,6 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         UpdateRegionResourceKey();
     }
 
-    private bool _hasVials = false;
-    /// <summary>
-    /// Determines if this region has vials enabled (spoiler mode with vials).
-    /// </summary>
-    public bool HasVials
-    {
-        get => _hasVials;
-        set => SetProperty(ref _hasVials, value);
-    }
-
     public IEnumerable<ObservableObject> SelectedItemList
     {
         get => HasVials
@@ -213,7 +174,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         {
             return GetVialSlots();
         }
-        return Enumerable.Empty<IVialSlot>();
+        return [];
     }
 
     private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)

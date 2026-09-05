@@ -97,17 +97,17 @@ public partial class KongBlueprint : UserControl
 
     private void UserControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is UiKongBlueprintViewModel viewModel)
+        if (DataContext is UiKongBlueprintViewModel viewModel && viewModel.IncrementCountCommand.CanExecute(null))
         {
-            viewModel.IncrementCount();
+            viewModel.IncrementCountCommand.Execute(null);
         }
     }
 
     private void UserControl_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is UiKongBlueprintViewModel viewModel)
+        if (DataContext is UiKongBlueprintViewModel viewModel && viewModel.DecrementCountCommand.CanExecute(null))
         {
-            viewModel.DecrementCount();
+            viewModel.DecrementCountCommand.Execute(null);
         }
     }
 
@@ -117,13 +117,13 @@ public partial class KongBlueprint : UserControl
         {
             return;
         }
-        if (e.Delta > 0)
+        if (e.Delta > 0 && viewModel.IncrementCountCommand.CanExecute(null))
         {
-            viewModel.IncrementCount();
+            viewModel.IncrementCountCommand.Execute(null);
         }
-        else if (e.Delta < 0)
+        else if (e.Delta < 0 && viewModel.DecrementCountCommand.CanExecute(null))
         {
-            viewModel.DecrementCount();
+            viewModel.DecrementCountCommand.Execute(null);
         }
         e.Handled = true;
     }

@@ -46,11 +46,6 @@ public interface IRegionItemViewModel: INotifyPropertyChanged, IDisposable
     bool AcceptDropAndMutate(ItemName itemToPlace, MouseDragType dragType);
 
     /// <summary>
-    /// Removes the item from the region, if it is currently present.
-    /// </summary>
-    void RemoveFromRegion();
-
-    /// <summary>
     /// Gets the hoard points associated with the item in the region, if any.
     /// </summary>
     /// <returns>The hoard points.</returns>
@@ -61,9 +56,4 @@ public interface IRegionItemViewModel: INotifyPropertyChanged, IDisposable
     /// </summary>
     /// <returns>The point value.</returns>
     int GetItemPoints();
-
-    /// <summary>
-    /// Toggles the starred state of the item in the region.
-    /// </summary>
-    void ToggleStar();
 }
