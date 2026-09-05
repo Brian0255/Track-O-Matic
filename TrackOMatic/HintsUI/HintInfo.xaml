@@ -11,11 +11,10 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=viewmodels:HintInfoViewModel}"
     d:DesignHeight="100"
-    d:DesignWidth="200"
+    d:DesignWidth="250"
     Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
-        <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
         <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
 
         <!-- Style for ListBoxItems in the suggestion dropdown -->

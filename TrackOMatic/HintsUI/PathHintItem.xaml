@@ -17,7 +17,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </ContentControl.Resources>
@@ -34,6 +34,6 @@
             </Border.Effect>
             <Image Source="{Binding ImageResourceKey, Converter={StaticResource ResourceKeyConverter}}"/>
         </Border>
-        <Image Source="{Binding CheckmarkKey, Converter={StaticResource ResourceKeyConverter}}" Visibility="{Binding IsFound, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
+        <Image Source="{Binding CheckmarkKey, Converter={StaticResource ResourceKeyConverter}}" Visibility="{Binding IsFound, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
     </Grid>
 </ContentControl>

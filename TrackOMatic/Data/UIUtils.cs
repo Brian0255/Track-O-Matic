@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace TrackOMatic
@@ -16,10 +15,7 @@ namespace TrackOMatic
         /// <remarks>This method needs refactoring for Linux/cross platform support when we get there.</remarks>
         public static double GetDpiScale(Visual visual)
         {
-            if (visual == null)
-            {
-                throw new ArgumentNullException(nameof(visual));
-            }
+            ArgumentNullException.ThrowIfNull(visual);
 
             var presentationSource = PresentationSource.FromVisual(visual);
             if (presentationSource?.CompositionTarget != null)

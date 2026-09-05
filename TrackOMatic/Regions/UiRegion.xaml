@@ -16,17 +16,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:AllAndToBoolConverter x:Key="AllAndToBoolConverter" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
-            <converters:PlayableRegionConverter x:Key="PlayableRegionConverter" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
-            <converters:LobbyRegionConverter x:Key="LobbyRegionConverter" />
-            <converters:MultiToSingleConverter x:Key="PlayableRegionPointsToVisibilityConverter" StartConverter="{StaticResource AllAndToBoolConverter}">
-                <converters:MultiToSingleConverter.TrailingConverters>
-                    <converters:BooleanToVisibilityConverter FalseVisibility="Hidden" />
-                </converters:MultiToSingleConverter.TrailingConverters>
-            </converters:MultiToSingleConverter>
             <converters:ChainedConverter x:Key="ItemPointsToColorConverter">
                 <converters:ChainedConverter.Converters>
                     <converters:ItemPointCountToColorConverter />

@@ -19,7 +19,6 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
-            <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
             <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
         </ResourceDictionary>

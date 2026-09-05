@@ -18,7 +18,6 @@
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
-            <converters:BooleanInvertConverter x:Key="BooleanInvertConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="Transparent" Margin="0">
