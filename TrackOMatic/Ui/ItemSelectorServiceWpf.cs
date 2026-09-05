@@ -52,14 +52,14 @@ internal class ItemSelectorServiceWpf(IUserSettingsService userSettingsService) 
                 // Center dialog on the preferred location
                 var x = preferredX.Value - (dialog.ActualWidth / 2);
                 var y = preferredY.Value - dialog.ActualHeight;
-                UIUtils.MoveWindowAndEnsureVisible(dialog, x, y);
+                WindowPositioning.PositionDialogCenteredOn(dialog, x + (dialog.ActualWidth / 2), y + dialog.ActualHeight);
             }
             else if (mainWindow?.IsVisible == true)
             {
                 // If no preferred location, center on main window
                 var x = mainWindow.Left + (mainWindow.Width - dialog.ActualWidth) / 2;
                 var y = mainWindow.Top + (mainWindow.Height - dialog.ActualHeight) / 2;
-                UIUtils.MoveWindowAndEnsureVisible(dialog, x, y);
+                WindowPositioning.PositionDialogCenteredOn(dialog, x + (dialog.ActualWidth / 2), y + (dialog.ActualHeight / 2));
             }
         }
 

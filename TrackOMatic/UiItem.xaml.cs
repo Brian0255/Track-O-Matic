@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,7 +14,7 @@ namespace TrackOMatic;
 /// <summary>
 /// Interaction logic for UiItem.xaml
 /// </summary>
-public partial class UiItem : UserControl, INotifyPropertyChanged
+public partial class UiItem : UserControl
 {
     public static readonly DependencyProperty ItemNameProperty = DependencyProperty.Register(
         nameof(ItemName),
@@ -62,10 +60,35 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
         InitializeComponent();
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
+    private static T? FindVisualAncestor<T>(DependencyObject child) where T : DependencyObject
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        DependencyObject? current = child;
+        while (current != null)
+        {
+            if (current is T ancestor)
+            {
+                return ancestor;
+            }
+            current = VisualTreeHelper.GetParent(current);
+        }
+        return null;
+    }
+
+    private static T? HitTestAt<T>(UIElement root, Point point) where T : DependencyObject
+    {
+        T? result = null;
+        VisualTreeHelper.HitTest(root, null, hitResult =>
+        {
+            var ancestor = FindVisualAncestor<T>(hitResult.VisualHit);
+            if (ancestor is not null)
+            {
+                result = ancestor;
+                return HitTestResultBehavior.Stop; // Stop after finding the first match
+            }
+            return HitTestResultBehavior.Continue;
+        }, new PointHitTestParameters(point));
+
+        return result;
     }
 
     private static void OnItemNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -270,7 +293,7 @@ public partial class UiItem : UserControl, INotifyPropertyChanged
 
         viewModel.IsDragging = false;
 
-        UiRegion? foundUiRegion = UIUtils.HitTestAt<UiRegion>(rootVisualContainer, dropPoint);
+        UiRegion? foundUiRegion = HitTestAt<UiRegion>(rootVisualContainer, dropPoint);
         if (foundUiRegion?.DataContext is not RegionViewModel regionViewModel)
         {
             viewModel.EndDrag();

@@ -2,6 +2,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 using TrackOMatic.Logic.Models.Hints;
+using TrackOMatic.Ui;
 using TrackOMatic.ViewModels.Hints;
 
 namespace TrackOMatic.HintsUI;
@@ -35,9 +36,8 @@ public partial class HintPanel : UserControl
 
         var dialog = new HintMultiSelectionDialog(HintDialogMapping.HintDialogMappings, [.. viewModel.ItemsToFilterBy], "Select Items to Prioritize");
 
-        var mousePosition = Mouse.GetPosition(this);
-        mousePosition = PointToScreen(mousePosition);
-        UIUtils.MoveWindowAndEnsureVisible(dialog, mousePosition.X - 20, mousePosition.Y - 10);
+        // Position dialog at cursor with small offset
+        WindowPositioning.PositionDialogAtCursor(dialog, -20, -10);
         dialog.ShowDialog();
         var selectedItems = dialog.GetSelectedItems().Select(x => x.ItemName).ToList();
 
