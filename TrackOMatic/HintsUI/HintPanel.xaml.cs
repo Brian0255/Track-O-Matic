@@ -21,7 +21,7 @@ public partial class HintPanel : UserControl
             return;
         }
 
-        if (viewModel.CreateHintCommand.CanExecute(null))
+        if (e.LeftButton == MouseButtonState.Pressed && viewModel.CreateHintCommand.CanExecute(null))
         {
             viewModel.CreateHintCommand.Execute(null);
         }
