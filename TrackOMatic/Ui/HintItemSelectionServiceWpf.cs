@@ -36,33 +36,30 @@ public class HintItemSelectionServiceWpf(IUserSettingsService userSettingsServic
             WindowStartupLocation = WindowStartupLocation.Manual
         };
 
-        // Position dialog relative to preferred location, or center on main window
-        void PositionDialog()
+        // Compute positioning parameters before creating event handlers
+        double centerX, centerY;
+
+        if (preferredX.HasValue && preferredY.HasValue)
         {
-            if (preferredX.HasValue && preferredY.HasValue)
-            {
-                // Center dialog on the preferred location
-                var x = preferredX.Value - (dialog.ActualWidth / 2);
-                var y = preferredY.Value - dialog.ActualHeight;
-                WindowPositioning.PositionDialogCenteredOn(dialog, x + (dialog.ActualWidth / 2), y + dialog.ActualHeight);
-            }
-            else if (mainWindow?.IsVisible == true)
-            {
-                // If no preferred location, center on main window
-                var x = mainWindow.Left + (mainWindow.Width - dialog.ActualWidth) / 2;
-                var y = mainWindow.Top + (mainWindow.Height - dialog.ActualHeight) / 2;
-                WindowPositioning.PositionDialogCenteredOn(dialog, x + (dialog.ActualWidth / 2), y + (dialog.ActualHeight / 2));
-            }
+            // Position relative to preferred location (centered above it)
+            centerX = preferredX.Value;
+            centerY = preferredY.Value;
+        }
+        else if (mainWindow?.IsVisible == true)
+        {
+            // Center on main window
+            centerX = mainWindow.Left + (mainWindow.Width / 2);
+            centerY = mainWindow.Top + (mainWindow.Height / 2);
+        }
+        else
+        {
+            // Fallback: no positioning
+            centerX = 0;
+            centerY = 0;
         }
 
-        // Position after window is measured (SourceInitialized)
-        void SourceInitializedHandler(object? s, EventArgs e)
-        {
-            dialog.SourceInitialized -= SourceInitializedHandler;
-            PositionDialog();
-        }
-
-        dialog.SourceInitialized += SourceInitializedHandler;
+        // Position dialog - this will subscribe to SourceInitialized internally
+        WindowPositioning.PositionDialogCenteredOn(dialog, centerX, centerY);
 
         // Keep dialog TopMost in sync with user settings while it's open
         var settingsChangedHandler = new PropertyChangedEventHandler((s, e) =>
