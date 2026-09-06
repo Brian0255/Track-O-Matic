@@ -79,6 +79,7 @@
                 Grid.Column="0"
                 x:Name="Location"
                 Margin="1,0,0,0"
+                Padding="0,4,0,0"
                 PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"
                 PreviewKeyDown="Location_PreviewKeyDown"
                 Style="{StaticResource BoldText}"
@@ -88,6 +89,7 @@
             <TextBox
                 Grid.Column="1"
                 Margin="0,0,3,0"
+                Padding="0,4,0,0"
                 HorizontalContentAlignment="Right"
                 PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"
                 PreviewKeyDown="PotionCount_PreviewKeyDown"
