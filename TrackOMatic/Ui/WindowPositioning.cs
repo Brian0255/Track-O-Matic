@@ -46,7 +46,7 @@ static class WindowPositioning
 
     /// <summary>
     /// Constrains a position to stay within the given screen's working area.
-    /// Assumes all coordinates are in logical pixels for the given DPI scale.
+    /// Works with WPF logical coordinates and screen physical bounds.
     /// </summary>
     private static void ClampToScreen(
         Screen screen,
@@ -56,10 +56,11 @@ static class WindowPositioning
         ref double y)
     {
         var screenBounds = screen.WorkingArea;
+        // Screen bounds are in physical pixels; convert to logical for comparison with dialog position
         double screenLeft = screenBounds.Left / dpiScale;
         double screenTop = screenBounds.Top / dpiScale;
-        double screenRight = screenBounds.Right / dpiScale;
-        double screenBottom = screenBounds.Bottom / dpiScale;
+        double screenRight = (screenBounds.Left + screenBounds.Width) / dpiScale;
+        double screenBottom = (screenBounds.Top + screenBounds.Height) / dpiScale;
 
         // Clamp horizontal position
         if (x < screenLeft)
@@ -130,8 +131,8 @@ static class WindowPositioning
     /// Detects which screen contains the center point and constrains the dialog to that screen.
     /// </summary>
     /// <param name="dialog">The window to position.</param>
-    /// <param name="centerX">X coordinate to center on (logical pixels).</param>
-    /// <param name="centerY">Y coordinate to center on (logical pixels).</param>
+    /// <param name="centerX">X coordinate to center on (in WPF logical pixels).</param>
+    /// <param name="centerY">Y coordinate to center on (in WPF logical pixels).</param>
     /// <remarks>
     /// This is useful for positioning a dialog relative to a known point (e.g., center of main window).
     /// It defers positioning until SourceInitialized to ensure window dimensions are available.
@@ -146,21 +147,51 @@ static class WindowPositioning
 
         dialog.SourceInitialized += (s, e) =>
         {
-            // Get DPI scale for this window
-            double dpiScale = GetDpiScale(dialog);
+            // Get dialog's current DPI scale
+            double dialogDpiScale = GetDpiScale(dialog);
 
             // Get the screen containing the center point
-            // Convert from logical to physical coordinates to use Screen.FromPoint
-            int centerPhysicalX = (int)(centerX * dpiScale);
-            int centerPhysicalY = (int)(centerY * dpiScale);
+            // centerX/centerY are in physical screen coordinates
+            int centerPhysicalX = (int)centerX;
+            int centerPhysicalY = (int)centerY;
             var screenForCenter = GetScreenOrPrimary(new Point(centerPhysicalX, centerPhysicalY));
 
-            // Center the dialog on the given point
-            double x = centerX - (dialog.ActualWidth / 2);
-            double y = centerY - (dialog.ActualHeight / 2);
+            var screenBounds = screenForCenter.WorkingArea;
+
+            // Convert center point from physical screen coordinates to logical WPF coordinates
+            double centerLogicalX = centerX / dialogDpiScale;
+            double centerLogicalY = centerY / dialogDpiScale;
+
+            // Center the dialog in logical coordinates
+            double x = centerLogicalX - (dialog.ActualWidth / 2);
+            double y = centerLogicalY - (dialog.ActualHeight / 2);
 
             // Clamp to screen boundaries
-            ClampToScreen(screenForCenter, dpiScale, dialog, ref x, ref y);
+            // Screen bounds are physical pixels, convert to logical using dialog's DPI
+            double screenLeft = screenBounds.Left / dialogDpiScale;
+            double screenTop = screenBounds.Top / dialogDpiScale;
+            double screenRight = (screenBounds.Left + screenBounds.Width) / dialogDpiScale;
+            double screenBottom = (screenBounds.Top + screenBounds.Height) / dialogDpiScale;
+
+            if (x < screenLeft)
+            {
+                x = screenLeft;
+            }
+            else if (x + dialog.ActualWidth > screenRight)
+            {
+                x = screenRight - dialog.ActualWidth;
+            }
+
+            if (y < screenTop)
+            {
+                y = screenTop;
+            }
+            else if (y + dialog.ActualHeight > screenBottom)
+            {
+                y = screenBottom - dialog.ActualHeight;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"  Logical After Clamp: ({x}, {y})");
 
             // Apply position
             dialog.Left = x;
