@@ -370,22 +370,6 @@ public class AutotrackerService : IAutotrackerService
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// Raises the RegionLightingChanged event.
-    /// </summary>
-    public void OnRegionLightingChanged(AutotrackerRegionEventArgs e)
-    {
-        RegionLightingChanged?.Invoke(this, e);
-    }
-
-    /// <summary>
-    /// Raises the HintProgressUpdated event.
-    /// </summary>
-    public void OnHintProgressUpdated(AutotrackerHintEventArgs e)
-    {
-        HintProgressUpdated?.Invoke(this, e);
-    }
-
     #region Private Implementation Methods
 
     /// <summary>

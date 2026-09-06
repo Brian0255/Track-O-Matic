@@ -35,11 +35,6 @@ public class AutotrackerServiceTests
     )
         : AutotrackerService(itemTracking, emulatorAttacher, memoryReader, timerFactory, appState, settings, collectiblesService, songService, regionPlacementOrchestrator)
     {
-
-        // Expose protected event-raising methods for testing
-        public void TestRaiseRegionLightingChanged(AutotrackerRegionEventArgs e) => OnRegionLightingChanged(e);
-        public void TestRaiseHintProgressUpdated(AutotrackerHintEventArgs e) => OnHintProgressUpdated(e);
-
         // Expose PerformMemoryRead for direct testing
         public new int TestPerformMemoryRead(uint addr, int numOfBits) => base.TestPerformMemoryRead(addr, numOfBits);
     }
@@ -464,58 +459,6 @@ public class AutotrackerServiceTests
         Assert.Equal(RegionName.DK_ISLES, capturedEventArgs.RegionName);
         Assert.False(capturedEventArgs.IsHint);
         Assert.True(capturedEventArgs.IsNewRegion);
-    }
-
-    [Fact]
-    public void RegionLightingChanged_WhenSubscribed_CanCaptureEventData()
-    {
-        var service = CreateServiceWithMocks(out _, out _, out _);
-
-        AutotrackerRegionEventArgs? capturedEventArgs = null;
-        object? capturedSender = null;
-
-        service.RegionLightingChanged += (sender, e) =>
-        {
-            capturedSender = sender;
-            capturedEventArgs = e;
-        };
-
-        var testEventArgs = new AutotrackerRegionEventArgs
-        {
-            Region = RegionName.JUNGLE_JAPES,
-            LightUp = true
-        };
-        service.TestRaiseRegionLightingChanged(testEventArgs);
-
-        Assert.NotNull(capturedEventArgs);
-        Assert.Same(service, capturedSender);
-        Assert.Equal(RegionName.JUNGLE_JAPES, capturedEventArgs.Region);
-        Assert.True(capturedEventArgs.LightUp);
-    }
-
-    [Fact]
-    public void HintProgressUpdated_WhenSubscribed_CanCaptureEventData()
-    {
-        var service = CreateServiceWithMocks(out _, out _, out _);
-
-        AutotrackerHintEventArgs? capturedEventArgs = null;
-        object? capturedSender = null;
-
-        service.HintProgressUpdated += (sender, e) =>
-        {
-            capturedSender = sender;
-            capturedEventArgs = e;
-        };
-
-        var testEventArgs = new AutotrackerHintEventArgs
-        {
-            AmountToNextHint = 15
-        };
-        service.TestRaiseHintProgressUpdated(testEventArgs);
-
-        Assert.NotNull(capturedEventArgs);
-        Assert.Same(service, capturedSender);
-        Assert.Equal(15, capturedEventArgs.AmountToNextHint);
     }
 
     [Fact(Skip = "ItemProcessed event has been removed")]

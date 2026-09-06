@@ -130,6 +130,13 @@ public class ItemTrackingService : IItemTrackingService
         if (_nodeMap.TryGetValue(itemName, out var existingNode))
         {
             previousState = existingNode.Value;
+
+            // Immediately abandon if this item is already pre-placed.
+            if (previousState.IsStartingAutotracked)
+            {
+                return;
+            }
+
             // Update the existing node's value to the new state
             existingNode.Value = state;
         }
@@ -194,8 +201,8 @@ public class ItemTrackingService : IItemTrackingService
 
     public IEnumerable<SavedItem> GetItemsInRegion(RegionName region)
     {
-        // Dictionary preserves insertion order in .NET 4.7.2+, so items appear in the order they were added
-        var result = _itemOrder.Where(item => item is not null && item.Region == region).ToList();
+        var snapshot = _itemOrder.ToList();
+        var result = snapshot.Where(item => item is not null && item.Region == region).ToList();
         return result;
     }
 

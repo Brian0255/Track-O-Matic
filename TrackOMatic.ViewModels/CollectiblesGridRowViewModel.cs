@@ -56,7 +56,6 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
         _userSettingsService.PropertyChanged += OnUserSettingsChanged;
         _autotrackerService.HintProgressUpdated += OnHintProgressUpdated;
         _autotrackerService.ProgHintItemUpdated += OnProgHintItemUpdated;
-        _savedProgressProvider.ProgressChanged += OnSavedProgressChanged;
 
         _collectibles = [];
 
@@ -124,11 +123,6 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
         {
             UpdateWrinklyHintType(e.ProgHintItem);
         }
-    }
-
-    private void OnSavedProgressChanged(object? sender, ProgressReplacedEventArgs e)
-    {
-        InitializeState();
     }
 
     #endregion
@@ -232,7 +226,6 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
                 _userSettingsService.PropertyChanged -= OnUserSettingsChanged;
                 _autotrackerService.HintProgressUpdated -= OnHintProgressUpdated;
                 _autotrackerService.ProgHintItemUpdated -= OnProgHintItemUpdated;
-                _savedProgressProvider.ProgressChanged -= OnSavedProgressChanged;
 
                 foreach (var vm in _collectibles.OfType<IDisposable>())
                 {

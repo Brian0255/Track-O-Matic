@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
+using TrackOMatic.Logic.Events.Autotracking;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -23,6 +24,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     private readonly IThemeService _themeService;
     private readonly RegionName _regionName;
     private readonly IRegionPlacementOrchestrator _regionPlacementOrchestrator;
+    private readonly IAutotrackerService _autotrackerService;
     private readonly RegionSlotProviderRegistry? _slotProviderRegistry;
     private readonly SynchronizationContext _syncContext;
 
@@ -80,7 +82,8 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         ISavedProgressProvider savedProgressProvider,
         IRegionPlacementOrchestrator regionPlacementOrchestrator,
         IThemeService themeService,
-        RegionSlotProviderRegistry? slotProviderRegistry = null
+        RegionSlotProviderRegistry slotProviderRegistry,
+        IAutotrackerService autotrackerService
     )
     {
         _regionName = regionName;
@@ -88,6 +91,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _regionPlacementOrchestrator = regionPlacementOrchestrator ?? throw new ArgumentNullException(nameof(regionPlacementOrchestrator));
+        _autotrackerService = autotrackerService ?? throw new ArgumentNullException(nameof(autotrackerService));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
 
         // Capture the synchronization context for UI thread marshaling in event handlers
@@ -119,6 +123,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnProgressChanged;
         _vialItemListViewModel.VialItemStateChanged += OnVialStateChanged;
+        _autotrackerService.RegionLightingChanged += OnRegionLightingChanged;
 
         // Initialize state directly (not debounced) in constructor
         InitializeState();
@@ -175,6 +180,15 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             return GetVialSlots();
         }
         return [];
+    }
+
+    private void OnRegionLightingChanged(object? sender, AutotrackerRegionEventArgs e)
+    {
+        if (e.Region != _regionName)
+        {
+            return;
+        }
+        _syncContext.Post(_ => SetLighting(e.LightUp), null);
     }
 
     private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
@@ -368,7 +382,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         return false;
     }
 
-    public void SetLighting(bool isLit)
+    private void SetLighting(bool isLit)
     {
         BackgroundResourceKey = isLit ? "RegionBGLitUp" : "RegionBG";
     }
@@ -399,6 +413,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnProgressChanged;
                 _vialItemListViewModel?.VialItemStateChanged -= OnVialStateChanged;
+                _autotrackerService.RegionLightingChanged -= OnRegionLightingChanged;
             }
             _disposed = true;
         }
