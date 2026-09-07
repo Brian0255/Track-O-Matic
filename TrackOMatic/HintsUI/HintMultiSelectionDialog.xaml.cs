@@ -1,7 +1,5 @@
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models.Hints;
@@ -25,7 +23,7 @@ public partial class HintMultiSelectionDialog : Window
 
         // create the view models from the items passed in.
         var dialogItems = new List<HintDialogItemViewModel>();
-        _itemViewModelsByName = new Dictionary<ItemName, HintDialogItemViewModel>();
+        _itemViewModelsByName = [];
 
         foreach (var cell in items)
         {
@@ -40,40 +38,8 @@ public partial class HintMultiSelectionDialog : Window
 
         InitializeComponent();
 
-        // Wire each hard-coded HintDialogItem to its corresponding view model
-        WireHardCodedItems();
-
         DataContext = _viewModel;
         Title = title;
-    }
-
-    private void WireHardCodedItems()
-    {
-        // Find the root content (StackPanel in this case)
-        if (this.Content is FrameworkElement root)
-        {
-            WireItemsRecursive(root);
-        }
-    }
-
-    private void WireItemsRecursive(DependencyObject parent)
-    {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            var child = VisualTreeHelper.GetChild(parent, i);
-
-            if (child is HintDialogItem hintItem)
-            {
-                if (_itemViewModelsByName.TryGetValue(hintItem.ItemName, out var viewModel))
-                {
-                    hintItem.DataContext = viewModel;
-                }
-            }
-            else
-            {
-                WireItemsRecursive(child);
-            }
-        }
     }
 
     public IList<HintGridCell> GetSelectedItems()

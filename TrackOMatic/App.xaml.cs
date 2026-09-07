@@ -60,6 +60,7 @@ public partial class App : Application
         var endGameProgressionService = _serviceProvider.GetRequiredService<IEndGameProgressionService>();
         var collectiblesService = _serviceProvider.GetRequiredService<ICollectiblesService>();
         var songService = _serviceProvider.GetRequiredService<ISongService>();
+        var itemSelectorService = _serviceProvider.GetRequiredService<IItemSelectorService>();
 
         _resourceDictionaryProvider = new WpfResourceDictionaryProvider(themeService);
         _resourceDictionaryProvider.UpdateResourceDictionaries();
@@ -80,7 +81,8 @@ public partial class App : Application
             levelOrderService,
             endGameProgressionService,
             collectiblesService,
-            songService
+            songService,
+            itemSelectorService
         );
         mainWindow.Show();
     }

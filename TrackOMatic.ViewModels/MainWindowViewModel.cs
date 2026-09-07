@@ -36,6 +36,10 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
 
     public ObservableCollection<UiItemViewModel> MiscMoves { get; private init; } = [];
 
+    public ObservableCollection<UiHelmSlotViewModel> HelmSlots { get; private init; } = [];
+
+    public ObservableCollection<UiBossSlotViewModel> BossSlots { get; private init; } = [];
+
     #endregion
 
     #region Proxy Properties
@@ -238,7 +242,9 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         IThemeService themeService,
         IAutotrackerService autotrackerService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider
+        IEndGameProgressionService endGameProgressionService,
+        ISavedProgressProvider savedProgressProvider,
+        IItemSelectorService itemSelectorService
     )
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
@@ -334,6 +340,24 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
                 _parsedSpoilerDataService,
                 _savedProgressProvider,
                 _themeService
+            ));
+        }
+
+        for (int i = 0; i <= 4; ++i)
+        {
+            HelmSlots.Add(new(
+                i,
+                endGameProgressionService,
+                _parsedSpoilerDataService,
+                _savedProgressProvider,
+                itemSelectorService
+            ));
+            BossSlots.Add(new(
+                i,
+                endGameProgressionService,
+                _parsedSpoilerDataService,
+                _savedProgressProvider,
+                itemSelectorService
             ));
         }
 

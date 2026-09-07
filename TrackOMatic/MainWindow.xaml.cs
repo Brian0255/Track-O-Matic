@@ -73,7 +73,8 @@ public partial class MainWindow : Window
         ILevelOrderService levelOrderService,
         IEndGameProgressionService endGameProgressionService,
         ICollectiblesService collectiblesService,
-        ISongService songService
+        ISongService songService,
+        IItemSelectorService itemSelectorService
     )
     {
         InitializeComponent();
@@ -98,7 +99,9 @@ public partial class MainWindow : Window
             themeService,
             autotrackerService,
             parsedSpoilerDataService,
-            savedProgressProvider
+            endGameProgressionService,
+            savedProgressProvider,
+            itemSelectorService
         );
 
         _saveTimer = new Timer(_saveInterval);

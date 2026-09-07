@@ -13,7 +13,6 @@
     d:DesignWidth="32"
     MouseLeftButtonDown="OnMouseLeftButtonDown"
     MouseWheel="OnMouseWheel"
-    Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
         <ResourceDictionary>

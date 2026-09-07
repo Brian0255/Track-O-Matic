@@ -48,6 +48,9 @@
             <DataTemplate x:Key="UiItemTemplate" DataType="{x:Type viewmodels:UiItemViewModel}">
                 <local:UiItem />
             </DataTemplate>
+            <ItemsPanelTemplate x:Key="SlotGridPanelTemplate">
+                <UniformGrid Rows="1" Columns="5" />
+            </ItemsPanelTemplate>
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
@@ -256,37 +259,33 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width=".3*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                             <Image x:Name="HelmLabel" Source="Images/dk64/lanky_bp.png" Grid.Column="0" Margin="-1"/>
-                            <local:HelmSlot Grid.Column="2" Opacity="1" Margin="1" SlotNumber="0" />
-                            <local:HelmSlot Grid.Column="3" Opacity="1" Margin="1" SlotNumber="1" />
-                            <local:HelmSlot Grid.Column="4" Opacity="1" Margin="1" SlotNumber="2" />
-                            <local:HelmSlot Grid.Column="5" Opacity="1" Margin="1" SlotNumber="3" />
-                            <local:HelmSlot Grid.Column="6" Opacity="1" Margin="1" SlotNumber="4" />
+                            <ItemsControl Grid.Column="2" ItemsSource="{Binding HelmSlots}" ItemsPanel="{StaticResource SlotGridPanelTemplate}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type viewmodels:UiHelmSlotViewModel}">
+                                        <local:HelmSlot Opacity="1" Margin="1" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </Grid>
                         <Grid Grid.Column="1" Margin="8,1,0,6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width=".3*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                             <Image x:Name="KRoolLabel" Source="Images/dk64/krool.png" Grid.Column="0" Margin="-1"/>
-                            <local:BossSlot Grid.Column="2" Opacity="1" Margin="1" SlotNumber="0" />
-                            <local:BossSlot Grid.Column="3" Opacity="1" Margin="1" SlotNumber="1" />
-                            <local:BossSlot Grid.Column="4" Opacity="1" Margin="1" SlotNumber="2" />
-                            <local:BossSlot Grid.Column="5" Opacity="1" Margin="1" SlotNumber="3" />
-                            <local:BossSlot Grid.Column="6" Opacity="1" Margin="1" SlotNumber="4" />
+                            <ItemsControl Grid.Column="2" ItemsSource="{Binding BossSlots}" ItemsPanel="{StaticResource SlotGridPanelTemplate}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type viewmodels:UiBossSlotViewModel}">
+                                        <local:BossSlot Opacity="1" Margin="1" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </Grid>
                     </Grid>
                     <!-- Song Display -->
