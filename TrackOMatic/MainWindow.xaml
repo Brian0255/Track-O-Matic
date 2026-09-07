@@ -31,9 +31,6 @@
 >
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <Style TargetType="Image">
                 <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
             </Style>

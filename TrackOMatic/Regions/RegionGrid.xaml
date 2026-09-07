@@ -11,13 +11,6 @@
     d:DesignHeight="400"
     d:DesignWidth="200"
 >
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <ItemsControl Margin="0" ItemsSource="{Binding Regions}" Background="{StaticResource BaseBG}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>

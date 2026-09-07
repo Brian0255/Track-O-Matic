@@ -36,9 +36,10 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="ToolTip">
                             <Border Name="Border" CornerRadius="3" Padding="2"
-                BorderThickness="2" BorderBrush="Black" Background="{StaticResource RegionImageBG}"
-                Width="{TemplateBinding Width}"
-                Height="{TemplateBinding Height}">
+                                BorderThickness="2" BorderBrush="Black" Background="{StaticResource RegionImageBG}"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                            >
                                 <ContentPresenter Margin="4" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             </Border>
                         </ControlTemplate>

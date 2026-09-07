@@ -10,7 +10,7 @@ public class BooleanInvertConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Convert(value);
 
-    private bool Convert(object value)
+    private static bool Convert(object value)
     {
         if (value is bool boolValue)
         {

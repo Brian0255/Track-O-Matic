@@ -1,9 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
-using TrackOMatic.Logic.Enums;
 using TrackOMatic.ViewModels.Hints;
 
 namespace TrackOMatic.HintsUI;

@@ -13,13 +13,6 @@
              MouseRightButtonDown="RegionLevel_MouseRightButtonDown"
              MouseWheel="RegionLevel_MouseWheel"
 >
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height=".9*" />

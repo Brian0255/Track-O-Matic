@@ -241,7 +241,9 @@ public partial class MainWindow : Window
             }
             else
             {
-                BroadcastView?.Close();
+                // Defer close to dispatcher to avoid InvalidOperationException
+                // when called during BroadcastView's Closing event
+                Dispatcher.BeginInvoke(() => BroadcastView?.Close());
             }
         }
     }

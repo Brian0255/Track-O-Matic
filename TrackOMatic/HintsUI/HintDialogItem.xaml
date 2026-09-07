@@ -19,9 +19,6 @@
 >
     <ContentControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </ContentControl.Resources>

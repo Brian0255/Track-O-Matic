@@ -15,9 +15,6 @@
 >
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
@@ -30,7 +27,11 @@
             ToolTipService.InitialShowDelay="500"
         >
             <Border.ToolTip>
-                <ToolTip Content="{Binding HoverText}" Visibility="{Binding HasHoverText, Converter={StaticResource BooleanToVisibilityConverter}}" Placement="Mouse" />
+                <ToolTip
+                    Content="{Binding HoverText}"
+                    Placement="Mouse"
+                    Visibility="{Binding HasHoverText, Converter={StaticResource BooleanToVisibilityConverter}}"
+                />
             </Border.ToolTip>
             <Border.Effect>
                 <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />

@@ -14,9 +14,6 @@
 >
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
             <Style TargetType="Viewbox">
                 <Setter Property="HorizontalAlignment" Value="Left" />
@@ -32,7 +29,14 @@
     <StackPanel>
         <Border CornerRadius="5" BorderThickness="1" BorderBrush="#131414" Background="#1a1b1c" />
         <StackPanel Orientation="Horizontal">
-            <Image Height="48" Margin="3" Panel.ZIndex="2" Opacity="1" HorizontalAlignment="Center" Source="{Binding ResourceKey, Converter={StaticResource ResourceKeyConverter}}" />
+            <Image
+                Height="48"
+                Margin="3"
+                Panel.ZIndex="2"
+                Opacity="1"
+                HorizontalAlignment="Center"
+                Source="{Binding ResourceKey, Converter={StaticResource ResourceKeyConverter}}"
+            />
             <StackPanel Margin="6,0,0,0">
                 <TextBlock Margin="0,4,0,1" Text="{Binding SongGame}" FontWeight="Light" />
                 <TextBlock Margin="0,1,0,4" Text="{Binding SongName}" FontWeight="Medium" />

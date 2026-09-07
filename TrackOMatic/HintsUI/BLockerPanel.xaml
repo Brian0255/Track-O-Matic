@@ -29,7 +29,14 @@
                     FontFamily="{DynamicResource DK64Font}"
                     Text="B. LOCKERS"
                     VerticalAlignment="Center"/>
-                <Border CornerRadius="1" Grid.Row="1" Margin="0" BorderThickness="0" BorderBrush="Black" Background="{StaticResource RegionImageBG}">
+                <Border
+                    CornerRadius="1"
+                    Grid.Row="1"
+                    Margin="0"
+                    BorderThickness="0"
+                    BorderBrush="Black"
+                    Background="{StaticResource RegionImageBG}"
+                >
                     <!-- Slightly more ocmplicated ItemsControl but handles the view models better. -->
                     <ItemsControl ItemsSource="{Binding Hints}">
                         <ItemsControl.ItemsPanel>

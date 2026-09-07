@@ -13,13 +13,6 @@
     d:DesignWidth="96"
     MouseLeftButtonDown="UserControl_MouseLeftButtonDown"
 >
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <UniformGrid Rows="1" Background="{StaticResource RegionBG}">
         <ItemsControl ItemsSource="{Binding PathItems}">
             <ItemsControl.ItemsPanel>

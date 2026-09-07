@@ -15,9 +15,6 @@
 >
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" FalseVisibility="Collapsed" />
             <Style TargetType="Image">
