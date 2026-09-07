@@ -91,7 +91,15 @@ public partial class MainWindow : Window
         ThemeService = themeService;
         CollectiblesService = collectiblesService;
         SongService = songService;
-        DataContext = new MainWindowViewModel(settingsSergice, themeService, autotrackerService, savedProgressProvider);
+        DataContext = new MainWindowViewModel(
+            itemTrackingService,
+            settingsSergice,
+            collectiblesService,
+            themeService,
+            autotrackerService,
+            parsedSpoilerDataService,
+            savedProgressProvider
+        );
 
         _saveTimer = new Timer(_saveInterval);
         _saveTimer.Elapsed += async (sender, e) => await OnTimerSave(sender, e);

@@ -191,8 +191,6 @@ static class WindowPositioning
                 y = screenBottom - dialog.ActualHeight;
             }
 
-            System.Diagnostics.Debug.WriteLine($"  Logical After Clamp: ({x}, {y})");
-
             // Apply position
             dialog.Left = x;
             dialog.Top = y;

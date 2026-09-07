@@ -3,6 +3,7 @@ using System.ComponentModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -58,40 +59,6 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
 
 
     #endregion
-
-    protected ItemName[] KongItemNames { get; } =
-    [
-        ItemName.DONKEY,
-        ItemName.COCONUT_GUN,
-        ItemName.BONGO_BLAST,
-        ItemName.GORILLA_GRAB,
-        ItemName.STRONG_KONG,
-        ItemName.BABOON_BLAST,
-        ItemName.DIDDY,
-        ItemName.PEANUT_POPGUNS,
-        ItemName.GUITAR_GAZUMP,
-        ItemName.CHIMPY_CHARGE,
-        ItemName.ROCKETBARREL_BOOST,
-        ItemName.SIMIAN_SPRING,
-        ItemName.LANKY,
-        ItemName.GRAPE_SHOOTER,
-        ItemName.TROMBONE_TREMOR,
-        ItemName.ORANGSTAND,
-        ItemName.ORANGSTAND_SPRINT,
-        ItemName.BABOON_BALLOON,
-        ItemName.TINY,
-        ItemName.FEATHER_BOW,
-        ItemName.SAXOPHONE_SLAM,
-        ItemName.PONYTAIL_TWIRL,
-        ItemName.MINI_MONKEY,
-        ItemName.MONKEYPORT,
-        ItemName.CHUNKY,
-        ItemName.PINEAPPLE_LAUNCHER,
-        ItemName.TRIANGLE_TRAMPLE,
-        ItemName.PRIMATE_PUNCH,
-        ItemName.HUNKY_CHUNKY,
-        ItemName.GORILLA_GONE
-    ];
 
     public MainBroadcastViewModel(
         IUserSettingsService userSettingsService,
@@ -149,7 +116,7 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
                 savedProgressProvider
             ));
         }
-        foreach (var itemName in KongItemNames)
+        foreach (var itemName in Extensions.KongItemNames)
         {
             KongItems.Add(new(
                 itemName,

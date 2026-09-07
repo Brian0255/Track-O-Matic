@@ -1,8 +1,10 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -15,10 +17,24 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     private readonly IThemeService _themeService;
     private readonly IAutotrackerService _autotrackerService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IItemTrackingService _itemTrackingService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
 
     #region Child ViewModels
 
     public CollectiblesGridRowViewModel CollectiblesGridRowViewModel { get; private init; }
+
+    public ObservableCollection<UiItemViewModel> KongItems { get; private init; } = [];
+
+    public ObservableCollection<UiKongBlueprintViewModel> KongBlueprints { get; private init; } = [];
+
+    public ObservableCollection<UiItemViewModel> Keys { get; private init; } = [];
+
+    public ObservableCollection<UiItemViewModel> Shopkeepers { get; private init; } = [];
+
+    public ObservableCollection<UiItemViewModel> TrainingMoves { get; private init; } = [];
+
+    public ObservableCollection<UiItemViewModel> MiscMoves { get; private init; } = [];
 
     #endregion
 
@@ -216,9 +232,12 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     #endregion
 
     public MainWindowViewModel(
+        IItemTrackingService itemTrackingService,
         IUserSettingsService userSettingsService,
+        ICollectiblesService collectiblesService,
         IThemeService themeService,
         IAutotrackerService autotrackerService,
+        IParsedSpoilerDataService parsedSpoilerDataService,
         ISavedProgressProvider savedProgressProvider
     )
     {
@@ -226,6 +245,8 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
         _autotrackerService = autotrackerService ?? throw new ArgumentNullException(nameof(autotrackerService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
+        _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
 
         CollectiblesGridRowViewModel = new CollectiblesGridRowViewModel(
             _userSettingsService,
@@ -234,6 +255,88 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         );
 
         InitializeState();
+
+        foreach (var itemName in Extensions.KongItemNames)
+        {
+            KongItems.Add(new(
+                itemName,
+                _itemTrackingService,
+                _parsedSpoilerDataService,
+                _savedProgressProvider,
+                _themeService
+            ));
+        }
+
+        var startingItem = (int)ItemType.DONKEY_BLUEPRINT;
+        for (int i = startingItem; i < startingItem + 10; i += 2)
+        {
+            KongBlueprints.Add(new(
+                (ItemType)i,
+                (ItemType)(i + 1),
+                collectiblesService,
+                _parsedSpoilerDataService,
+                _savedProgressProvider,
+                _userSettingsService
+            ));
+        }
+
+        var startingKey = (int)ItemName.KEY_1;
+        for (int i = startingKey; i < startingKey + 8; ++i)
+        {
+            Keys.Add(new(
+                (ItemName)i,
+                _itemTrackingService,
+                _parsedSpoilerDataService,
+                _savedProgressProvider,
+                _themeService
+            ));
+        }
+
+        var startingShopkeep = (int)ItemName.CRANKY;
+        for (int i = startingShopkeep; i < startingShopkeep + 4; ++i)
+        {
+            Shopkeepers.Add(new(
+                (ItemName)i,
+                _itemTrackingService,
+                _parsedSpoilerDataService,
+                _savedProgressProvider,
+                _themeService
+            ));
+        }
+
+        List<ItemName> trainingMoves = [ItemName.DIVING, ItemName.ORANGE_THROWING, ItemName.BARREL_THROWING, ItemName.VINE_SWINGING, ItemName.CLIMBING];
+        foreach (var item in trainingMoves)
+        {
+            TrainingMoves.Add(new(
+                item,
+                _itemTrackingService,
+                _parsedSpoilerDataService,
+                _savedProgressProvider,
+                _themeService
+            ));
+        }
+
+        List<ItemName> miscMoves = [
+            ItemName.PROGRESSIVE_SLAM_1,
+            ItemName.PROGRESSIVE_SLAM_2,
+            ItemName.PROGRESSIVE_SLAM_3,
+            ItemName.BEAN,
+            ItemName.SNIPER_SCOPE,
+            ItemName.HOMING_AMMO,
+            ItemName.FAIRY_CAMERA,
+            ItemName.SHOCKWAVE
+        ];
+        foreach (var item in miscMoves)
+        {
+            MiscMoves.Add(new(
+                item,
+                _itemTrackingService,
+                _parsedSpoilerDataService,
+                _savedProgressProvider,
+                _themeService
+            ));
+        }
+
         _userSettingsService.PropertyChanged += OnSettingChanged;
     }
 

@@ -9,13 +9,6 @@ namespace TrackOMatic.HintsUI;
 
 public partial class BLockerHint : UserControl
 {
-    public static readonly DependencyProperty RegionNameProperty = DependencyProperty.Register("RegionName", typeof(RegionName), typeof(BLockerHint));
-    public RegionName RegionName
-    {
-        get { return (RegionName)GetValue(RegionNameProperty); }
-        set { SetValue(RegionNameProperty, value); }
-    }
-
     public BLockerHint()
     {
         InitializeComponent();

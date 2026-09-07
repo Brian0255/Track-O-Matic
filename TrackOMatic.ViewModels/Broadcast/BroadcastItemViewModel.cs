@@ -37,6 +37,8 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
     protected internal readonly IThemeService _themeService;
     protected internal readonly ItemName _itemName;
 
+    public ItemName ItemName => _itemName;
+
     #region Proxy Properties
 
     [ObservableProperty]

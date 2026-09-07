@@ -16,30 +16,6 @@ namespace TrackOMatic;
 /// </summary>
 public partial class UiItem : UserControl
 {
-    public static readonly DependencyProperty ItemNameProperty = DependencyProperty.Register(
-        nameof(ItemName),
-        typeof(ItemName),
-        typeof(UiItem),
-        new PropertyMetadata(ItemName.BASIC_KEY, OnItemNameChanged));
-
-    public ItemName ItemName
-    {
-        get => (ItemName)GetValue(ItemNameProperty);
-        set => SetValue(ItemNameProperty, value);
-    }
-
-    public static readonly DependencyProperty HoverTextProperty = DependencyProperty.Register(
-        nameof(HoverText),
-        typeof(string),
-        typeof(UiItem)
-    );
-
-    public string HoverText
-    {
-        get => (string)GetValue(HoverTextProperty);
-        set => SetValue(HoverTextProperty, value);
-    }
-
     private bool PressedLeft { get; set; } = false;
 
     private bool PressedRight { get; set; } = false;
@@ -60,69 +36,7 @@ public partial class UiItem : UserControl
         InitializeComponent();
     }
 
-    private static T? FindVisualAncestor<T>(DependencyObject child) where T : DependencyObject
-    {
-        DependencyObject? current = child;
-        while (current != null)
-        {
-            if (current is T ancestor)
-            {
-                return ancestor;
-            }
-            current = VisualTreeHelper.GetParent(current);
-        }
-        return null;
-    }
-
-    private static T? HitTestAt<T>(UIElement root, Point point) where T : DependencyObject
-    {
-        T? result = null;
-        VisualTreeHelper.HitTest(root, null, hitResult =>
-        {
-            var ancestor = FindVisualAncestor<T>(hitResult.VisualHit);
-            if (ancestor is not null)
-            {
-                result = ancestor;
-                return HitTestResultBehavior.Stop; // Stop after finding the first match
-            }
-            return HitTestResultBehavior.Continue;
-        }, new PointHitTestParameters(point));
-
-        return result;
-    }
-
-    private static void OnItemNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is UiItem control && e.NewValue is ItemName itemName)
-        {
-            control.DataContext = new UiItemViewModel(
-                itemName,
-                control.ItemTrackingService,
-                control.ParsedSpoilerDataService,
-                control.SavedProgressProvider,
-                control.ThemeService
-            );
-        }
-    }
-
-    private void ToggleStar()
-    {
-        if (DataContext is UiItemViewModel viewModel)
-        {
-            if (viewModel.ToggleStarCommand.CanExecute(null))
-            {
-                viewModel.ToggleStarCommand.Execute(null);
-            }
-        }
-    }
-
-    private void CheckMiddleClick(object sender, MouseEventArgs e)
-    {
-        if (e.MiddleButton == MouseButtonState.Pressed)
-        {
-            ToggleStar();
-        }
-    }
+    #region Event Handlers
 
     private void UiItem_MouseWheel(object sender, MouseWheelEventArgs e)
     {
@@ -187,15 +101,6 @@ public partial class UiItem : UserControl
                 viewModel.DragY = currentPoint.Y + 5;
             }
         }
-    }
-
-    private static bool IsPastThreshold(Point startPoint, Point currentPoint)
-    {
-        Vector diff = startPoint - currentPoint;
-        return (
-            Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-            Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance
-        );
     }
 
     private void UiItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -284,6 +189,67 @@ public partial class UiItem : UserControl
         }
     }
 
+    #endregion
+
+    private static T? FindVisualAncestor<T>(DependencyObject child) where T : DependencyObject
+    {
+        DependencyObject? current = child;
+        while (current != null)
+        {
+            if (current is T ancestor)
+            {
+                return ancestor;
+            }
+            current = VisualTreeHelper.GetParent(current);
+        }
+        return null;
+    }
+
+    private static T? HitTestAt<T>(UIElement root, Point point) where T : DependencyObject
+    {
+        T? result = null;
+        VisualTreeHelper.HitTest(root, null, hitResult =>
+        {
+            var ancestor = FindVisualAncestor<T>(hitResult.VisualHit);
+            if (ancestor is not null)
+            {
+                result = ancestor;
+                return HitTestResultBehavior.Stop; // Stop after finding the first match
+            }
+            return HitTestResultBehavior.Continue;
+        }, new PointHitTestParameters(point));
+
+        return result;
+    }
+
+    private void ToggleStar()
+    {
+        if (DataContext is UiItemViewModel viewModel)
+        {
+            if (viewModel.ToggleStarCommand.CanExecute(null))
+            {
+                viewModel.ToggleStarCommand.Execute(null);
+            }
+        }
+    }
+
+    private void CheckMiddleClick(object sender, MouseEventArgs e)
+    {
+        if (e.MiddleButton == MouseButtonState.Pressed)
+        {
+            ToggleStar();
+        }
+    }
+
+    private static bool IsPastThreshold(Point startPoint, Point currentPoint)
+    {
+        Vector diff = startPoint - currentPoint;
+        return (
+            Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+            Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance
+        );
+    }
+
     private void ExecuteDrop(UIElement rootVisualContainer, Point dropPoint)
     {
         if (DataContext is not UiItemViewModel viewModel)
@@ -302,7 +268,7 @@ public partial class UiItem : UserControl
         {
             // Pass the RegionViewModel directly
             bool canDrop = ServiceLocator.GetService<IDragDropCoordinator>().TryExecuteDrop(
-                ItemName,
+                viewModel.ItemName,
                 regionViewModel,
                 viewModel.MouseDragType
             );
@@ -318,11 +284,5 @@ public partial class UiItem : UserControl
         }
 
         ServiceLocator.GetService<IDragPreviewService>().ClearDragPreview();
-    }
-
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        (DataContext as IDisposable)?.Dispose();
-        DataContext = null;
     }
 }

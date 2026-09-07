@@ -16,7 +16,6 @@
     PreviewMouseDown="UiItem_PreviewMouseDown"
     PreviewMouseMove="UiItem_PreviewMouseMove"
     PreviewMouseUp="UiItem_PreviewMouseUp"
-    Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
         <ResourceDictionary>

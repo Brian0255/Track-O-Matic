@@ -347,4 +347,38 @@ public static class Extensions
         HintPanelType.PotionCounts => "POTION COUNTS",
         _ => "Unknown"
     };
+
+    public static ItemName[] KongItemNames { get; } =
+    [
+        ItemName.DONKEY,
+        ItemName.COCONUT_GUN,
+        ItemName.BONGO_BLAST,
+        ItemName.GORILLA_GRAB,
+        ItemName.STRONG_KONG,
+        ItemName.BABOON_BLAST,
+        ItemName.DIDDY,
+        ItemName.PEANUT_POPGUNS,
+        ItemName.GUITAR_GAZUMP,
+        ItemName.CHIMPY_CHARGE,
+        ItemName.ROCKETBARREL_BOOST,
+        ItemName.SIMIAN_SPRING,
+        ItemName.LANKY,
+        ItemName.GRAPE_SHOOTER,
+        ItemName.TROMBONE_TREMOR,
+        ItemName.ORANGSTAND,
+        ItemName.ORANGSTAND_SPRINT,
+        ItemName.BABOON_BALLOON,
+        ItemName.TINY,
+        ItemName.FEATHER_BOW,
+        ItemName.SAXOPHONE_SLAM,
+        ItemName.PONYTAIL_TWIRL,
+        ItemName.MINI_MONKEY,
+        ItemName.MONKEYPORT,
+        ItemName.CHUNKY,
+        ItemName.PINEAPPLE_LAUNCHER,
+        ItemName.TRIANGLE_TRAMPLE,
+        ItemName.PRIMATE_PUNCH,
+        ItemName.HUNKY_CHUNKY,
+        ItemName.GORILLA_GONE
+    ];
 }

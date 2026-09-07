@@ -10,17 +10,6 @@ namespace TrackOMatic.HintsUI;
 
 public partial class HelmDoorHint : UserControl
 {
-    public static readonly DependencyProperty HelmDoorProperty = DependencyProperty.Register(
-        nameof(HelmDoor),
-        typeof(HelmDoor),
-        typeof(HelmDoorHint));
-
-    public HelmDoor HelmDoor
-    {
-        get => (HelmDoor)GetValue(HelmDoorProperty);
-        set => SetValue(HelmDoorProperty, value);
-    }
-
     public HelmDoorHint()
     {
         InitializeComponent();
