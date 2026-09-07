@@ -117,31 +117,6 @@ public partial class MainWindow : Window
         Reset();
     }
 
-    private void OnSettingChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(UserSettings.HintDisplay))
-        {
-            UpdateUiViaHintDisplay();
-        }
-        else if (e.PropertyName == nameof(UserSettings.CompactMode))
-        {
-            ResetWidthHeight();
-        }
-        else if (e.PropertyName == nameof(UserSettings.BroadcastViewActive))
-        {
-            if (UserSettings.BroadcastViewActive)
-            {
-                ShowBroadcastWindow();
-            }
-            else
-            {
-                // Defer close to dispatcher to avoid InvalidOperationException
-                // when called during BroadcastView's Closing event
-                Dispatcher.BeginInvoke(() => BroadcastView?.Close());
-            }
-        }
-    }
-
     #region Drag Drop Chaos
 
     /// <summary>
@@ -246,33 +221,29 @@ public partial class MainWindow : Window
 
     #endregion
 
-    /// <summary>
-    /// Updates the UI based on the current HintDisplay setting.
-    /// </summary>
-    /// <remarks>This method will be refactored eventually to not have MainWindow doing everything.</remarks>
-    private void UpdateUiViaHintDisplay()
-    {
-        ResetWidthHeight();
-        UpdateHintDisplayToggles();
-    }
+    #region Event Handling
 
-    private void UpdateHintDisplayToggles()
+    private void OnSettingChanged(object? sender, PropertyChangedEventArgs e)
     {
-        hintDisplayOff.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.Off);
-        hintDisplayMP.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.MultipathHints);
-        hintDisplayDirect.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.DirectItemHints);
-    }
-
-    private void UpdateBroadcastNumberDisplayToggles()
-    {
-        broadcastNumberDisplayPoints.IsChecked = (UserSettings.BroadcastNumberLabel == BroadcastNumberLabel.Points);
-        broadcastNumberDisplayWOTHCount.IsChecked = (UserSettings.BroadcastNumberLabel == BroadcastNumberLabel.WothCount);
-    }
-
-    private void InitData()
-    {
-        UpdateHintDisplayToggles();
-        UpdateBroadcastNumberDisplayToggles();
+        if (e.PropertyName == nameof(UserSettings.HintDisplay))
+        {
+            UpdateUiViaHintDisplay();
+        }
+        else if (e.PropertyName == nameof(UserSettings.CompactMode))
+        {
+            ResetWidthHeight();
+        }
+        else if (e.PropertyName == nameof(UserSettings.BroadcastViewActive))
+        {
+            if (UserSettings.BroadcastViewActive)
+            {
+                ShowBroadcastWindow();
+            }
+            else
+            {
+                BroadcastView?.Close();
+            }
+        }
     }
 
     private async Task OnTimerSave(object? sender, ElapsedEventArgs e)
@@ -287,15 +258,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private void InitOptions()
-    {
-        TopMostOption.IsChecked = UserSettings.TopMost;
-
-        Top = AppState.WindowY;
-        Left = AppState.WindowX;
-
-        ResetWidthHeight();
-    }
     private void Window_LocationChanged(object sender, EventArgs e)
     {
         AppState.WindowY = RestoreBounds.Top;
@@ -306,18 +268,6 @@ public partial class MainWindow : Window
     {
         // Do we want to allow saving the resized values all the time, or just at the end? Hmm...
     }
-
-    private void ResetWidthHeight()
-    {
-        double newWidth = 580;
-        if (UserSettings.HintDisplay != HintDisplayMode.Off)
-        {
-            newWidth = UserSettings.CompactMode ? 1392.0 : 1800.0;
-        }
-        Width = newWidth;
-        Height = 820;
-    }
-
     private void OnResetSize(object sender, RoutedEventArgs e)
     {
         ResetWidthHeight();
@@ -326,25 +276,6 @@ public partial class MainWindow : Window
     private void OnMouseDown(object sender, RoutedEventArgs e)
     {
         Keyboard.ClearFocus();
-    }
-
-    private async void DropFile(object sender, DragEventArgs e)
-    {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop))
-        {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (Path.GetExtension(files[0]).ToUpper().Equals(".JSON"))
-            {
-                try
-                {
-                    await OpenSpoilerFromPath(files[0]);
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Failed to open spoiler: {ex.Message}");
-                }
-            }
-        }
     }
 
     private async void OnOpenSpoiler(object sender, RoutedEventArgs e)
@@ -379,20 +310,25 @@ public partial class MainWindow : Window
         }
     }
 
-    private async Task OpenSpoilerFromPath(string filePath)
+    private async void OnDropExternalFile(object sender, DragEventArgs e)
     {
-        await DataSaverService.InitWithSpoilerAsync(filePath);
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (Path.GetExtension(files[0]).ToUpper().Equals(".JSON"))
+            {
+                try
+                {
+                    await OpenSpoilerFromPath(files[0]);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to open spoiler: {ex.Message}");
+                }
+            }
+        }
     }
 
-    private void Reset()
-    {
-        SpoilerLoaded = false;
-        SpoilerSettings = new SpoilerSettings();
-
-        HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
-        Autotracker.Reset();
-        DataSaverService.Reset();
-    }
     private void OnResetTracker(object sender, RoutedEventArgs e)
     {
         Reset();
@@ -472,23 +408,6 @@ public partial class MainWindow : Window
         // else: Keep current width from InitOptions, don't restore
     }
 
-    private static void HandleAutoUpdate()
-    {
-        try
-        {
-            AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
-            AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
-
-            AutoUpdater.InstalledVersion = new Version("3.0.0");
-
-            AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"AutoUpdater failed to start: {ex.Message}");
-        }
-    }
-
     private void Window_Closing(object sender, CancelEventArgs e)
     {
         _saveTimer.Stop();
@@ -507,6 +426,95 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Failed to save on exit: {ex.Message}");
+        }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        UserSettings.PropertyChanged -= OnSettingChanged;
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Updates the UI based on the current HintDisplay setting.
+    /// </summary>
+    /// <remarks>This method will be refactored eventually to not have MainWindow doing everything.</remarks>
+    private void UpdateUiViaHintDisplay()
+    {
+        ResetWidthHeight();
+        UpdateHintDisplayToggles();
+    }
+
+    private void UpdateHintDisplayToggles()
+    {
+        hintDisplayOff.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.Off);
+        hintDisplayMP.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.MultipathHints);
+        hintDisplayDirect.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.DirectItemHints);
+    }
+
+    private void UpdateBroadcastNumberDisplayToggles()
+    {
+        broadcastNumberDisplayPoints.IsChecked = (UserSettings.BroadcastNumberLabel == BroadcastNumberLabel.Points);
+        broadcastNumberDisplayWOTHCount.IsChecked = (UserSettings.BroadcastNumberLabel == BroadcastNumberLabel.WothCount);
+    }
+
+    private void InitData()
+    {
+        UpdateHintDisplayToggles();
+        UpdateBroadcastNumberDisplayToggles();
+    }
+
+    private void InitOptions()
+    {
+        TopMostOption.IsChecked = UserSettings.TopMost;
+
+        Top = AppState.WindowY;
+        Left = AppState.WindowX;
+
+        ResetWidthHeight();
+    }
+
+    private void ResetWidthHeight()
+    {
+        double newWidth = 580;
+        if (UserSettings.HintDisplay != HintDisplayMode.Off)
+        {
+            newWidth = UserSettings.CompactMode ? 1392.0 : 1800.0;
+        }
+        Width = newWidth;
+        Height = 820;
+    }
+
+    private async Task OpenSpoilerFromPath(string filePath)
+    {
+        await DataSaverService.InitWithSpoilerAsync(filePath);
+    }
+
+    private void Reset()
+    {
+        SpoilerLoaded = false;
+        SpoilerSettings = new SpoilerSettings();
+
+        HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
+        Autotracker.Reset();
+        DataSaverService.Reset();
+    }
+
+    private static void HandleAutoUpdate()
+    {
+        try
+        {
+            AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
+            AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
+
+            AutoUpdater.InstalledVersion = new Version("3.0.0");
+
+            AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"AutoUpdater failed to start: {ex.Message}");
         }
     }
 
@@ -537,10 +545,5 @@ public partial class MainWindow : Window
     {
         BroadcastView = null;
         UserSettings.BroadcastViewActive = false;
-    }
-
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        UserSettings.PropertyChanged -= OnSettingChanged;
     }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace TrackOMatic.Logic.Attributes;
 
 /// <summary>
@@ -10,20 +8,15 @@ namespace TrackOMatic.Logic.Attributes;
 /// Example: ANGRY_AZTEC → "Angry Aztec", DK_ISLES → "DK Isles"
 /// The attribute handles cases where PascalCase conversion wouldn't work.
 /// </remarks>
+/// <remarks>
+/// Initializes a new instance of the <see cref="SpoilerLogLabelAttribute"/> class.
+/// </remarks>
+/// <param name="label">The exact label string from the spoiler log (e.g., "Angry Aztec").</param>
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-public class SpoilerLogLabelAttribute : Attribute
+public class SpoilerLogLabelAttribute(string label) : Attribute
 {
     /// <summary>
     /// Gets the label as it appears in the spoiler log.
     /// </summary>
-    public string Label { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SpoilerLogLabelAttribute"/> class.
-    /// </summary>
-    /// <param name="label">The exact label string from the spoiler log (e.g., "Angry Aztec").</param>
-    public SpoilerLogLabelAttribute(string label)
-    {
-        Label = label;
-    }
+    public string Label { get; } = label;
 }

@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace TrackOMatic.Services;
 
 /// <summary>
@@ -14,7 +16,7 @@ public interface IDataPersistenceService
     /// A task that represents the asynchronous operation. The task result contains the loaded data,
     /// or a default instance of <typeparamref name="T"/> if the file does not exist or is empty.
     /// </returns>
-    Task<T> LoadAsync<T>(string filePath, CancellationToken cancellationToken = default) where T : class, new();
+    Task<T> LoadAsync<T>(string filePath, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default) where T : class, new();
 
     /// <summary>
     /// Asynchronously save data to a JSON file.

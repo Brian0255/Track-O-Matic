@@ -20,7 +20,11 @@ public class DataPersistenceService : IDataPersistenceService
         Converters = { new JsonStringEnumConverter() }
     };
 
-    public async Task<T> LoadAsync<T>(string filePath, CancellationToken cancellationToken = default) where T : class, new()
+    public async Task<T> LoadAsync<T>(
+        string filePath,
+        JsonSerializerOptions? options = null,
+        CancellationToken cancellationToken = default
+    ) where T : class, new()
     {
         try
         {
@@ -42,7 +46,8 @@ public class DataPersistenceService : IDataPersistenceService
             cts.CancelAfter(TimeSpan.FromSeconds(5));
             var jsonString = await reader.ReadToEndAsync(cts.Token).ConfigureAwait(false);
 
-            return JsonSerializer.Deserialize<T>(jsonString, _jsonOptions) ?? new T();
+            var opts = options ?? _jsonOptions;
+            return JsonSerializer.Deserialize<T>(jsonString, opts) ?? new T();
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {

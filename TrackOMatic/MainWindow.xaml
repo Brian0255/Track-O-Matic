@@ -21,7 +21,7 @@
     MouseDown="OnMouseDown"
     SizeChanged="Window_SizeChanged"
     AllowDrop="True"
-    Drop="DropFile"
+    Drop="OnDropExternalFile"
     Title="Track-O-Matic"
     Height="820"
     Width="{Binding CurrentWindowWidth}"

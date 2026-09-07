@@ -1,10 +1,11 @@
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Spoilers;
-using TrackOMatic.Services.SpoilerDeserialization;
 
 [assembly: InternalsVisibleTo("TrackOMatic.Services.Test")]
 
@@ -14,9 +15,16 @@ namespace TrackOMatic.Services;
 /// Implementation of <see cref="ISpoilerService"/> that handles complete deserialization
 /// and parsing of spoiler JSON files.
 /// </summary>
-public class SpoilerParserService : ISpoilerService
+public class SpoilerParserService(IDataPersistenceService dataPersistenceService) : ISpoilerService
 {
-    private readonly RawSpoilerFileDeserializer _rawDeserializer = new();
+    private static readonly JsonSerializerOptions _spoilerOptions = new()
+    {
+        PropertyNamingPolicy = null,
+        PropertyNameCaseInsensitive = false,
+        UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement
+    };
+
+    private readonly IDataPersistenceService _dataPersistenceService = dataPersistenceService;
 
     /// <summary>
     /// Deserializes and parses a spoiler file from a file path asynchronously.
@@ -27,46 +35,13 @@ public class SpoilerParserService : ISpoilerService
     {
         try
         {
-            // Step 1: Deserialize the raw JSON file
-            var rawResult = await _rawDeserializer.DeserializeFromFileAsync(filePath, cancellationToken);
-            if (!rawResult.IsSuccess || rawResult.Data == null)
+            var raw = await _dataPersistenceService.LoadAsync<RawSpoilerFile>(filePath, _spoilerOptions, cancellationToken);
+            if (raw == null)
             {
-                return DeserializationResult<ParsedSpoilerData>.Failure(
-                    rawResult.ErrorMessage ?? "Failed to deserialize spoiler file.");
+                return DeserializationResult<ParsedSpoilerData>.Failure("Failed to load raw spoiler file.");
             }
 
-            // Step 2: Parse the raw file into ParsedSpoilerData
-            return await ParseAsync(rawResult.Data, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return DeserializationResult<ParsedSpoilerData>.Failure("Deserialization operation was cancelled.");
-        }
-        catch (Exception ex)
-        {
-            return DeserializationResult<ParsedSpoilerData>.Failure($"Unexpected error: {ex.Message}");
-        }
-    }
-
-    /// <summary>
-    /// Deserializes and parses a spoiler from a JSON string asynchronously.
-    /// </summary>
-    public async Task<DeserializationResult<ParsedSpoilerData>> DeserializeAndParseFromStringAsync(
-        string jsonContent,
-        CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            // Step 1: Deserialize the JSON string
-            var rawResult = await _rawDeserializer.DeserializeFromStringAsync(jsonContent, cancellationToken);
-            if (!rawResult.IsSuccess || rawResult.Data == null)
-            {
-                return DeserializationResult<ParsedSpoilerData>.Failure(
-                    rawResult.ErrorMessage ?? "Failed to deserialize JSON content.");
-            }
-
-            // Step 2: Parse the raw file into ParsedSpoilerData
-            return await ParseAsync(rawResult.Data, cancellationToken);
+            return await ParseAsync(raw, cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -81,7 +56,7 @@ public class SpoilerParserService : ISpoilerService
     /// <summary>
     /// Parses a raw spoiler file into ParsedSpoilerData.
     /// </summary>
-    private Task<DeserializationResult<ParsedSpoilerData>> ParseAsync(
+    private static Task<DeserializationResult<ParsedSpoilerData>> ParseAsync(
         RawSpoilerFile rawSpoiler,
         CancellationToken cancellationToken = default)
     {
@@ -301,9 +276,9 @@ public class SpoilerParserService : ISpoilerService
                     slams++;
                     itemString = itemString + " " + slams.ToString();
                 }
-                if (SpoilerParserMappings.RANDO_NAME_TO_ITEM_NAME.ContainsKey(itemString))
+                if (SpoilerParserMappings.RANDO_NAME_TO_ITEM_NAME.TryGetValue(itemString, out ItemName value))
                 {
-                    startingMoves[SpoilerParserMappings.RANDO_NAME_TO_ITEM_NAME[itemString]] = regionToPlace;
+                    startingMoves[value] = regionToPlace;
                 }
             }
         }

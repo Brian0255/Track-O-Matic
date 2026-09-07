@@ -23,18 +23,6 @@ public interface ISpoilerService
     Task<DeserializationResult<ParsedSpoilerData>> DeserializeAndParseAsync(
         string filePath,
         CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Deserializes and parses a spoiler from a JSON string asynchronously.
-    /// </summary>
-    /// <param name="jsonContent">The raw JSON string content.</param>
-    /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-    /// <returns>
-    /// A <see cref="DeserializationResult{T}"/> containing the parsed spoiler data or error information.
-    /// </returns>
-    Task<DeserializationResult<ParsedSpoilerData>> DeserializeAndParseFromStringAsync(
-        string jsonContent,
-        CancellationToken cancellationToken = default);
 }
 
 /// <summary>

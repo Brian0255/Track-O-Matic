@@ -29,7 +29,10 @@ public static class ServiceRegistryExtensions
         // reinitialize their caches.
         services.AddSingleton<ISavedProgressProvider>(sp => new SavedProgressProvider(new SavedProgress()));
         services.AddSingleton<IItemTrackingService, ItemTrackingService>();
-        services.AddSingleton<IHintService>(sp => new HintService(sp.GetRequiredService<IItemTrackingService>(), sp.GetRequiredService<ISavedProgressProvider>()));
+        services.AddSingleton<IHintService>(sp => new HintService(
+            sp.GetRequiredService<IItemTrackingService>(),
+            sp.GetRequiredService<ISavedProgressProvider>()
+        ));
         services.AddSingleton<IDataSaverService>(sp => new DataSaverService(
             sp.GetRequiredService<IDataPersistenceService>(),
             sp.GetRequiredService<IParsedSpoilerDataService>(),
@@ -40,10 +43,8 @@ public static class ServiceRegistryExtensions
         ));
         services.AddSingleton<ICollectiblesService, CollectiblesService>();
         services.AddSingleton<IBarrierService, BarrierService>();
-        services.AddSingleton<ITrackerStateService, TrackerStateService>();
         services.AddSingleton<IEndGameProgressionService, EndGameProgressionService>();
         services.AddSingleton<ILevelOrderService, LevelOrderService>();
-        services.AddSingleton<ISpoilerLogService, SpoilerLogService>();
         services.AddSingleton<IParsedSpoilerDataService, ParsedSpoilerDataService>();
 
         services.AddSingleton<IShortcutService, ShortcutService>();

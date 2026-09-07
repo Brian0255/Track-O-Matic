@@ -40,8 +40,7 @@ public static class SuggestionListFocusBehavior
             listBox.UpdateLayout();
 
             // Get the first item container
-            var firstItem = listBox.ItemContainerGenerator.ContainerFromIndex(0) as ListBoxItem;
-            if (firstItem != null)
+            if (listBox.ItemContainerGenerator.ContainerFromIndex(0) is ListBoxItem firstItem)
             {
                 firstItem.Focus();
             }
