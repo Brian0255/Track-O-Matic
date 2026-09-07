@@ -1,3 +1,5 @@
+using TrackOMatic.Logic.Attributes;
+
 namespace TrackOMatic.Logic.Enums;
 
 public enum HintDisplayMode

@@ -19,7 +19,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </UserControl.Resources>

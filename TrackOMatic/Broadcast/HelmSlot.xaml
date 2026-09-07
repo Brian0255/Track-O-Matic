@@ -17,11 +17,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Visibility="{Binding ShowsSlot, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
+    <Grid Visibility="{Binding ShowsSlot, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
         <Border BorderThickness="0"
                 UseLayoutRounding="True"
                 RenderOptions.BitmapScalingMode="NearestNeighbor"

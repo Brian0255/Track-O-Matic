@@ -16,7 +16,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
             <converters:ChainedConverter x:Key="ItemPointsToColorConverter">
@@ -72,7 +71,7 @@
             <Grid
                 Grid.RowSpan="6"
                 Grid.ColumnSpan="5"
-                Visibility="{Binding ShouldShowRegionLevel, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+                Visibility="{Binding ShouldShowRegionLevel, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
             >
                 <!-- Child RegionLevel has its own DataContext -->
                 <local:RegionLevel DataContext="{Binding RegionLevelViewModel}" />
@@ -88,7 +87,7 @@
                     HorizontalAlignment="Right"
                     Text="{Binding WothPoints}"
                     Foreground="{StaticResource RequiredChecksColor}"
-                    Visibility="{Binding HasWothPoints, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+                    Visibility="{Binding HasWothPoints, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
                 />
             </Viewbox>
 
@@ -97,7 +96,7 @@
                 <TextBlock
                     Text="{Binding ItemPoints}"
                     Foreground="{Binding ItemPoints, Converter={StaticResource ItemPointsToColorConverter}}"
-                    Visibility="{Binding ShouldShowItemPoints, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+                    Visibility="{Binding ShouldShowItemPoints, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
                 />
             </Viewbox>
         </Grid>

@@ -71,7 +71,6 @@ public partial class App : Application
         (
             settingsService,
             appStateService,
-            spoilerService,
             parsedSpoilerDataService,
             autotrackingService,
             themeService,

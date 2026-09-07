@@ -19,7 +19,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
@@ -31,7 +31,7 @@
             RenderOptions.ClearTypeHint="Enabled"
         >
             <Border.ToolTip>
-                <ToolTip Content="{Binding HoverText}" Visibility="{Binding HasHoverText, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" Placement="Mouse" />
+                <ToolTip Content="{Binding HoverText}" Visibility="{Binding HasHoverText, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" Placement="Mouse" />
             </Border.ToolTip>
             <Border.Effect>
                 <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
@@ -47,7 +47,7 @@
             Source="{StaticResource star_complex}"
             HorizontalAlignment="Left"
             IsHitTestVisible="False"
-            Visibility="{Binding IsStarred, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+            Visibility="{Binding IsStarred, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
         />
     </Grid>
 </UserControl>

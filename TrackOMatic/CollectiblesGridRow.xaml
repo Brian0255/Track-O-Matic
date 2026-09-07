@@ -17,7 +17,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
             <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
             <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
@@ -34,7 +33,7 @@
         <Grid
             Grid.Column="1"
             Margin="0"
-            Visibility="{Binding IsWrinklyVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+            Visibility="{Binding IsWrinklyVisible, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
         >
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />

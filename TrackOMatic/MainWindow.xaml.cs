@@ -30,8 +30,6 @@ public partial class MainWindow : Window
     private BroadcastView? BroadcastView { get; set; }
 
     public bool SpoilerLoaded { get; private set; }
-    public static Grid Items { get; private set; } = null!;
-    public SpoilerParser SpoilerParser { get; private set; }
     public SpoilerSettings SpoilerSettings { get; private set; } = null!;
 
     public UiItemViewModel? CurrentDragViewModel { get; private set; }
@@ -39,7 +37,6 @@ public partial class MainWindow : Window
     private IAutotrackerService Autotracker { get; init; }
     private IUserSettingsService UserSettings { get; init; }
     private IApplicationStateService AppState { get; init; }
-    private ISpoilerService SpoilerService { get; init; }
     private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
     private IDataSaverService DataSaverService { get; init; }
 
@@ -63,7 +60,6 @@ public partial class MainWindow : Window
     public MainWindow(
         IUserSettingsService settingsSergice,
         IApplicationStateService appStateService,
-        ISpoilerService spoilerService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         IAutotrackerService autotrackerService,
         IThemeService themeService,
@@ -84,7 +80,6 @@ public partial class MainWindow : Window
         LevelOrderService = levelOrderService;
         AppState = appStateService;
         DataSaverService = dataSaverService;
-        SpoilerService = spoilerService;
         ParsedSpoilerDataService = parsedSpoilerDataService;
         SavedProgressProvider = savedProgressProvider;
         Autotracker = autotrackerService;
@@ -119,8 +114,6 @@ public partial class MainWindow : Window
         HintData.Init();
         InitOptions();
         InitData();
-
-        SpoilerParser = new(UserSettings, SpoilerService);
         Reset();
     }
 

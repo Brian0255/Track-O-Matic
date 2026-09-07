@@ -17,7 +17,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" FalseVisibility="Hidden" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
             <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
@@ -53,7 +53,7 @@
             HorizontalAlignment="Left"
             Height="16"
             Source="{Binding RegionResourceKey, Converter={StaticResource ResourceKeyConverter}}"
-            Visibility="{Binding ShowRegionImage, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+            Visibility="{Binding ShowRegionImage, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
         />
 
         <!-- Number of points (only relevant for games with point based spoiler logs) -->
