@@ -31,11 +31,13 @@ public partial class HelmDoorHint : UserControl
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
             Keyboard.ClearFocus();
-            TextBox_LostFocus(sender, null!);
+            OnLostTextBoxFocus(sender);
         }
     }
 
-    private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+    private void TextBox_LostFocus(object sender, RoutedEventArgs e) => OnLostTextBoxFocus(sender);
+
+    private void OnLostTextBoxFocus(object sender)
     {
         if (sender is not TextBox textBox)
         {

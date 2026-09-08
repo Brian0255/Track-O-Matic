@@ -18,19 +18,6 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// </remarks>
 public partial class BroadcastItemViewModel : ObservableObject, IEquatable<BroadcastItemViewModel>, IDisposable
 {
-    private static readonly HashSet<ItemName> _barrelPadItems =
-    [
-        ItemName.STRONG_KONG,
-        ItemName.ROCKETBARREL_BOOST,
-        ItemName.ORANGSTAND,
-        ItemName.MINI_MONKEY,
-        ItemName.HUNKY_CHUNKY,
-        ItemName.BABOON_BLAST,
-        ItemName.SIMIAN_SPRING,
-        ItemName.MONKEYPORT,
-        ItemName.GORILLA_GONE
-    ];
-
     protected internal readonly IItemTrackingService _itemTrackingService;
     protected internal readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     protected internal readonly ISavedProgressProvider _savedProgressProvider;
@@ -72,7 +59,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnSavedProgressChanged;
 
-        if (_barrelPadItems.Contains(_itemName))
+        if (EndGameMappings.BarrelPadItems.Contains(_itemName))
         {
             _themeService.BarrelPadThemeChanged += OnBarrelPadThemeChanged;
         }
@@ -119,7 +106,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
             // Unsubscribe from events to prevent memory leaks
             _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
             _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
-            if (_barrelPadItems.Contains(_itemName))
+            if (EndGameMappings.BarrelPadItems.Contains(_itemName))
             {
                 _themeService.BarrelPadThemeChanged -= OnBarrelPadThemeChanged;
             }

@@ -73,4 +73,17 @@ public class EndGameMappings
         RegionName.CREEPY_CASTLE, RegionName.HIDEOUT_HELM, RegionName.START,
         RegionName.DK_ISLES, RegionName.UNHINTABLE_MOVES
     ];
+
+    public static readonly HashSet<ItemName> BarrelPadItems =
+    [
+        ItemName.STRONG_KONG,
+        ItemName.ROCKETBARREL_BOOST,
+        ItemName.ORANGSTAND,
+        ItemName.MINI_MONKEY,
+        ItemName.HUNKY_CHUNKY,
+        ItemName.BABOON_BLAST,
+        ItemName.SIMIAN_SPRING,
+        ItemName.MONKEYPORT,
+        ItemName.GORILLA_GONE
+    ];
 }

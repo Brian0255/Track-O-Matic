@@ -65,7 +65,6 @@ public partial class PathHintItemListViewModel : ObservableObject, IDisposable
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _pathItems = [];
 
-        // TODO: SavedProgressProvider initializes the hinted/found items.
         _hintService.HintPathItemsUpdated += OnPathItemsUpdated;
         _savedProgressProvider.ProgressChanged += OnProgressChanged;
 

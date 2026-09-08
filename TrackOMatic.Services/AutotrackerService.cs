@@ -643,8 +643,12 @@ public class AutotrackerService : IAutotrackerService
                 {
                     File.WriteAllText(Path.Combine(songDisplayFolder, entry.Key), entry.Value);
                 }
-                catch (IOException) { }
-                catch (Exception) { }
+                catch (IOException) {
+                    // Silently fail if song output folder cannot be created
+                }
+                catch (Exception) {
+                    // Silently fail if song output folder cannot be created
+                }
             }
         }
         catch (Exception)

@@ -15,20 +15,6 @@ namespace TrackOMatic.ViewModels.Regions;
 /// </summary>
 public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionItemViewModel>, IRegionItemViewModel, IVialSlot
 {
-    // TODO: Maybe move this out of the view model specifically?
-    private static readonly HashSet<ItemName> _barrelPadItems =
-    [
-        ItemName.STRONG_KONG,
-        ItemName.ROCKETBARREL_BOOST,
-        ItemName.ORANGSTAND_SPRINT,
-        ItemName.MINI_MONKEY,
-        ItemName.HUNKY_CHUNKY,
-        ItemName.BABOON_BLAST,
-        ItemName.SIMIAN_SPRING,
-        ItemName.MONKEYPORT,
-        ItemName.GORILLA_GONE
-    ];
-
     protected ItemName? _itemName;
     protected readonly RegionName _regionName;
     private readonly IItemTrackingService _itemTrackingService;
@@ -78,7 +64,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
         // Subscribe to events
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
-        if (_itemName.HasValue && _barrelPadItems.Contains(_itemName.Value))
+        if (_itemName.HasValue && EndGameMappings.BarrelPadItems.Contains(_itemName.Value))
         {
             _themeService.BarrelPadThemeChanged += OnBarrelPadThemeChanged;
         }
@@ -190,7 +176,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
     protected virtual void OnBarrelPadThemeChanged(object? sender, EventArgs e)
     {
         // If the item is a barrel pad, we need to update the image resource key to reflect the new theme.
-        if (_itemName.HasValue && _barrelPadItems.Contains(_itemName.Value))
+        if (_itemName.HasValue && EndGameMappings.BarrelPadItems.Contains(_itemName.Value))
         {
             var itemState = _itemTrackingService.GetItemState(_itemName.Value);
             // Force the frontend to re-evaluate the binding via temporary property change.
@@ -262,7 +248,7 @@ public partial class RegionItemViewModel : ObservableObject, IEquatable<RegionIt
             _disposed = true;
 
             _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
-            if (_itemName.HasValue && _barrelPadItems.Contains(_itemName.Value))
+            if (_itemName.HasValue && EndGameMappings.BarrelPadItems.Contains(_itemName.Value))
             {
                 _themeService.BarrelPadThemeChanged -= OnBarrelPadThemeChanged;
             }

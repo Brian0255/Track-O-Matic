@@ -423,8 +423,12 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     [RelayCommand(CanExecute = nameof(CanConfirmPotionCount))]
     private void ConfirmPotionCount()
     {
-        // TODO: Phase 2 - Call mainWindow.DataSaver.Save() or similar persistence logic
-        // For now, just clear the focus (which is handled by the code-behind)
+        var hint = _hintService.GetHint(HintId);
+        if (hint is null)
+        {
+            return;
+        }
+        hint.PotionCountText = PotionCountText;
     }
 
     private bool CanConfirmPotionCount()
