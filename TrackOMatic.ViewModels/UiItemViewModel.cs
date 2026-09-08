@@ -12,7 +12,13 @@ using TrackOMatic.ViewModels.Broadcast;
 
 namespace TrackOMatic.ViewModels;
 
-public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyChanged
+public partial class UiItemViewModel(
+    ItemName itemName,
+    IItemTrackingService itemTrackingService,
+    IParsedSpoilerDataService parsedSpoilerDataService,
+    ISavedProgressProvider savedProgressProvider,
+    IThemeService themeService
+) : BroadcastItemViewModel(itemName, itemTrackingService, parsedSpoilerDataService, savedProgressProvider, themeService)
 {
     public MouseDragType MouseDragType { get; private set; }
 
@@ -40,18 +46,6 @@ public partial class UiItemViewModel : BroadcastItemViewModel, INotifyPropertyCh
     public partial RegionName RegionName { get; set; } = RegionName.UNKNOWN;
 
     #endregion
-
-    public UiItemViewModel(
-        ItemName itemName,
-        IItemTrackingService itemTrackingService,
-        IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider,
-        IThemeService themeService
-    ) : base(itemName, itemTrackingService, parsedSpoilerDataService, savedProgressProvider, themeService)
-    {
-        // Base constructor handles all service initialization and event registration
-        // No additional initialization needed here - base has already called InitializeState()
-    }
 
     /// <summary>
     /// Initialize properties from current service state, including opacity for UI rendering.

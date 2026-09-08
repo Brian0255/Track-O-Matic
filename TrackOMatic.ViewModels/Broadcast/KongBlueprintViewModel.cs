@@ -19,7 +19,7 @@ public partial class KongBlueprintViewModel : ObservableObject, IEquatable<KongB
     private int _collectedCount;
     private int _turnedInCount;
 
-    private static readonly HashSet<ItemType> AllowedCollectedTypes =
+    private static readonly HashSet<ItemType> _allowedCollectedTypes =
     [
         ItemType.DONKEY_BLUEPRINT,
         ItemType.DIDDY_BLUEPRINT,
@@ -28,7 +28,7 @@ public partial class KongBlueprintViewModel : ObservableObject, IEquatable<KongB
         ItemType.CHUNKY_BLUEPRINT
     ];
 
-    private static readonly HashSet<ItemType> AllowedTurnedInTypes =
+    private static readonly HashSet<ItemType> _allowedTurnedInTypes =
     [
         ItemType.DONKEY_BLUEPRINT_TURNED,
         ItemType.DIDDY_BLUEPRINT_TURNED,
@@ -56,11 +56,11 @@ public partial class KongBlueprintViewModel : ObservableObject, IEquatable<KongB
         ISavedProgressProvider savedProgressProvider
     )
     {
-        if (!AllowedCollectedTypes.Contains(collectedType))
+        if (!_allowedCollectedTypes.Contains(collectedType))
         {
             throw new ArgumentException($"ItemType {collectedType} is not allowed for collected blueprints.", nameof(collectedType));
         }
-        if (!AllowedTurnedInTypes.Contains(turnedInType))
+        if (!_allowedTurnedInTypes.Contains(turnedInType))
         {
             throw new ArgumentException($"ItemType {turnedInType} is not allowed for turned-in blueprints.", nameof(turnedInType));
         }

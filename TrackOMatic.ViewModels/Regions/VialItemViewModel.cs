@@ -6,6 +6,7 @@ using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
+using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Regions;
 
@@ -102,7 +103,7 @@ public partial class VialItemViewModel : RegionItemViewModel, IEquatable<VialIte
         var hasStarToTransfer = IsVialStarred;
         var cleanState = itemState with
         {
-            Starred = hasStarToTransfer ? true : itemState.Starred,
+            Starred = hasStarToTransfer || itemState.Starred,
         };
 
         // Clear the vial star since we're transferring it to the item
@@ -178,7 +179,7 @@ public partial class VialItemViewModel : RegionItemViewModel, IEquatable<VialIte
         var newItemState = oldItemState with
         {
             Region = RegionName,
-            Starred = hasStarToTransfer ? true : oldItemState.Starred,
+            Starred = hasStarToTransfer || oldItemState.Starred,
         };
         ItemTrackingService.SetItemState(itemToPlace, newItemState);
         CurrentItemName = itemToPlace;

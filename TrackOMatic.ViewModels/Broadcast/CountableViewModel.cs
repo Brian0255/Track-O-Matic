@@ -15,7 +15,7 @@ public partial class CountableViewModel : ObservableObject, IDisposable
     private readonly SynchronizationContext _uiContext;
     private readonly ItemType _itemType;
 
-    private static readonly HashSet<ItemType> AllowedItemTypes =
+    private static readonly HashSet<ItemType> _allowedItemTypes =
     [
         ItemType.GOLDEN_BANANA,
         ItemType.PEARL,
@@ -43,7 +43,7 @@ public partial class CountableViewModel : ObservableObject, IDisposable
         IParsedSpoilerDataService parsedSpoilerDataService
     )
     {
-        if (!AllowedItemTypes.Contains(itemType))
+        if (!_allowedItemTypes.Contains(itemType))
         {
             throw new ArgumentException($"ItemType {itemType} is not allowed for CountableViewModel.", nameof(itemType));
         }

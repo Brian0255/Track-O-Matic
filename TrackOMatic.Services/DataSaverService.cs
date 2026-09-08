@@ -5,39 +5,28 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.Services;
 
-public class DataSaverService : IDataSaverService
+public class DataSaverService(
+    IDataPersistenceService dataPersistenceService,
+    IParsedSpoilerDataService parsedSpoilerDataService,
+    IItemTrackingService itemTrackingService,
+    IHintService hintService,
+    ISavedProgressProvider savedProgressProvider,
+    ISpoilerService spoilerService
+) : IDataSaverService
 {
-    private static readonly string AppDataDirectory = Path.Combine(
+    private static readonly string _appDataDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "Track-O-Matic"
     );
 
-    private readonly IDataPersistenceService _dataPersistenceService;
-    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
-    private readonly IItemTrackingService _itemTrackingService;
-    private readonly IHintService _hintService;
-    private readonly ISavedProgressProvider _savedProgressProvider;
-    private readonly ISpoilerService _spoilerService;
+    private readonly IDataPersistenceService _dataPersistenceService = dataPersistenceService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService = parsedSpoilerDataService;
+    private readonly IItemTrackingService _itemTrackingService = itemTrackingService;
+    private readonly IHintService _hintService = hintService;
+    private readonly ISavedProgressProvider _savedProgressProvider = savedProgressProvider;
+    private readonly ISpoilerService _spoilerService = spoilerService;
 
-    private SavedProgress CurrentSavedProgress { get; set; }
-
-    public DataSaverService(
-        IDataPersistenceService dataPersistenceService,
-        IParsedSpoilerDataService parsedSpoilerDataService,
-        IItemTrackingService itemTrackingService,
-        IHintService hintService,
-        ISavedProgressProvider savedProgressProvider,
-        ISpoilerService spoilerService
-    )
-    {
-        _dataPersistenceService = dataPersistenceService;
-        _parsedSpoilerDataService = parsedSpoilerDataService;
-        _itemTrackingService = itemTrackingService;
-        _hintService = hintService;
-        _savedProgressProvider = savedProgressProvider;
-        _spoilerService = spoilerService;
-        CurrentSavedProgress = new();
-    }
+    private SavedProgress CurrentSavedProgress { get; set; } = new();
 
     public event EventHandler<SavedProgressChangedEventArgs>? SaveCompleted;
     public event EventHandler<string>? SaveFailed;
@@ -142,7 +131,7 @@ public class DataSaverService : IDataSaverService
             // Ensure the order of saved items is consistent before saving
             _itemTrackingService.SyncSavedItemsOrder();
             // If only a filename is provided, resolve it to the app data directory
-            string resolvedPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(AppDataDirectory, filePath);
+            string resolvedPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(_appDataDirectory, filePath);
             await _dataPersistenceService.SaveAsync(CreateFilteredProgressSnapshot(), resolvedPath);
             SaveCompleted?.Invoke(this, new() { FilePath = resolvedPath, Success = true });
         }

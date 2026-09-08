@@ -1,6 +1,7 @@
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
+using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.Services;
 
@@ -9,18 +10,12 @@ namespace TrackOMatic.Services;
 /// This implementation is stateless and query-driven; it queries regions for available slots
 /// at placement time rather than maintaining registrations.
 /// </summary>
-public class RegionPlacementOrchestrator : IRegionPlacementOrchestrator
+public class RegionPlacementOrchestrator(
+    IRegionSlotProvider slotProvider,
+    IItemTrackingService itemTrackingService) : IRegionPlacementOrchestrator
 {
-    private readonly IRegionSlotProvider _slotProvider;
-    private readonly IItemTrackingService _itemTrackingService;
-
-    public RegionPlacementOrchestrator(
-        IRegionSlotProvider slotProvider,
-        IItemTrackingService itemTrackingService)
-    {
-        _slotProvider = slotProvider ?? throw new ArgumentNullException(nameof(slotProvider));
-        _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
-    }
+    private readonly IRegionSlotProvider _slotProvider = slotProvider ?? throw new ArgumentNullException(nameof(slotProvider));
+    private readonly IItemTrackingService _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
 
     public bool TryPlaceAutoTrackedItem(ItemName itemName, RegionName targetRegion, SavedItem itemState)
     {

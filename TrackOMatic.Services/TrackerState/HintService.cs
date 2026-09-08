@@ -94,11 +94,7 @@ public class HintService : IHintService
 
     public void SetFoundItems(HintId hintId, Dictionary<ItemName, bool> foundItems, HintPanelType hintPanelType)
     {
-        var hint = GetHint(hintId);
-        if (hint is null)
-        {
-            throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
-        }
+        var hint = GetHint(hintId) ?? throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
 
         var hintedRegion = hintPanelType.ToRegion();
         if (hintedRegion.IsPlayableRegion())
@@ -126,11 +122,7 @@ public class HintService : IHintService
 
     public void SetPathItems(HintId hintId, Dictionary<ItemName, bool> pathItems)
     {
-        var hint = GetHint(hintId);
-        if (hint is null)
-        {
-            throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
-        }
+        var hint = GetHint(hintId) ?? throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
 
         hint.PathItems = pathItems;
         HintPathItemsUpdated?.Invoke(this, new(hintId, pathItems));
@@ -138,11 +130,7 @@ public class HintService : IHintService
 
     public void ToggleFoundItem(HintId hintId, ItemName itemName)
     {
-        var hint = GetHint(hintId);
-        if (hint is null)
-        {
-            throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
-        }
+        var hint = GetHint(hintId) ?? throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
 
         if (hint.FoundItems.TryGetValue(itemName, out bool value))
         {
@@ -153,11 +141,7 @@ public class HintService : IHintService
 
     public void TogglePathItem(HintId hintId, ItemName itemName)
     {
-        var hint = GetHint(hintId);
-        if (hint is null)
-        {
-            throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
-        }
+        var hint = GetHint(hintId) ?? throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
 
         if (hint.PathItems.TryGetValue(itemName, out bool value))
         {
@@ -168,11 +152,7 @@ public class HintService : IHintService
 
     public void UpdateHintLocation(HintId hintId, string location)
     {
-        var hint = GetHint(hintId);
-        if (hint is null)
-        {
-            throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
-        }
+        var hint = GetHint(hintId) ?? throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
 
         hint.LocationText = location;
         HintLocationUpdated?.Invoke(this, new(hintId, hint));
@@ -180,11 +160,7 @@ public class HintService : IHintService
 
     public void UpdateHintPotionCount(HintId hintId, string potionCount)
     {
-        var hint = GetHint(hintId);
-        if (hint is null)
-        {
-            throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
-        }
+        var hint = GetHint(hintId) ?? throw new ArgumentException($"Hint with ID {hintId} does not exist.", nameof(hintId));
 
         hint.PotionCountText = potionCount;
         HintPotionCountUpdated?.Invoke(this, new(hintId, hint));

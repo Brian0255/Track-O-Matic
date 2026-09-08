@@ -21,7 +21,7 @@ public partial class WindowsProcessMemoryReader : IProcessMemoryReader
     private static partial IntPtr OpenProcess(int dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
 
     [LibraryImport("kernel32.dll", SetLastError = true)]
-    private static partial int ReadProcessMemory(IntPtr hProcess, UIntPtr lpBaseAddress, byte[] buffer, uint size, IntPtr lpNumberOfBytesRead);
+    private static partial int ReadProcessMemory(IntPtr hProcess, UIntPtr lpBaseAddress, [Out] byte[] buffer, uint size, IntPtr lpNumberOfBytesRead);
 
     [LibraryImport("psapi.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]

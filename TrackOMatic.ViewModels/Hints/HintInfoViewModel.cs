@@ -60,7 +60,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     /// Tracks whether the ViewModel is initializing from loaded hint data.
     /// Prevents suggestion dropdown from opening during initialization.
     /// </summary>
-    private bool _isInitializing = true;
+    private readonly bool _isInitializing = true;
 
     public RegionName RegionName { get; private set; }
 

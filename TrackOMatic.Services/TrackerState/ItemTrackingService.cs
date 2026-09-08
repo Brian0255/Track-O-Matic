@@ -229,7 +229,6 @@ public class ItemTrackingService : IItemTrackingService
 
     public void SyncSavedItemsOrder()
     {
-        var oldItems = _progressProvider.CurrentProgress.SavedItems;
         _progressProvider.CurrentProgress.SavedItems = [];
 
         foreach (var item in _itemOrder)

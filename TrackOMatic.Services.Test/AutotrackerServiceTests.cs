@@ -427,39 +427,6 @@ public class AutotrackerServiceTests
 
     #region Event Tests
 
-    [Fact(Skip = "ItemProcessed event has been removed")]
-    public void ItemProcessed_WhenSubscribed_CanCaptureEventData()
-    {
-        var service = CreateServiceWithMocks(out _, out _, out _);
-
-        // Arrange: set up capture variables
-        AutotrackerItemEventArgs? capturedEventArgs = null;
-        object? capturedSender = null;
-        /*
-        service.ItemProcessed += (sender, e) =>
-        {
-            capturedSender = sender;
-            capturedEventArgs = e;
-        };
-
-        // Act: manually invoke the event (simulating what the service would do)
-        var testEventArgs = new AutotrackerItemEventArgs
-        {
-            ItemName = ItemName.NONE,
-            RegionName = RegionName.DK_ISLES,
-            IsHint = false,
-            IsNewRegion = true
-        };
-        service.TestRaiseItemProcessed(testEventArgs);
-        */
-        // Assert: verify the handler was called with correct data
-        Assert.NotNull(capturedEventArgs);
-        Assert.Same(service, capturedSender);
-        Assert.Equal(ItemName.NONE, capturedEventArgs.ItemName);
-        Assert.Equal(RegionName.DK_ISLES, capturedEventArgs.RegionName);
-        Assert.False(capturedEventArgs.IsHint);
-        Assert.True(capturedEventArgs.IsNewRegion);
-    }
 
     [Fact(Skip = "ItemProcessed event has been removed")]
     public void MultipleHandlers_AllGetInvoked()
@@ -484,27 +451,6 @@ public class AutotrackerServiceTests
         // Both handlers should have been invoked
         Assert.Equal(1, handler1Calls);
         Assert.Equal(1, handler2Calls);
-    }
-
-    [Fact(Skip = "ItemProcessed event has been removed")]
-    public void EventHandlerRemoval_PreventsFurtherInvocations()
-    {
-        var service = CreateServiceWithMocks(out _, out _, out _);
-
-        int callCount = 0;
-        void handler(object? sender, AutotrackerItemEventArgs e) => callCount++;
-        /*
-        service.ItemProcessed += handler;
-
-        var testEventArgs = new AutotrackerItemEventArgs();
-        service.TestRaiseItemProcessed(testEventArgs);
-        Assert.Equal(1, callCount);
-
-        service.ItemProcessed -= handler;
-        service.TestRaiseItemProcessed(testEventArgs);
-        */
-        // Handler should not have been called again after unsubscription
-        Assert.Equal(1, callCount);
     }
 
     #endregion

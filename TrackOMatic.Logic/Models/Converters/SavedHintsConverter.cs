@@ -47,10 +47,8 @@ internal class SavedHintsConverter : JsonConverter<List<SavedHint>>
         {
             // Serialize SavedHint directly as JSON (enums as strings via StringEnumConverter)
             var json = JsonSerializer.Serialize(hint, options);
-            using (var doc = JsonDocument.Parse(json))
-            {
-                doc.RootElement.WriteTo(writer);
-            }
+            using var doc = JsonDocument.Parse(json);
+            doc.RootElement.WriteTo(writer);
         }
 
         writer.WriteEndArray();

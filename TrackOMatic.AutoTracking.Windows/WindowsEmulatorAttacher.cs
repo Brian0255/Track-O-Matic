@@ -12,9 +12,9 @@ namespace TrackOMatic.AutoTracking.Windows;
 /// </summary>
 public class WindowsEmulatorAttacher(IProcessMemoryReader memoryReader) : IEmulatorAttacher
 {
-    private static readonly string Project64Id = "project64";
-    private static readonly string RmgId = "rmg";
-    private static readonly string RetroarchId = "retroarch";
+    private static readonly string _project64Id = "project64";
+    private static readonly string _rmgId = "rmg";
+    private static readonly string _retroarchId = "retroarch";
 
     private readonly IProcessMemoryReader _memoryReader = memoryReader;
 
@@ -22,9 +22,9 @@ public class WindowsEmulatorAttacher(IProcessMemoryReader memoryReader) : IEmula
     {
         var emu_to_function_call = new Dictionary<string, Func<Process, IntPtr, GameVerificationInfo, AttachedEmulatorInfo?>>()
         {
-            {Project64Id, AttachToProject64 },
-            {RmgId, AttachToRMG },
-            {RetroarchId, AttachToRetroarch }
+            {_project64Id, AttachToProject64 },
+            {_rmgId, AttachToRMG },
+            {_retroarchId, AttachToRetroarch }
         };
         foreach (var entry in emu_to_function_call)
         {
@@ -66,7 +66,7 @@ public class WindowsEmulatorAttacher(IProcessMemoryReader memoryReader) : IEmula
             if (_memoryReader.ReadInt32(target.Id, potentialOffset + verificationInfo.TargetAddress) == verificationInfo.TargetValue)
             {
                 Console.WriteLine(potentialOffset + verificationInfo.TargetAddress);
-                return new AttachedEmulatorInfo(target.Id, Project64Id, potentialOffset, handle);
+                return new AttachedEmulatorInfo(target.Id, _project64Id, potentialOffset, handle);
             }
         }
         return null;
@@ -97,7 +97,7 @@ public class WindowsEmulatorAttacher(IProcessMemoryReader memoryReader) : IEmula
             var testValue = _memoryReader.ReadInt32(target.Id, (uint)(readAddress + 0x80000000 + gameVerificationInfo.TargetAddress));
             if ((testValue & 0xffffffff) == gameVerificationInfo.TargetValue)
             {
-                return new AttachedEmulatorInfo(target.Id, RmgId, readAddress + 0x80000000, handle);
+                return new AttachedEmulatorInfo(target.Id, _rmgId, readAddress + 0x80000000, handle);
             }
         }
         return null;
@@ -248,7 +248,7 @@ public class WindowsEmulatorAttacher(IProcessMemoryReader memoryReader) : IEmula
             var testValue = _memoryReader.ReadInt32(target.Id, (uint)(readAddress + gameVerificationInfo.TargetAddress));
             if ((testValue & 0xFFFFFFFF) == gameVerificationInfo.TargetValue)
             {
-                return new AttachedEmulatorInfo(target.Id, RetroarchId, readAddress, handle);
+                return new AttachedEmulatorInfo(target.Id, _retroarchId, readAddress, handle);
             }
         }
         return null;

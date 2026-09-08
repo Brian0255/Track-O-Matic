@@ -39,7 +39,7 @@ public partial class HintDialogItemViewModel : ObservableObject
         var key = Cell.ItemName.ToString().ToLowerInvariant();
         if (!IsSelected)
         {
-            key = key + "_bw";
+            key += "_bw";
         }
         ImageResourceKey = key;
     }

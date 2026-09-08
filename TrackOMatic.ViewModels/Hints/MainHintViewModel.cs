@@ -8,7 +8,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Hints;
 
-public class MainHintViewModel : ObservableObject
+public class MainHintViewModel : ObservableObject, IDisposable
 {
     private readonly IHintService _hintService;
     private readonly IShortcutService _shortcutService;

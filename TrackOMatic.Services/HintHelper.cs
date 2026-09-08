@@ -2,16 +2,16 @@ namespace TrackOMatic.Services;
 
 public static class HintHelper
 {
-    private static readonly double EXPONENT = 1.7;
-    private static readonly double OFFSET_DIVISOR = 15;
+    private static readonly double _exponent = 1.7;
+    private static readonly double _offsetDivisor = 15;
 
     private static int GetHintRequirement(int hintSlot, int hintCap)
     {
         //based on https://github.com/2dos/DK64-Randomizer/blob/dev/randomizer%2FPatching%2FLib.py#L1092-L1105
-        var offset = hintCap / OFFSET_DIVISOR;
+        var offset = hintCap / _offsetDivisor;
         var multiplier = hintCap - offset;
         var final_offset = (hintCap + offset) / 2;
-        var exp_result = 1 + (Math.Pow(hintSlot, EXPONENT) / Math.Pow(34, EXPONENT));
+        var exp_result = 1 + (Math.Pow(hintSlot, _exponent) / Math.Pow(34, _exponent));
         var z = Math.PI * exp_result;
         var required_item_count = (int)(multiplier * 0.5 * Math.Cos(z) + final_offset);
         return (required_item_count == 0) ? 1 : required_item_count;

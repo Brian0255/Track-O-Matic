@@ -63,10 +63,8 @@ internal class SavedItemsConverter : JsonConverter<Dictionary<ItemName, SavedIte
             writer.WritePropertyName(kvp.Key.ToString());
 
             var json = JsonSerializer.Serialize(kvp.Value, options);
-            using (var doc = JsonDocument.Parse(json))
-            {
-                doc.RootElement.WriteTo(writer);
-            }
+            using var doc = JsonDocument.Parse(json);
+            doc.RootElement.WriteTo(writer);
         }
 
         writer.WriteEndObject();

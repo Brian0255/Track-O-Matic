@@ -29,7 +29,7 @@ public class RegionSlotProviderRegistry : IRegionSlotProvider
     /// <param name="provider">The provider (typically RegionViewModel implementing GetVialSlots)</param>
     public void RegisterRegionProvider(RegionName regionName, IRegionSlotProvider provider)
     {
-        if (provider == null) throw new ArgumentNullException(nameof(provider));
+        ArgumentNullException.ThrowIfNull(provider);
 
         _regionProviders.AddOrUpdate(regionName, provider, (_, __) => provider);
     }
@@ -56,7 +56,7 @@ public class RegionSlotProviderRegistry : IRegionSlotProvider
             return provider.GetVialSlotsForRegion(regionName);
         }
 
-        return Enumerable.Empty<IVialSlot>();
+        return [];
     }
 
     /// <summary>

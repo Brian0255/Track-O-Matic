@@ -8,22 +8,17 @@ namespace TrackOMatic.Services;
 /// Default implementation of IShortcutService.
 /// Searches HintData.UserShortcuts and default hint suggestions for matches.
 /// </summary>
-public class ShortcutService : IShortcutService
+public class ShortcutService(IUserSettingsService userSettingsService) : IShortcutService
 {
-    private readonly IUserSettingsService _userSettingsService;
+    private readonly IUserSettingsService _userSettingsService = userSettingsService;
 
     /// <summary>
     /// Items to exclude from DirectItemHint suggestions.
     /// </summary>
-    private static readonly List<string> DirectHintExclusions = new()
-    {
+    private static readonly List<string> _directHintExclusions =
+    [
         "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss", "Bought"
-    };
-
-    public ShortcutService(IUserSettingsService userSettingsService)
-    {
-        _userSettingsService = userSettingsService;
-    }
+    ];
 
     public IEnumerable<string> FindMatches(
         string locationText,
@@ -43,13 +38,13 @@ public class ShortcutService : IShortcutService
         }
 
         // Deduplicate and sort
-        return matches.Distinct().OrderBy(x => x).ToList();
+        return [.. matches.Distinct().OrderBy(x => x)];
     }
 
     /// <summary>
     /// Find matches from HintData.UserShortcuts and DirectItemHint region items.
     /// </summary>
-    private List<string> FindShortcutMatches(
+    private static List<string> FindShortcutMatches(
         string locationText,
         HintPanelType hintPanelType,
         List<string>? jsonKeys
@@ -97,7 +92,7 @@ public class ShortcutService : IShortcutService
     /// Find DirectItemHint suggestions by region using substring match on item names.
     /// Excludes region names and other non-item entries.
     /// </summary>
-    private IEnumerable<string> FindDirectItemMatches(string locationText, RegionName regionName)
+    private static IEnumerable<string> FindDirectItemMatches(string locationText, RegionName regionName)
     {
         if (!HintData.REGIONS_WITHOUT_LEVEL_NAME.TryGetValue(regionName, out List<string>? regionItems))
         {
@@ -107,7 +102,7 @@ public class ShortcutService : IShortcutService
         return [.. regionItems
             .Where(item =>
                 item.Contains(locationText, StringComparison.CurrentCultureIgnoreCase) &&
-                !DirectHintExclusions.Contains(item)
+                !_directHintExclusions.Contains(item)
             )
         ];
     }
@@ -116,20 +111,19 @@ public class ShortcutService : IShortcutService
     /// Find default suggestions by searching FullName and ShortName fields.
     /// Respects user settings for including/excluding enemies.
     /// </summary>
-    private IEnumerable<string> FindDefaultSuggestionMatches(
+    private List<string> FindDefaultSuggestionMatches(
         string locationText,
         IReadOnlyList<HintNameEntry> suggestions)
     {
         var input = locationText.ToLower();
         var includeEnemies = _userSettingsService.EnemiesInAutofill;
 
-        return suggestions
+        return [.. suggestions
             .Where(loc =>
                 (
                     loc.FullName.Contains(input, StringComparison.CurrentCultureIgnoreCase) ||
                     loc.ShortName.Contains(input, StringComparison.CurrentCultureIgnoreCase)
                 ) && (includeEnemies || loc.HintGroup != HintGroup.ENEMY))
-            .Select(loc => loc.ShortName)
-            .ToList();
+            .Select(loc => loc.ShortName)];
     }
 }

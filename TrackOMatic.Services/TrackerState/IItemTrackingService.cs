@@ -2,7 +2,7 @@ using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
 
-namespace TrackOMatic.Services;
+namespace TrackOMatic.Services.TrackerState;
 
 /// <summary>
 /// Manages item collection state across all regions.

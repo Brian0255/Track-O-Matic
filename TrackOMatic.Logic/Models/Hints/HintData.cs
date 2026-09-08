@@ -19,10 +19,10 @@ public static class HintData
         {RegionName.CREEPY_CASTLE, new() },
         {RegionName.HIDEOUT_HELM, new() },
     };
-    public static List<string> MISC_DIRECT_HINT_TYPES { get; } = new()
-    {
+    public static List<string> MISC_DIRECT_HINT_TYPES { get; } =
+    [
         "Battle Arena","Chunky","Colored Bananas","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny","Shops"
-    };
+    ];
     public static Dictionary<HintGroup, RegionName> REGION_HINT_GROUP_TO_REGION { get; } = new()
     {
         {HintGroup.REGION_ISLES, RegionName.DK_ISLES },
@@ -118,26 +118,23 @@ public static class HintData
 
     private static void InitSortedRegions()
     {
-        SortedRegions = HintRegion.All
+        SortedRegions = [.. HintRegion.All
             .Select(region => region.ShortName)
-            .OrderBy(name => name)
-            .ToList();
+            .OrderBy(name => name)];
     }
 
     private static void InitSortedMoves()
     {
-        SortedChecks = HintMove.All
+        SortedChecks = [.. HintMove.All
             .Select(move => move.ShortName)
-            .OrderBy(move => move)
-            .ToList();
+            .OrderBy(move => move)];
     }
 
     private static void InitSortedChecks()
     {
-        SortedChecks = HintLocation.All
+        SortedChecks = [.. HintLocation.All
             .Select(loc => loc.ShortName)
-            .OrderBy(name => name)
-            .ToList();
+            .OrderBy(name => name)];
     }
 
     public static void InitDirectItemHintList()
@@ -145,16 +142,15 @@ public static class HintData
         foreach (var hintRegion in HintRegion.All)
         {
             var hintRegionName = hintRegion.ShortName;
-            if (hintRegion.HintGroup != HintGroup.NONE && REGION_HINT_GROUP_TO_REGION.ContainsKey(hintRegion.HintGroup))
+            if (hintRegion.HintGroup != HintGroup.NONE && REGION_HINT_GROUP_TO_REGION.TryGetValue(hintRegion.HintGroup, out RegionName level))
             {
-                var level = REGION_HINT_GROUP_TO_REGION[hintRegion.HintGroup];
                 REGIONS_WITHOUT_LEVEL_NAME[level].Add(hintRegionName);
             }
         }
         foreach (var key in REGIONS_WITHOUT_LEVEL_NAME.Keys.ToList())
         {
             var regionList = REGIONS_WITHOUT_LEVEL_NAME[key];
-            regionList = regionList.Concat(MISC_DIRECT_HINT_TYPES).ToList();
+            regionList = [.. regionList, .. MISC_DIRECT_HINT_TYPES];
             regionList.Sort();
             REGIONS_WITHOUT_LEVEL_NAME[key] = regionList;
         }
