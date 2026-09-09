@@ -126,6 +126,19 @@ public partial class VialItemViewModel : RegionItemViewModel, IEquatable<VialIte
 
     #endregion
 
+    /// <summary>
+    /// Accept an autotracked item that has already been persisted to the <see cref="ItemTrackingService"/>.
+    /// </summary>
+    /// <param name="itemToPlace">The item to place</param>
+    /// <param name="itemState">The state of the item</param>
+    public void AcceptAutoTrackedItemWithoutPersist(ItemName itemToPlace, SavedItem itemState)
+    {
+        var hasStarToTransfer = IsVialStarred;
+        IsVialStarred = false;
+        CurrentItemName = itemToPlace;
+        UpdateProperties(itemState with {  Starred = hasStarToTransfer || itemState.Starred });
+    }
+
     #region Overridden Methods
 
     /// <summary>

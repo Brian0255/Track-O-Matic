@@ -12,6 +12,8 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:HintInfoViewModel}"
     d:DesignHeight="100"
     d:DesignWidth="250"
+    ContextMenu="{x:Null}"
+    PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"
     Unloaded="OnUnloaded"
 >
     <UserControl.Resources>
@@ -39,7 +41,6 @@
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="ContextMenu" Value="{x:Null}"/>
         </Style>
     </UserControl.Resources>
     <Border Background="{StaticResource RegionBG}" CornerRadius="0" Padding="4,3,3,3" BorderBrush="Black" BorderThickness=".5">
@@ -80,7 +81,6 @@
                 x:Name="Location"
                 Margin="1,0,0,0"
                 Padding="0,4,0,0"
-                PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"
                 PreviewKeyDown="Location_PreviewKeyDown"
                 Style="{StaticResource BoldText}"
                 Text="{Binding LocationText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -91,7 +91,6 @@
                 Margin="0,0,3,0"
                 Padding="0,4,0,0"
                 HorizontalContentAlignment="Right"
-                PreviewMouseRightButtonDown="Location_PreviewMouseRightButtonDown"
                 PreviewKeyDown="PotionCount_PreviewKeyDown"
                 Style="{StaticResource BoldText}"
                 Visibility="{Binding IsHintInfoPotionCount, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"

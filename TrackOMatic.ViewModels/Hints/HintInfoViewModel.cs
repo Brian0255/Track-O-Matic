@@ -386,8 +386,7 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
                 var itemState = _itemTrackingService.GetItemState(hint.ItemName);
                 if (itemState is not null && itemState.Hinted && itemState.Region == targetRegion)
                 {
-                    // Preserve any stars if they were set this way.
-                    _itemTrackingService.SetItemState(hint.ItemName, itemState with { Hinted = false, Region = RegionName.UNKNOWN });
+                    _itemTrackingService.RemoveDirectHintedItem(hint.ItemName);
                 }
             }
         }

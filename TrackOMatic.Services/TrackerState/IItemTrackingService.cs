@@ -15,35 +15,35 @@ public interface IItemTrackingService
     SavedItem? GetItemState(ItemName itemName);
 
     /// <summary>
-    /// Update tracking state for an item (replaces entire entry).
-    /// </summary>
-    void SetItemState(ItemName itemName, SavedItem state);
-
-    /// <summary>
     /// Update tracking state for an item (replaces entire entry) with a change reason.
     /// </summary>
     /// <param name="itemName">The item to update</param>
     /// <param name="state">The new item state</param>
     /// <param name="changeReason">The reason for this change (e.g., for filtering or logging)</param>
-    void SetItemState(ItemName itemName, SavedItem state, ChangeReason changeReason);
+    void SetItemState(ItemName itemName, SavedItem state, ChangeReason changeReason = ChangeReason.UserModified);
+
+    /// <summary>
+    /// Toggles the star visibility state of an item.
+    /// </summary>
+    /// <param name="itemName">The item to update.</param>
+    void ToggleStar(ItemName itemName);
+
+    /// <summary>
+    /// Removes the item that was directly hinted and placed by the program.
+    /// </summary>
+    /// <param name="itemName">The item to remove.</param>
+    void RemoveDirectHintedItem(ItemName itemName);
 
     /// <summary>
     /// Remove tracking state for an item.
     /// </summary>
+    /// <param name="itemName">The item to clear.</param>
     void ClearItemState(ItemName itemName);
 
     /// <summary>
     /// Get all items in a specific region.
     /// </summary>
     IEnumerable<SavedItem> GetItemsInRegion(RegionName region);
-
-    /// <summary>
-    /// Toggles the star visibility state of an item.
-    /// If no SavedItem exists for the item, creates one with the star toggled to Visible.
-    /// This method centralizes star toggle logic to ensure consistent behavior across all view models.
-    /// </summary>
-    /// <param name="itemName">The name of the item whose star should be toggled.</param>
-    void ToggleStar(ItemName itemName);
 
     /// <summary>
     /// Get all items in the order they were added, preserving the linked list order.

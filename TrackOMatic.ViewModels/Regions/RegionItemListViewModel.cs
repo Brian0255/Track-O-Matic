@@ -74,7 +74,24 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
         OnPropertyChanged(nameof(Items));
     }
 
-    public bool TryAcceptDrop(ItemName itemName, MouseDragType dragType) => true;
+    public bool TryAcceptDrop(ItemName itemName, MouseDragType dragType)
+    {
+        var itemState = _itemTrackingService.GetItemState(itemName);
+        if (itemState is null)
+        {
+            return true;
+        }
+        if (itemState.Autotracked)
+        {
+            return false;
+        }
+        if (itemState.Region == RegionName.START || itemState.Region == RegionName.UNHINTABLE_MOVES)
+        {
+            return dragType == MouseDragType.None;
+        }
+
+        return true;
+    }
 
     /// <summary>
     /// Handle item state changes from the item tracking service.

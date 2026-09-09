@@ -45,10 +45,40 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
         _syncContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null. Ensure this ViewModel is created on the UI thread.");
 
+        _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnDataReset;
 
         RefreshPlacedItems();
+    }
+
+    private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
+    {
+        if (e.ChangeReason != ChangeReason.AutoTracked || e.UpdatedItem.Region != _regionName)
+        {
+            return;
+        }
+
+        // Find a vial and place the item in it. Worse case, replace a badly placed item.
+        var item = e.UpdatedItem;
+        var targetColor = item.ItemName.ToVialColor();
+        var compatibleSlots = Items.Where(slot => slot.VialColor == targetColor).ToList();
+
+        // First see if there's a slot with the item already placed. Maybe a user hinted item?
+        var existingItemSlot = compatibleSlots.FirstOrDefault(slot => slot.CurrentItemName == item.ItemName);
+        if (existingItemSlot is not null && existingItemSlot.CanAcceptAutoTrackedItem(item.ItemName, item))
+        {
+            existingItemSlot.AcceptAutoTrackedItemWithoutPersist(item.ItemName, item);
+            return;
+        }
+
+        // See if there's an empty slot.
+        var emptySlot = compatibleSlots.FirstOrDefault(slot => !slot.CurrentItemName.HasValue);
+        if (emptySlot is not null && emptySlot.CanAcceptAutoTrackedItem(item.ItemName, item))
+        {
+            emptySlot.AcceptAutoTrackedItemWithoutPersist(item.ItemName, item);
+            return;
+        }
     }
 
     private void OnDataReset(object? sender, ProgressReplacedEventArgs e) => WipeVialConnections();
@@ -79,7 +109,7 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
 
             static int ItemNameSort(KeyValuePair<ItemName, RegionName> a, KeyValuePair<ItemName, RegionName> b)
             {
-                 // Fallback: compare against the item name itself.
+                // Fallback: compare against the item name itself.
                 return a.Key.CompareTo(b.Key);
             }
 
@@ -152,6 +182,12 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
             return false;
         }
 
+        // Additional start region validation: don't let user drag/drops happen.
+        if (RegionName == RegionName.START && dragType != MouseDragType.None)
+        {
+            return false;
+        }
+
         // Actually mutate the slot state - this updates CurrentItemName and fires UpdateProperties
         return emptySlot.AcceptDropAndMutate(itemToPlace, dragType);
     }
@@ -206,6 +242,7 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
             if (disposing)
             {
                 WipeVialConnections();
+                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnDataReset;
             }

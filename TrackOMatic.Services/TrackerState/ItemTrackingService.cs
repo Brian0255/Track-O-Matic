@@ -105,60 +105,25 @@ public class ItemTrackingService : IItemTrackingService
         return _nodeMap.TryGetValue(itemName, out var node) ? node.Value : null;
     }
 
-    public void SetItemState(ItemName itemName, SavedItem state)
+    public void SetItemState(ItemName itemName, SavedItem state, ChangeReason changeReason = ChangeReason.UserModified)
+        => SetItemStateInternal(itemName, state, changeReason);
+
+    public void ToggleStar(ItemName itemName)
     {
-        SetItemState(itemName, state, ChangeReason.UserModified);
+        var currentItem = GetItemState(itemName) ?? SavedItem.CreateEmpty(itemName);
+        SavedItem updatedItem = currentItem with { Starred = !currentItem.Starred };
+        SetItemStateInternal(itemName, updatedItem, ChangeReason.UserModified, true);
     }
 
-    public void SetItemState(ItemName itemName, SavedItem state, ChangeReason changeReason)
+    public void RemoveDirectHintedItem(ItemName itemName)
     {
-        if (state.ItemName != itemName)
+        if (!_nodeMap.TryGetValue(itemName, out var node))
         {
-            throw new ArgumentException($"SavedItem.ItemName ({state.ItemName}) does not match itemName parameter ({itemName})", nameof(state));
-        }
-
-        // If the new state is empty (no region, not starred, not hinted), clear it instead of storing
-        if (state.IsEmpty)
-        {
-            ClearItemState(itemName);
             return;
         }
-
-        SavedItem? previousState = null;
-
-        // See if the item already exists.
-        if (_nodeMap.TryGetValue(itemName, out var existingNode))
-        {
-            previousState = existingNode.Value;
-
-            // Immediately abandon if this item is already pre-placed.
-            if (previousState.IsStartingAutotracked)
-            {
-                return;
-            }
-
-            // Update the existing node's value to the new state
-            existingNode.Value = state;
-        }
-        else
-        {
-            // We have a new item, so add to the end of the list.
-            var newNode = _itemOrder.AddLast(state);
-            _nodeMap[itemName] = newNode;
-        }
-
-        // Update SavedProgress (for serialization purposes)
-        _progressProvider.CurrentProgress.SavedItems[itemName] = state;
-
-        // If batching, defer the event; otherwise fire immediately
-        if (_isBatchingUpdates)
-        {
-            _deferredUpdates.Add(new DeferredItemChange(itemName, state, previousState));
-        }
-        else
-        {
-            RaiseItemStateChanged(state, previousState, changeReason);
-        }
+        SavedItem removedState = node.Value;
+        SavedItem updatedState = removedState with { Hinted = false, Region = RegionName.UNKNOWN, Opacity = 1 };
+        SetItemStateInternal(itemName, updatedState, ChangeReason.UserModified, true);
     }
 
     public void ClearItemState(ItemName itemName)
@@ -211,22 +176,6 @@ public class ItemTrackingService : IItemTrackingService
         return _itemOrder.ToList().AsReadOnly();
     }
 
-    /// <summary>
-    /// Toggles the star visibility state of an item.
-    /// If no SavedItem exists for the item, creates one with the star toggled to Visible.
-    /// This method centralizes star toggle logic to ensure consistent behavior across all view models.
-    /// </summary>
-    /// <param name="itemName">The name of the item whose star should be toggled.</param>
-    public void ToggleStar(ItemName itemName)
-    {
-        var currentItem = GetItemState(itemName) ?? SavedItem.CreateEmpty(itemName);
-
-        var newStarred = !currentItem.Starred;
-
-        SavedItem updatedItem = new(currentItem.ItemName, currentItem.Region, newStarred, currentItem.Autotracked, currentItem.Opacity, currentItem.Hinted);
-        SetItemState(itemName, updatedItem);
-    }
-
     public void SyncSavedItemsOrder()
     {
         _progressProvider.CurrentProgress.SavedItems = [];
@@ -244,6 +193,57 @@ public class ItemTrackingService : IItemTrackingService
     public IDisposable BeginBatchUpdate()
     {
         return new BatchUpdateScope(this);
+    }
+
+    private void SetItemStateInternal(ItemName itemName, SavedItem state, ChangeReason changeReason, bool skipAutotrackedCheck = false)
+    {
+        if (state.ItemName != itemName)
+        {
+            throw new ArgumentException($"SavedItem.ItemName ({state.ItemName}) does not match itemName parameter ({itemName})", nameof(state));
+        }
+
+        // If the new state is empty (no region, not starred, not hinted), clear it instead of storing
+        if (state.IsEmpty)
+        {
+            ClearItemState(itemName);
+            return;
+        }
+
+        SavedItem? previousState = null;
+
+        // See if the item already exists.
+        if (_nodeMap.TryGetValue(itemName, out var existingNode))
+        {
+            previousState = existingNode.Value;
+
+            // Immediately abandon if this item is already pre-placed.
+            if (!skipAutotrackedCheck && previousState.IsStartingAutotracked)
+            {
+                return;
+            }
+
+            // Update the existing node's value to the new state
+            existingNode.Value = state;
+        }
+        else
+        {
+            // We have a new item, so add to the end of the list.
+            var newNode = _itemOrder.AddLast(state);
+            _nodeMap[itemName] = newNode;
+        }
+
+        // Update SavedProgress (for serialization purposes)
+        _progressProvider.CurrentProgress.SavedItems[itemName] = state;
+
+        // If batching, defer the event; otherwise fire immediately
+        if (_isBatchingUpdates)
+        {
+            _deferredUpdates.Add(new DeferredItemChange(itemName, state, previousState));
+        }
+        else
+        {
+            RaiseItemStateChanged(state, previousState, changeReason);
+        }
     }
 
     /// <summary>

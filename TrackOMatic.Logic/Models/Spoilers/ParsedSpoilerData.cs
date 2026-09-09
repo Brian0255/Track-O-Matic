@@ -66,6 +66,6 @@ public class ParsedSpoilerData
     public BlockerInfoRaw GetBarrierInfo(RegionName regionName)
     {
         var regionIndex = (int)regionName - 2;
-        return RegionBarrierInfo.Count > regionIndex && regionIndex >= 0 ? RegionBarrierInfo[regionIndex] : new BlockerInfoRaw { Item = 0, Cost = 0 };
+        return RegionBarrierInfo.Count > regionIndex && regionIndex >= 0 ? RegionBarrierInfo[regionIndex] : new BlockerInfoRaw { Item = 0, Cost = -1 };
     }
 }
