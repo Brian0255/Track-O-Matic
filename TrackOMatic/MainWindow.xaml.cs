@@ -96,7 +96,8 @@ public partial class MainWindow : Window
             parsedSpoilerDataService,
             endGameProgressionService,
             savedProgressProvider,
-            itemSelectorService
+            itemSelectorService,
+            dataSaverService
         );
 
         _saveTimer = new Timer(_saveInterval);
@@ -533,7 +534,8 @@ public partial class MainWindow : Window
                 EndGameProgressionService,
                 ThemeService,
                 CollectiblesService,
-                SongService
+                SongService,
+                DataSaverService
             );
             // Wire up the Closed event so we can clean up when the window closes
             BroadcastView.Closed += ClosedBroadcastWindow;

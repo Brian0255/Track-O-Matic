@@ -23,7 +23,8 @@ public partial class BroadcastView : Window
         IEndGameProgressionService endGameProgressionService,
         IThemeService themeService,
         ICollectiblesService collectiblesService,
-        ISongService songService
+        ISongService songService,
+        IDataSaverService dataSaverService
     )
     {
 
@@ -37,7 +38,8 @@ public partial class BroadcastView : Window
             endGameProgressionService,
             themeService,
             collectiblesService,
-            songService
+            songService,
+            dataSaverService
         );
         UserSettings = userSettings;
     }

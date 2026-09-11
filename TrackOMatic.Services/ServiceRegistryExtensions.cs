@@ -19,6 +19,9 @@ public static class ServiceRegistryExtensions
         services.AddSingleton<IUserSettingsService, UserSettingsService>();
         services.AddSingleton<IApplicationStateService, ApplicationStateService>();
         services.AddSingleton<IThemeService, BarrelPadThemeService>();
+        services.AddSingleton<IBarrierService, BarrierService>();
+        services.AddSingleton<IEndGameProgressionService, EndGameProgressionService>();
+        services.AddSingleton<ILevelOrderService, LevelOrderService>();
 
         // Unified spoiler deserialization and parsing service
         services.AddSingleton<ISpoilerService, SpoilerParserService>();
@@ -39,12 +42,12 @@ public static class ServiceRegistryExtensions
             sp.GetRequiredService<IItemTrackingService>(),
             sp.GetRequiredService<IHintService>(),
             sp.GetRequiredService<ISavedProgressProvider>(),
-            sp.GetRequiredService<ISpoilerService>()
+            sp.GetRequiredService<ISpoilerService>(),
+            sp.GetRequiredService<IBarrierService>(),
+            sp.GetRequiredService<IEndGameProgressionService>(),
+            sp.GetRequiredService<ILevelOrderService>()
         ));
         services.AddSingleton<ICollectiblesService, CollectiblesService>();
-        services.AddSingleton<IBarrierService, BarrierService>();
-        services.AddSingleton<IEndGameProgressionService, EndGameProgressionService>();
-        services.AddSingleton<ILevelOrderService, LevelOrderService>();
         services.AddSingleton<IParsedSpoilerDataService, ParsedSpoilerDataService>();
 
         services.AddSingleton<IShortcutService, ShortcutService>();

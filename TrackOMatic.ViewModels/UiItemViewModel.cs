@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -17,8 +15,9 @@ public partial class UiItemViewModel(
     IItemTrackingService itemTrackingService,
     IParsedSpoilerDataService parsedSpoilerDataService,
     ISavedProgressProvider savedProgressProvider,
-    IThemeService themeService
-) : BroadcastItemViewModel(itemName, itemTrackingService, parsedSpoilerDataService, savedProgressProvider, themeService)
+    IThemeService themeService,
+    IDataSaverService dataSaverService
+) : BroadcastItemViewModel(itemName, itemTrackingService, parsedSpoilerDataService, savedProgressProvider, themeService, dataSaverService)
 {
     public MouseDragType MouseDragType { get; private set; }
 

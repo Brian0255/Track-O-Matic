@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
@@ -75,6 +72,12 @@ public class LevelOrderService: ILevelOrderService
         var newList = levelOrder.ToList();
         _savedProgress.LevelOrder = newList;
         LevelOrderChanged?.Invoke(this, new LevelOrderStateChangedEventArgs([.. previous], newList, ChangeReason.UserModified));
+    }
+
+    public void LoadLevelOrderSilently(IEnumerable<int> levelOrder)
+    {
+        _savedProgress.LevelOrder = levelOrder.ToList();
+        _progressProvider.CurrentProgress.LevelOrder = levelOrder.ToList();
     }
 
     #endregion

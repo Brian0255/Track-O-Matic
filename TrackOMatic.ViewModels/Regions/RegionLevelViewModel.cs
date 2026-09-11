@@ -14,6 +14,7 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
     private readonly IUserSettingsService _userSettingsService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IDataSaverService _dataSaverService;
 
     #region Proxy Properties
 
@@ -30,7 +31,8 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
         ILevelOrderService levelOrderService,
         IUserSettingsService userSettingsService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService
     )
     {
         _regionName = regionName;
@@ -38,10 +40,12 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         // Subscribe to level order changes
         _levelOrderService.LevelOrderChanged += OnLevelOrderChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnLevelOrderChanged;
         _savedProgressProvider.ProgressChanged += OnLevelOrderChanged;
+        _dataSaverService.DataLoadingCompleted += OnLevelOrderChanged;
         // Initialize the level order number
         UpdateLevelOrderNumber();
     }
@@ -110,38 +114,6 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
     {
         return (int)_regionName - 2;
     }
-
-    #region IDisposable
-
-    private bool _disposed = false;
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // Unsubscribe from events
-                _levelOrderService.LevelOrderChanged -= OnLevelOrderChanged;
-                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnLevelOrderChanged;
-                _savedProgressProvider.ProgressChanged -= OnLevelOrderChanged;
-            }
-            _disposed = true;
-        }
-    }
-
-    ~RegionLevelViewModel()
-    {
-        Dispose(false);
-    }
-
-    #endregion
 
     #region Event Methods
 
@@ -212,4 +184,38 @@ public partial class RegionLevelViewModel : ObservableObject, IEquatable<RegionL
     public static bool operator !=(RegionLevelViewModel? left, RegionLevelViewModel? right) => !(left == right);
 
     #endregion
+
+    #region IDisposable
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from events
+                _levelOrderService.LevelOrderChanged -= OnLevelOrderChanged;
+                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnLevelOrderChanged;
+                _savedProgressProvider.ProgressChanged -= OnLevelOrderChanged;
+                _dataSaverService.DataLoadingCompleted -= OnLevelOrderChanged;
+            }
+            _disposed = true;
+        }
+    }
+
+    ~RegionLevelViewModel()
+    {
+        Dispose(false);
+    }
+
+    #endregion
+
 }

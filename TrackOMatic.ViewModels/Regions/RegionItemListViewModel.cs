@@ -15,6 +15,7 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IThemeService _themeService;
+    private readonly IDataSaverService _dataSaverService;
     private readonly RegionName _regionName;
 
     #region Proxy Properties
@@ -31,7 +32,8 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
         IItemTrackingService itemTrackingService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         ISavedProgressProvider savedProgressProvider,
-        IThemeService themeService
+        IThemeService themeService,
+        IDataSaverService dataSaverService
     )
     {
         _regionName = regionName;
@@ -39,10 +41,12 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
 
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _savedProgressProvider.ProgressChanged += OnDataReset;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
+        _dataSaverService.DataLoadingCompleted += OnDataLoadingCompleted;
 
         RefreshPlacedItems();
     }
@@ -111,6 +115,8 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
 
     private void OnDataReset(object? sender, ProgressReplacedEventArgs e) => RefreshPlacedItems();
 
+    private void OnDataLoadingCompleted(object? sender, DataLoadingCompletedEventArgs e) => RefreshPlacedItems();
+
     /// <summary>
     /// Refresh the item list when the parsed spoiler data changes, as the items in this region may have changed.
     /// </summary>
@@ -136,6 +142,7 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
                 _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
                 _savedProgressProvider.ProgressChanged -= OnDataReset;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoadingCompleted;
             }
             _disposed = true;
         }

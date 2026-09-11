@@ -27,7 +27,8 @@ public partial class Main : UserControl
             ServiceLocator.GetService<ISavedProgressProvider>(),
             ServiceLocator.GetService<IBarrierService>(),
             ServiceLocator.GetService<IParsedSpoilerDataService>(),
-            ServiceLocator.GetService<IItemSelectorService>()
+            ServiceLocator.GetService<IItemSelectorService>(),
+            ServiceLocator.GetService<IDataSaverService>()
         );
         DataContext = _currentViewModel;
 

@@ -9,12 +9,13 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Hints;
 
-public partial class BLockerHintViewModel : ObservableObject, IDisposable
+public partial class BLockerHintViewModel : ObservableObject, IEquatable<BLockerHintViewModel>, IDisposable
 {
     private readonly IBarrierService _barrierService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IItemSelectorService _itemSelectorService;
+    private readonly IDataSaverService _dataSaverService;
     private readonly SynchronizationContext _uiContext;
     private readonly RegionName _regionName;
 
@@ -54,7 +55,8 @@ public partial class BLockerHintViewModel : ObservableObject, IDisposable
         IBarrierService barrierService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         ISavedProgressProvider savedProgressProvider,
-        IItemSelectorService itemSelectorService
+        IItemSelectorService itemSelectorService,
+        IDataSaverService dataSaverService
     )
     {
         if (!EndGameMappings.LOBBY_ORDER.Contains(regionName))
@@ -66,10 +68,12 @@ public partial class BLockerHintViewModel : ObservableObject, IDisposable
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _itemSelectorService = itemSelectorService ?? throw new ArgumentNullException(nameof(itemSelectorService));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         _uiContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null. Ensure this is called from the UI thread.");
         _barrierService.BlockerBarrierAmountChanged += OnBarrierAmountChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnDataReset;
+        _dataSaverService.DataLoadingCompleted += OnDataLoaded;
         InitializeState();
     }
 
@@ -165,6 +169,31 @@ public partial class BLockerHintViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(IsLocked));
     }
 
+    private void OnDataLoaded(object? sender, DataLoadingCompletedEventArgs e)
+    {
+        var spoilerBarrierData = _parsedSpoilerDataService.GetBarrierInfo(_regionName);
+        if (spoilerBarrierData.Cost < 0)
+        {
+            InitializeState();
+            OnPropertyChanged(nameof(IsLocked));
+            return;
+        }
+        var target = spoilerBarrierData.Cost.ToString();
+        if (_uiContext is not null && SynchronizationContext.Current != _uiContext)
+        {
+            _uiContext.Post(_ =>
+            {
+                UpdateBarrierCount(target);
+                OnPropertyChanged(nameof(IsLocked));
+            }, null);
+        }
+        else
+        {
+            UpdateBarrierCount(target);
+            OnPropertyChanged(nameof(IsLocked));
+        }
+    }
+
     private void UpdateBarrierCount(string count)
     {
         BarrierCount = count;
@@ -191,6 +220,7 @@ public partial class BLockerHintViewModel : ObservableObject, IDisposable
                 _barrierService.BlockerBarrierAmountChanged -= OnBarrierAmountChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnDataReset;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoaded;
             }
             _disposed = true;
         }
@@ -203,12 +233,18 @@ public partial class BLockerHintViewModel : ObservableObject, IDisposable
 
     #endregion
 
-    #region Object
+    #region Object Overrides
 
-    public override bool Equals(object? obj)
+    public bool Equals(BLockerHintViewModel? other)
     {
-        return obj is BLockerHintViewModel other && _regionName == other._regionName;
+        if (other is null)
+        {
+            return false;
+        }
+        return _regionName == other._regionName;
     }
+
+    public override bool Equals(object? obj) => Equals(obj as BLockerHintViewModel);
 
     public override int GetHashCode()
     {

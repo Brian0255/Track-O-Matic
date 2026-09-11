@@ -13,8 +13,9 @@ public partial class UiBossSlotViewModel(
     IEndGameProgressionService endGameProgressionService,
     IParsedSpoilerDataService parsedSpoilerDataService,
     ISavedProgressProvider savedProgressProvider,
-    IItemSelectorService itemSelectorService
-) : BossSlotViewModel(slotNumber, endGameProgressionService, parsedSpoilerDataService, savedProgressProvider)
+    IItemSelectorService itemSelectorService,
+    IDataSaverService dataSaverService
+) : BossSlotViewModel(slotNumber, endGameProgressionService, parsedSpoilerDataService, savedProgressProvider, dataSaverService)
 {
     private readonly IEndGameProgressionService _endGameProgressionService = endGameProgressionService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService = parsedSpoilerDataService;

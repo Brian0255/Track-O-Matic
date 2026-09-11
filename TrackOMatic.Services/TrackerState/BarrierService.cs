@@ -45,8 +45,7 @@ public class BarrierService : IBarrierService
         InitializeCollections();
     }
 
-
-    // B. Locker domain
+    #region B. Locker Portion
     public string GetBLockerCount(RegionName region)
     {
         if (_savedProgress.SavedGBCounts.TryGetValue(region, out var count))
@@ -64,6 +63,16 @@ public class BarrierService : IBarrierService
         {
             ChangeReason = ChangeReason.UserModified
         });
+    }
+
+    public void LoadBLockerCountsSilently(IDictionary<RegionName, string> counts)
+    {
+        foreach (var kvp in counts)
+        {
+            _savedProgress.SavedGBCounts[kvp.Key] = kvp.Value;
+        }
+
+        _progressProvider.CurrentProgress.SavedGBCounts = _savedProgress.SavedGBCounts;
     }
 
     public BarrierItems GetBLockerItemType(RegionName region)
@@ -84,7 +93,19 @@ public class BarrierService : IBarrierService
             ChangeReason = ChangeReason.UserModified
         });
     }
-    // Helm Door domain
+
+    public void LoadBLockerTypesSilently(IDictionary<RegionName, int> types)
+    {
+        foreach (var kvp in types)
+        {
+            _savedProgress.BLockerImageIndexes[kvp.Key] = kvp.Value;
+        }
+
+        _progressProvider.CurrentProgress.BLockerImageIndexes = _savedProgress.BLockerImageIndexes;
+    }
+    #endregion
+
+    #region Helm Door Portion
     public string GetHelmDoorCount(HelmDoor helmDoor)
     {
         int doorIndex = helmDoor == HelmDoor.First ? 0 : 1;
@@ -110,6 +131,26 @@ public class BarrierService : IBarrierService
         {
             ChangeReason = ChangeReason.UserModified
         });
+    }
+
+    public void LoadHelmDoorCountsSilently(IList<string> counts)
+    {
+        _savedProgress.HelmDoorCounts.Clear();
+        if (counts.Count < 2)
+        {
+            _savedProgress.HelmDoorCounts.Add("?");
+            _savedProgress.HelmDoorCounts.Add("?");
+        }
+        else
+        {
+            // Safety check: ensure no corrupt save file gets past.
+            for (int i = 0; i < 2; ++i)
+            {
+                _savedProgress.HelmDoorCounts.Add(counts[i]);
+            }
+        }
+
+        _progressProvider.CurrentProgress.HelmDoorCounts = _savedProgress.HelmDoorCounts;
     }
 
     public BarrierItems GetHelmDoorItemType(HelmDoor helmDoor)
@@ -138,4 +179,26 @@ public class BarrierService : IBarrierService
             ChangeReason = ChangeReason.UserModified
         });
     }
+
+    public void LoadHelmDoorTypesSilently(IList<int> types)
+    {
+        _savedProgress.HelmDoorImageIndexes.Clear();
+        if (types.Count < 2)
+        {
+            _savedProgress.HelmDoorImageIndexes.Add(0);
+            _savedProgress.HelmDoorImageIndexes.Add(0);
+
+        }
+        else
+        {
+            // Safety check: ensure no corrupt save file gets past.
+            for (int i = 0; i < 2; ++i)
+            {
+                _savedProgress.HelmDoorImageIndexes.Add(types[i]);
+            }
+        }
+
+        _progressProvider.CurrentProgress.HelmDoorImageIndexes = _savedProgress.HelmDoorImageIndexes;
+    }
+    #endregion
 }

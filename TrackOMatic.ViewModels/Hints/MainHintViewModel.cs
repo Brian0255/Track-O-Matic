@@ -16,6 +16,7 @@ public class MainHintViewModel : ObservableObject, IDisposable
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IUserSettingsService _userSettingsService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IDataSaverService _dataSaverService;
 
     #region Lazy-loaded HintPanelViewModels
 
@@ -234,7 +235,8 @@ public class MainHintViewModel : ObservableObject, IDisposable
         ISavedProgressProvider savedProgressProvider,
         IBarrierService barrierService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        IItemSelectorService itemSelectorService
+        IItemSelectorService itemSelectorService,
+        IDataSaverService dataSaverService
     )
     {
         _hintService = hintService ?? throw new ArgumentNullException(nameof(hintService));
@@ -243,13 +245,15 @@ public class MainHintViewModel : ObservableObject, IDisposable
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
 
         BLockerPanelViewModel = new(
             "#f0f000",
             barrierService,
             parsedSpoilerDataService,
             _savedProgressProvider,
-            itemSelectorService
+            itemSelectorService,
+            dataSaverService
         );
         HelmDoorPanelViewModel = new(
             "#7d3cbd",
@@ -270,7 +274,8 @@ public class MainHintViewModel : ObservableObject, IDisposable
         _hintItemSelectionService,
         _itemTrackingService,
         _userSettingsService,
-        _savedProgressProvider
+        _savedProgressProvider,
+        _dataSaverService
     );
 
     private void OnSettingChanged(object? sender, PropertyChangedEventArgs e)

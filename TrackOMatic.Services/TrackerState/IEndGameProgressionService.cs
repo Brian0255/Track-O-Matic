@@ -20,6 +20,15 @@ public interface IEndGameProgressionService
     /// <param name="kongs">The list of Kongs required. This must have exactly 5 elements.</param>
     void SetHelmKongs(IEnumerable<int> kongs);
 
+    /// <summary>
+    /// Set the Kongs needed for disabling the Blast-O-Matic in Helm without raising events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal Use Only.</strong> This should only be called by file loading services!
+    /// </remarks>
+    /// <param name="kongs">The list of Kongs required. This must have exactly 5 elements.</param>
+    void SetHelmKongsSilently(IEnumerable<int> kongs);
+
     #endregion
 
     #region Final Boss Gauntlet Domain
@@ -35,6 +44,15 @@ public interface IEndGameProgressionService
     /// </summary>
     /// <param name="kongs">The list of phases required. This must have exactly 5 elements.</param>
     void SetBossKongs(IEnumerable<int> kongs);
+
+    /// <summary>
+    /// Set the Kongs needed for defeating the Final Boss Gauntlet without raising events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal Use Only.</strong> This should only be called by file loading services!
+    /// </remarks>
+    /// <param name="kongs">The list of Kongs required. This must have exactly 5 elements.</param>
+    void SetBossKongsSilently(IEnumerable<int> kongs);
     #endregion
 
     #region Event Handlers

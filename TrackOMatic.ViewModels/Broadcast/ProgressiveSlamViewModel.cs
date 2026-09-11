@@ -17,6 +17,7 @@ public partial class ProgressiveSlamViewModel : ObservableObject, IDisposable
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IDataSaverService _dataSaverService;
 
     #region Proxy Properties
 
@@ -37,15 +38,18 @@ public partial class ProgressiveSlamViewModel : ObservableObject, IDisposable
     public ProgressiveSlamViewModel(
         IItemTrackingService itemTrackingService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService
     )
     {
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnProgressChanged;
+        _dataSaverService.DataLoadingCompleted += OnDataLoadingCompleted;
 
         InitializeState();
     }
@@ -57,37 +61,6 @@ public partial class ProgressiveSlamViewModel : ObservableObject, IDisposable
         UpdateHoverText();
     }
 
-    #region IDisposable
-
-    private bool _disposed = false;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // Unsubscribe from events
-                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
-                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
-                _savedProgressProvider.ProgressChanged -= OnProgressChanged;
-            }
-            _disposed = true;
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    ~ProgressiveSlamViewModel()
-    {
-        Dispose(false);
-    }
-    #endregion
-
     protected virtual void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
         if (e.UpdatedItem.ItemName == _slam1 || e.UpdatedItem.ItemName == _slam2 || e.UpdatedItem.ItemName == _slam3)
@@ -97,20 +70,16 @@ public partial class ProgressiveSlamViewModel : ObservableObject, IDisposable
         }
     }
 
-    protected virtual void OnParsedSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e)
-    {
-        InitializeState();
-    }
+    protected virtual void OnParsedSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e) => InitializeState();
 
-    protected virtual void OnProgressChanged(object? sender, ProgressReplacedEventArgs e)
-    {
-        InitializeState();
-    }
+    protected virtual void OnProgressChanged(object? sender, ProgressReplacedEventArgs e) => InitializeState();
+
+    private void OnDataLoadingCompleted(object? sender, DataLoadingCompletedEventArgs e) => InitializeState();
 
     protected virtual void UpdateHoverText()
     {
         var spoilerData = _parsedSpoilerDataService.CurrentData;
-        if (spoilerData is null)
+        if (spoilerData is null || !spoilerData.SpoilerSettings.PointsEnabled)
         {
             HoverText = "";
             HasHoverText = false;
@@ -131,33 +100,14 @@ public partial class ProgressiveSlamViewModel : ObservableObject, IDisposable
 
     protected virtual void SetStarred()
     {
-        var slam1 = _itemTrackingService.GetItemState(_slam1);
-        var slam2 = _itemTrackingService.GetItemState(_slam2);
-        var slam3 = _itemTrackingService.GetItemState(_slam3);
-        IsStarred =
-            (slam1 is not null && slam1.Starred) ||
-            (slam2 is not null && slam2.Starred) ||
-            (slam3 is not null && slam3.Starred);
-        }
+        IsStarred = IsAnySlamStarred();
+    }
 
     protected virtual void UpdateImageResourceKey()
     {
-        ItemName[] slamArray = [_slam1, _slam2, _slam3];
-        var counts = slamArray.Count(slam =>
-        {
-            // Check if the slam is in spoiler starting items
-            var inSpoilerData = _parsedSpoilerDataService.CurrentData?.StartingItems.ContainsKey(slam) == true
-                            && _parsedSpoilerDataService.CurrentData.StartingItems[slam] != RegionName.UNKNOWN;
+        var slamCount = GetSlamCount();
 
-            // Check if the slam is tracked in a known region
-            var trackedItem = _itemTrackingService.GetItemState(slam);
-            var inTracking = trackedItem is not null && trackedItem.Region != RegionName.UNKNOWN;
-
-            // Count this slam if it's in either source
-            return inSpoilerData || inTracking;
-        });
-
-        var newKey = counts switch
+        var newKey = slamCount switch
         {
             1 => "progressive_slam_1_bc",
             2 => "progressive_slam_2_bc",
@@ -170,4 +120,78 @@ public partial class ProgressiveSlamViewModel : ObservableObject, IDisposable
         ImageResourceKey = string.Empty;
         ImageResourceKey = newKey;
     }
+
+    private bool IsAnySlamStarred()
+    {
+        var slam1 = _itemTrackingService.GetItemState(_slam1);
+        var slam2 = _itemTrackingService.GetItemState(_slam2);
+        var slam3 = _itemTrackingService.GetItemState(_slam3);
+        return
+            (slam1 is not null && slam1.Starred) ||
+            (slam2 is not null && slam2.Starred) ||
+            (slam3 is not null && slam3.Starred);
+    }
+
+    private int GetSlamCount()
+    {
+        ItemName[] slamArray = [_slam1, _slam2, _slam3];
+        return slamArray.Count(slam =>
+        {
+            // Check if the slam is in spoiler starting items
+            var inSpoilerData = _parsedSpoilerDataService.CurrentData?.StartingItems.ContainsKey(slam) == true
+                            && _parsedSpoilerDataService.CurrentData.StartingItems[slam] != RegionName.UNKNOWN;
+
+            // Check if the slam is tracked in a known region
+            var trackedItem = _itemTrackingService.GetItemState(slam);
+            var inTracking = trackedItem is not null && trackedItem.Region != RegionName.UNKNOWN;
+
+            // Count this slam if it's in either source
+            return inSpoilerData || inTracking;
+        });
+    }
+
+    public override string ToString()
+    {
+        var prefix = GetSlamCount() switch
+        {
+            1 => "",
+            2 => "Super ",
+            3 => "Super Duper ",
+            _ => "No ",
+        };
+        return $"{prefix}Simian Slam{(IsStarred ? "*" : "")}";
+    }
+
+    #region IDisposable
+
+    private bool _disposed = false;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from events
+                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
+                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
+                _savedProgressProvider.ProgressChanged -= OnProgressChanged;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoadingCompleted;
+            }
+            _disposed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    ~ProgressiveSlamViewModel()
+    {
+        Dispose(false);
+    }
+    #endregion
+
 }

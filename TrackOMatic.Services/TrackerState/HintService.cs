@@ -166,6 +166,19 @@ public class HintService : IHintService
         HintPotionCountUpdated?.Invoke(this, new(hintId, hint));
     }
 
+    public void LoadHintsSilently(IEnumerable<SavedHint> hints)
+    {
+        _hintCache.Clear();
+        foreach (var hint in hints)
+        {
+            _hintCache.Add(hint);
+        }
+
+        // Update SavedProgress to match
+        _progressProvider.CurrentProgress.SavedHints.Clear();
+        _progressProvider.CurrentProgress.SavedHints.AddRange(hints);
+    }
+
     #endregion
 
     /// <summary>

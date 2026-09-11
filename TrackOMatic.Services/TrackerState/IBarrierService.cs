@@ -22,6 +22,24 @@ public interface IBarrierService
 
     /// <summary>Set the item type displayed in a B. Locker in a specific region.</summary>
     void SetBLockerItemType(RegionName region, BarrierItems itemType);
+
+    /// <summary>
+    /// Load the B. Locker counts from a save file without raising events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal use only.</strong> This is not meant to be called by external code!
+    /// </remarks>
+    /// <param name="counts"></param>
+    void LoadBLockerCountsSilently(IDictionary<RegionName, string> counts);
+
+    /// <summary>
+    /// Load the B. Locker item types from a save file without raising events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal use only.</strong> This is not meant to be called by external code!
+    /// </remarks>
+    /// <param name="types"></param>
+    void LoadBLockerTypesSilently(IDictionary<RegionName, int> types);
     #endregion
 
     #region Helm Door domain (select a door)
@@ -36,6 +54,24 @@ public interface IBarrierService
 
     /// <summary>Set the item type displayed in a Helm Door.</summary>
     void SetHelmDoorItemType(HelmDoor helmDoor, BarrierItems itemType);
+
+    /// <summary>
+    /// Load the Helm Door counts from a save file without raising events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal use only.</strong> This is not meant to be called by external code!
+    /// </remarks>
+    /// <param name="counts"></param>
+    void LoadHelmDoorCountsSilently(IList<string> counts);
+
+    /// <summary>
+    /// Load the Helm Door item types from a save file without raising events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal use only.</strong> This is not meant to be called by external code!
+    /// </remarks>
+    /// <param name="types"></param>
+    void LoadHelmDoorTypesSilently(IList<int> types);
     #endregion
 
     #region Event Handlers

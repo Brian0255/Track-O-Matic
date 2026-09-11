@@ -35,6 +35,15 @@ public interface IItemTrackingService
     void RemoveDirectHintedItem(ItemName itemName);
 
     /// <summary>
+    /// Load items direclty into the tracking cache without firing <see cref="ItemStateChanged"/> events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal Use Only.</strong> This method is intended exclusively for loading from a file!
+    /// </remarks>
+    /// <param name="items">The items to load into the cache.</param>
+    void LoadItemsSilently(Dictionary<ItemName, SavedItem> items);
+
+    /// <summary>
     /// Remove tracking state for an item.
     /// </summary>
     /// <param name="itemName">The item to clear.</param>

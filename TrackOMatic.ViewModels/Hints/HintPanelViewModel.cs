@@ -21,6 +21,7 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IUserSettingsService _userSettingsService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IDataSaverService _dataSaverService;
     private readonly HintPanelType _hintPanelType;
 
     #region Proxy Properties
@@ -57,7 +58,8 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
         IHintItemSelectionService hintItemSelectionService,
         IItemTrackingService itemTrackingService,
         IUserSettingsService userSettingsService,
-        ISavedProgressProvider savedProgressProvider
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService
     )
     {
         _hintService = hintService ?? throw new ArgumentNullException(nameof(hintService));
@@ -66,10 +68,12 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         LineColor = lineColor;
         _hintPanelType = hintPanelType;
         // Subscribe to progress changes to update hints when the game state changes.
         _savedProgressProvider.ProgressChanged += OnProgressChanged;
+        _dataSaverService.DataLoadingCompleted += OnDataLoaded;
 
         _hintService.HintCreated += OnHintCreated;
         _hintService.HintRemoved += OnHintRemoved;
@@ -87,10 +91,9 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
         _hintService.CreateHint(_hintPanelType);
     }
 
-    private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e)
-    {
-        LoadHintsForPanel();
-    }
+    private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e) => LoadHintsForPanel();
+
+    private void OnDataLoaded(object? sender, DataLoadingCompletedEventArgs e) => LoadHintsForPanel();
 
     private void LoadHintsForPanel()
     {
@@ -248,6 +251,7 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
             if (disposing)
             {
                 // Unsubscribe from events
+                _dataSaverService.DataLoadingCompleted -= OnDataLoaded;
                 _savedProgressProvider.ProgressChanged -= OnProgressChanged;
                 _hintService.HintCreated -= OnHintCreated;
                 _hintService.HintRemoved -= OnHintRemoved;

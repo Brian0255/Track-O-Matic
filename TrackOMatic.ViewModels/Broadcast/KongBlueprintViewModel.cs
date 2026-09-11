@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
-using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;

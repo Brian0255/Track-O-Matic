@@ -40,6 +40,12 @@ public interface IDataSaverService
     /// An event that is triggered when the save operation is completed successfully.
     /// </summary>
     event EventHandler<SavedProgressChangedEventArgs>? SaveCompleted;
+
+    /// <summary>
+    /// An event that is fired when the data loading operation is completed successfully.
+    /// </summary>
+    event EventHandler<DataLoadingCompletedEventArgs>? DataLoadingCompleted;
+
     /// <summary>
     /// An event that is triggered when the save operation fails.
     /// </summary>

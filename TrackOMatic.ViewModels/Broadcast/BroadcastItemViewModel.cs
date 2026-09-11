@@ -21,6 +21,7 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
     protected internal readonly IItemTrackingService _itemTrackingService;
     protected internal readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     protected internal readonly ISavedProgressProvider _savedProgressProvider;
+    protected internal readonly IDataSaverService _dataSaverService;
     protected internal readonly IThemeService _themeService;
     protected internal readonly ItemName _itemName;
 
@@ -47,7 +48,8 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
         IItemTrackingService itemTrackingService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         ISavedProgressProvider savedProgressProvider,
-        IThemeService themeService
+        IThemeService themeService,
+        IDataSaverService dataSaverService
     )
     {
         _itemName = itemName;
@@ -55,9 +57,11 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnSavedProgressChanged;
+        _dataSaverService.DataLoadingCompleted += OnDataLoaded;
 
         if (EndGameMappings.BarrelPadItems.Contains(_itemName))
         {
@@ -90,35 +94,6 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
 
         UpdateHoverText();
     }
-
-    #region IDisposable
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            // Unsubscribe from events to prevent memory leaks
-            _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
-            _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
-            if (EndGameMappings.BarrelPadItems.Contains(_itemName))
-            {
-                _themeService.BarrelPadThemeChanged -= OnBarrelPadThemeChanged;
-            }
-        }
-    }
-
-    ~BroadcastItemViewModel()
-    {
-        Dispose(false);
-    }
-
-    #endregion
 
     protected internal virtual void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
@@ -153,6 +128,8 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
     {
         InitializeState();
     }
+
+    private void OnDataLoaded(object? sender, DataLoadingCompletedEventArgs e) => InitializeState();
 
     private void OnBarrelPadThemeChanged(object? sender, EventArgs e)
     {
@@ -264,4 +241,36 @@ public partial class BroadcastItemViewModel : ObservableObject, IEquatable<Broad
     }
 
     #endregion
+
+    #region IDisposable
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Unsubscribe from events to prevent memory leaks
+            _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
+            _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
+            _savedProgressProvider.ProgressChanged -= OnSavedProgressChanged;
+            _dataSaverService.DataLoadingCompleted -= OnDataLoaded;
+            if (EndGameMappings.BarrelPadItems.Contains(_itemName))
+            {
+                _themeService.BarrelPadThemeChanged -= OnBarrelPadThemeChanged;
+            }
+        }
+    }
+
+    ~BroadcastItemViewModel()
+    {
+        Dispose(false);
+    }
+
+    #endregion
+
 }

@@ -30,6 +30,7 @@ public partial class BossSlotViewModel: ObservableObject, IEquatable<BossSlotVie
     private readonly IEndGameProgressionService _endGameProgressionService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IDataSaverService _dataSaverService;
     private readonly SynchronizationContext _uiContext;
     private readonly int _slotNumber;
 
@@ -50,7 +51,8 @@ public partial class BossSlotViewModel: ObservableObject, IEquatable<BossSlotVie
         int slotNumber,
         IEndGameProgressionService endGameProgressionService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService
     )
     {
         if (slotNumber < 0 || slotNumber > 12)
@@ -61,11 +63,13 @@ public partial class BossSlotViewModel: ObservableObject, IEquatable<BossSlotVie
         _endGameProgressionService = endGameProgressionService ?? throw new ArgumentNullException(nameof(endGameProgressionService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         _uiContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null. Ensure this is called from the UI thread.");
 
         _endGameProgressionService.GauntletStateChanged += OnBossStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnDataReset;
+        _dataSaverService.DataLoadingCompleted += OnDataLoadingCompleted;
 
         InitializeState();
     }
@@ -119,6 +123,34 @@ public partial class BossSlotViewModel: ObservableObject, IEquatable<BossSlotVie
                 BossValue = 0;
                 ShowsSlot = false;
             }
+        }
+        OnPropertyChanged(nameof(ShowsSlot));
+        UpdateImageResourceKey();
+    }
+
+    private void OnDataLoadingCompleted(object? sender, DataLoadingCompletedEventArgs e)
+    {
+        var hasSpoilerData = false;
+        if (e.HasSpoiler && _parsedSpoilerDataService.HasBossOrder())
+        {
+            hasSpoilerData = true;
+        }
+        if (!hasSpoilerData)
+        {
+            InitializeState();
+            return;
+        }
+        var data = _parsedSpoilerDataService.CurrentData!.FinalBossOrder;
+        var kongsRequired = data.Count;
+        if (_slotNumber < kongsRequired)
+        {
+            BossValue = data[_slotNumber];
+            ShowsSlot = true;
+        }
+        else
+        {
+            BossValue = 0;
+            ShowsSlot = false;
         }
         OnPropertyChanged(nameof(ShowsSlot));
         UpdateImageResourceKey();
@@ -186,6 +218,7 @@ public partial class BossSlotViewModel: ObservableObject, IEquatable<BossSlotVie
                 _endGameProgressionService.GauntletStateChanged -= OnBossStateChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnDataReset;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoadingCompleted;
             }
             _disposed = true;
         }

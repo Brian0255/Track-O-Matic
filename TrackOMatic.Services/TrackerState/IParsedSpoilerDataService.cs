@@ -2,7 +2,7 @@ using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Spoilers;
 
-namespace TrackOMatic.Services;
+namespace TrackOMatic.Services.TrackerState;
 
 /// <summary>
 /// Provides access to the currently loaded parsed spoiler data.
@@ -102,6 +102,22 @@ public interface IParsedSpoilerDataService
     /// <param name="regionName"></param>
     /// <returns></returns>
     IEnumerable<VialColor> GetVialColorsForRegion(RegionName regionName);
+
+    /// <summary>
+    /// Gets the information needed to bypass B. Locker and enter a specified region.
+    /// </summary>
+    /// <param name="regionName">The name of the region.</param>
+    /// <returns>The information needed to bypass B. Locker and enter the specified region.</returns>
+    BlockerInfoRaw GetBarrierInfo(RegionName regionName);
+
+    /// <summary>
+    /// Load the parsed spoiler data directly without firing the <see cref="ParsedSpoilerDataChanged" /> event.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal Use Only.</strong> This method is only meant to be called during file loading sequences!
+    /// </remarks>
+    /// <param name="data">The data to parse.</param>
+    void LoadParsedDataSilently(ParsedSpoilerData? data);
 
     /// <summary>
     /// Beigns a new scope where parsed data changes are batched.

@@ -17,13 +17,15 @@ public partial class BLockerPanel : UserControl
         var parsedSpoilerDataService = ServiceLocator.GetService<IParsedSpoilerDataService>();
         var savedProgressProvider = ServiceLocator.GetService<ISavedProgressProvider>();
         var itemSelectorService = ServiceLocator.GetService<IItemSelectorService>();
+        var dataSaverService = ServiceLocator.GetService<IDataSaverService>();
 
         DataContext = new BLockerPanelViewModel(
             "#f0f000",
             barrierService,
             parsedSpoilerDataService,
             savedProgressProvider,
-            itemSelectorService
+            itemSelectorService,
+            dataSaverService
         );
     }
 

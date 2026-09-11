@@ -33,7 +33,8 @@ public partial class RegionGridViewModel : ObservableObject
         IRegionPlacementOrchestrator orchestrator,
         IThemeService themeService,
         RegionSlotProviderRegistry regionSlotProviderRegistry,
-        IAutotrackerService autotrackerService
+        IAutotrackerService autotrackerService,
+        IDataSaverService dataSaverService
     )
     {
         foreach (var regionName in _displayRegions)
@@ -46,7 +47,8 @@ public partial class RegionGridViewModel : ObservableObject
                 orchestrator,
                 themeService,
                 regionSlotProviderRegistry,
-                autotrackerService
+                autotrackerService,
+                dataSaverService
             ));
         }
     }

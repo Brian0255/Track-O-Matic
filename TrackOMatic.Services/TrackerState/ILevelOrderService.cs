@@ -20,6 +20,15 @@ public interface ILevelOrderService
     void SetLevelOrder(IEnumerable<int> levelOrder);
 
     /// <summary>
+    /// Sets the level order to a new sequence of integers without raising events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal use only.</strong> This should only be called via file load operations!
+    /// </remarks>
+    /// <param name="levelOrder">The new sequence of integers representing the level order.</param>
+    void LoadLevelOrderSilently(IEnumerable<int> levelOrder);
+
+    /// <summary>
     /// Occurs when the level order state has changed.
     /// </summary>
     event EventHandler<LevelOrderStateChangedEventArgs>? LevelOrderChanged;

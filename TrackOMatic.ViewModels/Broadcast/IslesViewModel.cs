@@ -14,12 +14,13 @@ namespace TrackOMatic.ViewModels.Broadcast;
 /// A view model for displaying data about the DK Isles region in the broadcast view.
 /// </summary>
 /// <remarks>This view model only changes based on point totals, but sub classes can watch for additional items.</remarks>
-public partial class IslesViewModel : ObservableObject, IDisposable
+public partial class IslesViewModel : ObservableObject, IEquatable<IslesViewModel>, IDisposable
 {
     protected readonly IItemTrackingService _itemTrackingService;
     protected readonly ILevelOrderService _levelOrderService;
     protected readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     protected readonly IUserSettingsService _userSettingsService;
+    protected readonly IDataSaverService _dataSaverService;
     protected readonly int _selectedLevel;
 
     #region Proxy Properties
@@ -54,9 +55,10 @@ public partial class IslesViewModel : ObservableObject, IDisposable
         IItemTrackingService itemTrackingService,
         ILevelOrderService levelOrderService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        IUserSettingsService userSettingsService
+        IUserSettingsService userSettingsService,
+        IDataSaverService dataSaverService
 
-    ) : this(9, itemTrackingService, levelOrderService, parsedSpoilerDataService, userSettingsService)
+    ) : this(9, itemTrackingService, levelOrderService, parsedSpoilerDataService, userSettingsService, dataSaverService)
     {
         _userSettingsService = userSettingsService;
     }
@@ -75,7 +77,8 @@ public partial class IslesViewModel : ObservableObject, IDisposable
         IItemTrackingService itemTrackingService,
         ILevelOrderService levelOrderService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        IUserSettingsService userSettingsService
+        IUserSettingsService userSettingsService,
+        IDataSaverService dataSaverService
     )
     {
         _selectedLevel = selectedLevel;
@@ -83,9 +86,11 @@ public partial class IslesViewModel : ObservableObject, IDisposable
         _levelOrderService = levelOrderService ?? throw new ArgumentNullException(nameof(levelOrderService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         _levelOrderService.LevelOrderChanged += OnDataReset;
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnDataReset;
+        _dataSaverService.DataLoadingCompleted += OnDataReset;
         _userSettingsService.PropertyChanged += OnUserSettingsChanged;
         // Initialize state from service (if level exists)
         InitializeState();
@@ -98,38 +103,6 @@ public partial class IslesViewModel : ObservableObject, IDisposable
         ShowRegionImage = false;
         UpdateRegionData();
     }
-
-    #region IDisposable
-
-    private bool _disposed = false;
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // Unsubscribe from events
-                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
-                _levelOrderService.LevelOrderChanged -= OnDataReset;
-                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnDataReset;
-            }
-            _disposed = true;
-        }
-    }
-
-    ~IslesViewModel()
-    {
-        Dispose(false);
-    }
-
-    #endregion
 
     /// <summary>
     /// Handles the event when the data is reset, updating the region data accordingly.
@@ -221,7 +194,45 @@ public partial class IslesViewModel : ObservableObject, IDisposable
         return (true, true, points, colorResource);
     }
 
-    public override bool Equals(object? obj) => obj is IslesViewModel other && other._selectedLevel == _selectedLevel;
+    #region Object Overrides
+
+    public bool Equals(IslesViewModel? other) => other is not null && other._selectedLevel == _selectedLevel;
+
+    public override bool Equals(object? obj) => Equals(obj as IslesViewModel);
 
     public override int GetHashCode() => _selectedLevel.GetHashCode();
+
+    #endregion
+
+    #region IDisposable
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from events
+                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
+                _levelOrderService.LevelOrderChanged -= OnDataReset;
+                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnDataReset;
+            }
+            _disposed = true;
+        }
+    }
+
+    ~IslesViewModel()
+    {
+        Dispose(false);
+    }
+
+    #endregion
 }

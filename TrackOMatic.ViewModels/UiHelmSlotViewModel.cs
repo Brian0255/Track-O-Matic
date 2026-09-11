@@ -13,8 +13,9 @@ public partial class UiHelmSlotViewModel(
     IEndGameProgressionService endGameProgressionService,
     IParsedSpoilerDataService parsedSpoilerDataService,
     ISavedProgressProvider savedProgressProvider,
-    IItemSelectorService itemSelectorService
-) : HelmSlotViewModel(slotNumber, endGameProgressionService, parsedSpoilerDataService, savedProgressProvider)
+    IItemSelectorService itemSelectorService,
+    IDataSaverService dataSaverService
+) : HelmSlotViewModel(slotNumber, endGameProgressionService, parsedSpoilerDataService, savedProgressProvider, dataSaverService)
 {
     private readonly IEndGameProgressionService _endGameProgressionService = endGameProgressionService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService = parsedSpoilerDataService;

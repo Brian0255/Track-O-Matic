@@ -45,10 +45,11 @@ public partial class LevelViewModel : IslesViewModel, IEquatable<LevelViewModel>
         ILevelOrderService levelOrderService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         IUserSettingsService userSettingsService,
-        ISavedProgressProvider savedProgressProvider
-    ) : base(selectedLevel, itemTrackingService, levelOrderService, parsedSpoilerDataService, userSettingsService)
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService
+    ) : base(selectedLevel, itemTrackingService, levelOrderService, parsedSpoilerDataService, userSettingsService, dataSaverService)
     {
-        KeyViewModel = new(selectedLevel, itemTrackingService, parsedSpoilerDataService, savedProgressProvider);
+        KeyViewModel = new(selectedLevel, itemTrackingService, parsedSpoilerDataService, savedProgressProvider, dataSaverService);
 
         // Initialize state from service (if level exists)
         InitializeState();

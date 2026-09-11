@@ -1,3 +1,4 @@
+using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Spoilers;
@@ -11,7 +12,10 @@ public class DataSaverService(
     IItemTrackingService itemTrackingService,
     IHintService hintService,
     ISavedProgressProvider savedProgressProvider,
-    ISpoilerService spoilerService
+    ISpoilerService spoilerService,
+    IBarrierService BarrierService,
+    IEndGameProgressionService endGameProgressionService,
+    ILevelOrderService levelOrderService
 ) : IDataSaverService
 {
     private static readonly string _appDataDirectory = Path.Combine(
@@ -25,45 +29,20 @@ public class DataSaverService(
     private readonly IHintService _hintService = hintService;
     private readonly ISavedProgressProvider _savedProgressProvider = savedProgressProvider;
     private readonly ISpoilerService _spoilerService = spoilerService;
+    private readonly IBarrierService _barrierService = BarrierService;
+    private readonly IEndGameProgressionService _endGameProgressionService = endGameProgressionService;
+    private readonly ILevelOrderService _levelOrderService = levelOrderService;
 
     private SavedProgress CurrentSavedProgress { get; set; } = new();
 
     public event EventHandler<SavedProgressChangedEventArgs>? SaveCompleted;
+    public event EventHandler<DataLoadingCompletedEventArgs>? DataLoadingCompleted;
     public event EventHandler<string>? SaveFailed;
 
     public async Task InitWithSpoilerAsync(string spoilerFilePath)
     {
-        CurrentSavedProgress = new();
-
-        try
-        {
-            // Perform batch updates to minimize issues with a new load.
-            using (_parsedSpoilerDataService.BeginBatchUpdate())
-            using (_itemTrackingService.BeginBatchUpdate())
-            using (_hintService.BeginBatchUpdate())
-            {
-                var spoilerData = await ParseSpoilerLogAsync(spoilerFilePath);
-                _parsedSpoilerDataService.UpdateParsedData(spoilerData);
-                CurrentSavedProgress.SpoilerPath = spoilerFilePath;
-
-                // Sync fresh progress WITHIN the batch scopes
-                // This ensures OnProgressChanged doesn't trigger secondary UpdateParsedData(null) or item-change events
-                _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
-
-                foreach (var item in _parsedSpoilerDataService.GetStartingItems())
-                {
-                    _itemTrackingService.SetItemState(item.Key, new(item.Key, item.Value, autotracked: true));
-                }
-            }
-
-            // We probably do want the AutotrackerService to observe here...
-        }
-        catch (Exception)
-        {
-            CurrentSavedProgress = new();
-            _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
-            throw;
-        }
+        SavedProgress progress = new() { SpoilerPath = spoilerFilePath };
+        await LoadProgressStateAsync(progress, skipExistingItems: true);
     }
 
     public async Task LoadAsync(string filePath)
@@ -74,42 +53,7 @@ public class DataSaverService(
             return;
         }
 
-        CurrentSavedProgress = loadedProgress;
-
-        // Perform all initializations in batch mode FIRST, then notify subscribers
-        // This ensures all caches are populated before OnProgressChanged handlers fire
-        using (_parsedSpoilerDataService.BeginBatchUpdate())
-        using (_itemTrackingService.BeginBatchUpdate())
-        using (_hintService.BeginBatchUpdate())
-        {
-            if (!string.IsNullOrEmpty(CurrentSavedProgress.SpoilerPath))
-            {
-                try
-                {
-                    var spoilerData = await ParseSpoilerLogAsync(CurrentSavedProgress.SpoilerPath);
-                    _parsedSpoilerDataService.UpdateParsedData(spoilerData);
-
-                    foreach (var item in _parsedSpoilerDataService.GetStartingItems())
-                    {
-                        _itemTrackingService.SetItemState(item.Key, new(item.Key, item.Value, autotracked: true));
-                    }
-                }
-                catch (Exception)
-                {
-                    // Handle the exception or log it as needed
-                }
-            }
-            else
-            {
-                // No spoiler path set: this is fine. Just make sure the parsed data is cleared.
-                _parsedSpoilerDataService.UpdateParsedData(null);
-            }
-        }
-        // Exit batch scopes here - all caches are now populated
-
-        // NOW notify subscribers that progress has been replaced
-        // This ensures HintPanelViewModel.OnProgressChanged fires AFTER HintService cache is ready
-        _savedProgressProvider.UpdateProgress(CurrentSavedProgress);
+        await LoadProgressStateAsync(loadedProgress, skipExistingItems: false);
     }
 
     public void Reset()
@@ -138,6 +82,90 @@ public class DataSaverService(
         catch (Exception ex)
         {
             SaveFailed?.Invoke(this, $"Failed to save progress: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Common logic for loading progress state into services silently.
+    /// Used by both InitWithSpoilerAsync (new spoiler only) and LoadAsync (with merge).
+    /// </summary>
+    /// <param name="progress">The SavedProgress to load (either new or from file)</param>
+    /// <param name="skipExistingItems">If true, ignore progress.SavedItems and only use spoiler starting items</param>
+    private async Task LoadProgressStateAsync(SavedProgress progress, bool skipExistingItems)
+    {
+        try
+        {
+            // PHASE 1: Load spoiler data silently (if present)
+            if (!string.IsNullOrEmpty(progress.SpoilerPath))
+            {
+                try
+                {
+                    var spoilerData = await ParseSpoilerLogAsync(progress.SpoilerPath);
+                    _parsedSpoilerDataService.LoadParsedDataSilently(spoilerData);
+                }
+                catch (Exception)
+                {
+                    // Spoiler failed to load, continue without it
+                    _parsedSpoilerDataService.LoadParsedDataSilently(null);
+                }
+            }
+            else
+            {
+                _parsedSpoilerDataService.LoadParsedDataSilently(null);
+            }
+
+            // PHASE 2: Prepare items (spoiler starting items + existing items if skipExistingItems is false)
+            var itemsToLoad = new Dictionary<ItemName, SavedItem>();
+
+            // Start with spoiler starting items
+            if (_parsedSpoilerDataService.CurrentData != null)
+            {
+                foreach (var (itemName, count) in _parsedSpoilerDataService.GetStartingItems())
+                {
+                    itemsToLoad[itemName] = new SavedItem(itemName, count, autotracked: true);
+                }
+            }
+
+            // Layer existing items if we're loading a full save file (manual data wins on conflicts)
+            if (!skipExistingItems)
+            {
+                foreach (var (itemName, savedItem) in progress.SavedItems)
+                {
+                    itemsToLoad[itemName] = savedItem;
+                }
+            }
+
+            // PHASE 3: Load all items silently (no events fired)
+            _itemTrackingService.LoadItemsSilently(itemsToLoad);
+
+            // PHASE 4: Load hints silently (no events fired)
+            var hintsToLoad = skipExistingItems ? [] : progress.SavedHints;
+            _hintService.LoadHintsSilently(hintsToLoad);
+
+            _barrierService.LoadBLockerCountsSilently(progress.SavedGBCounts);
+            _barrierService.LoadBLockerTypesSilently(progress.BLockerImageIndexes);
+            _barrierService.LoadHelmDoorCountsSilently(progress.HelmDoorCounts);
+            _barrierService.LoadHelmDoorTypesSilently(progress.HelmDoorImageIndexes);
+
+            _endGameProgressionService.SetHelmKongsSilently(progress.HelmKongs);
+            _endGameProgressionService.SetBossKongsSilently(progress.BossKongs);
+
+            _levelOrderService.LoadLevelOrderSilently(progress.LevelOrder);
+
+            // PHASE 5: Update saved progress
+            CurrentSavedProgress = progress;
+
+            // PHASE 6: Alert UI that loading is complete
+            DataLoadingCompleted?.Invoke(this, new DataLoadingCompletedEventArgs(progress));
+        }
+        catch (Exception)
+        {
+            // On error, reset to clean state
+            CurrentSavedProgress = new();
+            _parsedSpoilerDataService.LoadParsedDataSilently(null);
+            _itemTrackingService.LoadItemsSilently([]);
+            _hintService.LoadHintsSilently([]);
+            throw;
         }
     }
 

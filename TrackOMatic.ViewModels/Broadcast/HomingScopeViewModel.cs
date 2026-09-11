@@ -16,6 +16,7 @@ public partial class HomingScopeViewModel : ObservableObject, IDisposable
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IDataSaverService _dataSaverService;
 
 
     #region Proxy Properties
@@ -37,15 +38,18 @@ public partial class HomingScopeViewModel : ObservableObject, IDisposable
     public HomingScopeViewModel(
         IItemTrackingService itemTrackingService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService
     )
     {
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnProgressChanged;
+        _dataSaverService.DataLoadingCompleted += OnDataLoadingCompleted;
 
         InitializeState();
     }
@@ -57,37 +61,6 @@ public partial class HomingScopeViewModel : ObservableObject, IDisposable
         UpdateHoverText();
     }
 
-    #region IDisposable
-
-    private bool _disposed = false;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // Unsubscribe from events
-                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
-                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
-                _savedProgressProvider.ProgressChanged -= OnProgressChanged;
-            }
-            _disposed = true;
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    ~HomingScopeViewModel()
-    {
-        Dispose(false);
-    }
-    #endregion
-
     protected virtual void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
         if (e.UpdatedItem.ItemName == _leftItem || e.UpdatedItem.ItemName == _rightItem)
@@ -97,20 +70,16 @@ public partial class HomingScopeViewModel : ObservableObject, IDisposable
         }
     }
 
-    protected virtual void OnParsedSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e)
-    {
-        InitializeState();
-    }
+    protected virtual void OnParsedSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e) => InitializeState();
 
-    protected virtual void OnProgressChanged(object? sender, ProgressReplacedEventArgs e)
-    {
-        InitializeState();
-    }
+    protected virtual void OnProgressChanged(object? sender, ProgressReplacedEventArgs e) => InitializeState();
+
+    protected virtual void OnDataLoadingCompleted(object? sender, DataLoadingCompletedEventArgs e) => InitializeState();
 
     protected virtual void UpdateHoverText()
     {
         var spoilerData = _parsedSpoilerDataService.CurrentData;
-        if (spoilerData is null)
+        if (spoilerData is null || !spoilerData.SpoilerSettings.PointsEnabled)
         {
             HoverText = "";
             HasHoverText = false;
@@ -131,12 +100,7 @@ public partial class HomingScopeViewModel : ObservableObject, IDisposable
 
     protected virtual void SetStarred()
     {
-        var leftItem = _itemTrackingService.GetItemState(_leftItem);
-        var rightItem = _itemTrackingService.GetItemState(_rightItem);
-
-        IsStarred =
-            (leftItem is not null && leftItem.Starred) ||
-            (rightItem is not null && rightItem.Starred);
+        IsStarred = IsEitherItemStarred();
     }
 
     protected virtual void UpdateImageResourceKey()
@@ -165,4 +129,45 @@ public partial class HomingScopeViewModel : ObservableObject, IDisposable
             (true, true) => "homing_scope",
         };
     }
+
+    private bool IsEitherItemStarred()
+    {
+        var leftItem = _itemTrackingService.GetItemState(_leftItem);
+        var rightItem = _itemTrackingService.GetItemState(_rightItem);
+        return
+            (leftItem is not null && leftItem.Starred) ||
+            (rightItem is not null && rightItem.Starred);
+    }
+
+    #region IDisposable
+
+    private bool _disposed = false;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from events
+                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
+                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
+                _savedProgressProvider.ProgressChanged -= OnProgressChanged;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoadingCompleted;
+            }
+            _disposed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    ~HomingScopeViewModel()
+    {
+        Dispose(false);
+    }
+    #endregion
 }

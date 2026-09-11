@@ -140,6 +140,20 @@ public class ParsedSpoilerDataService : IParsedSpoilerDataService
 
     public bool HasRegionBarrier() => CurrentData?.RegionBarrierInfo is not null && CurrentData.RegionBarrierInfo.Count > 0;
 
+    public BlockerInfoRaw GetBarrierInfo(RegionName regionName)
+    {
+        if (CurrentData is null)
+        {
+            return new() { Item = 0, Cost = -1 };
+        }
+        return CurrentData.GetBarrierInfo(regionName);
+    }
+
+    public void LoadParsedDataSilently(ParsedSpoilerData? data)
+    {
+        _currentData = data;
+    }
+
     public IDisposable BeginBatchUpdate()
     {
         return new BatchUpdateScope(this);

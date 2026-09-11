@@ -20,8 +20,8 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
-    private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IThemeService _themeService;
+    private readonly IDataSaverService _dataSaverService;
     private readonly RegionName _regionName;
     private readonly IRegionPlacementOrchestrator _regionPlacementOrchestrator;
     private readonly IAutotrackerService _autotrackerService;
@@ -83,16 +83,17 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         IRegionPlacementOrchestrator regionPlacementOrchestrator,
         IThemeService themeService,
         RegionSlotProviderRegistry slotProviderRegistry,
-        IAutotrackerService autotrackerService
+        IAutotrackerService autotrackerService,
+        IDataSaverService dataSaverService
     )
     {
         _regionName = regionName;
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
-        _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _regionPlacementOrchestrator = regionPlacementOrchestrator ?? throw new ArgumentNullException(nameof(regionPlacementOrchestrator));
         _autotrackerService = autotrackerService ?? throw new ArgumentNullException(nameof(autotrackerService));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
 
         // Capture the synchronization context for UI thread marshaling in event handlers
         // In tests (no UI thread), this will be null and we'll run directly
@@ -102,15 +103,17 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             _regionName,
             _itemTrackingService,
             _parsedSpoilerDataService,
-            _savedProgressProvider,
-            _themeService
+            savedProgressProvider,
+            _themeService,
+            _dataSaverService
         );
         _regionItemListViewModel = new RegionItemListViewModel(
             _regionName,
             _itemTrackingService,
             _parsedSpoilerDataService,
-            _savedProgressProvider,
-            _themeService
+            savedProgressProvider,
+            _themeService,
+            _dataSaverService
         );
 
         // Registry is optional for backwards compatibility with existing tests/code
@@ -121,9 +124,9 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
 
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
-        _savedProgressProvider.ProgressChanged += OnProgressChanged;
         _vialItemListViewModel.VialItemStateChanged += OnVialStateChanged;
         _autotrackerService.RegionLightingChanged += OnRegionLightingChanged;
+        _dataSaverService.DataLoadingCompleted += OnDataLoadingCompleted;
 
         // Initialize state directly (not debounced) in constructor
         InitializeState();
@@ -137,7 +140,8 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             levelOrderService,
             userSettingsService,
             _parsedSpoilerDataService,
-            savedProgressProvider
+            savedProgressProvider,
+            dataSaverService
         );
     }
 
@@ -216,6 +220,17 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
 
         UpdateHoardText();
         UpdateItemPointText();
+    }
+
+    private void OnDataLoadingCompleted(object? sender, DataLoadingCompletedEventArgs e)
+    {
+        _syncContext.Post(_ =>
+        {
+            HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
+            UpdateHoardText();
+            UpdateItemPointText();
+            OnPropertyChanged(nameof(SelectedItemList));
+        }, null);
     }
 
     private void OnParsedSpoilerDataChanged(object? sender, EventArgs e)
@@ -411,9 +426,9 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
                 // Unsubscribe from service events
                 _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
-                _savedProgressProvider.ProgressChanged -= OnProgressChanged;
                 _vialItemListViewModel?.VialItemStateChanged -= OnVialStateChanged;
                 _autotrackerService.RegionLightingChanged -= OnRegionLightingChanged;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoadingCompleted;
             }
             _disposed = true;
         }

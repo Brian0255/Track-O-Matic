@@ -244,7 +244,8 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         IParsedSpoilerDataService parsedSpoilerDataService,
         IEndGameProgressionService endGameProgressionService,
         ISavedProgressProvider savedProgressProvider,
-        IItemSelectorService itemSelectorService
+        IItemSelectorService itemSelectorService,
+        IDataSaverService dataSaverService
     )
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
@@ -269,7 +270,8 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
                 _itemTrackingService,
                 _parsedSpoilerDataService,
                 _savedProgressProvider,
-                _themeService
+                _themeService,
+                dataSaverService
             ));
         }
 
@@ -294,7 +296,8 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
                 _itemTrackingService,
                 _parsedSpoilerDataService,
                 _savedProgressProvider,
-                _themeService
+                _themeService,
+                dataSaverService
             ));
         }
 
@@ -306,7 +309,8 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
                 _itemTrackingService,
                 _parsedSpoilerDataService,
                 _savedProgressProvider,
-                _themeService
+                _themeService,
+                dataSaverService
             ));
         }
 
@@ -318,7 +322,8 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
                 _itemTrackingService,
                 _parsedSpoilerDataService,
                 _savedProgressProvider,
-                _themeService
+                _themeService,
+                dataSaverService
             ));
         }
 
@@ -339,7 +344,8 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
                 _itemTrackingService,
                 _parsedSpoilerDataService,
                 _savedProgressProvider,
-                _themeService
+                _themeService,
+                dataSaverService
             ));
         }
 
@@ -350,14 +356,16 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
                 endGameProgressionService,
                 _parsedSpoilerDataService,
                 _savedProgressProvider,
-                itemSelectorService
+                itemSelectorService,
+                dataSaverService
             ));
             BossSlots.Add(new(
                 i,
                 endGameProgressionService,
                 _parsedSpoilerDataService,
                 _savedProgressProvider,
-                itemSelectorService
+                itemSelectorService,
+                dataSaverService
             ));
         }
 

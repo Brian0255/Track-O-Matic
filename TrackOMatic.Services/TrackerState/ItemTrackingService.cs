@@ -126,6 +126,26 @@ public class ItemTrackingService : IItemTrackingService
         SetItemStateInternal(itemName, updatedState, ChangeReason.UserModified, true);
     }
 
+    public void LoadItemsSilently(Dictionary<ItemName, SavedItem> items)
+    {
+        _itemOrder.Clear();
+        _nodeMap.Clear();
+
+        foreach (var item in items.Values)
+        {
+            var cleanItem = item with
+            {
+                ItemName = item.ItemName // Ensure consistency
+            };
+            var node = _itemOrder.AddLast(cleanItem);
+            _nodeMap[cleanItem.ItemName] = node;
+        }
+
+        // Ensure the SavedProgress matches what we have.
+        _progressProvider.CurrentProgress.SavedItems.Clear();
+        _progressProvider.CurrentProgress.SavedItems = new(items);
+    }
+
     public void ClearItemState(ItemName itemName)
     {
         if (!_nodeMap.TryGetValue(itemName, out var node))

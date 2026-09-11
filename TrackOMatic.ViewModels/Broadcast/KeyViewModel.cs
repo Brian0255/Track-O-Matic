@@ -14,6 +14,7 @@ public partial class KeyViewModel : ObservableObject, IDisposable
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IDataSaverService _dataSaverService;
     private readonly int _selectedKey;
 
     #region Proxy Properties
@@ -35,16 +36,20 @@ public partial class KeyViewModel : ObservableObject, IDisposable
         int selectedKey,
         IItemTrackingService itemTrackingService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider)
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService
+    )
     {
         _selectedKey = selectedKey;
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
 
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnDataReset;
         _savedProgressProvider.ProgressChanged += OnDataReset;
+        _dataSaverService.DataLoadingCompleted += OnDataReset;
 
         InitializeState();
     }
@@ -62,41 +67,7 @@ public partial class KeyViewModel : ObservableObject, IDisposable
 
         IsStarred = itemState is not null && itemState.Starred;
         UpdateHoverText();
-
     }
-
-    #region IDisposable
-
-    private bool _disposed = false;
-
-    // Cleanup
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // Unsubscribe from events
-                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
-                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnDataReset;
-                _savedProgressProvider.ProgressChanged -= OnDataReset;
-            }
-            _disposed = true;
-        }
-    }
-
-    ~KeyViewModel()
-    {
-        Dispose(false);
-    }
-
-    #endregion
 
     private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
@@ -120,7 +91,7 @@ public partial class KeyViewModel : ObservableObject, IDisposable
     private void UpdateHoverText()
     {
         var spoilerData = _parsedSpoilerDataService.CurrentData;
-        if (spoilerData is null)
+        if (spoilerData is null || !spoilerData.SpoilerSettings.PointsEnabled)
         {
             HoverText = "";
             HasHoverText = false;
@@ -186,6 +157,40 @@ public partial class KeyViewModel : ObservableObject, IDisposable
     public override bool Equals(object? obj) => obj is KeyViewModel other && other._selectedKey == _selectedKey;
 
     public override int GetHashCode() => _selectedKey.GetHashCode();
+
+    #endregion
+
+    #region IDisposable
+
+    private bool _disposed = false;
+
+    // Cleanup
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from events
+                _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
+                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnDataReset;
+                _savedProgressProvider.ProgressChanged -= OnDataReset;
+                _dataSaverService.DataLoadingCompleted -= OnDataReset;
+            }
+            _disposed = true;
+        }
+    }
+
+    ~KeyViewModel()
+    {
+        Dispose(false);
+    }
 
     #endregion
 }

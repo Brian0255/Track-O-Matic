@@ -51,6 +51,12 @@ public class EndGameProgressionService: IEndGameProgressionService
         BlastStateChanged?.Invoke(this, new BlastStateChangedEventArgs([.. previous], newList, ChangeReason.UserModified));
     }
 
+    public void SetHelmKongsSilently(IEnumerable<int> kongs)
+    {
+        _savedProgress.HelmKongs = kongs.ToList();
+        _progressProvider.CurrentProgress.HelmKongs = kongs.ToList();
+    }
+
     public IList<int> GetBossKongs()
     {
         return _savedProgress.BossKongs;
@@ -62,6 +68,12 @@ public class EndGameProgressionService: IEndGameProgressionService
         var newList = kongs.ToList();
         _savedProgress.BossKongs = newList;
         GauntletStateChanged?.Invoke(this, new GauntletStateChangedEventArgs([.. previous], newList, ChangeReason.UserModified));
+    }
+
+    public void SetBossKongsSilently(IEnumerable<int> kongs)
+    {
+        _savedProgress.BossKongs = kongs.ToList();
+        _progressProvider.CurrentProgress.BossKongs = kongs.ToList();
     }
 
     #endregion

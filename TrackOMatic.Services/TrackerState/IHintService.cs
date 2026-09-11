@@ -155,5 +155,14 @@ public interface IHintService
     /// <returns>A read-only list of all saved hints.</returns>
     IReadOnlyList<SavedHint> GetAllHints();
 
+    /// <summary>
+    /// Load hints directly into the cache without firing <see cref="HintCreated"/> events.
+    /// </summary>
+    /// <remarks>
+    /// <strong>Internal Use Only.</strong> This method is intended only for loading files!
+    /// </remarks>
+    /// <param name="hints">The hints to load.</param>
+    void LoadHintsSilently(IEnumerable<SavedHint> hints);
+
     #endregion
 }

@@ -69,7 +69,8 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
         IEndGameProgressionService endGameProgressionService,
         IThemeService themeService,
         ICollectiblesService collectiblesService,
-        ISongService songService
+        ISongService songService,
+        IDataSaverService dataSaverService
     )
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
@@ -88,7 +89,8 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
             itemTrackingService,
             levelOrderService,
             parsedSpoilerDataService,
-            userSettingsService
+            userSettingsService,
+            dataSaverService
         );
         for (int i = 1; i <= 8; ++i)
         {
@@ -98,7 +100,8 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
                 levelOrderService,
                 parsedSpoilerDataService,
                 userSettingsService,
-                savedProgressProvider
+                savedProgressProvider,
+                dataSaverService
             ));
         }
         for (int i = 0; i <= 4; ++i)
@@ -107,13 +110,15 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
                 i,
                 endGameProgressionService,
                 parsedSpoilerDataService,
-                savedProgressProvider
+                savedProgressProvider,
+                dataSaverService
             ));
             BossSlots.Add(new(
                 i,
                 endGameProgressionService,
                 parsedSpoilerDataService,
-                savedProgressProvider
+                savedProgressProvider,
+                dataSaverService
             ));
         }
         foreach (var itemName in Extensions.KongItemNames)
@@ -123,7 +128,8 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
                 itemTrackingService,
                 parsedSpoilerDataService,
                 savedProgressProvider,
-                themeService
+                themeService,
+                dataSaverService
             ));
         }
 
@@ -134,7 +140,8 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
                 itemTrackingService,
                 parsedSpoilerDataService,
                 savedProgressProvider,
-                themeService
+                themeService,
+                dataSaverService
             ));
         }
 
@@ -164,50 +171,58 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
             itemTrackingService,
             parsedSpoilerDataService,
             savedProgressProvider,
-            themeService
+            themeService,
+            dataSaverService
         );
         Diving = new(
             ItemName.DIVING,
             itemTrackingService,
             parsedSpoilerDataService,
             savedProgressProvider,
-            themeService
+            themeService,
+            dataSaverService
         );
         Oranges = new(
             ItemName.ORANGE_THROWING,
             itemTrackingService,
             parsedSpoilerDataService,
             savedProgressProvider,
-            themeService
+            themeService,
+            dataSaverService
         );
         Barrels = new(
             ItemName.BARREL_THROWING,
             itemTrackingService,
             parsedSpoilerDataService,
             savedProgressProvider,
-            themeService
+            themeService,
+            dataSaverService
         );
         Vines = new(
             ItemName.VINE_SWINGING,
             itemTrackingService,
             parsedSpoilerDataService,
             savedProgressProvider,
-            themeService
+            themeService,
+            dataSaverService
         );
         Slams = new(
             itemTrackingService,
             parsedSpoilerDataService,
-            savedProgressProvider
+            savedProgressProvider,
+            dataSaverService
         );
         CameraShockwave = new(
             itemTrackingService,
             parsedSpoilerDataService,
-            savedProgressProvider
+            savedProgressProvider,
+            dataSaverService
         );
         HomingScope = new(
             itemTrackingService,
             parsedSpoilerDataService,
-            savedProgressProvider
+            savedProgressProvider,
+            dataSaverService
         );
 
         Song = new(songService);

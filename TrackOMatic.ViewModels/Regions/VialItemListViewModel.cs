@@ -16,6 +16,7 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IThemeService _themeService;
+    private readonly IDataSaverService _dataSaverService;
     private readonly SynchronizationContext _syncContext;
     private readonly RegionName _regionName;
 
@@ -35,7 +36,8 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
         IItemTrackingService itemTrackingService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         ISavedProgressProvider savedProgressProvider,
-        IThemeService themeService
+        IThemeService themeService,
+        IDataSaverService dataSaverService
     )
     {
         _regionName = regionName;
@@ -43,11 +45,13 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         _syncContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null. Ensure this ViewModel is created on the UI thread.");
 
         _itemTrackingService.ItemStateChanged += OnItemStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnDataReset;
+        _dataSaverService.DataLoadingCompleted += OnDataLoadingCompleted;
 
         RefreshPlacedItems();
     }
@@ -82,6 +86,8 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
     }
 
     private void OnDataReset(object? sender, ProgressReplacedEventArgs e) => WipeVialConnections();
+
+    private void OnDataLoadingCompleted(object? sender, DataLoadingCompletedEventArgs e) => RefreshPlacedItems();
 
     private void WipeVialConnections()
     {
@@ -138,12 +144,15 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
             var regionData = spoilerData?.RegionData.GetValueOrDefault(_regionName);
             if (regionData is not null)
             {
-                // Helpful no matter which region.
-                var vialColors = _parsedSpoilerDataService.GetVialColorsForRegion(_regionName);
+                // Get all items currently in this region from the service (in their stored order)
+                var itemsInRegion = _itemTrackingService.GetItemsInRegion(_regionName).ToList();
+                var placedItems = new HashSet<ItemName>();
 
                 for (int slotIndex = 0; slotIndex < regionData.VialColors.Count; ++slotIndex)
                 {
                     var vialColor = regionData.VialColors[slotIndex];
+
+                    // Create vial empty (required by constructor validation for non-START regions)
                     var vial = new VialItemViewModel(
                         null,
                         _regionName,
@@ -152,6 +161,19 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
                         _parsedSpoilerDataService,
                         _themeService
                     );
+
+                    // Look for the next unpaced item matching this vial color
+                    var itemInSlot = itemsInRegion.FirstOrDefault(item => 
+                        item.ItemName.ToVialColor() == vialColor && 
+                        !placedItems.Contains(item.ItemName));
+
+                    if (itemInSlot is not null)
+                    {
+                        // Place the saved item into the vial without re-persisting
+                        vial.AcceptAutoTrackedItemWithoutPersist(itemInSlot.ItemName, itemInSlot);
+                        placedItems.Add(itemInSlot.ItemName);
+                    }
+
                     vial.VialItemStateChanged += OnVialDataChanged;
                     Items.Add(vial);
                 }
@@ -245,6 +267,7 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
                 _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnDataReset;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoadingCompleted;
             }
             _disposed = true;
         }

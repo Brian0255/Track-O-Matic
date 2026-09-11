@@ -21,7 +21,8 @@ public partial class RegionGrid : UserControl
             ServiceLocator.GetService<IRegionPlacementOrchestrator>(),
             ServiceLocator.GetService<IThemeService>(),
             ServiceLocator.GetService<RegionSlotProviderRegistry>(),
-            ServiceLocator.GetService<IAutotrackerService>()
+            ServiceLocator.GetService<IAutotrackerService>(),
+            ServiceLocator.GetService<IDataSaverService>()
         );
     }
 }

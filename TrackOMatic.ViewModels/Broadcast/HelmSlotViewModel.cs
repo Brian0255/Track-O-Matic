@@ -8,7 +8,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public partial class HelmSlotViewModel: ObservableObject, IEquatable<HelmSlotViewModel>, IDisposable
+public partial class HelmSlotViewModel : ObservableObject, IEquatable<HelmSlotViewModel>, IDisposable
 {
     protected static readonly List<ItemGridCell> _helmKongMappings =
     [
@@ -23,6 +23,7 @@ public partial class HelmSlotViewModel: ObservableObject, IEquatable<HelmSlotVie
     private readonly IEndGameProgressionService _endGameProgressionService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly IDataSaverService _dataSaverService;
     private readonly SynchronizationContext _uiContext;
     private readonly int _slotNumber;
 
@@ -44,7 +45,8 @@ public partial class HelmSlotViewModel: ObservableObject, IEquatable<HelmSlotVie
         int slotNumber,
         IEndGameProgressionService endGameProgressionService,
         IParsedSpoilerDataService parsedSpoilerDataService,
-        ISavedProgressProvider savedProgressProvider
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService
     )
     {
         if (slotNumber < 0 || slotNumber > 4)
@@ -55,11 +57,13 @@ public partial class HelmSlotViewModel: ObservableObject, IEquatable<HelmSlotVie
         _endGameProgressionService = endGameProgressionService ?? throw new ArgumentNullException(nameof(endGameProgressionService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         _uiContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null. Ensure this is called from the UI thread.");
 
         _endGameProgressionService.BlastStateChanged += OnBlastStateChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnSpoilerDataChanged;
         _savedProgressProvider.ProgressChanged += OnDataReset;
+        _dataSaverService.DataLoadingCompleted += OnDataLoadingCompleted;
 
         InitializeState();
     }
@@ -119,6 +123,34 @@ public partial class HelmSlotViewModel: ObservableObject, IEquatable<HelmSlotVie
     }
 
     private void OnDataReset(object? sender, EventArgs e) => InitializeState();
+
+    private void OnDataLoadingCompleted(object? sender, DataLoadingCompletedEventArgs e)
+    {
+        var hasSpoilerData = false;
+        if (e.HasSpoiler && _parsedSpoilerDataService.HasHelmOrder())
+        {
+            hasSpoilerData = true;
+        }
+        if (!hasSpoilerData)
+        {
+            InitializeState();
+            return;
+        }
+        var data = _parsedSpoilerDataService.CurrentData!.HelmOrder;
+        var kongsRequired = data.Count;
+        if (_slotNumber < kongsRequired)
+        {
+            HelmValue = data[_slotNumber];
+            ShowsSlot = true;
+        }
+        else
+        {
+            HelmValue = 0;
+            ShowsSlot = false;
+        }
+        OnPropertyChanged(nameof(ShowsSlot));
+        UpdateImageResourceKey();
+    }
 
     protected virtual void UpdateImageResourceKey()
     {
@@ -186,6 +218,7 @@ public partial class HelmSlotViewModel: ObservableObject, IEquatable<HelmSlotVie
                 _endGameProgressionService.BlastStateChanged -= OnBlastStateChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnDataReset;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoadingCompleted;
             }
             _disposed = true;
         }
