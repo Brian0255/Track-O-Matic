@@ -64,7 +64,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             Foreground="{Binding PointColorResource, Converter={StaticResource ResourceKeyConverter}}"
-            Text="{Binding PointsText}"
+            Text="{Binding Points, StringFormat={}{0}}"
         />
     </Grid>
 </UserControl>

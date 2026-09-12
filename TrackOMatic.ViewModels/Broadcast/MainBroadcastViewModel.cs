@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Events;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 
@@ -14,6 +15,7 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
 {
     private readonly IUserSettingsService _userSettingsService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
+    private readonly IDataSaverService _dataSaverService;
 
     #region Proxy Properties
 
@@ -75,6 +77,7 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
+        _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
 
         // Initialize all proxy properties from the service before subscribing to events
         TopMostSetting = _userSettingsService.TopMost;
@@ -84,6 +87,7 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
 
         _userSettingsService.PropertyChanged += OnSettingChanged;
         _parsedSpoilerDataService.ParsedSpoilerDataChanged += OnParsedSpoilerDataChanged;
+        _dataSaverService.DataLoadingCompleted += OnDataLoaded;
 
         Isles = new(
             itemTrackingService,
@@ -231,6 +235,8 @@ public partial class MainBroadcastViewModel : ObservableObject, IDisposable
     }
 
     private void OnParsedSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e) => AdjustLayout();
+
+    private void OnDataLoaded(object? sender, DataLoadingCompletedEventArgs e) => AdjustLayout();
 
     private void OnSettingChanged(object? sender, PropertyChangedEventArgs e)
     {

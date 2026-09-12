@@ -119,7 +119,7 @@ public partial class LevelViewModel : IslesViewModel, IEquatable<LevelViewModel>
         if (regionName == RegionName.UNKNOWN)
         {
             ShowRemainingPoints = false;
-            PointsText = "";
+            Points = -1;
             PointColorResource = "RegionInProgress";
             return;
         }

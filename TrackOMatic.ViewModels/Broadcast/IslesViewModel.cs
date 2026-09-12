@@ -38,7 +38,7 @@ public partial class IslesViewModel : ObservableObject, IEquatable<IslesViewMode
     public partial bool ShowRemainingPoints { get; set; } = false;
 
     [ObservableProperty]
-    public partial string PointsText { get; set; } = "";
+    public partial int Points { get; set; } = -1;
 
     [ObservableProperty]
     public partial string PointColorResource { get; set; } = "RegionInProgress";
@@ -145,53 +145,65 @@ public partial class IslesViewModel : ObservableObject, IEquatable<IslesViewMode
 
     protected virtual void UpdatePointsData(RegionName regionName)
     {
-        var pointSetting = _userSettingsService.BroadcastNumberLabel;
-        if (pointSetting == BroadcastNumberLabel.WothCount)
+        var spoilerData = _parsedSpoilerDataService.CurrentData;
+
+        if (spoilerData is null)
         {
-            var hoardData = GetHoardPointsData(regionName);
-            ShowRegionImage = hoardData.Item1;
-            ShowRemainingPoints = hoardData.Item2;
-            PointsText = hoardData.Item3.ToString();
-            PointColorResource = hoardData.Item4;
+            UpdateLabelsByNoPoints();
+        }
+        else if (spoilerData.SpoilerSettings.PointsEnabled && spoilerData.SpoilerSettings.WOTHEnabled)
+        {
+            Action<RegionName> updateLabel = _userSettingsService.BroadcastNumberLabel == BroadcastNumberLabel.WothCount
+                ? UpdateLabelsByHoardPoints
+                : UpdateLabelsByItemPoints;
+            updateLabel(regionName);
+        }
+        else if (spoilerData.SpoilerSettings.WOTHEnabled)
+        {
+            UpdateLabelsByHoardPoints(regionName);
+        }
+        else if (spoilerData.SpoilerSettings.PointsEnabled)
+        {
+            UpdateLabelsByItemPoints(regionName);
         }
         else
         {
-            var itemData = GetItemPointsData(regionName);
-            ShowRegionImage = itemData.Item1;
-            ShowRemainingPoints = itemData.Item2;
-            PointsText = itemData.Item3.ToString();
-            PointColorResource = itemData.Item4;
+            UpdateLabelsByNoPoints();
         }
     }
 
-    private (bool, bool, int, string) GetHoardPointsData(RegionName regionName)
+    protected virtual void UpdateLabelsByNoPoints()
+    {
+        ShowRegionImage = false;
+        ShowRemainingPoints = false;
+        Points = -1;
+        PointColorResource = "RegionInProgress";
+    }
+
+    protected virtual void UpdateLabelsByHoardPoints(RegionName regionName)
     {
         var maxHoardPoints = _parsedSpoilerDataService.GetWothPointsForRegion(regionName);
-        if (maxHoardPoints < 0)
-        {
-            return (regionName != RegionName.DK_ISLES, false, 0, "RequiredChecksColor");
-        }
-
         var itemsInRegion = _itemTrackingService.GetItemsInRegion(regionName);
         var hoardPoints = itemsInRegion.Sum(i => i.Starred ? 1 : 0);
         var points = maxHoardPoints - hoardPoints;
-        return (true, true, points, "RequiredChecksColor");
+        ShowRegionImage = true;
+        ShowRemainingPoints = true;
+        Points = points;
+        PointColorResource = "RequiredChecksColor";
     }
 
-    private (bool, bool,int, string) GetItemPointsData(RegionName regionName)
+    protected virtual void UpdateLabelsByItemPoints(RegionName regionName)
     {
         var pointSpread = _parsedSpoilerDataService.GetPointSpread();
-        if (pointSpread.Count == 0)
-        {
-            return (regionName != RegionName.DK_ISLES, false, 0, "RegionInProgress");
-        }
-
         var regionPoints = _parsedSpoilerDataService.GetPointsForRegion(regionName);
         var itemsInRegion = _itemTrackingService.GetItemsInRegion(regionName);
         var categories = itemsInRegion.Select(i => i.ItemName.ToPointCategory());
         var points = regionPoints - categories.Sum(c => pointSpread[c]);
         var colorResource = points > 0 ? "RegionInProgress" : "RegionComplete";
-        return (true, true, points, colorResource);
+        ShowRegionImage = true;
+        ShowRemainingPoints = true;
+        Points = points;
+        PointColorResource = colorResource;
     }
 
     #region Object Overrides
