@@ -46,6 +46,9 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     public partial string RegionResourceKey { get; set; } = "";
 
     [ObservableProperty]
+    public partial int ImageColumnSpan { get; set; } = 1;
+
+    [ObservableProperty]
     public partial string BackgroundResourceKey { get; set; } = "RegionBG";
 
     [ObservableProperty]
@@ -59,6 +62,9 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
 
     [ObservableProperty]
     public partial int ItemPoints { get; set; } = -1;
+
+    [ObservableProperty]
+    public partial string ItemPointColorKey { get; set; } = "";
 
     [ObservableProperty]
     public partial bool HasVials { get; set; } = false;
@@ -153,6 +159,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     {
         UpdateHoardText();
         UpdateItemPointText();
+        UpdateImageColumnSpan();
         UpdateRegionResourceKey();
     }
 
@@ -208,10 +215,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         }
 
         // Only process certain change reasons to avoid stale state assumptions
-        bool isRelevantChange = e.ChangeReason == ChangeReason.UserModified
-                    || e.ChangeReason == ChangeReason.AutoTracked;
-        //|| e.ChangeReason == "ItemMovedToUnknown"
-        //|| e.ChangeReason == ChangeReason. "ItemCleared";
+        bool isRelevantChange = e.ChangeReason == ChangeReason.UserModified || e.ChangeReason == ChangeReason.AutoTracked;
 
         if (!isRelevantChange)
         {
@@ -229,6 +233,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
             UpdateHoardText();
             UpdateItemPointText();
+            UpdateImageColumnSpan();
             OnPropertyChanged(nameof(SelectedItemList));
         }, null);
     }
@@ -240,6 +245,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
             UpdateHoardText();
             UpdateItemPointText();
+            UpdateImageColumnSpan();
             OnPropertyChanged(nameof(SelectedItemList));
         }, null);
     }
@@ -251,6 +257,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
             UpdateHoardText();
             UpdateItemPointText();
+            UpdateImageColumnSpan();
             OnPropertyChanged(nameof(SelectedItemList));
         }, null);
     }
@@ -293,6 +300,19 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         HasWothPoints = true;
     }
 
+    private void UpdateImageColumnSpan()
+    {
+        var spoilerData = _parsedSpoilerDataService.CurrentData;
+        if (spoilerData is not null && (spoilerData.SpoilerSettings.VialsEnabled || spoilerData.SpoilerSettings.PointsEnabled))
+        {
+            ImageColumnSpan = 2;
+        }
+        else
+        {
+            ImageColumnSpan = 4;
+        }
+    }
+
     internal void UpdateItemPointText()
     {
         // TODO: Have the point calculations take place in the service layer.
@@ -303,6 +323,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         {
             ItemPoints = -1;
             HasItemPoints = false;
+            ItemPointColorKey = "RegionInProgress";
         }
         else
         {
@@ -311,6 +332,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             var points = regionPoints - categories.Sum(c => pointSpread[c]);
             ItemPoints = points;
             HasItemPoints = points >= 0;
+            ItemPointColorKey = points <= 0 ? "RegionComplete" : "RegionInProgress";
         }
 
         OnPropertyChanged(nameof(ShouldShowItemPoints));
