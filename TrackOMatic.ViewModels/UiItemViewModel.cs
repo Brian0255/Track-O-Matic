@@ -57,6 +57,7 @@ public partial class UiItemViewModel(
         IsStarred = itemState?.Starred == true;
         Opacity = itemState?.Opacity ?? 1.0;
         RegionName = itemState?.Region ?? RegionName.UNKNOWN;
+        UpdateHoverText();
     }
 
     /// <summary>
