@@ -136,8 +136,7 @@ public static class SynchronizationContextTestHelper
     /// </summary>
     public class TestSynchronizationContext : SynchronizationContext
     {
-        private readonly ConcurrentQueue<(SendOrPostCallback callback, object? state)> _callbacks =
-            new ConcurrentQueue<(SendOrPostCallback, object?)>();
+        private readonly ConcurrentQueue<(SendOrPostCallback callback, object? state)> _callbacks = new();
 
         public override void Post(SendOrPostCallback d, object? state)
         {

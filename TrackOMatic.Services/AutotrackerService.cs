@@ -561,22 +561,21 @@ public class AutotrackerService : IAutotrackerService
     /// </summary>
     private void UpdateCurrentSong()
     {
-        var songGame = "";
-        var songName = "";
-
-        if (RandomizerVersion >= 4)
+        if (RandomizerVersion < 4)
         {
-            uint songPointer = 0x7FFFF0;
-            uint songAddr = ReadPointer(songPointer);
-            if (songAddr == 0x00000000)
-            {
-                return;
-            }
-
-            songGame = ReadAscii(ref songAddr);
-            songAddr++;
-            songName = ReadAscii(ref songAddr);
+            return;
         }
+
+        uint songPointer = 0x7FFFF0;
+        uint songAddr = ReadPointer(songPointer);
+        if (songAddr == 0x00000000)
+        {
+            return;
+        }
+
+        var songGame = ReadAscii(ref songAddr);
+        songAddr++;
+        var songName = ReadAscii(ref songAddr);
 
         if (songName == "")
         {
@@ -643,10 +642,12 @@ public class AutotrackerService : IAutotrackerService
                 {
                     File.WriteAllText(Path.Combine(songDisplayFolder, entry.Key), entry.Value);
                 }
-                catch (IOException) {
+                catch (IOException)
+                {
                     // Silently fail if song output folder cannot be created
                 }
-                catch (Exception) {
+                catch (Exception)
+                {
                     // Silently fail if song output folder cannot be created
                 }
             }

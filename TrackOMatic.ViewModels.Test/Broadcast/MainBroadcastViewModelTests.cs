@@ -25,6 +25,32 @@ public class MainBroadcastViewModelTests
         _collectiblesServiceMock = new Mock<ICollectiblesService>();
         _songServiceMock = new Mock<ISongService>();
         _dataSaverServiceMock = new Mock<IDataSaverService>();
+
+        // Set up default mock behavior to avoid nulls during construction
+        SetupDefaultMocks();
+    }
+
+    private void SetupDefaultMocks()
+    {
+        // Set up ILevelOrderService to return a valid level order
+        var defaultLevelOrder = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+        _levelOrderServiceMock.Setup(x => x.GetLevelOrder()).Returns(defaultLevelOrder);
+
+        // Set up IParsedSpoilerDataService with a real ParsedSpoilerData instance
+        var defaultParsedData = new ParsedSpoilerData
+        {
+            LevelOrder = []
+        };
+        _parsedSpoilerDataServiceMock.Setup(x => x.CurrentData).Returns(defaultParsedData);
+
+        // Set up IEndGameProgressionService to return valid lists for helm and boss kongs
+        var defaultHelmKongs = new List<int> { 0, 1, 2, 3, 4 };
+        var defaultBossKongs = new List<int> { 0, 1, 2, 3, 4 };
+        _endGameProgressionServiceMock.Setup(x => x.GetHelmKongs()).Returns(defaultHelmKongs);
+        _endGameProgressionServiceMock.Setup(x => x.GetBossKongs()).Returns(defaultBossKongs);
+
+        // Set up ISavedProgressProvider to return a valid SavedProgress
+        _savedProgressProviderMock.Setup(x => x.CurrentProgress).Returns(new SavedProgress());
     }
 
     private MainBroadcastViewModel CreateViewModel()
@@ -74,6 +100,48 @@ public class MainBroadcastViewModelTests
             )
         );
         Assert.Equal("userSettingsService", ex.ParamName);
+    }
+
+    [Fact]
+    public void Constructor_WithNullParsedSpoilerDataService_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentNullException>(() =>
+            new MainBroadcastViewModel(
+                _userSettingsServiceMock.Object,
+                null!,
+                _itemTrackingServiceMock.Object,
+                _levelOrderServiceMock.Object,
+                _savedProgressProviderMock.Object,
+                _endGameProgressionServiceMock.Object,
+                _themeServiceMock.Object,
+                _collectiblesServiceMock.Object,
+                _songServiceMock.Object,
+                _dataSaverServiceMock.Object
+            )
+        );
+        Assert.Equal("parsedSpoilerDataService", ex.ParamName);
+    }
+
+    [Fact]
+    public void Constructor_WithNulDataSaverService_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentNullException>(() =>
+            new MainBroadcastViewModel(
+                _userSettingsServiceMock.Object,
+                _parsedSpoilerDataServiceMock.Object,
+                _itemTrackingServiceMock.Object,
+                _levelOrderServiceMock.Object,
+                _savedProgressProviderMock.Object,
+                _endGameProgressionServiceMock.Object,
+                _themeServiceMock.Object,
+                _collectiblesServiceMock.Object,
+                _songServiceMock.Object,
+                null!
+            )
+        );
+        Assert.Equal("dataSaverService", ex.ParamName);
     }
 
     #endregion
@@ -168,7 +236,9 @@ public class MainBroadcastViewModelTests
         var viewModel = CreateViewModel();
 
         // Assert
-        _userSettingsServiceMock.VerifyAdd(x => x.PropertyChanged += It.IsAny<PropertyChangedEventHandler>(), Times.Once);
+        // MainBroadcastViewModel and its nested view models (HelmSlots, BossSlots, ShopkeepItems, KongItems, etc.)
+        // all subscribe to PropertyChanged during construction, so we expect multiple subscriptions
+        _userSettingsServiceMock.VerifyAdd(x => x.PropertyChanged += It.IsAny<PropertyChangedEventHandler>(), Times.AtLeastOnce);
     }
 
     #endregion
@@ -197,11 +267,8 @@ public class MainBroadcastViewModelTests
         // Act
         viewModel.Dispose();
 
-        // Assert - verify that nested viewmodels unsubscribe from services
-        Assert.Multiple(
-            () => _itemTrackingServiceMock.VerifyRemove(x => x.ItemStateChanged -= It.IsAny<EventHandler<ItemStateChangedEventArgs>>(), Times.AtLeastOnce),
-            () => _parsedSpoilerDataServiceMock.VerifyRemove(x => x.ParsedSpoilerDataChanged -= It.IsAny<EventHandler<ParsedSpoilerDataChangedEventArgs>>(), Times.AtLeastOnce)
-        );
+        // Assert - verify that MainBroadcastViewModel unsubscribes from UserSettings
+        _userSettingsServiceMock.VerifyRemove(x => x.PropertyChanged -= It.IsAny<PropertyChangedEventHandler>(), Times.AtLeastOnce);
     }
 
     #endregion

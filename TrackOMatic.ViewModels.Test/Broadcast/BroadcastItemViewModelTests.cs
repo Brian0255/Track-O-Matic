@@ -390,7 +390,8 @@ public class BroadcastItemViewModelTests
         var result = viewModel.ToString();
 
         // Assert
-        Assert.Multiple(() => {
+        Assert.Multiple(() =>
+        {
             Assert.NotNull(result);
             Assert.Contains("*", result);
         });
