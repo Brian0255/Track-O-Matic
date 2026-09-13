@@ -71,7 +71,6 @@
             <!-- If playing with WOTH point totals, the amount of items is shown here. -->
             <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3">
                 <TextBlock
-                    HorizontalAlignment="Right"
                     Text="{Binding WothPoints}"
                     Foreground="{StaticResource RequiredChecksColor}"
                     Visibility="{Binding HasWothPoints, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"

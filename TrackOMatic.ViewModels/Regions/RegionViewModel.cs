@@ -23,7 +23,6 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     private readonly IThemeService _themeService;
     private readonly IDataSaverService _dataSaverService;
     private readonly RegionName _regionName;
-    private readonly IRegionPlacementOrchestrator _regionPlacementOrchestrator;
     private readonly IAutotrackerService _autotrackerService;
     private readonly RegionSlotProviderRegistry? _slotProviderRegistry;
     private readonly SynchronizationContext _syncContext;
@@ -86,7 +85,6 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         IItemTrackingService itemTrackingService,
         IParsedSpoilerDataService parsedSpoilerDataService,
         ISavedProgressProvider savedProgressProvider,
-        IRegionPlacementOrchestrator regionPlacementOrchestrator,
         IThemeService themeService,
         RegionSlotProviderRegistry slotProviderRegistry,
         IAutotrackerService autotrackerService,
@@ -96,7 +94,6 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         _regionName = regionName;
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
         _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
-        _regionPlacementOrchestrator = regionPlacementOrchestrator ?? throw new ArgumentNullException(nameof(regionPlacementOrchestrator));
         _autotrackerService = autotrackerService ?? throw new ArgumentNullException(nameof(autotrackerService));
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
         _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
