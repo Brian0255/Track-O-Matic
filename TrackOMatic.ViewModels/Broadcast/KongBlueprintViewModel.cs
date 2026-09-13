@@ -83,37 +83,6 @@ public partial class KongBlueprintViewModel : ObservableObject, IEquatable<KongB
         UpdateImageResourceKey();
     }
 
-    #region IDisposable Implementation
-
-    private bool _disposed = false;
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                _collectiblesService.CollectibleChanged -= OnCollectibleChanged;
-                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
-                _savedProgressProvider.ProgressChanged -= OnSavedProgressChanged;
-            }
-            _disposed = true;
-        }
-    }
-
-    ~KongBlueprintViewModel()
-    {
-        Dispose(false);
-    }
-
-    #endregion
-
     private void OnCollectibleChanged(object? sender, CollectiblesChangedEventArgs e)
     {
         if (e.ItemType != _collectedType && e.ItemType != _turnedInType)
@@ -173,6 +142,37 @@ public partial class KongBlueprintViewModel : ObservableObject, IEquatable<KongB
     public override string ToString()
     {
         return $"KongBlueprintViewModel: {Count} of the {_collectedType} blueprints on hand.";
+    }
+
+    #endregion
+
+    #region IDisposable Implementation
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _collectiblesService.CollectibleChanged -= OnCollectibleChanged;
+                _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
+                _savedProgressProvider.ProgressChanged -= OnSavedProgressChanged;
+            }
+            _disposed = true;
+        }
+    }
+
+    ~KongBlueprintViewModel()
+    {
+        Dispose(false);
     }
 
     #endregion

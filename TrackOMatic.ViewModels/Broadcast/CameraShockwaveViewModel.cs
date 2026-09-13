@@ -154,6 +154,7 @@ public partial class CameraShockwaveViewModel : ObservableObject, IDisposable
                 _itemTrackingService.ItemStateChanged -= OnItemStateChanged;
                 _parsedSpoilerDataService.ParsedSpoilerDataChanged -= OnParsedSpoilerDataChanged;
                 _savedProgressProvider.ProgressChanged -= OnProgressChanged;
+                _dataSaverService.DataLoadingCompleted -= OnDataLoadingCompleted;
             }
             _disposed = true;
         }
