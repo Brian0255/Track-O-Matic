@@ -90,7 +90,7 @@ public partial class KongBlueprintViewModel : ObservableObject, IEquatable<KongB
             return;
         }
 
-        if (_uiContext is not null && SynchronizationContext.Current != _uiContext)
+        if (SynchronizationContext.Current != _uiContext)
         {
             _uiContext.Post(_ => InitializeState(), null);
         }
@@ -131,7 +131,7 @@ public partial class KongBlueprintViewModel : ObservableObject, IEquatable<KongB
 
     public override bool Equals(object? obj)
     {
-        return base.Equals(obj);
+        return Equals(obj as KongBlueprintViewModel);
     }
 
     public override int GetHashCode()

@@ -13,7 +13,7 @@ namespace TrackOMatic.ViewModels.Broadcast;
 public partial class SongViewModel : ObservableObject, IDisposable
 {
     private readonly ISongService _songService;
-    private readonly SynchronizationContext? _uiContext;
+    private readonly SynchronizationContext _uiContext;
 
     [ObservableProperty]
     public partial string SongGame { get; set; } = string.Empty;
@@ -27,7 +27,7 @@ public partial class SongViewModel : ObservableObject, IDisposable
     public SongViewModel(ISongService songService)
     {
         _songService = songService ?? throw new ArgumentNullException(nameof(songService));
-        _uiContext = SynchronizationContext.Current; // Capture UI context at creation
+        _uiContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SongViewModel must be created on a thread with an active SynchronizationContext.");
 
         // Initialize from current state
         InitializeState();
@@ -46,7 +46,7 @@ public partial class SongViewModel : ObservableObject, IDisposable
     private void OnSongChanged(object? sender, SongChangedEventArgs e)
     {
         // Marshal to UI thread if needed (AutotrackerService runs on background thread)
-        if (_uiContext is not null && SynchronizationContext.Current != _uiContext)
+        if (SynchronizationContext.Current != _uiContext)
         {
             _uiContext.Post(_ => UpdateFromService(), null);
         }

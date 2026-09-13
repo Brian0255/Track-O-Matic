@@ -99,8 +99,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
 
         // Capture the synchronization context for UI thread marshaling in event handlers
-        // In tests (no UI thread), this will be null and we'll run directly
-        _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
+        _syncContext = SynchronizationContext.Current ?? throw new InvalidOperationException("RegionViewModel must be created on a thread with an active SynchronizationContext.");
 
         _vialItemListViewModel = new VialItemListViewModel(
             _regionName,
@@ -196,7 +195,14 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
         {
             return;
         }
-        _syncContext.Post(_ => SetLighting(e.LightUp), null);
+        if (SynchronizationContext.Current != _syncContext)
+        {
+            _syncContext.Post(_ => SetLighting(e.LightUp), null);
+        }
+        else
+        {
+            SetLighting(e.LightUp);
+        }
     }
 
     private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
@@ -225,38 +231,65 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
 
     private void OnDataLoadingCompleted(object? sender, DataLoadingCompletedEventArgs e)
     {
-        _syncContext.Post(_ =>
+        var update = new Action(() =>
         {
             HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
             UpdateHoardText();
             UpdateItemPointText();
             UpdateImageColumnSpan();
             OnPropertyChanged(nameof(SelectedItemList));
-        }, null);
+        });
+
+        if (SynchronizationContext.Current != _syncContext)
+        {
+            _syncContext.Post(_ => update(), null);
+        }
+        else
+        {
+            update();
+        }
     }
 
     private void OnParsedSpoilerDataChanged(object? sender, EventArgs e)
     {
-        _syncContext.Post(_ =>
+        var update = new Action(() =>
         {
             HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
             UpdateHoardText();
             UpdateItemPointText();
             UpdateImageColumnSpan();
             OnPropertyChanged(nameof(SelectedItemList));
-        }, null);
+        });
+
+        if (SynchronizationContext.Current != _syncContext)
+        {
+            _syncContext.Post(_ => update(), null);
+        }
+        else
+        {
+            update();
+        }
     }
 
     private void OnProgressChanged(object? sender, ProgressReplacedEventArgs e)
     {
-        _syncContext.Post(_ =>
+        var update = new Action(() =>
         {
             HasVials = _parsedSpoilerDataService.GetSpoilerSettings()?.VialsEnabled ?? false;
             UpdateHoardText();
             UpdateItemPointText();
             UpdateImageColumnSpan();
             OnPropertyChanged(nameof(SelectedItemList));
-        }, null);
+        });
+
+        if (SynchronizationContext.Current != _syncContext)
+        {
+            _syncContext.Post(_ => update(), null);
+        }
+        else
+        {
+            update();
+        }
     }
 
     private void OnVialStateChanged(object? sender, VialItemStateChangedEventArgs e)
@@ -270,11 +303,20 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
             return;
         }
 
-        _syncContext.Post(_ =>
+        var update = new Action(() =>
         {
             UpdateHoardText();
             UpdateItemPointText();
-        }, null);
+        });
+
+        if (SynchronizationContext.Current != _syncContext)
+        {
+            _syncContext.Post(_ => update(), null);
+        }
+        else
+        {
+            update();
+        }
     }
 
     private void UpdateHoardText()
