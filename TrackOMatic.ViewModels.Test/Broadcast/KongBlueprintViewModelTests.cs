@@ -1,7 +1,5 @@
 namespace TrackOMatic.ViewModels.Test.Broadcast;
 
-using TrackOMatic.ViewModels.Test.Helpers;
-
 /// <summary>
 /// Test coverage for KongBlueprintViewModel.
 /// Tests constructor validation, event subscriptions, and state initialization.

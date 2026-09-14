@@ -1,18 +1,5 @@
 namespace TrackOMatic.ViewModels.Test.Broadcast;
 
-using Moq;
-
-using System;
-
-using Xunit;
-
-using TrackOMatic.Logic.Events;
-using TrackOMatic.Logic.Models;
-using TrackOMatic.Logic.Models.Spoilers;
-using TrackOMatic.Services;
-using TrackOMatic.Services.TrackerState;
-using TrackOMatic.ViewModels.Broadcast;
-
 public class HelmSlotViewModelTests
 {
     private static Mock<IEndGameProgressionService> SetupEndGameProgressionServiceMock()
@@ -252,7 +239,7 @@ public class HelmSlotViewModelTests
             var spoilerData = new ParsedSpoilerData
             {
                 LevelOrder = new Dictionary<RegionName, int> { { RegionName.JUNGLE_JAPES, 1 } },
-                HelmOrder = new List<int> { 5, 3, 1, 2, 4 } // Chunky, Lanky, Donkey, Diddy, Tiny
+                HelmOrder = [5, 3, 1, 2, 4] // Chunky, Lanky, Donkey, Diddy, Tiny
             };
 
             parsedSpoilerDataServiceMock.Setup(x => x.HasHelmOrder()).Returns(true);
@@ -292,7 +279,7 @@ public class HelmSlotViewModelTests
             var spoilerData = new ParsedSpoilerData
             {
                 LevelOrder = new Dictionary<RegionName, int> { { RegionName.JUNGLE_JAPES, 1 } },
-                HelmOrder = new List<int> { 1, 2 } // Only 2 kongs
+                HelmOrder = [1, 2] // Only 2 kongs
             };
 
             parsedSpoilerDataServiceMock.Setup(x => x.HasHelmOrder()).Returns(true);
@@ -332,7 +319,7 @@ public class HelmSlotViewModelTests
             var spoilerData = new ParsedSpoilerData
             {
                 LevelOrder = new Dictionary<RegionName, int> { { RegionName.JUNGLE_JAPES, 1 } },
-                HelmOrder = new List<int> { 0, 2, 3 } // Unknown Kong, Diddy, Lanky
+                HelmOrder = [0, 2, 3] // Unknown Kong, Diddy, Lanky
             };
 
             parsedSpoilerDataServiceMock.Setup(x => x.HasHelmOrder()).Returns(true);

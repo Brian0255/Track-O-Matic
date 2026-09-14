@@ -9,7 +9,7 @@ using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.ViewModels.Broadcast;
 
-public partial class KeyViewModel : ObservableObject, IDisposable
+public partial class KeyViewModel : ObservableObject, IEquatable<KeyViewModel>, IDisposable
 {
     private readonly IItemTrackingService _itemTrackingService;
     private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
@@ -69,7 +69,7 @@ public partial class KeyViewModel : ObservableObject, IDisposable
         UpdateHoverText();
     }
 
-    private void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
+    internal void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
         var targetKey = $"KEY_{_selectedKey}";
         if (!Enum.TryParse<ItemName>(targetKey, out var itemName))
@@ -154,9 +154,16 @@ public partial class KeyViewModel : ObservableObject, IDisposable
 
     #region Object Overrides
 
-    public override bool Equals(object? obj) => obj is KeyViewModel other && other._selectedKey == _selectedKey;
+    public bool Equals(KeyViewModel? other) => other is not null && other._selectedKey == _selectedKey;
+
+    public override bool Equals(object? obj) => Equals(obj as KeyViewModel);
 
     public override int GetHashCode() => _selectedKey.GetHashCode();
+
+    public override string ToString()
+    {
+        return $"Key {_selectedKey}{(IsStarred ? "*" : "")}";
+    }
 
     #endregion
 

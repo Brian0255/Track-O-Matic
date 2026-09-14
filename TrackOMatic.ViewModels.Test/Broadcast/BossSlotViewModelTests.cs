@@ -1,18 +1,5 @@
 namespace TrackOMatic.ViewModels.Test.Broadcast;
 
-using Moq;
-
-using System;
-
-using Xunit;
-
-using TrackOMatic.Logic.Events;
-using TrackOMatic.Logic.Models;
-using TrackOMatic.Logic.Models.Spoilers;
-using TrackOMatic.Services;
-using TrackOMatic.Services.TrackerState;
-using TrackOMatic.ViewModels.Broadcast;
-
 public class BossSlotViewModelTests
 {
     private static Mock<IEndGameProgressionService> SetupEndGameProgressionServiceMock()
@@ -252,7 +239,7 @@ public class BossSlotViewModelTests
             var spoilerData = new ParsedSpoilerData
             {
                 LevelOrder = new Dictionary<RegionName, int> { { RegionName.JUNGLE_JAPES, 1 } },
-                FinalBossOrder = new List<int> { 1, 2, 3, 4, 5, 6 } // Donkey, Diddy, Lanky, Tiny, Chunky, Army
+                FinalBossOrder = [1, 2, 3, 4, 5, 6] // Donkey, Diddy, Lanky, Tiny, Chunky, Army
             };
 
             parsedSpoilerDataServiceMock.Setup(x => x.HasBossOrder()).Returns(true);
@@ -292,7 +279,7 @@ public class BossSlotViewModelTests
             var spoilerData = new ParsedSpoilerData
             {
                 LevelOrder = new Dictionary<RegionName, int> { { RegionName.JUNGLE_JAPES, 1 } },
-                FinalBossOrder = new List<int> { 1, 2, 3 } // Only 3 bosses
+                FinalBossOrder = [1, 2, 3] // Only 3 bosses
             };
 
             parsedSpoilerDataServiceMock.Setup(x => x.HasBossOrder()).Returns(true);
@@ -332,7 +319,7 @@ public class BossSlotViewModelTests
             var spoilerData = new ParsedSpoilerData
             {
                 LevelOrder = new Dictionary<RegionName, int> { { RegionName.JUNGLE_JAPES, 1 } },
-                FinalBossOrder = new List<int> { 0, 2, 3 } // Unknown, Diddy, Lanky
+                FinalBossOrder = [0, 2, 3] // Unknown, Diddy, Lanky
             };
 
             parsedSpoilerDataServiceMock.Setup(x => x.HasBossOrder()).Returns(true);
@@ -362,7 +349,7 @@ public class BossSlotViewModelTests
     #region Object Override Tests
 
     [Fact]
-    public void Equals_WithSameSotNumber_ReturnsTrue()
+    public void Equals_WithSameSlotNumber_ReturnsTrue()
     {
         // Arrange
         BossSlotViewModel viewModel1 = null!;
