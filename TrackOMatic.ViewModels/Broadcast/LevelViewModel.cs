@@ -71,7 +71,7 @@ public partial class LevelViewModel : IslesViewModel, IEquatable<LevelViewModel>
     /// <summary>
     /// Override to filter item state changes to only those relevant to this level's key.
     /// </summary>
-    protected override void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
+    internal override void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
         // Only update if the changed item is the key for this level
         if (e is ItemStateChangedEventArgs itemChangeEvent)

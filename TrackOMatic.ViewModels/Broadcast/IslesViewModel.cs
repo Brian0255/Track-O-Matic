@@ -109,7 +109,7 @@ public partial class IslesViewModel : ObservableObject, IEquatable<IslesViewMode
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void OnDataReset(object? sender, EventArgs e)
+    internal virtual void OnDataReset(object? sender, EventArgs e)
     {
         UpdateRegionData();
     }
@@ -119,7 +119,7 @@ public partial class IslesViewModel : ObservableObject, IEquatable<IslesViewMode
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
+    internal virtual void OnItemStateChanged(object? sender, ItemStateChangedEventArgs e)
     {
         UpdateRegionData();
     }
@@ -130,7 +130,7 @@ public partial class IslesViewModel : ObservableObject, IEquatable<IslesViewMode
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void OnUserSettingsChanged(object? sender, PropertyChangedEventArgs e)
+    internal virtual void OnUserSettingsChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(IUserSettingsService.BroadcastNumberLabel))
         {

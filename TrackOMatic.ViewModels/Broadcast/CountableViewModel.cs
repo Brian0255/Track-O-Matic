@@ -64,6 +64,49 @@ public partial class CountableViewModel : ObservableObject, IDisposable
         UpdateImageResourceKey();
     }
 
+    protected internal virtual void OnCollectibleChanged(object? sender, CollectiblesChangedEventArgs e)
+    {
+        if (e.ItemType != _itemType)
+        {
+            return;
+        }
+
+        if (_uiContext is not null && SynchronizationContext.Current != _uiContext)
+        {
+            _uiContext.Post(_ =>
+            {
+                HandleCollectibleChanged(e);
+            }, null);
+        }
+        else
+        {
+            HandleCollectibleChanged(e);
+        }
+    }
+
+    protected internal virtual void HandleCollectibleChanged(CollectiblesChangedEventArgs e)
+    {
+        if (e.ItemType != _itemType)
+        {
+            return;
+        }
+        Count = e.NewValue;
+        UpdateImageResourceKey();
+    }
+
+    protected virtual void OnParsedSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e) => InitializeState();
+
+    protected virtual void UpdateImageResourceKey()
+    {
+        string baseKey = _itemType.ToResourceKey();
+        if (Count <= 0)
+        {
+            baseKey = $"{baseKey}_bw";
+        }
+        ImageResourceKey = baseKey;
+    }
+
+
     #region IDisposable Implementation
 
     private bool _disposed = false;
@@ -94,45 +137,4 @@ public partial class CountableViewModel : ObservableObject, IDisposable
 
     #endregion
 
-    protected virtual void OnCollectibleChanged(object? sender, CollectiblesChangedEventArgs e)
-    {
-        if (e.ItemType != _itemType)
-        {
-            return;
-        }
-
-        if (_uiContext is not null && SynchronizationContext.Current != _uiContext)
-        {
-            _uiContext.Post(_ =>
-            {
-                HandleCollectibleChanged(e);
-            }, null);
-        }
-        else
-        {
-            HandleCollectibleChanged(e);
-        }
-    }
-
-    protected virtual void HandleCollectibleChanged(CollectiblesChangedEventArgs e)
-    {
-        if (e.ItemType != _itemType)
-        {
-            return;
-        }
-        Count = e.NewValue;
-        UpdateImageResourceKey();
-    }
-
-    protected virtual void OnParsedSpoilerDataChanged(object? sender, ParsedSpoilerDataChangedEventArgs e) => InitializeState();
-
-    protected virtual void UpdateImageResourceKey()
-    {
-        string baseKey = _itemType.ToResourceKey();
-        if (Count <= 0)
-        {
-            baseKey = $"{baseKey}_bw";
-        }
-        ImageResourceKey = baseKey;
-    }
 }
