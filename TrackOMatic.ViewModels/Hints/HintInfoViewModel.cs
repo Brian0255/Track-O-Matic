@@ -44,7 +44,6 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
     private readonly IHintItemSelectionService _hintItemSelectionService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IItemTrackingService _itemTrackingService;
-    private readonly IUserSettingsService _userSettingsService;
 
     /// <summary>
     /// Tracks whether path items selection dialog has been opened.
@@ -203,15 +202,14 @@ public partial class HintInfoViewModel : ObservableObject, IEquatable<HintInfoVi
         IShortcutService shortcutService,
         IHintItemSelectionService hintItemSelectionService,
         ISavedProgressProvider savedProgressProvider,
-        IItemTrackingService itemTrackingService,
-        IUserSettingsService userSettingsService)
+        IItemTrackingService itemTrackingService
+    )
     {
         _shortcutService = shortcutService ?? throw new ArgumentNullException(nameof(shortcutService));
         _hintService = hintService ?? throw new ArgumentNullException(nameof(hintService));
         _hintItemSelectionService = hintItemSelectionService ?? throw new ArgumentNullException(nameof(hintItemSelectionService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
-        _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
 
         _hintId = hintId;
 

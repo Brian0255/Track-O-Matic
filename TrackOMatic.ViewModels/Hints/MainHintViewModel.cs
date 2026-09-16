@@ -18,159 +18,23 @@ public class MainHintViewModel : ObservableObject, IDisposable
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IDataSaverService _dataSaverService;
 
-    #region Lazy-loaded HintPanelViewModels
+    #region HintPanelViewModels
 
-    // Eventually have properties for each panel's view model here as well.
-
-    private HintPanelViewModel? _pathsHintPanelViewModel;
-    public HintPanelViewModel PathsHintPanelViewModel
-    {
-        get
-        {
-            _pathsHintPanelViewModel ??= CreateViewModel(HintPanelType.Paths, "#dba512");
-            return _pathsHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _foolishHintPanelViewModel;
-    public HintPanelViewModel FoolishHintPanelViewModel
-    {
-        get
-        {
-            _foolishHintPanelViewModel ??= CreateViewModel(HintPanelType.Foolish, "#e02f2f");
-            return _foolishHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _kongsHintPanelViewModel;
-    public HintPanelViewModel KongsHintPanelViewModel
-    {
-        get
-        {
-            _kongsHintPanelViewModel ??= CreateViewModel(HintPanelType.Kongs, "#ff59e1");
-            return _kongsHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _hoardHintPanelViewModel;
-    public HintPanelViewModel HoardHintPanelViewModel
-    {
-        get
-        {
-            _hoardHintPanelViewModel ??= CreateViewModel(HintPanelType.WayOfTheHoard, "#2652ff");
-            return _hoardHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _potionHintPanelViewModel;
-    public HintPanelViewModel PotionHintPanelViewModel
-    {
-        get
-        {
-            _potionHintPanelViewModel ??= CreateViewModel(HintPanelType.PotionCounts, "#d0d0d0");
-            return _potionHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _unhintedHintPanelViewModel;
-    public HintPanelViewModel UnhintedHintPanelViewModel
-    {
-        get
-        {
-            _unhintedHintPanelViewModel ??= CreateViewModel(HintPanelType.Unhinted, "#36f77d");
-            return _unhintedHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _islesHintPanelViewModel;
-    public HintPanelViewModel IslesHintPanelViewModel
-    {
-        get
-        {
-            _islesHintPanelViewModel ??= CreateViewModel(HintPanelType.Isles, "#fff67a");
-            return _islesHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _japesHintPanelViewModel;
-    public HintPanelViewModel JapesHintPanelViewModel
-    {
-        get
-        {
-            _japesHintPanelViewModel ??= CreateViewModel(HintPanelType.Japes, "#59ff64");
-            return _japesHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _aztecHintPanelViewModel;
-    public HintPanelViewModel AztecHintPanelViewModel
-    {
-        get
-        {
-            _aztecHintPanelViewModel ??= CreateViewModel(HintPanelType.Aztec, "#ffb01f");
-            return _aztecHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _factoryHintPanelViewModel;
-    public HintPanelViewModel FactoryHintPanelViewModel
-    {
-        get
-        {
-            _factoryHintPanelViewModel ??= CreateViewModel(HintPanelType.Factory, "#eeeeee");
-            return _factoryHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _galleonHintPanelViewModel;
-    public HintPanelViewModel GalleonHintPanelViewModel
-    {
-        get
-        {
-            _galleonHintPanelViewModel ??= CreateViewModel(HintPanelType.Galleon, "#216fff");
-            return _galleonHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _forestHintPanelViewModel;
-    public HintPanelViewModel ForestHintPanelViewModel
-    {
-        get
-        {
-            _forestHintPanelViewModel ??= CreateViewModel(HintPanelType.Forest, "#006b3e");
-            return _forestHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _cavesHintPanelViewModel;
-    public HintPanelViewModel CavesHintPanelViewModel
-    {
-        get
-        {
-            _cavesHintPanelViewModel ??= CreateViewModel(HintPanelType.Caves, "#42ddf5");
-            return _cavesHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _castleHintPanelViewModel;
-    public HintPanelViewModel CastleHintPanelViewModel
-    {
-        get
-        {
-            _castleHintPanelViewModel ??= CreateViewModel(HintPanelType.Castle, "#99a3ad");
-            return _castleHintPanelViewModel;
-        }
-    }
-
-    private HintPanelViewModel? _helmHintPanelViewModel;
-    public HintPanelViewModel HelmHintPanelViewModel
-    {
-        get
-        {
-            _helmHintPanelViewModel ??= CreateViewModel(HintPanelType.Helm, "#b580ff");
-            return _helmHintPanelViewModel;
-        }
-    }
+    public HintPanelViewModel PathsHintPanelViewModel { get; init; }
+    public HintPanelViewModel FoolishHintPanelViewModel { get; init; }
+    public HintPanelViewModel KongsHintPanelViewModel { get; init; }
+    public HintPanelViewModel HoardHintPanelViewModel { get; init; }
+    public HintPanelViewModel PotionHintPanelViewModel { get; init; }
+    public HintPanelViewModel UnhintedHintPanelViewModel { get; init; }
+    public HintPanelViewModel IslesHintPanelViewModel { get; init; }
+    public HintPanelViewModel JapesHintPanelViewModel { get; init; }
+    public HintPanelViewModel AztecHintPanelViewModel { get; init; }
+    public HintPanelViewModel FactoryHintPanelViewModel { get; init; }
+    public HintPanelViewModel GalleonHintPanelViewModel { get; init; }
+    public HintPanelViewModel ForestHintPanelViewModel { get; init; }
+    public HintPanelViewModel CavesHintPanelViewModel { get; init; }
+    public HintPanelViewModel CastleHintPanelViewModel { get; init; }
+    public HintPanelViewModel HelmHintPanelViewModel { get; init; }
 
     #endregion
 
@@ -247,6 +111,23 @@ public class MainHintViewModel : ObservableObject, IDisposable
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
 
+        // Eagerly instantiate all hint panel view models
+        PathsHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Paths, "#dba512");
+        FoolishHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Foolish, "#e02f2f");
+        KongsHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Kongs, "#ff59e1");
+        HoardHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.WayOfTheHoard, "#2652ff");
+        PotionHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.PotionCounts, "#d0d0d0");
+        UnhintedHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Unhinted, "#36f77d");
+        IslesHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Isles, "#fff67a");
+        JapesHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Japes, "#59ff64");
+        AztecHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Aztec, "#ffb01f");
+        FactoryHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Factory, "#eeeeee");
+        GalleonHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Galleon, "#216fff");
+        ForestHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Forest, "#006b3e");
+        CavesHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Caves, "#42ddf5");
+        CastleHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Castle, "#99a3ad");
+        HelmHintPanelViewModel = CreateHintPanelViewModel(HintPanelType.Helm, "#b580ff");
+
         BLockerPanelViewModel = new(
             "#f0f000",
             barrierService,
@@ -266,14 +147,13 @@ public class MainHintViewModel : ObservableObject, IDisposable
         _userSettingsService.PropertyChanged += OnSettingChanged;
     }
 
-    private HintPanelViewModel CreateViewModel(HintPanelType hintPanelType, string lineColor) => new(
+    private HintPanelViewModel CreateHintPanelViewModel(HintPanelType hintPanelType, string lineColor) => new(
         hintPanelType,
         lineColor,
         _hintService,
         _shortcutService,
         _hintItemSelectionService,
         _itemTrackingService,
-        _userSettingsService,
         _savedProgressProvider,
         _dataSaverService
     );

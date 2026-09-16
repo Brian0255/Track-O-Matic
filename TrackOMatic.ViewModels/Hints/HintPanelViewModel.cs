@@ -19,7 +19,6 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
     private readonly IShortcutService _shortcutService;
     private readonly IHintItemSelectionService _hintItemSelectionService;
     private readonly IItemTrackingService _itemTrackingService;
-    private readonly IUserSettingsService _userSettingsService;
     private readonly ISavedProgressProvider _savedProgressProvider;
     private readonly IDataSaverService _dataSaverService;
     private readonly HintPanelType _hintPanelType;
@@ -57,7 +56,6 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
         IShortcutService shortcutService,
         IHintItemSelectionService hintItemSelectionService,
         IItemTrackingService itemTrackingService,
-        IUserSettingsService userSettingsService,
         ISavedProgressProvider savedProgressProvider,
         IDataSaverService dataSaverService
     )
@@ -66,7 +64,6 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
         _shortcutService = shortcutService ?? throw new ArgumentNullException(nameof(shortcutService));
         _hintItemSelectionService = hintItemSelectionService ?? throw new ArgumentNullException(nameof(hintItemSelectionService));
         _itemTrackingService = itemTrackingService ?? throw new ArgumentNullException(nameof(itemTrackingService));
-        _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _dataSaverService = dataSaverService ?? throw new ArgumentNullException(nameof(dataSaverService));
         LineColor = lineColor;
@@ -109,8 +106,7 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
                 _shortcutService,
                 _hintItemSelectionService,
                 _savedProgressProvider,
-                _itemTrackingService,
-                _userSettingsService
+                _itemTrackingService
             );
             HintInfoViewModels.Add(vm);
         }
@@ -135,8 +131,7 @@ public partial class HintPanelViewModel : ObservableObject, IEquatable<HintPanel
                 _shortcutService,
                 _hintItemSelectionService,
                 _savedProgressProvider,
-                _itemTrackingService,
-                _userSettingsService
+                _itemTrackingService
             )
             {
                 // Focus the Location TextBox immediately when a new hint is created

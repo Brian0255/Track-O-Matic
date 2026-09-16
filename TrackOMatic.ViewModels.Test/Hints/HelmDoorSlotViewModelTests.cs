@@ -408,18 +408,27 @@ public class HelmDoorSlotViewModelTests
         _barrierServiceMock.SetupAdd(x => x.HelmBarrierTypeChanged += It.IsAny<EventHandler<HelmBarrierTypeChangedEventArgs>>())
             .Callback((EventHandler<HelmBarrierTypeChangedEventArgs> handler) => barrierChangeHandler = handler);
 
-        SynchronizationContextTestHelper.RunWithUIContext(() =>
+        SynchronizationContextTestHelper.RunWithUIContext(uiContext =>
         {
             var viewModel = CreateViewModel(HelmDoor.First);
+            var initialBarrierValue = viewModel.BarrierValue;
 
             // Simulate background thread calling the event handler
             var backgroundTask = Task.Run(() =>
             {
+                SynchronizationContext.SetSynchronizationContext(null);
                 var eventArgs = new HelmBarrierTypeChangedEventArgs(HelmDoor.First, BarrierItems.GOLDEN_BANANA, BarrierItems.PEARL);
                 barrierChangeHandler?.Invoke(_barrierServiceMock.Object, eventArgs);
             });
 
             backgroundTask.Wait();
+
+            // Posted callback should be queued, not yet applied
+            Assert.Equal(initialBarrierValue, viewModel.BarrierValue);
+            Assert.True(uiContext.PendingCallbackCount > 0);
+
+            // Deterministically process posted UI callback
+            uiContext.RunPendingCallbacks();
 
             // Assert
             Assert.Equal(2, viewModel.BarrierValue);

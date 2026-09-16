@@ -30,6 +30,27 @@ public static class SynchronizationContextTestHelper
     }
 
     /// <summary>
+    /// Sets up a SynchronizationContext for the current test thread and runs the given action,
+    /// exposing the test context so callers can deterministically run pending callbacks.
+    /// </summary>
+    /// <param name="action">The action to run on the UI context thread.</param>
+    public static void RunWithUIContext(Action<TestSynchronizationContext> action)
+    {
+        var previousContext = SynchronizationContext.Current;
+        try
+        {
+            var uiContext = new TestSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(uiContext);
+            action(uiContext);
+            uiContext.RunPendingCallbacks();
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(previousContext);
+        }
+    }
+
+    /// <summary>
     /// Sets up a SynchronizationContext for the current test thread and runs the given action with a return value.
     /// Ensures context is properly cleaned up after the action completes.
     /// </summary>
