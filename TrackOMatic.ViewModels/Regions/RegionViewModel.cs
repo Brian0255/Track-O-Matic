@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -10,9 +9,6 @@ using TrackOMatic.Logic.Events.Autotracking;
 using TrackOMatic.Logic.Models;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
-
-
-[assembly: InternalsVisibleTo("TrackOMatic.ViewModels.Test")]
 
 namespace TrackOMatic.ViewModels.Regions;
 
