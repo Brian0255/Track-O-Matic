@@ -62,7 +62,7 @@ public partial class RegionViewModel : ObservableObject, IEquatable<RegionViewMo
     public partial string ItemPointColorKey { get; set; } = "";
 
     [ObservableProperty]
-    public partial bool HasVials { get; set; } = false;
+    public virtual partial bool HasVials { get; set; } = false;
 
     public bool ShouldShowItemPoints
     {

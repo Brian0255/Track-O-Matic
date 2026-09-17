@@ -258,6 +258,8 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         CollectiblesGridRowViewModel = new CollectiblesGridRowViewModel(
             _userSettingsService,
             _autotrackerService,
+            collectiblesService,
+            parsedSpoilerDataService,
             _savedProgressProvider
         );
 

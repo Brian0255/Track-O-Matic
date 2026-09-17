@@ -78,7 +78,7 @@ public partial class RegionItemListViewModel : ObservableObject, IItemListViewMo
         OnPropertyChanged(nameof(Items));
     }
 
-    public bool TryAcceptDrop(ItemName itemName, MouseDragType dragType)
+    public virtual bool TryAcceptDrop(ItemName itemName, MouseDragType dragType)
     {
         var itemState = _itemTrackingService.GetItemState(itemName);
         if (itemState is null)

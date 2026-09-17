@@ -4,7 +4,6 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Events;
 using TrackOMatic.Logic.Events.Autotracking;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
@@ -16,6 +15,8 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
     private readonly IUserSettingsService _userSettingsService;
     private readonly IAutotrackerService _autotrackerService;
     private readonly ISavedProgressProvider _savedProgressProvider;
+    private readonly ICollectiblesService _collectiblesService;
+    private readonly IParsedSpoilerDataService _parsedSpoilerDataService;
     private readonly SynchronizationContext _uiContext;
     private readonly ObservableCollection<ObservableObject> _collectibles;
 
@@ -45,11 +46,15 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
     public CollectiblesGridRowViewModel(
         IUserSettingsService userSettingsService,
         IAutotrackerService autotrackerService,
+        ICollectiblesService collectiblesService,
+        IParsedSpoilerDataService parsedSpoilerDataService,
         ISavedProgressProvider savedProgressProvider
     )
     {
         _userSettingsService = userSettingsService ?? throw new ArgumentNullException(nameof(userSettingsService));
         _autotrackerService = autotrackerService ?? throw new ArgumentNullException(nameof(autotrackerService));
+        _collectiblesService = collectiblesService ?? throw new ArgumentNullException(nameof(collectiblesService));
+        _parsedSpoilerDataService = parsedSpoilerDataService ?? throw new ArgumentNullException(nameof(parsedSpoilerDataService));
         _savedProgressProvider = savedProgressProvider ?? throw new ArgumentNullException(nameof(savedProgressProvider));
         _uiContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null. This class must be instantiated on the UI thread.");
 
@@ -156,15 +161,13 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
     private void RefreshCollectibles()
     {
         _collectibles.Clear();
-        var collectiblesService = ServiceLocator.GetService<ICollectiblesService>();
-        var parsedSpoilerDataService = ServiceLocator.GetService<IParsedSpoilerDataService>();
         int hiddenCollectibleCount = 0;
 
         if (_userSettingsService.ShowTotalBPs)
         {
             _collectibles.Add(new UiTotalBlueprintViewModel(
-                collectiblesService,
-                parsedSpoilerDataService,
+                _collectiblesService,
+                _parsedSpoilerDataService,
                 _savedProgressProvider,
                 _userSettingsService
             ));
@@ -178,8 +181,8 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
         {
             _collectibles.Add(new UiCountableViewModel(
                 ItemType.COMPANY_COIN,
-                collectiblesService,
-                parsedSpoilerDataService,
+                _collectiblesService,
+                _parsedSpoilerDataService,
                 _userSettingsService
             ));
         }
@@ -196,8 +199,8 @@ public partial class CollectiblesGridRowViewModel : ObservableObject, IDisposabl
         {
             _collectibles.Add(new UiCountableViewModel(
                 itemType,
-                collectiblesService,
-                parsedSpoilerDataService,
+                _collectiblesService,
+                _parsedSpoilerDataService,
                 _userSettingsService
             ));
         }

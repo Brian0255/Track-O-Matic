@@ -183,7 +183,7 @@ public partial class VialItemListViewModel : ObservableObject, IItemListViewMode
         OnPropertyChanged(nameof(Items));
     }
 
-    public bool TryAcceptDrop(ItemName itemToPlace, MouseDragType dragType)
+    public virtual bool TryAcceptDrop(ItemName itemToPlace, MouseDragType dragType)
     {
         // In vial enabled mode: find the first empty slot that matches the vial color
         var targetColor = itemToPlace.ToVialColor();
