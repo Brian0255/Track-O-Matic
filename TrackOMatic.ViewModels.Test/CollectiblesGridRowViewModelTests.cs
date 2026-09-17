@@ -18,7 +18,7 @@ public class CollectiblesGridRowViewModelTests
         var mockProgressProvider = new Mock<ISavedProgressProvider>();
 
         var exception = Assert.Throws<ArgumentNullException>(() =>
-            new CollectiblesGridRowViewModel(null!, mockAutotrackerService.Object, mockCollectiblesService.Object, 
+            new CollectiblesGridRowViewModel(null!, mockAutotrackerService.Object, mockCollectiblesService.Object,
                 mockSpoilerDataService.Object, mockProgressProvider.Object)
         );
 
@@ -66,7 +66,7 @@ public class CollectiblesGridRowViewModelTests
         var mockProgressProvider = new Mock<ISavedProgressProvider>();
 
         var exception = Assert.Throws<ArgumentNullException>(() =>
-            new CollectiblesGridRowViewModel(mockUserSettingsService.Object, mockAutotrackerService.Object, 
+            new CollectiblesGridRowViewModel(mockUserSettingsService.Object, mockAutotrackerService.Object,
                 mockCollectiblesService.Object, null!, mockProgressProvider.Object)
         );
 
