@@ -164,4 +164,21 @@ public static class HintData
         InitSortedChecks();
         InitDirectItemHintList();
     }
+
+    /// <summary>
+    /// Initialize HintData with provided shortcuts data (for testing).
+    /// This allows tests to bypass embedded resource loading and provide synthetic data.
+    /// </summary>
+    /// <param name="testShortcuts">Pre-built shortcuts dictionary for testing</param>
+    public static void InitForTesting(Dictionary<string, Dictionary<string, string>> testShortcuts)
+    {
+        // Set UserShortcuts to the provided test data
+        UserShortcuts = testShortcuts;
+
+        // Still initialize the sorted collections from real data
+        InitSortedRegions();
+        InitSortedMoves();
+        InitSortedChecks();
+        InitDirectItemHintList();
+    }
 }

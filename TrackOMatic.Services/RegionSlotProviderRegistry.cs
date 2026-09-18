@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 
 using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Models;
 
 namespace TrackOMatic.Services;
 
@@ -58,9 +57,4 @@ public class RegionSlotProviderRegistry : IRegionSlotProvider
 
         return [];
     }
-
-    /// <summary>
-    /// Gets the count of currently registered regions (useful for testing/diagnostics).
-    /// </summary>
-    public int RegisteredRegionCount => _regionProviders.Count;
 }

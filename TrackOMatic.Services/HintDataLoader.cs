@@ -14,16 +14,21 @@ public class HintDataLoader : IHintDataLoader
 {
     /// <summary>
     /// Load hint data by calling HintData.Init() and collecting the results.
+    /// If HintData is already initialized (e.g., by tests), skips re-initialization.
     /// </summary>
     public HintDataLoadResult LoadHintData()
     {
-        // Initialize static HintData (loads resources, parses JSON, builds structures)
-        HintData.Init();
+        // Initialize static HintData only if not already initialized
+        // This allows tests to pre-initialize with test data
+        if (HintData.UserShortcuts == null)
+        {
+            HintData.Init();
+        }
 
         // Collect the initialized data into a result object
         return new HintDataLoadResult
         {
-            UserShortcuts = HintData.UserShortcuts.ToDictionary(
+            UserShortcuts = HintData.UserShortcuts!.ToDictionary(
                 kvp => kvp.Key,
                 kvp => (IReadOnlyDictionary<string, string>)kvp.Value
             ),
