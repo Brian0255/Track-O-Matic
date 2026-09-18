@@ -76,8 +76,8 @@ public class LevelOrderService: ILevelOrderService
 
     public void LoadLevelOrderSilently(IEnumerable<int> levelOrder)
     {
-        _savedProgress.LevelOrder = levelOrder.ToList();
-        _progressProvider.CurrentProgress.LevelOrder = levelOrder.ToList();
+        _savedProgress.LevelOrder = [.. levelOrder];
+        _progressProvider.CurrentProgress.LevelOrder = [.. levelOrder];
     }
 
     #endregion

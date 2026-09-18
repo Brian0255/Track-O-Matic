@@ -53,8 +53,8 @@ public class EndGameProgressionService: IEndGameProgressionService
 
     public void SetHelmKongsSilently(IEnumerable<int> kongs)
     {
-        _savedProgress.HelmKongs = kongs.ToList();
-        _progressProvider.CurrentProgress.HelmKongs = kongs.ToList();
+        _savedProgress.HelmKongs = [.. kongs];
+        _progressProvider.CurrentProgress.HelmKongs = [.. kongs];
     }
 
     public IList<int> GetBossKongs()
@@ -72,8 +72,8 @@ public class EndGameProgressionService: IEndGameProgressionService
 
     public void SetBossKongsSilently(IEnumerable<int> kongs)
     {
-        _savedProgress.BossKongs = kongs.ToList();
-        _progressProvider.CurrentProgress.BossKongs = kongs.ToList();
+        _savedProgress.BossKongs = [.. kongs];
+        _progressProvider.CurrentProgress.BossKongs = [.. kongs];
     }
 
     #endregion

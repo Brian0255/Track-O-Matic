@@ -425,36 +425,6 @@ public class AutotrackerServiceTests
 
     #endregion
 
-    #region Event Tests
-
-
-    [Fact(Skip = "ItemProcessed event has been removed")]
-    public void MultipleHandlers_AllGetInvoked()
-    {
-        var service = CreateServiceWithMocks(out _, out _, out _);
-
-        int handler1Calls = 0;
-        int handler2Calls = 0;
-        /*
-        service.ItemProcessed += (sender, e) => handler1Calls++;
-        service.ItemProcessed += (sender, e) => handler2Calls++;
-
-        var testEventArgs = new AutotrackerItemEventArgs
-        {
-            ItemName = ItemName.NONE,
-            RegionName = RegionName.START,
-            IsHint = false,
-            IsNewRegion = false
-        };
-        service.TestRaiseItemProcessed(testEventArgs);
-        */
-        // Both handlers should have been invoked
-        Assert.Equal(1, handler1Calls);
-        Assert.Equal(1, handler2Calls);
-    }
-
-    #endregion
-
     #region Disposal Tests
 
     [Fact]
