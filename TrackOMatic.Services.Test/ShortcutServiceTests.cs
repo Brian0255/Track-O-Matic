@@ -2,8 +2,11 @@ using Moq;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models.Hints;
+using TrackOMatic.Logic.Services;
 
 namespace TrackOMatic.Services.Test;
+
+#pragma warning disable CA1861 // Avoid constant arrays as arguments
 
 public class ShortcutServiceTests
 {
@@ -13,7 +16,56 @@ public class ShortcutServiceTests
     {
         var mockUserSettings = new Mock<IUserSettingsService>();
         mockUserSettings.Setup(x => x.EnemiesInAutofill).Returns(includeEnemiesInAutofill);
-        return new ShortcutService(mockUserSettings.Object);
+
+        // Create mock provider with test shortcuts (no HintData.Init() required)
+        var mockHintDataProvider = new Mock<IHintDataProvider>();
+
+        // Test data: predictable shortcuts for deterministic testing
+        var testShortcuts = new Dictionary<string, Dictionary<string, string>>
+        {
+            ["Hint Regions"] = new()
+            {
+                ["K"] = "Kremling Collective",
+                ["Kong"] = "Donkey Kong",
+                ["Japes"] = "Jungle Japes",
+                ["Crystal"] = "Crystal Caves"
+            },
+            ["Locations"] = new()
+            {
+                ["Cavern"] = "Cavern Entrance",
+                ["Factory"] = "Frantic Factory"
+            }
+        };
+
+        mockHintDataProvider.Setup(x => x.UserShortcuts)
+            .Returns(testShortcuts.ToDictionary(
+                kvp => kvp.Key,
+                kvp => (IReadOnlyDictionary<string, string>)kvp.Value
+            ));
+
+        // Test data for direct item hints (items accessible in each playable region)
+        var testRegionItems = new Dictionary<RegionName, IReadOnlyList<string>>
+        {
+            [RegionName.JUNGLE_JAPES] =
+            [
+                "Barrel Blast",
+                "Coconut Cluster",
+                "Enemy Kong",
+                "Key Barrel"
+            ],
+            [RegionName.FRANTIC_FACTORY] =
+            [
+                "Blueprint Piece",
+                "Conveyor Belt",
+                "Gear",
+                "Machine Part"
+            ]
+        };
+
+        mockHintDataProvider.Setup(x => x.RegionsWithoutLevelName)
+            .Returns(testRegionItems as IReadOnlyDictionary<RegionName, IReadOnlyList<string>>);
+
+        return new ShortcutService(mockUserSettings.Object, mockHintDataProvider.Object);
     }
 
     private static HintSuggestionConfig CreateTestConfig(
@@ -270,10 +322,54 @@ public class ShortcutServiceTests
     [Fact]
     public void FindMatches_WithNullConfigAndPlayableRegion_ReturnsDirectItemMatches()
     {
-        // This test requires HintData to be initialized, which is complex.
-        // For now, we'll note that this scenario depends on HintData initialization.
-        // See advanced coverage notes in comments.
-        Assert.True(true); // Placeholder for advanced test
+        // Arrange
+        var service = CreateService();
+        // HintPanelType.Japes maps to RegionName.JUNGLE_JAPES (playable region)
+        var config = new HintSuggestionConfig([], []);
+
+        // Act
+        var result = service.FindMatches("", HintPanelType.Japes, config);
+
+        // Assert
+        // Should return direct items from Jungle Japes region, sorted
+        var resultList = result.ToList();
+        Assert.Equal(
+            new[] { "Barrel Blast", "Coconut Cluster", "Enemy Kong", "Key Barrel" },
+            resultList
+        );
+    }
+
+    [Fact]
+    public void FindMatches_WithPlayableRegionAndFilter_ReturnsFilteredDirectItems()
+    {
+        // Arrange
+        var service = CreateService();
+        // HintPanelType.Factory maps to RegionName.FRANTIC_FACTORY (playable region)
+        var config = new HintSuggestionConfig([], []);
+
+        // Act
+        // Filter for items containing "Blueprint"
+        var result = service.FindMatches("Blue", HintPanelType.Factory, config);
+
+        // Assert
+        // Should find items matching substring
+        var resultList = result.ToList();
+        Assert.Equal(new[] { "Blueprint Piece" }, resultList);
+    }
+
+    [Fact]
+    public void FindMatches_WithPlayableRegion_IsCaseInsensitive()
+    {
+        // Arrange
+        var service = CreateService();
+        var config = new HintSuggestionConfig([], []);
+
+        // Act
+        var lowerResult = service.FindMatches("barrel", HintPanelType.Japes, config);
+        var upperResult = service.FindMatches("BARREL", HintPanelType.Japes, config);
+
+        // Assert
+        Assert.Equal(lowerResult, upperResult);
     }
 
     #endregion
@@ -281,17 +377,144 @@ public class ShortcutServiceTests
     #region UserShortcuts Tests
 
     [Fact]
-    public void FindMatches_WithUserShortcutsConfig_SearchesByJSONKey()
+    public void FindMatches_WithRegionAndShortcutsConfig_SearchesByJSONKey()
     {
-        // This test is complex because it depends on HintData.UserShortcuts being properly loaded.
-        // The ShortcutService reads from a static HintData.UserShortcuts that is loaded from JSON.
-        // Unit testing this requires either:
-        // 1. Mocking the static HintData.UserShortcuts (complex and fragile)
-        // 2. Using an integration test with real HintData initialization
-        // 3. Refactoring ShortcutService to inject HintData sources
-        //
-        // For now, this test is documented but not implemented to avoid test fragility.
-        Assert.True(true); // Placeholder for advanced coverage
+        // Arrange
+        var service = CreateService();
+        var config = new HintSuggestionConfig(["Hint Regions"], []);
+
+        // Act
+        var result = service.FindMatches("", HintPanelType.Foolish, config);
+
+        // Assert
+        // Should return all items from "Hint Regions" JSON key, sorted
+        var resultList = result.ToList();
+        Assert.Equal(
+            new[] { "Crystal Caves", "Donkey Kong", "Jungle Japes", "Kremling Collective" },
+            resultList
+        );
+    }
+
+    [Fact]
+    public void FindMatches_WithRegionAndShortcutsConfig_FiltersByPrefixMatch()
+    {
+        // Arrange
+        var service = CreateService();
+        var config = new HintSuggestionConfig(["Hint Regions"], []);
+
+        // Act
+        var result = service.FindMatches("K", HintPanelType.Foolish, config);
+
+        // Assert
+        // Should match keys starting with "K": "K" and "Kong"
+        var resultList = result.ToList();
+        Assert.Equal(
+            new[] { "Donkey Kong", "Kremling Collective" },
+            resultList
+        );
+    }
+
+    [Fact]
+    public void FindMatches_WithRegionAndShortcutsConfig_IsCaseInsensitive()
+    {
+        // Arrange
+        var service = CreateService();
+        var config = new HintSuggestionConfig(["Hint Regions"], []);
+
+        // Act
+        var lowerResult = service.FindMatches("k", HintPanelType.Foolish, config);
+        var upperResult = service.FindMatches("K", HintPanelType.Foolish, config);
+
+        // Assert
+        Assert.Equal(lowerResult, upperResult);
+    }
+
+    [Fact]
+    public void FindMatches_WithMultipleJSONKeys_CombinesResults()
+    {
+        // Arrange
+        var service = CreateService();
+        var config = new HintSuggestionConfig(["Hint Regions", "Locations"], []);
+
+        // Act
+        var result = service.FindMatches("", HintPanelType.Foolish, config);
+
+        // Assert
+        // Should combine results from both JSON keys, sorted
+        var resultList = result.ToList();
+        Assert.Equal(
+            new[]
+            {
+                "Cavern Entrance",
+                "Crystal Caves",
+                "Donkey Kong",
+                "Frantic Factory",
+                "Jungle Japes",
+                "Kremling Collective"
+            },
+            resultList
+        );
+    }
+
+    [Fact]
+    public void FindMatches_WithNonexistentJSONKey_ReturnsEmpty()
+    {
+        // Arrange
+        var service = CreateService();
+        var config = new HintSuggestionConfig(["NonexistentKey_XYZ"], []);
+
+        // Act
+        var result = service.FindMatches("", HintPanelType.Foolish, config);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void FindMatches_WithMultipleJSONKeysAndFilter_CombinesFilteredResults()
+    {
+        // Arrange
+        var service = CreateService();
+        var config = new HintSuggestionConfig(["Hint Regions", "Locations"], []);
+
+        // Act
+        var result = service.FindMatches("C", HintPanelType.Foolish, config);
+
+        // Assert
+        // Keys starting with "C": "Crystal" from Hint Regions, "Cavern" from Locations
+        var resultList = result.ToList();
+        Assert.Equal(
+            new[] { "Cavern Entrance", "Crystal Caves" },
+            resultList
+        );
+    }
+
+    [Fact]
+    public void FindMatches_WithShortcutsAndDefaultSuggestions_CombinesResults()
+    {
+        // Arrange
+        var service = CreateService();
+        var suggestions = new List<HintNameEntry>
+        {
+            new("King Kong", "KK", HintGroup.NONE),
+            new("Donkey", "Donkey", HintGroup.NONE)
+        };
+        var config = new HintSuggestionConfig(["Hint Regions"], suggestions);
+
+        // Act
+        var result = service.FindMatches("", HintPanelType.Foolish, config);
+
+        // Assert
+        // Should combine:
+        // - Shortcuts from "Hint Regions": Crystal Caves, Donkey Kong, Jungle Japes, Kremling Collective
+        // - Default suggestions: returns ShortName of matching entries
+        //   Both "King Kong" (FullName) and "Donkey" (ShortName) match empty substring
+        //   So we get "KK" (shortName of "King Kong") and "Donkey" (shortName of "Donkey")
+        var resultList = result.ToList();
+        Assert.Equal(
+            new[] { "Crystal Caves", "Donkey", "Donkey Kong", "Jungle Japes", "KK", "Kremling Collective" },
+            resultList
+        );
     }
 
     #endregion
@@ -367,42 +590,5 @@ public class ShortcutServiceTests
     }
 
     #endregion
-
-    #region Advanced Coverage Notes
-
-    /*
-     * ADVANCED TEST SCENARIOS (Not Fully Implemented)
-     * 
-     * These scenarios require deeper integration with HintData and static initialization,
-     * which is difficult to unit test without refactoring the service or HintData structure.
-     * 
-     * 1. DirectItemHint Matching (Playable Regions)
-     *    - Requires: HintData.REGIONS_WITHOUT_LEVEL_NAME populated with region items
-     *    - Requires: HintData.InitDirectItemHintList() called to populate regions
-     *    - Current obstacle: Static initialization happens in HintData.Init() which loads shortcuts from file
-     *    - Solution: Either mock static data or refactor to inject HintData sources
-     * 
-     * 2. UserShortcuts Prefix Matching
-     *    - Requires: HintData.UserShortcuts loaded with real or test shortcut data
-     *    - Requires: JsonShortcutKeys in HintSuggestionConfig to match HintData.UserShortcuts keys
-     *    - Current obstacle: Static JSON loading requires file system or embedded resource
-     *    - Solution: Create test shortcuts data or mock the static dictionary
-     * 
-     * 3. Exclusions List Filtering
-     *    - Requires: DirectItemHint matching logic to execute
-     *    - Tests the private _directHintExclusions static list
-     *    - Verifies items like "Isles", "Boss", "Bought" are filtered out
-     * 
-     * 4. HintPanelType.IsPlayableRegion() Routing
-     *    - Tests different HintPanelTypes to verify correct code path (DirectItemHint vs UserShortcuts)
-     *    - Playable regions: Isles, Japes, Aztec, Factory, Galleon, Forest, Caves, Castle, Helm
-     * 
-     * RECOMMENDATION:
-     * For full coverage, consider:
-     * - Refactoring ShortcutService to accept injected HintData/shortcut sources
-     * - Creating a separate integration test suite with real HintData initialization
-     * - Mocking static HintData for specific scenarios (requires care to avoid state pollution)
-     */
-
-    #endregion
 }
+#pragma warning restore CA1861 // Avoid constant arrays as arguments

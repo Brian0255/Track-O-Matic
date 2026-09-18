@@ -125,7 +125,7 @@ public static class HintData
 
     private static void InitSortedMoves()
     {
-        SortedChecks = [.. HintMove.All
+        SortedMoves = [.. HintMove.All
             .Select(move => move.ShortName)
             .OrderBy(move => move)];
     }

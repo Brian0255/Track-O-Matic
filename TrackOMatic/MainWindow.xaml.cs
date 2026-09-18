@@ -112,7 +112,6 @@ public partial class MainWindow : Window
             Autotracker.Start();
         }
 
-        HintData.Init();
         InitOptions();
         InitData();
         Reset();

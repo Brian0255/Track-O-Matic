@@ -1,16 +1,20 @@
 using TrackOMatic.Logic;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models.Hints;
+using TrackOMatic.Logic.Services;
 
 namespace TrackOMatic.Services;
 
 /// <summary>
 /// Default implementation of IShortcutService.
-/// Searches HintData.UserShortcuts and default hint suggestions for matches.
+/// Searches hint data via IHintDataProvider and default hint suggestions for matches.
 /// </summary>
-public class ShortcutService(IUserSettingsService userSettingsService) : IShortcutService
+public class ShortcutService(
+    IUserSettingsService userSettingsService,
+    IHintDataProvider hintDataProvider) : IShortcutService
 {
     private readonly IUserSettingsService _userSettingsService = userSettingsService;
+    private readonly IHintDataProvider _hintDataProvider = hintDataProvider;
 
     /// <summary>
     /// Items to exclude from DirectItemHint suggestions.
@@ -42,9 +46,9 @@ public class ShortcutService(IUserSettingsService userSettingsService) : IShortc
     }
 
     /// <summary>
-    /// Find matches from HintData.UserShortcuts and DirectItemHint region items.
+    /// Find matches from hint data provider shortcuts and DirectItemHint region items.
     /// </summary>
-    private static List<string> FindShortcutMatches(
+    internal List<string> FindShortcutMatches(
         string locationText,
         HintPanelType hintPanelType,
         List<string>? jsonKeys
@@ -67,12 +71,12 @@ public class ShortcutService(IUserSettingsService userSettingsService) : IShortc
 
         foreach (var jsonKey in jsonKeys)
         {
-            if (!HintData.UserShortcuts.ContainsKey(jsonKey))
+            if (!_hintDataProvider.UserShortcuts.ContainsKey(jsonKey))
             {
                 continue;
             }
 
-            foreach (var entry in HintData.UserShortcuts[jsonKey])
+            foreach (var entry in _hintDataProvider.UserShortcuts[jsonKey])
             {
                 var shortcutKey = entry.Key;
                 var shortcutValue = entry.Value;
@@ -92,9 +96,9 @@ public class ShortcutService(IUserSettingsService userSettingsService) : IShortc
     /// Find DirectItemHint suggestions by region using substring match on item names.
     /// Excludes region names and other non-item entries.
     /// </summary>
-    private static IEnumerable<string> FindDirectItemMatches(string locationText, RegionName regionName)
+    internal IEnumerable<string> FindDirectItemMatches(string locationText, RegionName regionName)
     {
-        if (!HintData.REGIONS_WITHOUT_LEVEL_NAME.TryGetValue(regionName, out List<string>? regionItems))
+        if (!_hintDataProvider.RegionsWithoutLevelName.TryGetValue(regionName, out IReadOnlyList<string>? regionItems))
         {
             return [];
         }

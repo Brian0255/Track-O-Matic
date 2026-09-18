@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using TrackOMatic.Logic.Models;
+using TrackOMatic.Logic.Services;
 using TrackOMatic.Services.TrackerState;
 
 namespace TrackOMatic.Services;
@@ -50,7 +51,27 @@ public static class ServiceRegistryExtensions
         services.AddSingleton<ICollectiblesService, CollectiblesService>();
         services.AddSingleton<IParsedSpoilerDataService, ParsedSpoilerDataService>();
 
-        services.AddSingleton<IShortcutService, ShortcutService>();
+        // Hint data loader: loads hint data (shortcuts, regions, etc.) from sources
+        services.AddSingleton<IHintDataLoader, HintDataLoader>();
+
+        // Hint data provider: container for loaded hint data
+        services.AddSingleton<IHintDataProvider>(sp =>
+        {
+            var loader = sp.GetRequiredService<IHintDataLoader>();
+            var result = loader.LoadHintData();
+            return new HintDataProvider(
+                result.UserShortcuts,
+                result.RegionsWithoutLevelName,
+                result.SortedRegions,
+                result.SortedMoves,
+                result.SortedChecks
+            );
+        });
+
+        services.AddSingleton<IShortcutService>(sp => new ShortcutService(
+            sp.GetRequiredService<IUserSettingsService>(),
+            sp.GetRequiredService<IHintDataProvider>()
+        ));
 
         // Autotracking service: requires platform-specific implementations (IProcessMemoryReader, IEmulatorAttacher)
         // to be registered via platform registration (e.g., AddWindowsAutotracking())
