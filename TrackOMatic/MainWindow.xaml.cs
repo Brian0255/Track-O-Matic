@@ -4,6 +4,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 using AutoUpdaterDotNET;
 
@@ -11,7 +12,6 @@ using Microsoft.Win32;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
-using TrackOMatic.Logic.Models.Hints;
 using TrackOMatic.Services;
 using TrackOMatic.Services.TrackerState;
 using TrackOMatic.ViewModels;
@@ -26,6 +26,11 @@ namespace TrackOMatic;
 public partial class MainWindow : Window
 {
     private static readonly TimeSpan _saveInterval = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan _windowLocationChangeDebounceInterval = TimeSpan.FromSeconds(1);
+    private static readonly TimeSpan _windowSizeChangeDebounceInterval = TimeSpan.FromSeconds(1);
+
+    private readonly DispatcherTimer _locationChangeDebounceTimer;
+    private readonly DispatcherTimer _sizeChangeDebounceTimer;
 
     private BroadcastView? BroadcastView { get; set; }
 
@@ -103,6 +108,10 @@ public partial class MainWindow : Window
         _saveTimer = new Timer(_saveInterval);
         _saveTimer.Elapsed += async (sender, e) => await OnTimerSave(sender, e);
         _saveTimer.Start();
+        _locationChangeDebounceTimer ??= new DispatcherTimer();
+        _locationChangeDebounceTimer.Tick += SaveLocationData;
+        _sizeChangeDebounceTimer = new DispatcherTimer();
+        _sizeChangeDebounceTimer.Tick += SaveSizeData;
 
         // Subscribe to settings changes to notify XAML bindings
         UserSettings.PropertyChanged += OnSettingChanged;
@@ -262,13 +271,30 @@ public partial class MainWindow : Window
 
     private void Window_LocationChanged(object sender, EventArgs e)
     {
+        _locationChangeDebounceTimer.Stop();
+        _locationChangeDebounceTimer.Interval = _windowLocationChangeDebounceInterval;
+        _locationChangeDebounceTimer.Start();
+    }
+
+    private void SaveLocationData(object? s, EventArgs e)
+    {
+        _locationChangeDebounceTimer.Stop();
         AppState.WindowY = RestoreBounds.Top;
         AppState.WindowX = RestoreBounds.Left;
     }
 
+    private void SaveSizeData(object? s, EventArgs e)
+    {
+        _sizeChangeDebounceTimer.Stop();
+        AppState.DesiredHeight = Height;
+        AppState.DesiredWidth = Width;
+    }
+
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        // Do we want to allow saving the resized values all the time, or just at the end? Hmm...
+        _sizeChangeDebounceTimer.Stop();
+        _sizeChangeDebounceTimer.Interval = _windowSizeChangeDebounceInterval;
+        _sizeChangeDebounceTimer.Start();
     }
     private void OnResetSize(object sender, RoutedEventArgs e)
     {
@@ -434,6 +460,9 @@ public partial class MainWindow : Window
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         UserSettings.PropertyChanged -= OnSettingChanged;
+        _locationChangeDebounceTimer.Tick -= SaveLocationData;
+        _sizeChangeDebounceTimer.Tick -= SaveSizeData;
+
     }
 
     #endregion

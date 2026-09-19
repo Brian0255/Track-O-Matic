@@ -247,12 +247,12 @@ public partial class HintInfo : UserControl
 
     private void Location_PreviewMouseRightButtonDown(object sender, MouseEventArgs e)
     {
+        e.Handled = true;
         var viewModel = DataContext as HintInfoViewModel;
         if (viewModel?.RemoveHintCommand.CanExecute(null) == true)
         {
             viewModel.RemoveHintCommand.Execute(null);
         }
-        e.Handled = true;
     }
 
     /// <summary>

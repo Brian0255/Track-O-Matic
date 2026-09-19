@@ -22,7 +22,7 @@
         <!-- Style for ListBoxItems in the suggestion dropdown -->
         <Style TargetType="ListBoxItem">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Padding" Value="4,1,1,1"/>
             <Setter Property="Margin" Value="0"/>
             <Style.Triggers>
                 <!-- When item has keyboard focus (highlighted but not selected) -->
@@ -80,6 +80,7 @@
                 Grid.Column="0"
                 x:Name="Location"
                 Margin="1,0,0,0"
+                ContextMenu="{x:Null}"
                 Padding="0,4,0,0"
                 PreviewKeyDown="Location_PreviewKeyDown"
                 Style="{StaticResource BoldText}"
@@ -91,6 +92,7 @@
                 Margin="0,0,3,0"
                 Padding="0,4,0,0"
                 HorizontalContentAlignment="Right"
+                ContextMenu="{x:Null}"
                 PreviewKeyDown="PotionCount_PreviewKeyDown"
                 Style="{StaticResource BoldText}"
                 Visibility="{Binding IsHintInfoPotionCount, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
