@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Humanizer.Core" Version="3.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TrackOMatic.Logic\TrackOMatic.Logic.csproj" />
     <ProjectReference Include="..\TrackOMatic.Services\TrackOMatic.Services.csproj" />
   </ItemGroup>

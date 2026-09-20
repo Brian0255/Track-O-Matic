@@ -1,41 +1,60 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
+using System.Windows.Input;
 
-namespace TrackOMatic
+using TrackOMatic.ViewModels.Hints;
+
+namespace TrackOMatic.HintsUI;
+
+public partial class HelmDoorHint : UserControl
 {
-    public partial class HelmDoorHint : UserControl
+    public HelmDoorHint()
     {
-        public static readonly DependencyProperty LabelTextProperty = DependencyProperty.Register("LabelText", typeof(string), typeof(HelmDoorHint));
+        InitializeComponent();
+    }
 
-        public string LabelText
+    private void OnTextLeftClick(object sender, MouseButtonEventArgs e)
+    {
+        if (DataContext is not HelmDoorHintViewModel viewModel)
         {
-            get { return (string)GetValue(LabelTextProperty); }
-            set { SetValue(LabelTextProperty, value); }
-        }
-        public HelmDoorHint()
-        {
-            InitializeComponent();
-            List<List<BitmapImage>> BLockerSources = new()
-            {
-                new()
-                {
-                    (BitmapImage)FindResource("golden_banana"),
-                    (BitmapImage)FindResource("blueprint"),
-                    (BitmapImage)FindResource("pearl"),
-                    (BitmapImage)FindResource("crown"),
-                    (BitmapImage)FindResource("medal"),
-                    (BitmapImage)FindResource("rainbow_coin"),
-                    (BitmapImage)FindResource("fairy"),
-                },
-                new()
-                {
-                    (BitmapImage)FindResource("company_coin"),
-                    (BitmapImage)FindResource("bean"),
-                }
-            };
-            DoorItem.ImageSources = BLockerSources;
+            return;
         }
 
+        if (viewModel.ClearPlaceholderCommand.CanExecute(null))
+        {
+            viewModel.ClearPlaceholderCommand.Execute(null);
+        }
+    }
+
+    private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter || e.Key == Key.Return)
+        {
+            Keyboard.ClearFocus();
+            OnLostTextBoxFocus(sender);
+        }
+    }
+
+    private void TextBox_LostFocus(object sender, RoutedEventArgs e) => OnLostTextBoxFocus(sender);
+
+    private void OnLostTextBoxFocus(object sender)
+    {
+        if (sender is not TextBox textBox)
+        {
+            return;
+        }
+
+        if (DataContext is not HelmDoorHintViewModel viewModel)
+        {
+            return;
+        }
+
+        // Update the ViewModel's BarrierCount with the current TextBox text before executing the command
+        viewModel.BarrierCount = textBox.Text;
+
+        if (viewModel.SetBarrierCountCommand.CanExecute(null))
+        {
+            viewModel.SetBarrierCountCommand.Execute(null);
+        }
     }
 }

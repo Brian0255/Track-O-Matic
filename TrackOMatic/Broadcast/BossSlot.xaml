@@ -1,0 +1,32 @@
+<UserControl
+    x:Class="TrackOMatic.Broadcast.BossSlot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.Broadcast"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:BossSlotViewModel}"
+    d:DesignHeight="32"
+    d:DesignWidth="32"
+>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Visibility="{Binding ShowsSlot, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Border BorderThickness="0"
+                UseLayoutRounding="True"
+                RenderOptions.BitmapScalingMode="NearestNeighbor"
+                RenderOptions.ClearTypeHint="Enabled">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+            </Border.Effect>
+            <Image Opacity="1" Source="{Binding ImageResourceKey, Converter={StaticResource ResourceKeyConverter}}"/>
+        </Border>
+    </Grid>
+</UserControl>

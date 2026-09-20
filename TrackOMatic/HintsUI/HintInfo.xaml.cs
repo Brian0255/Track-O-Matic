@@ -1,366 +1,307 @@
-using System.ComponentModel;
-using System.Globalization;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media;
 
-using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Models;
-using TrackOMatic.Logic.Models.Hints;
+using TrackOMatic.ViewModels.Hints;
 
-namespace TrackOMatic
+namespace TrackOMatic.HintsUI;
+
+public partial class HintInfo : UserControl
 {
-    public partial class HintInfo : UserControl, INotifyPropertyChanged
+    private HintInfoViewModel? _viewModel;
+    private bool _isInitialized = false;
+    private Popup? _cachedPopup = null;
+
+    public HintInfo()
     {
-        private bool UserInitialized = false;
-        private MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-        private Dictionary<HintSuggestion, HintSuggestionConfig> SuggestionToShortcutInfo { get; } = new()
-        {
-            {HintSuggestion.REGION, new HintSuggestionConfig(["Hint Regions"], HintRegion.All) },
-            {HintSuggestion.CHECK, new HintSuggestionConfig(["Item Locations"], HintLocation.All) },
-            {HintSuggestion.MOVE, new HintSuggestionConfig(["Moves"], HintMove.All) },
-            {HintSuggestion.REGION_OR_MOVE, new HintSuggestionConfig(["Hint Regions","Moves"], HintRegion.All.Concat(HintMove.All).ToList()) }
-        };
-        private HintSuggestionConfig? HintSuggestionConfig { get; init; }
+        InitializeComponent();
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
 
-        public static readonly DependencyProperty HintTypeSettingsProperty = DependencyProperty.Register("HintTypeSettings", typeof(HintTypeSettings), typeof(HintInfo));
-        public HintTypeSettings HintTypeSettings
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        // Guard against multiple Loaded events
+        if (_isInitialized)
         {
-            get { return (HintTypeSettings)GetValue(HintTypeSettingsProperty); }
-            set { SetValue(HintTypeSettingsProperty, value); }
+            return;
         }
 
-        public HintType HintType { get; private set; }
-        public bool DoSuggestions { get; set; } = true;
+        _isInitialized = true;
 
-        public RegionName RegionName { get; }
-
-        public SavedHint SavedHint { get; private set; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        _viewModel = DataContext as HintInfoViewModel;
+        if (_viewModel is null || FindName("SuggestionPopup") is not Popup popup || FindName("Location") is not TextBox locationBox)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return;
         }
 
-        public HintInfo(HintType hintType, string panelName, bool isSavedHint = false, RegionName regionName = RegionName.UNKNOWN)
-        {
-            InitializeComponent();
-            if (!isSavedHint)
-            {
-                Location.Loaded += (sender, e) => Location.Focus();
-            }
+        _cachedPopup = popup;
 
-            HintTypeSettings = HintTypeSettingsList.SETTINGS[hintType];
-            OnPropertyChanged(nameof(HintTypeSettings));
-            SuggestionBox.ItemsSource = new List<string>(HintData.SortedRegions);
-            HintType = hintType;
-            SavedHint = new SavedHint(panelName, Location.Text, PotionCount.Text, new(), new());
-            ItemsOnPath.HintInfo = this;
-            RightItems.HintInfo = this;
-            if (!HintTypeSettings.PathItemsVisible)
-            {
-                RightItems.BottomRow.Height = new GridLength(0);
-            }
-            if (SuggestionToShortcutInfo.ContainsKey(HintTypeSettings.HintSuggestion))
-            {
-                HintSuggestionConfig = SuggestionToShortcutInfo[HintTypeSettings.HintSuggestion];
-            }
-            RegionName = regionName;
+        // PlacementTarget must be set so the popup knows where to position itself
+        popup.PlacementTarget = locationBox;
+
+        // Subscribe to ViewModel changes
+        _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+
+        // Subscribe to dialog opening events
+        _viewModel.PathItemsSelectionRequested += ViewModel_PathItemsSelectionRequested;
+        _viewModel.FoundItemsSelectionRequested += ViewModel_FoundItemsSelectionRequested;
+    }
+
+    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        // The popup IsOpen is now handled by binding, so we don't need to manually sync it here.
+        // This method can be removed if no other properties need special handling.
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel is not null)
+        {
+            _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            _viewModel.PathItemsSelectionRequested -= ViewModel_PathItemsSelectionRequested;
+            _viewModel.FoundItemsSelectionRequested -= ViewModel_FoundItemsSelectionRequested;
+        }
+        (DataContext as IDisposable)?.Dispose();
+        DataContext = null;
+        _cachedPopup = null;
+    }
+
+    private void Location_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (DataContext is not HintInfoViewModel viewModel)
+        {
+            return;
         }
 
-        public void UpdateSelectedItems()
+        if (e.Key == Key.Enter || e.Key == Key.Return)
         {
-            SavedHint.PathItems = ItemsOnPath.SelectedItems;
-            SavedHint.FoundItems = RightItems.SelectedItems;
-            mainWindow.DataSaver.Save();
-        }
+            string locationText = viewModel.LocationText ?? "";
 
-        private void Location_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
+            // Check if focus is in the SuggestionBox (dropdown) and an item is selected
+            if (_cachedPopup?.Child is ListBox listBox && listBox.IsKeyboardFocusWithin &&
+                viewModel.SelectedSuggestion is string selectedSuggestion)
             {
-                if (SuggestionBox.Items.Count > 0)
-                {
-                    Location.Text = SuggestionBox.Items[0] as string;
-                }
-                ProcessSelection();
-                Keyboard.ClearFocus();
-                mainWindow.DataSaver.Save();
-                if (HintType == HintType.REGION_POTION_COUNT)
-                {
-                    PotionCount.Focus();
-                }
+                // Use the selected item from the dropdown
+                locationText = selectedSuggestion;
             }
-            if (e.Key == Key.Down)
+            else if (viewModel.Suggestions.Count > 0 && sender is TextBox { IsFocused: true })
             {
-                SuggestionBox.SelectedIndex = 0;
-                SuggestionBox.UpdateLayout();
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    var listBoxItem = (ListBoxItem)SuggestionBox
-                    .ItemContainerGenerator
-                    .ContainerFromItem(SuggestionBox.SelectedItem);
-                    listBoxItem?.Focus();
-                }));
+                // Focus is in the TextBox and there are suggestions - use first suggestion
+                locationText = viewModel.Suggestions[0];
             }
-        }
+            // else: use what's already in LocationText
 
-        private void CheckForShortcuts(List<string> matches)
-        {
-            var directHintExclusions = new List<string>() { "Isles", "Japes", "Aztec", "Factory", "Galleon", "Forest", "Caves", "Castle", "Helm", "Boss", "Bought" };
-            var exclude = directHintExclusions;
-            var JSONKeys = new List<string>() { "Kong Hint Shorthand" };
-            if (HintSuggestionConfig != null)
-            {
-                JSONKeys = HintSuggestionConfig.JSONShortcutKeys;
-                exclude = new();
-            }
-            var textInfo = new CultureInfo("en-US", false).TextInfo;
-            foreach (var JSONKey in JSONKeys)
-            {
-                if (!HintData.UserShortcuts.ContainsKey(JSONKey))
-                {
-                    continue;
-                }
-                foreach (var entry in HintData.UserShortcuts[JSONKey])
-                {
-                    var toAdd = entry.Value;
-                    if (JSONKey == "Kong Hint Shorthand")
-                    {
-                        toAdd = textInfo.ToTitleCase(toAdd.ToLower());
-                    }
-                    var shortcut = entry.Key;
-                    if (shortcut.ToLower().StartsWith(Location.Text.ToLower()) && !exclude.Contains(entry.Value))
-                    {
-                        matches.Add(toAdd);
-                    }
-                }
-            }
-        }
+            // Update the Location TextBox via ViewModel
+            viewModel.LocationText = locationText;
 
-        private void SetUpSuggestions()
-        {
-            var matches = new List<string>();
-            List<string> sortBy = new();
-            IEnumerable<string> filteredItems = new List<string>();
-            CheckForShortcuts(matches);
-            var include_enemies = Properties.Settings.Default.EnemiesInAutofill;
-            if (HintTypeSettings.HintSuggestion == HintSuggestion.NONE)
-            {
-                SuggestionBox.ItemsSource = null;
-                return;
-            }
-            if (HintType == HintType.DIRECT_ITEM_HINT)
-            {
-                sortBy = HintData.REGIONS_WITHOUT_LEVEL_NAME[RegionName];
-                filteredItems = sortBy.Where(item => item.ToLower().Contains(Location.Text.ToLower()));
-            }
-            else if (HintSuggestionConfig != null)
-            {
-                var input = Location.Text.ToLower();
-                filteredItems = HintSuggestionConfig.DefaultSuggestions
-                    .Where(loc => (loc.FullName.ToLower().Contains(input)
-                               || loc.ShortName.ToLower().Contains(input))
-                               && (include_enemies || loc.HintGroup != HintGroup.ENEMY))
-                    .Select(loc => loc.ShortName);
-            }
-            matches = matches.Concat(filteredItems).Distinct().ToList();
-            matches.Sort();
-            SuggestionBox.ItemsSource = matches;
-        }
+            // Close the suggestion dropdown
+            viewModel.SuggestionBoxIsOpen = false;
 
-        private void Location_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!DoSuggestions)
-            {
-                return;
-            }
+            // Trigger the appropriate action based on hint panel type
+            // This will focus the appropriate control (potion count, path items, or found items)
+            viewModel.TriggerLocationConfirmationAction();
 
-            SetUpSuggestions();
-            BottomRow.IsOpen = Location.Text != "" && (SuggestionBox.Items.Count > 0) && HintTypeSettings.HintSuggestion != HintSuggestion.NONE;
-            SavedHint.LocationText = Location.Text;
-        }
-
-        private bool TryProcessKongHint()
-        {
-            var hintWordList = Location.Text.Split(' ');
-            if (hintWordList.Length != 3)
-            {
-                return false;
-            }
-
-            if (!HintData.UserShortcuts.ContainsKey("Kong Hint Shorthand"))
-            {
-                return false;
-            }
-
-            var shorthands = HintData.UserShortcuts["Kong Hint Shorthand"];
-            for (int i = 0; i < hintWordList.Length; ++i)
-            {
-                hintWordList[i] = hintWordList[i].ToLower();
-                if (!shorthands.ContainsKey(hintWordList[i]))
-                {
-                    return false;
-                }
-            }
-            var foundKongString = shorthands[hintWordList[0]];
-            if (!Enum.TryParse(foundKongString, out ItemName kongThatIsFound))
-            {
-                return false;
-            }
-
-            var textInfo = new CultureInfo("en-US", false).TextInfo;
-            var region = shorthands[hintWordList[2]];
-            var thingThatFinds = shorthands[hintWordList[1]];
-            thingThatFinds = textInfo.ToTitleCase(thingThatFinds.ToLower());
-            var newText = thingThatFinds + " in " + region;
-            if (thingThatFinds == "Boss")
-            {
-                newText = region + " Boss Defeated";
-            }
-            RightItems.SelectedItems = new() { { kongThatIsFound, false } };
-            RightItems.ProcessSelectedItems();
-            Location.Text = newText;
-            UpdateSelectedItems();
-            return true;
-        }
-
-        private void ProcessSelection()
-        {
-            if (SuggestionBox.SelectedItem != null)
-            {
-                Location.Text = SuggestionBox.SelectedItem as string;
-                if (HintType == HintType.REGION_POTION_COUNT)
-                {
-                    PotionCount.Focus();
-                }
-            }
-            BottomRow.IsOpen = false;
-
-            if (HintTypeSettings.PathItemsVisible && !UserInitialized)
-            {
-                ItemsOnPath.OpenItemSelectionDialog();
-                UserInitialized = true;
-            }
-            if (HintType == HintType.KONGS)
-            {
-                UserInitialized = TryProcessKongHint();
-            }
-            if (HintTypeSettings.PromptForFoundItem && !UserInitialized)
-            {
-                RightItems.OpenItemSelectionDialog();
-                UserInitialized = true;
-            }
-            SuggestionBox.UnselectAll();
-        }
-
-        private void SuggestionBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && SuggestionBox.SelectedItem != null)
-            {
-                ProcessSelection();
-                mainWindow.DataSaver.Save();
-            }
-        }
-
-        private void SuggestionBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (SuggestionBox.SelectedItem != null)
-            {
-                ProcessSelection();
-                mainWindow.DataSaver.Save();
-            }
-        }
-
-        private void HintInfoWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (ItemsOnPath != null && RightItems != null)
-            {
-                // Execute the code only when the visual tree is fully loaded
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-
-                    Point position = ItemsOnPath.ItemPanel.PointToScreen(new Point(0, 0));
-
-                    // Get the DPI scaling factor
-                    Matrix matrix = PresentationSource.FromVisual(ItemsOnPath.ItemPanel).CompositionTarget.TransformToDevice;
-                    double dpiX = matrix.M11;
-                    double dpiY = matrix.M22;
-
-                    // Adjust position for DPI scaling
-                    position = new Point(position.X / dpiX, position.Y / dpiY);
-
-                    double[] selectionDialogPosition = { position.X - 10, position.Y };
-                    ItemsOnPath.SelectionDialogPosition = selectionDialogPosition;
-                    RightItems.SelectionDialogPosition = selectionDialogPosition;
-                }
-                ), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
-            }
-        }
-
-        private void PotionCount_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            SavedHint.PotionCountText = PotionCount.Text;
-        }
-
-        private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Keyboard.ClearFocus();
-                SavedHint.PotionCountText = PotionCount.Text;
-            }
-        }
-
-        public void OnRemove()
-        {
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            if (HintType != HintType.DIRECT_ITEM_HINT)
-            {
-                return;
-            }
-
-            foreach (var entry in RightItems.SelectedItems)
-            {
-                var itemName = entry.Key;
-                if (!mainWindow.ITEM_NAME_TO_ITEM.ContainsKey(itemName))
-                {
-                    continue;
-                }
-
-                var matchingItem = mainWindow.ITEM_NAME_TO_ITEM[itemName];
-                if (matchingItem.ItemImage.ToString().Contains("bw") && matchingItem.Parent != mainWindow.ItemGrid)
-                {
-                    matchingItem.HandleItemReturn();
-                }
-            }
-        }
-        public void SetUpFromSavedHint(SavedHint savedHint)
-        {
-            DoSuggestions = false;
-            SavedHint = savedHint;
-            Location.Text = savedHint.LocationText;
-            PotionCount.Text = savedHint.PotionCountText;
-            ItemsOnPath.SelectedItems = savedHint.PathItems;
-            ItemsOnPath.ProcessSelectedItems();
-            RightItems.SelectedItems = savedHint.FoundItems;
-            RightItems.ProcessSelectedItems();
-            UserInitialized = true;
-            DoSuggestions = true;
-        }
-
-        private void Location_PreviewMouseRightButtonDown(object sender, MouseEventArgs e)
-        {
-            var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right)
-            {
-                RoutedEvent = MouseDownEvent,
-                Source = this
-            };
-            RaiseEvent(args);
             e.Handled = true;
+        }
+        else if (e.Key == Key.Down)
+        {
+            // Allow keyboard navigation into suggestions without auto-selecting
+            if (viewModel.Suggestions.Count > 0 && viewModel.SuggestionBoxIsOpen)
+            {
+                // Signal the behavior to focus the first item in the ListBox
+                viewModel.ShouldFocusSuggestionsFirst = true;
+                // Initialize the focus index in ViewModel for navigation tracking
+                viewModel.SelectedSuggestionIndex = 0;
+                e.Handled = true;
+            }
+        }
+    }
+
+    private void SuggestionBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is not ListBox listBox || DataContext is not HintInfoViewModel viewModel)
+        {
+            return;
+        }
+        if (!listBox.IsLoaded)
+        {
+            return;
+        }
+
+        // Only process if user explicitly selected via mouse or Enter key
+        // Keyboard navigation (arrow keys) should not trigger this flow
+        if (listBox.SelectedItem is string selectedSuggestion &&
+            (Keyboard.IsKeyDown(Key.Enter) || Keyboard.IsKeyDown(Key.Return)))
+        {
+            // Confirm the selection and trigger appropriate action
+            viewModel.SelectSuggestionCommand.Execute(selectedSuggestion);
+        }
+    }
+
+    /// <summary>
+    /// Confirms the currently selected suggestion and triggers the appropriate action.
+    /// Used by both keyboard (Enter) and mouse (double-click) selection paths.
+    /// </summary>
+    private static void ConfirmSuggestedLocation(HintInfoViewModel viewModel, RoutedEventArgs e)
+    {
+        int selectedIndex = viewModel.SelectedSuggestionIndex;
+        if (selectedIndex >= 0 && selectedIndex < viewModel.Suggestions.Count)
+        {
+            string selectedSuggestion = viewModel.Suggestions[selectedIndex];
+
+            // Update location and close popup
+            viewModel.LocationText = selectedSuggestion;
+            viewModel.SuggestionBoxIsOpen = false;
+
+            // Trigger the appropriate action based on hint panel type
+            viewModel.TriggerLocationConfirmationAction();
+
+            // Reset the index
+            viewModel.SelectedSuggestionIndex = -1;
+
+            e.Handled = true;
+        }
+    }
+
+    private void SuggestionBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (DataContext is not HintInfoViewModel viewModel)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Enter || e.Key == Key.Return)
+        {
+            ConfirmSuggestedLocation(viewModel, e);
+        }
+        else if (e.Key == Key.Down)
+        {
+            // Track Down navigation in ViewModel
+            int currentIndex = viewModel.SelectedSuggestionIndex;
+            if (currentIndex >= 0 && currentIndex < viewModel.Suggestions.Count - 1)
+            {
+                viewModel.SelectedSuggestionIndex++;
+            }
+            else if (currentIndex < 0)
+            {
+                // First Down key press: start at index 0
+                viewModel.SelectedSuggestionIndex = 0;
+            }
+        }
+        else if (e.Key == Key.Up)
+        {
+            // Track Up navigation in ViewModel
+            int currentIndex = viewModel.SelectedSuggestionIndex;
+            if (currentIndex > 0)
+            {
+                viewModel.SelectedSuggestionIndex--;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles PreviewMouseDoubleClick event for the Suggestion ListBox.
+    /// Double-clicking an item (with the left mouse button) has the same behavior as pressing Enter/Return.
+    /// </summary>
+    private void SuggestionBox_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        // Only process left mouse button double-clicks
+        if (e.ChangedButton != MouseButton.Left)
+        {
+            return;
+        }
+
+        if (DataContext is not HintInfoViewModel viewModel)
+        {
+            return;
+        }
+
+        ConfirmSuggestedLocation(viewModel, e);
+    }
+
+    /// <summary>
+    /// Handles Preview KeyDown event for the PotionCount TextBox.
+    /// When Enter/Return is pressed, confirms the potion count and prepares to save the hint.
+    /// </summary>
+    private void PotionCount_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (DataContext is not HintInfoViewModel viewModel)
+        {
+            return;
+        }
+        if (e.Key == Key.Enter || e.Key == Key.Return)
+        {
+            // Invoke the command to confirm potion count and prepare to save
+            if (viewModel.ConfirmPotionCountCommand.CanExecute(null))
+            {
+                viewModel.ConfirmPotionCountCommand.Execute(null);
+            }
+
+            // Clear focus from the potion count box
+            Keyboard.ClearFocus();
+            e.Handled = true;
+        }
+    }
+
+    private void Location_PreviewMouseRightButtonDown(object sender, MouseEventArgs e)
+    {
+        e.Handled = true;
+        var viewModel = DataContext as HintInfoViewModel;
+        if (viewModel?.RemoveHintCommand.CanExecute(null) == true)
+        {
+            viewModel.RemoveHintCommand.Execute(null);
+        }
+    }
+
+    /// <summary>
+    /// Handles the PathItemsSelectionRequested event from the ViewModel.
+    /// Opens the Path Items selection dialog.
+    /// </summary>
+    private void ViewModel_PathItemsSelectionRequested(object? sender, EventArgs e)
+    {
+        if (_viewModel is HintInfoViewModel hintInfoVM)
+        {
+            var pathViewModel = hintInfoVM.PathHintItemListViewModel;
+
+            if (pathViewModel is not null)
+            {
+                // Get the current mouse position for dialog placement
+                var mousePos = Mouse.GetPosition(this);
+                var screenMousePosition = PointToScreen(mousePos);
+                var parameter = (screenMousePosition.X, screenMousePosition.Y);
+
+                if (pathViewModel.SelectPathItemsCommand.CanExecute(parameter))
+                {
+                    pathViewModel.SelectPathItemsCommand.Execute(parameter);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles the FoundItemsSelectionRequested event from the ViewModel.
+    /// Opens the Found Items selection dialog.
+    /// </summary>
+    private void ViewModel_FoundItemsSelectionRequested(object? sender, EventArgs e)
+    {
+        if (_viewModel is HintInfoViewModel hintInfoVM)
+        {
+            var foundViewModel = hintInfoVM.FoundHintItemListViewModel;
+
+            if (foundViewModel is not null)
+            {
+                // Get the current mouse position for dialog placement
+                var mousePos = Mouse.GetPosition(this);
+                var screenMousePosition = PointToScreen(mousePos);
+                var parameter = (screenMousePosition.X, screenMousePosition.Y);
+
+                if (foundViewModel.SelectFoundItemsCommand.CanExecute(parameter))
+                {
+                    foundViewModel.SelectFoundItemsCommand.Execute(parameter);
+                }
+            }
         }
     }
 }

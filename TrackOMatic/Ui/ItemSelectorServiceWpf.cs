@@ -1,0 +1,94 @@
+using System.ComponentModel;
+using System.Windows;
+
+using TrackOMatic.Services;
+
+namespace TrackOMatic.Ui;
+
+/// <summary>
+/// WPF implementation of the item selector service.
+/// Creates and manages the lifecycle of FlexibleGridItemSelector dialogs.
+/// </summary>
+internal class ItemSelectorServiceWpf(IUserSettingsService userSettingsService) : IItemSelectorService
+{
+    private readonly IUserSettingsService _userSettingsService = userSettingsService
+        ?? throw new ArgumentNullException(nameof(userSettingsService));
+
+    /// <summary>
+    /// Selects an item from a grid of items, displaying a dialog to the user.
+    /// </summary>
+    /// <remarks>
+    /// This method is one of the few explicitly allowed to refer to <see cref="MainWindow"/> in code.
+    /// We need the ability to spawn a window where the mouse is located, and this is one of the
+    /// slightly better approaches we can take.
+    /// </remarks>
+    /// <param name="items">The list of items to display along with their coordinates.</param>
+    /// <param name="title">The title of the dialog window.</param>
+    /// <param name="preferredX">The preferred X coordinate for the dialog window.</param>
+    /// <param name="preferredY">The preferred Y coordinate for the dialog window.</param>
+    /// <returns>The selected item, or null if no item was selected.</returns>
+    public async Task<ItemGridCell?> SelectItemAsync(IReadOnlyList<ItemGridCell> items, string title, double? preferredX = null, double? preferredY = null)
+    {
+        if (items == null || items.Count == 0)
+        {
+            return null;
+        }
+
+        var mainWindow = Application.Current.MainWindow;
+
+        // Create the dialog window
+        var dialog = new FlexibleGridItemSelector(items, title)
+        {
+            Topmost = _userSettingsService.TopMost,
+            Owner = mainWindow,
+            WindowStartupLocation = WindowStartupLocation.Manual
+        };
+
+        // Position dialog relative to preferred location, or center on main window
+        double centerX, centerY;
+
+        if (preferredX.HasValue && preferredY.HasValue)
+        {
+            // Position relative to preferred location (centered)
+            centerX = preferredX.Value;
+            centerY = preferredY.Value;
+        }
+        else if (mainWindow?.IsVisible == true)
+        {
+            // Center on main window
+            centerX = mainWindow.Left + (mainWindow.Width / 2);
+            centerY = mainWindow.Top + (mainWindow.Height / 2);
+        }
+        else
+        {
+            // Fallback: no positioning
+            centerX = 0;
+            centerY = 0;
+        }
+
+        // Position dialog - this will subscribe to SourceInitialized internally
+        WindowPositioning.PositionDialogCenteredOn(dialog, centerX, centerY);
+
+        // Keep dialog TopMost in sync with user settings while it's open
+        var settingsChangedHandler = new PropertyChangedEventHandler((s, e) =>
+        {
+            if (e.PropertyName == nameof(IUserSettingsService.TopMost))
+            {
+                dialog.Topmost = _userSettingsService.TopMost;
+            }
+        });
+
+        _userSettingsService.PropertyChanged += settingsChangedHandler;
+
+        try
+        {
+            // Show dialog and wait for result
+            dialog.ShowDialog();
+            return dialog.SelectedItem;
+        }
+        finally
+        {
+            _userSettingsService.PropertyChanged -= settingsChangedHandler;
+        }
+    }
+}

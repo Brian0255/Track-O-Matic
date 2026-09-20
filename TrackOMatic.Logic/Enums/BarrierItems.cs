@@ -12,8 +12,8 @@ public enum BarrierItems
     COMPANY_COIN = 7,
     BEAN = 8,
     KEY = -1,
-    PERCENTAGE = -1,
-    COLORED_BANANA = -1,
-    KONG = -1,
-    MOVE = -1,
+    PERCENTAGE = -2,
+    COLORED_BANANA = -3,
+    KONG = -4,
+    MOVE = -5,
 }

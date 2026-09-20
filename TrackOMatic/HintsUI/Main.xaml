@@ -1,0 +1,168 @@
+<UserControl
+    x:Class="TrackOMatic.HintsUI.Main"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainHintViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Unloaded="OnUnloaded"
+>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
+
+            <Style TargetType="{x:Type local:HintPanel}">
+                <Setter Property="Margin" Value="3" />
+            </Style>
+            <Style TargetType="{x:Type local:BLockerPanel}">
+                <Setter Property="Margin" Value="3" />
+            </Style>
+            <Style TargetType="{x:Type local:HelmDoorPanel}">
+                <Setter Property="Margin" Value="3" />
+            </Style>
+
+            <!-- DirectHintCompactMode Template -->
+            <DataTemplate x:Key="DirectHintCompactModeTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <UniformGrid Grid.Column="0" Rows="4" Columns="2">
+                        <local:HintPanel DataContext="{Binding IslesHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding JapesHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding AztecHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding FactoryHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding GalleonHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding ForestHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding CavesHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding CastleHintPanelViewModel}" />
+                    </UniformGrid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2.54*" />
+                            <RowDefinition Height="5*" />
+                            <RowDefinition Height="2.6*" />
+                            <RowDefinition Height="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource CountToRelativeWidthConverter}}" />
+                        </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" DataContext="{Binding HelmHintPanelViewModel}" />
+                        <local:HintPanel Grid.Row="1" DataContext="{Binding UnhintedHintPanelViewModel}" />
+                        <local:BLockerPanel Grid.Row="2" DataContext="{Binding BLockerPanelViewModel}" />
+                        <local:HelmDoorPanel Grid.Row="3" DataContext="{Binding HelmDoorPanelViewModel}" Visibility="{Binding IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
+            <!-- DirectHintStandardMode Template -->
+            <DataTemplate x:Key="DirectHintStandardModeTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <UniformGrid Grid.Column="0" Rows="3" Columns="3">
+                        <local:HintPanel DataContext="{Binding IslesHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding JapesHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding AztecHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding FactoryHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding GalleonHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding ForestHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding CavesHintPanelViewModel}" />
+                        <local:HintPanel DataContext="{Binding CastleHintPanelViewModel}" />
+                        <local:HintPanel Grid.Row="0" DataContext="{Binding HelmHintPanelViewModel}" />
+                    </UniformGrid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5*" />
+                            <RowDefinition Height="2.6*" />
+                            <RowDefinition Height="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource CountToRelativeWidthConverter}}" />
+                        </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" DataContext="{Binding UnhintedHintPanelViewModel}" />
+                        <local:BLockerPanel Grid.Row="1" DataContext="{Binding BLockerPanelViewModel}" />
+                        <local:HelmDoorPanel Grid.Row="2" DataContext="{Binding HelmDoorPanelViewModel}" Visibility="{Binding IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
+            <!-- MultipathHintCompactMode Template -->
+            <DataTemplate x:Key="MultipathHintCompactModeTemplate">
+                <UniformGrid Rows="1" Columns="3">
+                    <local:HintPanel DataContext="{Binding PathsHintPanelViewModel}" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.6*" />
+                            <RowDefinition Height="1.25*" />
+                            <RowDefinition Height="3*" />
+                        </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" DataContext="{Binding FoolishHintPanelViewModel}" />
+                        <local:HintPanel Grid.Row="1" DataContext="{Binding KongsHintPanelViewModel}" />
+                        <local:HintPanel Grid.Row="2" DataContext="{Binding HoardHintPanelViewModel}" />
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2.54*" />
+                            <RowDefinition Height="5*" />
+                            <RowDefinition Height="2.6*" />
+                            <RowDefinition Height="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource CountToRelativeWidthConverter}}" />
+                        </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" DataContext="{Binding PotionHintPanelViewModel}" />
+                        <local:HintPanel Grid.Row="1" DataContext="{Binding UnhintedHintPanelViewModel}" />
+                        <local:BLockerPanel Grid.Row="2" DataContext="{Binding BLockerPanelViewModel}" />
+                        <local:HelmDoorPanel Grid.Row="3" DataContext="{Binding HelmDoorPanelViewModel}" Visibility="{Binding IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Grid>
+                </UniformGrid>
+            </DataTemplate>
+
+            <!-- MultipathHintStandardMode Template -->
+            <DataTemplate x:Key="MultipathHintStandardModeTemplate">
+                <UniformGrid Rows="1" Columns="4">
+                    <local:HintPanel DataContext="{Binding PathsHintPanelViewModel}" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.25*" />
+                            <RowDefinition Height="3*" />
+                        </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" DataContext="{Binding KongsHintPanelViewModel}" />
+                        <local:HintPanel Grid.Row="1" DataContext="{Binding HoardHintPanelViewModel}" />
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5*" />
+                            <RowDefinition Height="3*" />
+                        </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" DataContext="{Binding FoolishHintPanelViewModel}" />
+                        <local:HintPanel Grid.Row="1" DataContext="{Binding PotionHintPanelViewModel}" />
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5*" />
+                            <RowDefinition Height="2.6*" />
+                            <RowDefinition Height="{Binding IsHelmDoorPanelEnabled, Converter={StaticResource CountToRelativeWidthConverter}}" />
+                        </Grid.RowDefinitions>
+                        <local:HintPanel Grid.Row="0" DataContext="{Binding UnhintedHintPanelViewModel}" />
+                        <local:BLockerPanel Grid.Row="1" DataContext="{Binding BLockerPanelViewModel}" />
+                        <local:HelmDoorPanel Grid.Row="2" DataContext="{Binding HelmDoorPanelViewModel}" Visibility="{Binding IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Grid>
+                </UniformGrid>
+            </DataTemplate>
+
+            <local:HintModeTemplateSelector x:Key="HintModeTemplateSelector"
+                DirectHintCompactTemplate="{StaticResource DirectHintCompactModeTemplate}"
+                DirectHintStandardTemplate="{StaticResource DirectHintStandardModeTemplate}"
+                MultipathHintCompactTemplate="{StaticResource MultipathHintCompactModeTemplate}"
+                MultipathHintStandardTemplate="{StaticResource MultipathHintStandardModeTemplate}"
+            />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <!-- Single ContentPresenter using template selector ensures only one visual tree exists at a time -->
+    <!-- The UpdateSourceTrigger ensures ContentTemplateSelector is re-evaluated when CurrentModeKey changes -->
+    <ContentPresenter x:Name="ModeContentPresenter" Content="{Binding}" ContentTemplateSelector="{StaticResource HintModeTemplateSelector}" />
+</UserControl>

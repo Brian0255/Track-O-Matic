@@ -1,203 +1,63 @@
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
-using TrackOMatic.Logic.Enums;
-using TrackOMatic.Logic.Models;
 using TrackOMatic.Logic.Models.Hints;
-using TrackOMatic.Properties;
+using TrackOMatic.Ui;
+using TrackOMatic.ViewModels.Hints;
 
-namespace TrackOMatic
+namespace TrackOMatic.HintsUI;
+
+public partial class HintPanel : UserControl
 {
-    public partial class HintPanel : UserControl
+    public HintPanel()
     {
+        InitializeComponent();
+    }
 
-        public static readonly DependencyProperty HeadingProperty = DependencyProperty.Register("Heading", typeof(string), typeof(HintPanel));
-        public static readonly DependencyProperty LineColorProperty = DependencyProperty.Register("LineColor", typeof(Color), typeof(HintPanel));
-        public static readonly DependencyProperty HintTypeProperty = DependencyProperty.Register("HintType", typeof(HintType), typeof(HintPanel));
-        public static readonly DependencyProperty RegionNameProperty = DependencyProperty.Register("RegionName", typeof(RegionName), typeof(HintPanel));
-
-
-        public List<ItemName> ItemsToFilterBy { get; private set; } = new();
-
-        public string Heading
+    public void OnAddHint(object sender, MouseEventArgs e)
+    {
+        if (DataContext is not HintPanelViewModel viewModel)
         {
-            get { return (string)GetValue(HeadingProperty); }
-            set { SetValue(HeadingProperty, value); }
+            return;
         }
 
-        public Color LineColor
+        if (e.LeftButton == MouseButtonState.Pressed && viewModel.CreateHintCommand.CanExecute(null))
         {
-            get { return (Color)GetValue(LineColorProperty); }
-            set { SetValue(LineColorProperty, value); }
+            viewModel.CreateHintCommand.Execute(null);
+        }
+    }
+
+    private void FilterButton_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (DataContext is not HintPanelViewModel viewModel)
+        {
+            return;
         }
 
-        public HintType HintType
+        var dialog = new HintMultiSelectionDialog(HintDialogMapping.HintDialogMappings, [.. viewModel.ItemsToFilterBy], "Select Items to Prioritize");
+
+        // Position dialog at cursor with small offset
+        WindowPositioning.PositionDialogAtCursor(dialog, -20, -10);
+        dialog.ShowDialog();
+        var selectedItems = dialog.GetSelectedItems().Select(x => x.ItemName).ToList();
+
+        // Pass selected items to ViewModel command
+        if (viewModel.ApplyFilterCommand.CanExecute(selectedItems))
         {
-            get { return (HintType)GetValue(HintTypeProperty); }
-            set { SetValue(HintTypeProperty, value); }
+            viewModel.ApplyFilterCommand.Execute(selectedItems);
+        }
+    }
+
+    public void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (DataContext is not HintPanelViewModel viewModel)
+        {
+            return;
         }
 
-        public RegionName RegionName
+        if (viewModel.SortHintsCommand.CanExecute(null))
         {
-            get { return (RegionName)GetValue(RegionNameProperty); }
-            set { SetValue(RegionNameProperty, value); }
-        }
-
-        public void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var hintSettings = HintTypeSettingsList.SETTINGS[HintType];
-            SortButton.Visibility = hintSettings.HintSorterVisibility ? Visibility.Visible : Visibility.Collapsed;
-            FilterButton.Visibility = hintSettings.HintSorterVisibility ? Visibility.Visible : Visibility.Collapsed;
-        }
-        public HintPanel()
-        {
-            Console.WriteLine(HintType);
-            InitializeComponent();
-            Loaded += OnLoaded;
-        }
-
-        public void Reset()
-        {
-            foreach (var child in HintList.Children.OfType<HintInfo>().ToList())
-            {
-                HintList.Children.Remove(child);
-            }
-            ItemsToFilterBy = new();
-            UpdateFilterImage();
-        }
-
-        private void RemoveHint(object sender, MouseEventArgs e)
-        {
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                HintInfo hint = (HintInfo)sender;
-                hint.OnRemove();
-                HintList.Children.Remove(hint);
-            }
-        }
-
-        private HintInfo CreateNewHint(bool isSavedHint = false)
-        {
-            var newHint = new HintInfo(HintType, Name, isSavedHint, RegionName);
-            var insertionPoint = HintList.Children.Count - 1;
-            HintList.Children.Insert(insertionPoint, newHint);
-            newHint.MouseDown += RemoveHint;
-            newHint.ItemsOnPath.OnItemsSelected += OnPathItemsSelected;
-            return newHint;
-        }
-
-        public void OnAddHint(object sender, MouseEventArgs e)
-        {
-            CreateNewHint();
-        }
-
-        public void AddSavedHint(SavedHint savedHint)
-        {
-            var newHint = CreateNewHint(true);
-            newHint.SetUpFromSavedHint(savedHint);
-        }
-
-        public List<SavedHint> GetSavedHints()
-        {
-            List<SavedHint> hints = new();
-            foreach (var hint in HintList.Children)
-            {
-                if (hint is HintInfo hintInfo)
-                {
-                    hints.Add(hintInfo.SavedHint);
-                }
-            }
-            return hints;
-        }
-
-        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-        }
-
-        private List<HintInfo> FetchCurrentHintList()
-        {
-            return HintList.Children.OfType<HintInfo>().ToList();
-        }
-
-        private void BuildHintPanelFromHintList(List<HintInfo> hints)
-        {
-            var addNewHint = HintList.Children[HintList.Children.Count - 1];
-            HintList.Children.Clear();
-            foreach (var hint in hints)
-            {
-                HintList.Children.Add(hint);
-            }
-            HintList.Children.Add(addNewHint);
-        }
-
-        private void UpdateFilterImage()
-        {
-            string resource = ItemsToFilterBy.Count > 0 ? "filter_on" : "filter_empty";
-            FilterButton.Source = (ImageSource)FindResource(resource);
-        }
-
-        private void ApplyFilter()
-        {
-            var filteredHints = new List<HintInfo>();
-            var rejectedHints = new List<HintInfo>();
-            foreach (var child in HintList.Children)
-            {
-                if (child is HintInfo hintInfo)
-                {
-                    var selectedItems = hintInfo.ItemsOnPath.SelectedItems;
-                    if (ItemsToFilterBy.All(filterItem => selectedItems.ContainsKey(filterItem)))
-                    {
-                        filteredHints.Add(hintInfo);
-                    }
-                    else
-                    {
-                        rejectedHints.Add(hintInfo);
-                    }
-                }
-            }
-            var combined = filteredHints.Concat(rejectedHints).ToList();
-            BuildHintPanelFromHintList(combined);
-            UpdateFilterImage();
-        }
-
-        private void Sort()
-        {
-            var hints = FetchCurrentHintList();
-            hints.Sort((hint1, hint2) => hint2.ItemsOnPath.SelectedItems.Count - hint1.ItemsOnPath.SelectedItems.Count);
-            BuildHintPanelFromHintList(hints);
-        }
-
-        private void OnPathItemsSelected()
-        {
-            if (Settings.Default.AutoSortPathHints)
-            {
-                Sort();
-            }
-
-            ApplyFilter();
-        }
-
-        private void FilterButton_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            var dialog = new HintItemSelectionDialog(ItemsToFilterBy.ToList())
-            {
-                Title = "Select Items to Prioritize"
-            };
-            var mousePosition = Mouse.GetPosition(this);
-            mousePosition = PointToScreen(mousePosition);
-            UIUtils.MoveWindowAndEnsureVisible(dialog, mousePosition.X - 20, mousePosition.Y - 10);
-            dialog.ShowDialog();
-            ItemsToFilterBy = dialog.SelectedItems.Keys.ToList();
-            ApplyFilter();
-        }
-
-        public void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Sort();
-            ApplyFilter();
+            viewModel.SortHintsCommand.Execute(null);
         }
     }
 }

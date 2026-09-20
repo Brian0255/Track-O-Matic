@@ -1,0 +1,124 @@
+<UserControl
+    x:Class="TrackOMatic.Regions.UiRegion"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.Regions"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Regions;assembly=TrackOMatic.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:RegionViewModel}"
+    d:DesignHeight="200"
+    d:DesignWidth="400"
+>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+            <Style TargetType="Viewbox">
+                <Setter Property="HorizontalAlignment" Value="Right" />
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontSize" Value="{StaticResource BigFontSize}" />
+                <Setter Property="FontFamily" Value="{DynamicResource DK64Font}" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <!-- This background can actually change in auto tracking mode. -->
+    <Grid Background="{Binding BackgroundResourceKey, Converter={StaticResource ResourceKeyConverter}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="3.3*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- The points/level grid portion. -->
+        <Grid Grid.Column="0" Background="{StaticResource RegionImageBG}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height=".1*"/>
+                <RowDefinition Height=".75*"/>
+                <RowDefinition Height=".25*"/>
+                <RowDefinition Height=".75*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height=".1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width=".1*"/>
+                <ColumnDefinition Width=".3*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- The picture associated with the region. -->
+            <Image
+                Grid.RowSpan="6"
+                Grid.ColumnSpan="{Binding ImageColumnSpan}"
+                Source="{Binding RegionResourceKey, Converter={StaticResource ResourceKeyConverter}}"
+                Margin="{StaticResource RegionPictureMargin}" />
+
+            <!-- Level order number is set here. -->
+            <Grid
+                Grid.RowSpan="6"
+                Grid.ColumnSpan="5"
+                Visibility="{Binding ShouldShowRegionLevel, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+            >
+                <!-- Child RegionLevel has its own DataContext -->
+                <local:RegionLevel DataContext="{Binding RegionLevelViewModel}" />
+            </Grid>
+
+            <!-- If playing with WOTH point totals, the amount of items is shown here. -->
+            <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3">
+                <TextBlock
+                    Text="{Binding WothPoints}"
+                    Foreground="{StaticResource RequiredChecksColor}"
+                    Visibility="{Binding HasWothPoints, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+                />
+            </Viewbox>
+
+            <!-- If playing with any point item values, the total found in a region is shown here. -->
+            <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
+                <TextBlock
+                    Text="{Binding ItemPoints}"
+                    Foreground="{Binding ItemPointColorKey, Converter={StaticResource ResourceKeyConverter}}"
+                    Visibility="{Binding ShouldShowItemPoints, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+                />
+            </Viewbox>
+        </Grid>
+        <ItemsControl
+            Grid.Column="1"
+            Margin="3"
+            ItemsSource="{Binding SelectedItemList}"
+            Visibility="{Binding HasVials, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+        >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:VialItemViewModel}">
+                    <local:VialItem />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <local:VialItems IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <ItemsControl
+            Grid.Column="1"
+            Margin="3"
+            ItemsSource="{Binding SelectedItemList}"
+            Visibility="{Binding HasVials, Converter={StaticResource BooleanToCollapsedVisibilityConverter}, ConverterParameter=Invert}"
+        >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:RegionItemViewModel}">
+                    <local:RegionItem />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <local:RegionItems IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </Grid>
+</UserControl>

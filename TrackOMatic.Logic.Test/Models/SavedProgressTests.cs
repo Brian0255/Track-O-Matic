@@ -1,6 +1,6 @@
+using System.Text.Json;
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
-using Newtonsoft.Json;
 
 namespace TrackOMatic.Logic.Test.Models;
 
@@ -37,7 +37,7 @@ public class SavedProgressTests
         var progress = new SavedProgress();
 
         // Assert
-        Assert.Equal("", progress.spoilerPath);
+        Assert.Equal("", progress.SpoilerPath);
     }
 
     [Fact]
@@ -48,9 +48,9 @@ public class SavedProgressTests
         var item = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
-            autotracked: false,
-            opacity: 1.0
+            true,
+            false,
+            1.0
         );
 
         // Act
@@ -69,17 +69,15 @@ public class SavedProgressTests
     {
         // Arrange
         var progress = new SavedProgress();
-        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0);
-        var item2 = new SavedItem(ItemName.TINY, RegionName.SHOPS, ItemVisibilityState.Hidden, false, 0.5);
-        var item3 = new SavedItem(ItemName.CHUNKY, RegionName.FUNGI_FOREST, ItemVisibilityState.Collapsed, true, 0.75);
+        var item1 = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0);
+        var item2 = new SavedItem(ItemName.TINY, RegionName.SHOPS, false, false, 0.5);
 
         // Act
         progress.SavedItems[ItemName.DONKEY] = item1;
         progress.SavedItems[ItemName.TINY] = item2;
-        progress.SavedItems[ItemName.CHUNKY] = item3;
 
         // Assert
-        Assert.Equal(3, progress.SavedItems.Count);
+        Assert.Equal(2, progress.SavedItems.Count);
     }
 
     [Fact]
@@ -88,7 +86,7 @@ public class SavedProgressTests
         // Arrange
         var progress = new SavedProgress();
         var hint = new SavedHint(
-            "test_key",
+            HintPanelType.Isles,
             "Test Location",
             "5",
             new Dictionary<ItemName, bool> { { ItemName.DONKEY, true } },
@@ -168,16 +166,6 @@ public class SavedProgressTests
     }
 
     [Fact]
-    public void HelmKongs_NullByDefault()
-    {
-        // Arrange & Act
-        var progress = new SavedProgress();
-
-        // Assert
-        Assert.Null(progress.HelmKongs);
-    }
-
-    [Fact]
     public void HelmKongs_CanBePopulated()
     {
         // Arrange
@@ -195,23 +183,14 @@ public class SavedProgressTests
     }
 
     [Fact]
-    public void BossKongs_NullByDefault()
-    {
-        // Arrange & Act
-        var progress = new SavedProgress();
-
-        // Assert
-        Assert.Null(progress.BossKongs);
-    }
-
-    [Fact]
     public void BossKongs_CanBePopulated()
     {
         // Arrange
-        var progress = new SavedProgress();
-
-        // Act
-        progress.BossKongs = [0, 1, 2];
+        var progress = new SavedProgress
+        {
+            // Act
+            BossKongs = [0, 1, 2]
+        };
 
         // Assert
         Assert.Multiple(() =>
@@ -219,16 +198,6 @@ public class SavedProgressTests
             Assert.NotNull(progress.BossKongs);
             Assert.Equal(3, progress.BossKongs.Count);
         });
-    }
-
-    [Fact]
-    public void LevelOrder_NullByDefault()
-    {
-        // Arrange & Act
-        var progress = new SavedProgress();
-
-        // Assert
-        Assert.Null(progress.LevelOrder);
     }
 
     [Fact]
@@ -254,17 +223,17 @@ public class SavedProgressTests
         // Arrange
         var original = new SavedProgress();
         var testPath = Path.Combine(AppContext.BaseDirectory, "test_path.json");
-        original.spoilerPath = testPath;
+        original.SpoilerPath = testPath;
 
         // Act
-        var json = JsonConvert.SerializeObject(original);
-        var restored = JsonConvert.DeserializeObject<SavedProgress>(json);
+        var json = JsonSerializer.Serialize(original);
+        var restored = JsonSerializer.Deserialize<SavedProgress>(json);
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.NotNull(restored);
-            Assert.Equal(testPath, restored.spoilerPath);
+            Assert.Equal(testPath, restored.SpoilerPath);
             Assert.Empty(restored.SavedItems);
             Assert.Empty(restored.SavedHints);
         });
@@ -278,21 +247,21 @@ public class SavedProgressTests
         original.SavedItems[ItemName.DONKEY] = new SavedItem(
             ItemName.DONKEY,
             RegionName.JUNGLE_JAPES,
-            ItemVisibilityState.Visible,
-            autotracked: true,
-            opacity: 0.8
+            true,
+            true,
+            0.8
         );
         original.SavedItems[ItemName.TINY] = new SavedItem(
             ItemName.TINY,
             RegionName.SHOPS,
-            ItemVisibilityState.Hidden,
-            autotracked: false,
-            opacity: 0.5
+            false,
+            false,
+            0.5
         );
 
         // Act
-        var json = JsonConvert.SerializeObject(original);
-        var restored = JsonConvert.DeserializeObject<SavedProgress>(json);
+        var json = JsonSerializer.Serialize(original);
+        var restored = JsonSerializer.Deserialize<SavedProgress>(json);
 
         // Assert
         Assert.Multiple(() =>
@@ -300,7 +269,7 @@ public class SavedProgressTests
             Assert.NotNull(restored);
             Assert.Equal(2, restored.SavedItems.Count);
             Assert.True(restored.SavedItems[ItemName.DONKEY].Autotracked);
-            Assert.Equal(ItemVisibilityState.Hidden, restored.SavedItems[ItemName.TINY].Starred);
+            Assert.False(restored.SavedItems[ItemName.TINY].Starred);
         });
     }
 
@@ -312,9 +281,9 @@ public class SavedProgressTests
         var testPath = Path.Combine(testDir, "test.json");
         var original = new SavedProgress
         {
-            spoilerPath = testPath
+            SpoilerPath = testPath
         };
-        original.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0);
+        original.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0);
         original.SavedGBCounts[RegionName.JUNGLE_JAPES] = "15/20";
         original.BLockerImageIndexes[RegionName.SHOPS] = 3;
         original.HelmDoorImageIndexes.Add(0);
@@ -323,8 +292,8 @@ public class SavedProgressTests
         original.LevelOrder = [1, 2, 3, 4, 5];
 
         // Act
-        var json = JsonConvert.SerializeObject(original);
-        var restored = JsonConvert.DeserializeObject<SavedProgress>(json);
+        var json = JsonSerializer.Serialize(original);
+        var restored = JsonSerializer.Deserialize<SavedProgress>(json);
 
         // Assert
         Assert.Multiple(() =>
@@ -332,7 +301,7 @@ public class SavedProgressTests
             Assert.NotNull(restored);
             Assert.NotNull(restored.HelmKongs);
             Assert.NotNull(restored.LevelOrder);
-            Assert.Equal(testPath, restored.spoilerPath);
+            Assert.Equal(testPath, restored.SpoilerPath);
             Assert.Single(restored.SavedItems);
             Assert.Equal("15/20", restored.SavedGBCounts[RegionName.JUNGLE_JAPES]);
             Assert.Equal(3, restored.BLockerImageIndexes[RegionName.SHOPS]);
@@ -350,18 +319,18 @@ public class SavedProgressTests
         var progress2 = new SavedProgress();
 
         // Act
-        progress1.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, ItemVisibilityState.Visible, false, 1.0);
-        progress1.spoilerPath = "path1.json";
+        progress1.SavedItems[ItemName.DONKEY] = new SavedItem(ItemName.DONKEY, RegionName.JUNGLE_JAPES, true, false, 1.0);
+        progress1.SpoilerPath = "path1.json";
 
-        progress2.spoilerPath = "path2.json";
+        progress2.SpoilerPath = "path2.json";
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.Single(progress1.SavedItems);
             Assert.Empty(progress2.SavedItems);
-            Assert.Equal("path1.json", progress1.spoilerPath);
-            Assert.Equal("path2.json", progress2.spoilerPath);
+            Assert.Equal("path1.json", progress1.SpoilerPath);
+            Assert.Equal("path2.json", progress2.SpoilerPath);
         });
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.7.11911.148 stable
+VisualStudioVersion = 18.7.11911.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Track-O-Matic", "TrackOMatic\Track-O-Matic.csproj", "{91260922-9FBA-4508-9593-430514E34A2B}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackOMatic.Logic.Test", "TrackOMatic.Logic.Test\TrackOMatic.Logic.Test.csproj", "{A449A2C4-AC5D-4775-ABBD-036E87043140}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackOMatic.ViewModels.Test", "TrackOMatic.ViewModels.Test\TrackOMatic.ViewModels.Test.csproj", "{947BBBCB-AB1F-47C7-9F61-E572A0DF075B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackOMatic.AutoTracking.Windows", "TrackOMatic.AutoTracking.Windows\TrackOMatic.AutoTracking.Windows.csproj", "{EAFEE4E0-0085-248F-FE50-467F4ED51BB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{947BBBCB-AB1F-47C7-9F61-E572A0DF075B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947BBBCB-AB1F-47C7-9F61-E572A0DF075B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{947BBBCB-AB1F-47C7-9F61-E572A0DF075B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAFEE4E0-0085-248F-FE50-467F4ED51BB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFEE4E0-0085-248F-FE50-467F4ED51BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAFEE4E0-0085-248F-FE50-467F4ED51BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAFEE4E0-0085-248F-FE50-467F4ED51BB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,184 @@
+using System.Reflection;
+using System.Text.Json;
+
+using TrackOMatic.Logic.Enums;
+
+namespace TrackOMatic.Logic.Models.Hints;
+
+public static class HintData
+{
+    public static Dictionary<RegionName, List<string>> REGIONS_WITHOUT_LEVEL_NAME { get; } = new()
+    {
+        {RegionName.DK_ISLES, new() },
+        {RegionName.JUNGLE_JAPES, new() },
+        {RegionName.ANGRY_AZTEC, new() },
+        {RegionName.FRANTIC_FACTORY, new() },
+        {RegionName.GLOOMY_GALLEON, new() },
+        {RegionName.FUNGI_FOREST, new() },
+        {RegionName.CRYSTAL_CAVES, new() },
+        {RegionName.CREEPY_CASTLE, new() },
+        {RegionName.HIDEOUT_HELM, new() },
+    };
+    public static List<string> MISC_DIRECT_HINT_TYPES { get; } =
+    [
+        "Battle Arena","Chunky","Colored Bananas","Crate","Diddy","Dirt Patch","Donkey","Fairy","Kasplat","Lanky","Tiny","Shops"
+    ];
+    public static Dictionary<HintGroup, RegionName> REGION_HINT_GROUP_TO_REGION { get; } = new()
+    {
+        {HintGroup.REGION_ISLES, RegionName.DK_ISLES },
+        {HintGroup.REGION_JAPES, RegionName.JUNGLE_JAPES },
+        {HintGroup.REGION_AZTEC, RegionName.ANGRY_AZTEC },
+        {HintGroup.REGION_FACTORY, RegionName.FRANTIC_FACTORY },
+        {HintGroup.REGION_GALLEON, RegionName.GLOOMY_GALLEON },
+        {HintGroup.REGION_FOREST, RegionName.FUNGI_FOREST },
+        {HintGroup.REGION_CAVES, RegionName.CRYSTAL_CAVES},
+        {HintGroup.REGION_CASTLE, RegionName.CREEPY_CASTLE },
+        {HintGroup.REGION_HELM, RegionName.HIDEOUT_HELM },
+    };
+
+    public static Dictionary<string, Dictionary<string, string>> UserShortcuts { get; private set; } = null!;
+    public static List<string> SortedRegions { get; private set; } = null!;
+    public static List<string> SortedMoves { get; private set; } = null!;
+    public static List<string> SortedChecks { get; private set; } = null!;
+
+    private static Dictionary<string, Dictionary<string, string>> LoadDefaultShortcuts()
+    {
+        var defaultShortcutsResource = "TrackOMatic.default_shortcuts.json";
+        using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(defaultShortcutsResource)
+            ?? throw new InvalidOperationException("Unable to load default shortcuts resource.");
+        using StreamReader reader = new(stream);
+        string json = reader.ReadToEnd();
+        return JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(json)
+            ?? throw new InvalidOperationException("Default shortcuts resource could not be deserialized.");
+    }
+
+    private static void CreateUserShortcuts()
+    {
+        var defaultShortcutsResource = "TrackOMatic.default_shortcuts.json";
+        using Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(defaultShortcutsResource);
+        if (stream != null)
+        {
+            using FileStream fileStream = File.Create("shortcuts.json");
+            stream.CopyTo(fileStream);
+        }
+    }
+
+    private static void InitUserShortcuts()
+    {
+        var userShortcutsFile = "shortcuts.json";
+
+        try
+        {
+            if (!File.Exists(userShortcutsFile))
+            {
+                CreateUserShortcuts();
+            }
+
+            using StreamReader reader = new(userShortcutsFile);
+            string json = reader.ReadToEnd();
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(json);
+
+            if (deserialized == null || !deserialized.ContainsKey("Hint Regions"))
+            {
+                UserShortcuts = LoadDefaultShortcuts();
+            }
+            else
+            {
+                UserShortcuts = deserialized;
+            }
+        }
+        catch
+        {
+            // If any error occurs loading user shortcuts, fall back to defaults
+            UserShortcuts = LoadDefaultShortcuts();
+        }
+
+        foreach (var entry in UserShortcuts["Hint Regions"].ToList())
+        {
+            if (HintRegion.ByFieldName.TryGetValue(entry.Value, out var region))
+            {
+                UserShortcuts["Hint Regions"][entry.Key] = region.ShortName;
+            }
+        }
+        foreach (var entry in UserShortcuts["Item Locations"].ToList())
+        {
+            if (HintLocation.ByFieldName.TryGetValue(entry.Value, out var location))
+            {
+                UserShortcuts["Item Locations"][entry.Key] = location.ShortName;
+            }
+        }
+        foreach (var entry in UserShortcuts["Moves"].ToList())
+        {
+            if (HintMove.ByFieldName.TryGetValue(entry.Value, out var move))
+            {
+                UserShortcuts["Moves"][entry.Key] = move.ShortName;
+            }
+        }
+    }
+
+    private static void InitSortedRegions()
+    {
+        SortedRegions = [.. HintRegion.All
+            .Select(region => region.ShortName)
+            .OrderBy(name => name)];
+    }
+
+    private static void InitSortedMoves()
+    {
+        SortedMoves = [.. HintMove.All
+            .Select(move => move.ShortName)
+            .OrderBy(move => move)];
+    }
+
+    private static void InitSortedChecks()
+    {
+        SortedChecks = [.. HintLocation.All
+            .Select(loc => loc.ShortName)
+            .OrderBy(name => name)];
+    }
+
+    public static void InitDirectItemHintList()
+    {
+        foreach (var hintRegion in HintRegion.All)
+        {
+            var hintRegionName = hintRegion.ShortName;
+            if (hintRegion.HintGroup != HintGroup.NONE && REGION_HINT_GROUP_TO_REGION.TryGetValue(hintRegion.HintGroup, out RegionName level))
+            {
+                REGIONS_WITHOUT_LEVEL_NAME[level].Add(hintRegionName);
+            }
+        }
+        foreach (var key in REGIONS_WITHOUT_LEVEL_NAME.Keys.ToList())
+        {
+            var regionList = REGIONS_WITHOUT_LEVEL_NAME[key];
+            regionList = [.. regionList, .. MISC_DIRECT_HINT_TYPES];
+            regionList.Sort();
+            REGIONS_WITHOUT_LEVEL_NAME[key] = regionList;
+        }
+    }
+
+    public static void Init()
+    {
+        InitSortedRegions();
+        InitUserShortcuts();
+        InitSortedMoves();
+        InitSortedChecks();
+        InitDirectItemHintList();
+    }
+
+    /// <summary>
+    /// Initialize HintData with provided shortcuts data (for testing).
+    /// This allows tests to bypass embedded resource loading and provide synthetic data.
+    /// </summary>
+    /// <param name="testShortcuts">Pre-built shortcuts dictionary for testing</param>
+    public static void InitForTesting(Dictionary<string, Dictionary<string, string>> testShortcuts)
+    {
+        // Set UserShortcuts to the provided test data
+        UserShortcuts = testShortcuts;
+
+        // Still initialize the sorted collections from real data
+        InitSortedRegions();
+        InitSortedMoves();
+        InitSortedChecks();
+        InitDirectItemHintList();
+    }
+}

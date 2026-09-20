@@ -1,0 +1,130 @@
+<Window
+    x:Class="TrackOMatic.HintsUI.HintMultiSelectionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MultiGridItemSelectorViewModel}"
+    Background="{StaticResource RegionBG}"
+    Title="Select Items"
+    ResizeMode="NoResize"
+    SizeToContent="WidthAndHeight"
+>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Dictionary1.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="ItemTemplate" DataType="{x:Type viewmodels:HintDialogItemViewModel}">
+                <local:HintDialogItem />
+            </DataTemplate>
+            <ItemsPanelTemplate x:Key="Grid15">
+                <UniformGrid Rows="1" Columns="5" />
+            </ItemsPanelTemplate>
+            <ItemsPanelTemplate x:Key="Grid24">
+                <UniformGrid Rows="2" Columns="4" />
+            </ItemsPanelTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <StackPanel Margin="2">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="6*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Individual Moves, Bosses, Potions -->
+            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="6*" />
+                </Grid.ColumnDefinitions>
+                <!-- Region 1: K. Rool Phases -->
+                <ItemsControl Grid.Row="0" Grid.Column="0" ItemsSource="{Binding FinalBossPhases}" ItemTemplate="{StaticResource ItemTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="5" Columns="1" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <!-- Region 2: Kongs and their moves -->
+                <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding KongMoves}" ItemTemplate="{StaticResource ItemTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="5" Columns="6" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <!-- Region 3: Potions (and Kong Family) -->
+                <ItemsControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Potions}" ItemTemplate="{StaticResource ItemTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="1" Columns="7" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <!-- Region 4: Level Bosses -->
+                <ItemsControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding LevelBosses}" ItemTemplate="{StaticResource ItemTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="1" Columns="7" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
+
+            <!-- Primarily Shared and Unknown Items -->
+            <Grid Grid.Row="0" Grid.Column="2" VerticalAlignment="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Region 5: Keys -->
+                <ItemsControl Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Keys}" ItemTemplate="{StaticResource ItemTemplate}" ItemsPanel="{StaticResource Grid24}" />
+
+                <!-- Region 6: Shared Moves & Bean -->
+                <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SharedMoves}" ItemTemplate="{StaticResource ItemTemplate}" ItemsPanel="{StaticResource Grid24}" />
+
+                <!-- Region 7: Shopkeepers -->
+                <ItemsControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ItemsSource="{Binding Shopkeepers}" ItemTemplate="{StaticResource ItemTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="4" Columns="1" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <!-- Region 8: Training Moves -->
+                <ItemsControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding TrainingMoves}" ItemTemplate="{StaticResource ItemTemplate}" ItemsPanel="{StaticResource Grid15}" />
+
+                <!-- Region 9: The Unknowns and Unwanteds -->
+                <ItemsControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding MiscItems}" ItemTemplate="{StaticResource ItemTemplate}" ItemsPanel="{StaticResource Grid15}" />
+            </Grid>
+        </Grid>
+
+        <Border MouseDown="OnDoneClicked" Cursor="Hand" Margin="5,18,5,5" Padding="0,10,0,10" CornerRadius="5" Background="{StaticResource RegionImageBG}" BorderBrush="Black" BorderThickness="0.5">
+            <TextBlock Margin="0" Text="Done" Style="{StaticResource DefaultText}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Border>
+    </StackPanel>
+</Window>

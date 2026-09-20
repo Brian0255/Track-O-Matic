@@ -28,6 +28,9 @@
     <BitmapImage x:Key="star_simple" UriSource="Images/dk64/star_simple.png" x:Shared="false" />
     <BitmapImage x:Key="star_complex" UriSource="Images/dk64/star_complex.png" x:Shared="false" />
     <BitmapImage x:Key="x" UriSource="Images/dk64/x.png" x:Shared="false" />
+    <BitmapImage x:Key="checkmark" UriSource="Images/dk64/checkmark.png" x:Shared="false" />
+
+    <BitmapImage x:Key="headphones" UriSource="Images/dk64/headphones.png" x:Shared="false" />
 
     <BitmapImage x:Key="unknown_kong" UriSource="Images/dk64/unknown_kong.png" x:Shared="false" />
     <BitmapImage x:Key="dk_isles" UriSource="Images/dk64/dk_isles.png" x:Shared="false" />
@@ -85,6 +88,20 @@
 
     <BitmapImage x:Key="baboon_balloon" UriSource="Images/dk64/lankypad.png"  x:Shared="false" />
 
+    <BitmapImage x:Key="bp_dk" UriSource="Images/dk64/dk_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_diddy" UriSource="Images/dk64/diddy_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_lanky" UriSource="Images/dk64/lanky_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_tiny" UriSource="Images/dk64/tiny_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_chunky" UriSource="Images/dk64/chunky_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_total" UriSource="Images/dk64/total_bps.png" x:Shared="false" />
+    <BitmapImage x:Key="count_company" UriSource="Images/dk64/company_coin.png" x:Shared="false" />
+    <BitmapImage x:Key="count_pearl" UriSource="Images/dk64/pearl.png" x:Shared="false" />
+    <BitmapImage x:Key="count_crown" UriSource="Images/dk64/crown.png" x:Shared="false" />
+    <BitmapImage x:Key="count_medal" UriSource="Images/dk64/bananamedal.png" x:Shared="false" />
+    <BitmapImage x:Key="count_rainbow" UriSource="Images/dk64/rainbowcoin.png" x:Shared="false" />
+    <BitmapImage x:Key="count_fairy" UriSource="Images/dk64/fairy.png" x:Shared="false" />
+    <BitmapImage x:Key="count_gb" UriSource="Images/dk64/gb.png" x:Shared="false" />
+
     <BitmapImage x:Key="key_1" UriSource="Images/dk64/k1.png"  x:Shared="false"/>
     <BitmapImage x:Key="key_2" UriSource="Images/dk64/k2.png"  x:Shared="false"/>
     <BitmapImage x:Key="key_3" UriSource="Images/dk64/k3.png"  x:Shared="false"/>
@@ -95,6 +112,15 @@
     <BitmapImage x:Key="key_8" UriSource="Images/dk64/k8.png"  x:Shared="false"/>
 
     <BitmapImage x:Key="basic_key" UriSource="Images/dk64/key.png"  x:Shared="false"/>
+
+    <BitmapImage x:Key="number_1" UriSource="Images/dk64/1.png" x:Shared="false"/>
+    <BitmapImage x:Key="number_2" UriSource="Images/dk64/2.png" x:Shared="false"/>
+    <BitmapImage x:Key="number_3" UriSource="Images/dk64/3.png" x:Shared="false"/>
+    <BitmapImage x:Key="number_4" UriSource="Images/dk64/4.png" x:Shared="false"/>
+    <BitmapImage x:Key="number_5" UriSource="Images/dk64/5.png" x:Shared="false"/>
+    <BitmapImage x:Key="number_6" UriSource="Images/dk64/6.png" x:Shared="false"/>
+    <BitmapImage x:Key="number_7" UriSource="Images/dk64/7.png" x:Shared="false"/>
+    <BitmapImage x:Key="number_8" UriSource="Images/dk64/8.png" x:Shared="false"/>
 
     <BitmapImage x:Key="unknown_vial" UriSource="Images/dk64/unknown_vial.png"  x:Shared="false"/>
     <BitmapImage x:Key="unknown_key" UriSource="Images/dk64/unknown_key.png"  x:Shared="false"/>
@@ -152,6 +178,7 @@
     <BitmapImage x:Key="candy" UriSource="Images/dk64/candy.png" x:Shared="false"/>
     <BitmapImage x:Key="funky" UriSource="Images/dk64/funky.png" x:Shared="false"/>
     <BitmapImage x:Key="snide" UriSource="Images/dk64/snide.png" x:Shared="false"/>
+    <BitmapImage x:Key="wrinkly" UriSource="Images/dk64/wrinkly.png" x:Shared="false"/>
 
     <BitmapImage x:Key="army" UriSource="Images/dk64/army.png" x:Shared="false"/>
     <BitmapImage x:Key="army2" UriSource="Images/dk64/army2.png" x:Shared="false"/>
@@ -216,6 +243,20 @@
     <BitmapImage x:Key="primate_punch_bw" UriSource="Images/bw/chunky_move.png"  x:Shared="false" />
 
     <BitmapImage x:Key="baboon_balloon_bw" UriSource="Images/bw/lankypad.png"  x:Shared="false" />
+
+    <BitmapImage x:Key="bp_dk_bw" UriSource="Images/bw/dk_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_diddy_bw" UriSource="Images/bw/diddy_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_lanky_bw" UriSource="Images/bw/lanky_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_tiny_bw" UriSource="Images/bw/tiny_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_chunky_bw" UriSource="Images/bw/chunky_bp.png" x:Shared="false" />
+    <BitmapImage x:Key="bp_total_bw" UriSource="Images/bw/total_bps.png" x:Shared="false" />
+    <BitmapImage x:Key="count_company_bw" UriSource="Images/bw/company_coin.png" x:Shared="false" />
+    <BitmapImage x:Key="count_pearl_bw" UriSource="Images/bw/pearl.png" x:Shared="false" />
+    <BitmapImage x:Key="count_crown_bw" UriSource="Images/bw/crown.png" x:Shared="false" />
+    <BitmapImage x:Key="count_medal_bw" UriSource="Images/bw/bananamedal.png" x:Shared="false" />
+    <BitmapImage x:Key="count_rainbow_bw" UriSource="Images/bw/rainbowcoin.png" x:Shared="false" />
+    <BitmapImage x:Key="count_fairy_bw" UriSource="Images/bw/fairy.png" x:Shared="false" />
+    <BitmapImage x:Key="count_gb_bw" UriSource="Images/bw/gb.png" x:Shared="false" />
 
     <BitmapImage x:Key="key_1_bw" UriSource="Images/bw/k1.png"  x:Shared="false"/>
     <BitmapImage x:Key="key_2_bw" UriSource="Images/bw/k2.png"  x:Shared="false"/>

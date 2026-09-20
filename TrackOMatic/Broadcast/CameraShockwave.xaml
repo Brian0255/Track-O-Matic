@@ -1,0 +1,51 @@
+<UserControl
+    x:Class="TrackOMatic.Broadcast.CameraShockwave"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.Broadcast"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Broadcast;assembly=TrackOMatic.ViewModels"
+    Background="Transparent"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:CameraShockwaveViewModel}"
+    d:DesignHeight="64"
+    d:DesignWidth="64"
+>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Border
+            BorderThickness="0"
+            RenderOptions.BitmapScalingMode="NearestNeighbor"
+            RenderOptions.ClearTypeHint="Enabled"
+            ToolTipService.InitialShowDelay="500"
+        >
+            <Border.ToolTip>
+                <ToolTip
+                    Content="{Binding HoverText}"
+                    Placement="Mouse"
+                    Visibility="{Binding HasHoverText, Converter={StaticResource BooleanToVisibilityConverter}}"
+                />
+            </Border.ToolTip>
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+            </Border.Effect>
+
+            <!-- Bind to the resource key via converter -->
+            <Image Source="{Binding ImageResourceKey, Converter={StaticResource ResourceKeyConverter}}" />
+        </Border>
+
+        <!-- Star visibility bound to IsStarred via converter -->
+        <Image
+            Margin="0,0,4,4"
+            Source="{StaticResource star_complex}"
+            HorizontalAlignment="Left"
+            Visibility="{Binding IsStarred, Converter={StaticResource BooleanToVisibilityConverter}}" />
+    </Grid>
+</UserControl>

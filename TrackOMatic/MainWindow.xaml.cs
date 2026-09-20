@@ -4,7 +4,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 using AutoUpdaterDotNET;
 
@@ -12,753 +12,570 @@ using Microsoft.Win32;
 
 using TrackOMatic.Logic.Enums;
 using TrackOMatic.Logic.Models;
-using TrackOMatic.Properties;
+using TrackOMatic.Services;
+using TrackOMatic.Services.TrackerState;
+using TrackOMatic.ViewModels;
 
 using Timer = System.Timers.Timer;
 
-namespace TrackOMatic
+namespace TrackOMatic;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    private static readonly TimeSpan _saveInterval = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan _windowLocationChangeDebounceInterval = TimeSpan.FromSeconds(1);
+    private static readonly TimeSpan _windowSizeChangeDebounceInterval = TimeSpan.FromSeconds(1);
+
+    private readonly DispatcherTimer _locationChangeDebounceTimer;
+    private readonly DispatcherTimer _sizeChangeDebounceTimer;
+
+    private BroadcastView? BroadcastView { get; set; }
+
+    public bool SpoilerLoaded { get; private set; }
+    public SpoilerSettings SpoilerSettings { get; private set; } = null!;
+
+    public UiItemViewModel? CurrentDragViewModel { get; private set; }
+
+    private IAutotrackerService Autotracker { get; init; }
+    private IUserSettingsService UserSettings { get; init; }
+    private IApplicationStateService AppState { get; init; }
+    private IParsedSpoilerDataService ParsedSpoilerDataService { get; init; }
+    private IDataSaverService DataSaverService { get; init; }
+
+    private IItemTrackingService ItemTrackingService { get; init; }
+
+    private ILevelOrderService LevelOrderService { get; init; }
+
+    private ISavedProgressProvider SavedProgressProvider { get; init; }
+
+    private IEndGameProgressionService EndGameProgressionService { get; init; }
+
+    private IThemeService ThemeService { get; init; }
+
+    private ICollectiblesService CollectiblesService { get; init; }
+
+    private ISongService SongService { get; init; }
+
+    // Timer to save the data every minute.
+    private Timer _saveTimer { get; init; }
+
+    public MainWindow(
+        IUserSettingsService settingsSergice,
+        IApplicationStateService appStateService,
+        IParsedSpoilerDataService parsedSpoilerDataService,
+        IAutotrackerService autotrackerService,
+        IThemeService themeService,
+        ISavedProgressProvider savedProgressProvider,
+        IDataSaverService dataSaverService,
+        IItemTrackingService itemTrackingService,
+        ILevelOrderService levelOrderService,
+        IEndGameProgressionService endGameProgressionService,
+        ICollectiblesService collectiblesService,
+        ISongService songService,
+        IItemSelectorService itemSelectorService
+    )
     {
-        public int TotalGBs { get; private set; }
-        public BroadcastView? BroadcastView { get; private set; }
-        public Dictionary<RegionName, Region> Regions { get; private set; } = null!;
-        public Dictionary<ItemType, CollectibleItem> Collectibles { get; private set; } = null!;
-        public Dictionary<Item, ItemBackground> ITEM_TO_BACKGROUND_IMAGE { get; } = new();
-        public Dictionary<ItemBackground, Item> BACKGROUND_IMAGE_TO_ITEM { get; } = new();
-        public Dictionary<ItemName, RegionName> ITEM_NAME_TO_REGION { get; } = new();
-        public List<ProgressiveItem> BossKongs { get; private set; }
-        public List<ProgressiveItem> HelmKongs { get; private set; }
-        public List<HintPanel> HintPanels { get; private set; } = null!;
+        InitializeComponent();
 
-        public List<Item> DraggableItems { get; private set; } = new();
+        UserSettings = settingsSergice;
+        ItemTrackingService = itemTrackingService;
+        LevelOrderService = levelOrderService;
+        AppState = appStateService;
+        DataSaverService = dataSaverService;
+        ParsedSpoilerDataService = parsedSpoilerDataService;
+        SavedProgressProvider = savedProgressProvider;
+        Autotracker = autotrackerService;
+        EndGameProgressionService = endGameProgressionService;
+        ThemeService = themeService;
+        CollectiblesService = collectiblesService;
+        SongService = songService;
+        DataContext = new MainWindowViewModel(
+            itemTrackingService,
+            settingsSergice,
+            collectiblesService,
+            themeService,
+            autotrackerService,
+            parsedSpoilerDataService,
+            endGameProgressionService,
+            savedProgressProvider,
+            itemSelectorService,
+            dataSaverService
+        );
 
-        public int collected;
-        public Autotracker Autotracker { get; private set; } = null!;
-        public bool SpoilerLoaded { get; private set; }
-        public static Grid Items { get; private set; } = null!;
-        public SpoilerParser SpoilerParser { get; private set; }
-        public DataSaver DataSaver { get; private set; }
-        public SpoilerSettings SpoilerSettings { get; private set; } = null!;
+        _saveTimer = new Timer(_saveInterval);
+        _saveTimer.Elapsed += async (sender, e) => await OnTimerSave(sender, e);
+        _saveTimer.Start();
+        _locationChangeDebounceTimer ??= new DispatcherTimer();
+        _locationChangeDebounceTimer.Tick += SaveLocationData;
+        _sizeChangeDebounceTimer = new DispatcherTimer();
+        _sizeChangeDebounceTimer.Tick += SaveSizeData;
 
-        private List<BitmapImage> ProgressiveKongSource { get; init; }
-        private List<BitmapImage> BossSource { get; init; }
+        // Subscribe to settings changes to notify XAML bindings
+        UserSettings.PropertyChanged += OnSettingChanged;
 
-        public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
-        public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
-
-        // Timer to save the data every minute. This is properly initialized, but the compiler is finicky.
-        private Timer SaveTimer = null!;
-        public MainWindow()
+        if (UserSettings.Autotracking)
         {
-            InitializeComponent();
-            HintData.Init();
-            InitOptions();
-            InitData();
-            ProgressiveKongSource =
-            [
-                (BitmapImage)FindResource("unknown_kong_bw"),
-                (BitmapImage)FindResource("donkey"),
-                (BitmapImage)FindResource("diddy"),
-                (BitmapImage)FindResource("lanky"),
-                (BitmapImage)FindResource("tiny"),
-                (BitmapImage)FindResource("chunky"),
-            ];
-            foreach (var progressiveItem in HelmKongs!)
-            {
-                progressiveItem.ImageSources = [ProgressiveKongSource];
-            }
-            BossSource =
-            [
-                (BitmapImage)FindResource("army"),
-                (BitmapImage)FindResource("doga"),
-                (BitmapImage)FindResource("madjack"),
-                (BitmapImage)FindResource("pufftoss"),
-                (BitmapImage)FindResource("doga2"),
-                (BitmapImage)FindResource("army2"),
-                (BitmapImage)FindResource("kutout"),
-            ];
-            List<List<BitmapImage>> allBosses = [ProgressiveKongSource, BossSource];
-            foreach (var progressiveItem in BossKongs!)
-            {
-                progressiveItem.ImageSources = allBosses;
-            }
-
-            SpoilerParser = new(this);
-            DataSaver = new(this);
-            Reset();
-            AdjustBasedOnCompactMode();
+            Autotracker.Start();
         }
 
-        private void UpdateHintDisplayToggles()
+        InitOptions();
+        InitData();
+        Reset();
+    }
+
+    #region Drag Drop Chaos
+
+    /// <summary>
+    /// Registers a ViewModel as the currently dragging item and updates the drag preview canvas.
+    /// </summary>
+    public void RegisterDragPreview(UiItemViewModel dragViewModel)
+    {
+        CurrentDragViewModel = dragViewModel;
+        UpdateDragPreviewCanvas();
+    }
+
+    /// <summary>
+    /// Clears the currently dragging ViewModel and updates the drag preview canvas.
+    /// </summary>
+    public void ClearDragPreview()
+    {
+        CurrentDragViewModel = null;
+        UpdateDragPreviewCanvas();
+    }
+
+    /// <summary>
+    /// Updates the drag preview canvas with the current drag ViewModel's state.
+    /// </summary>
+    /// <remarks>This method is ugly, but will hopefully be replaced with something cleaner in the future.</remarks>
+    private void UpdateDragPreviewCanvas()
+    {
+        var dragPreviewCanvas = (Canvas?)FindName("DragPreviewCanvas");
+        if (dragPreviewCanvas == null)
         {
-            hintDisplayOff.IsChecked = (Settings.Default.HintDisplay == "Off");
-            hintDisplayMP.IsChecked = (Settings.Default.HintDisplay == "Multipath Hints");
-            hintDisplayDirect.IsChecked = (Settings.Default.HintDisplay == "Direct Item Hints");
-            broadcastNumberDisplayPoints.IsChecked = (Settings.Default.BroadcastNumberLabel == "Points");
-            broadcastNumberDisplayWOTHCount.IsChecked = (Settings.Default.BroadcastNumberLabel == "WOTH Count");
+            return;
         }
 
-        private ItemBackground? FindMatchingBackgroundImage(Item item)
+        dragPreviewCanvas.Children.Clear();
+
+        if (CurrentDragViewModel?.IsDragging == true)
         {
-            foreach (var control in Items.Children)
+            // Create an Image element and bind it to the ViewModel properties
+            var dragImage = new Image
             {
-                if (control is ItemBackground button)
-                {
-                    if ((ItemName)button.Tag == (ItemName)item.Tag)
-                    {
-                        return button;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        private void InitData()
-        {
-            UpdateHintDisplayToggles();
-            Regions = new()
-            {
-                { RegionName.DK_ISLES, new Region(RegionName.DK_ISLES, DKIslesRegion, DKIslesImagePointsGrid, DKIslesPicture, DKIslesRegionGrid, DKIslesPoints, DKIslesTopLabel) },
-                { RegionName.START, new Region(RegionName.START, StartRegion, StartImagePointsGrid, StartPicture, StartRegionGrid, StartPoints, StartTopLabel) },
-
-                { RegionName.JUNGLE_JAPES, new Region(RegionName.JUNGLE_JAPES, Level1, Level1ImagePointsGrid, Level1Picture, Level1RegionGrid, Level1Points, Level1TopLabel, Level1Order) },
-                { RegionName.ANGRY_AZTEC, new Region(RegionName.ANGRY_AZTEC, Level2, Level2ImagePointsGrid, Level2Picture, Level2RegionGrid, Level2Points,Level2TopLabel, Level2Order) },
-                { RegionName.FRANTIC_FACTORY, new Region(RegionName.FRANTIC_FACTORY, Level3, Level3ImagePointsGrid, Level3Picture, Level3RegionGrid, Level3Points,Level3TopLabel, Level3Order) },
-                { RegionName.GLOOMY_GALLEON, new Region(RegionName.GLOOMY_GALLEON, Level4, Level4ImagePointsGrid, Level4Picture, Level4RegionGrid, Level4Points,Level4TopLabel, Level4Order) },
-                { RegionName.FUNGI_FOREST, new Region(RegionName.FUNGI_FOREST, Level5, Level5ImagePointsGrid, Level5Picture, Level5RegionGrid, Level5Points, Level5TopLabel, Level5Order) },
-                { RegionName.CRYSTAL_CAVES, new Region(RegionName.CRYSTAL_CAVES, Level6, Level6ImagePointsGrid, Level6Picture, Level6RegionGrid, Level6Points,Level6TopLabel, Level6Order) },
-                { RegionName.CREEPY_CASTLE, new Region(RegionName.CREEPY_CASTLE, Level7, Level7ImagePointsGrid, Level7Picture, Level7RegionGrid, Level7Points,Level7TopLabel, Level7Order) },
-
-                { RegionName.HIDEOUT_HELM, new Region(RegionName.HIDEOUT_HELM, HideoutHelm, HelmImagePointsGrid, HideoutHelmPicture, HideoutHelmRegionGrid, HideoutHelmPoints, HideoutHelmTopLabel, Level8Order) },
-                // Special region that's not displayed for the user, but is where all the unhintable moves are stored.
-                {RegionName.UNHINTABLE_MOVES, new Region(RegionName.UNHINTABLE_MOVES, UnhintableMovesRegion, UnhintableMovesImagePointsGrid, null, UnhintableMovesRegionGrid) }
+                Stretch = System.Windows.Media.Stretch.Fill
             };
-            Collectibles = new()
-            {
-                {ItemType.DONKEY_BLUEPRINT, DonkeyBPs },
-                {ItemType.DIDDY_BLUEPRINT, DiddyBPs },
-                {ItemType.LANKY_BLUEPRINT, LankyBPs },
-                {ItemType.TINY_BLUEPRINT, TinyBPs },
-                {ItemType.CHUNKY_BLUEPRINT, ChunkyBPs },
 
-                {ItemType.PEARL, Pearls },
-                {ItemType.BATTLE_CROWN, BattleCrowns },
-                {ItemType.BANANA_MEDAL, BananaMedals },
-                {ItemType.RAINBOW_COIN, RainbowCoins },
-                {ItemType.FAIRY, Fairies },
-                {ItemType.GOLDEN_BANANA, GBs },
-                {ItemType.COMPANY_COIN, CompanyCoinsTotal },
-                {ItemType.TOTAL_BLUEPRINTS, BlueprintsTotal }
+            // Bind Width
+            var widthBinding = new System.Windows.Data.Binding("DragWidth")
+            {
+                Source = CurrentDragViewModel,
+                Mode = System.Windows.Data.BindingMode.OneWay
             };
-            Items = ItemGrid;
-            BossKongs = new() { BossKong1, BossKong2, BossKong3, BossKong4, BossKong5 };
-            HelmKongs = new() { HelmKong1, HelmKong2, HelmKong3, HelmKong4, HelmKong5 };
-            foreach (var control in ItemGrid.Children)
+            dragImage.SetBinding(Image.WidthProperty, widthBinding);
+
+            // Bind Height
+            var heightBinding = new System.Windows.Data.Binding("DragHeight")
             {
-                if (control is Item item)
-                {
-                    var itemName = (ItemName)item.Tag;
-                    ITEM_NAME_TO_ITEM[itemName] = item;
-                }
-            }
+                Source = CurrentDragViewModel,
+                Mode = System.Windows.Data.BindingMode.OneWay
+            };
+            dragImage.SetBinding(Image.HeightProperty, heightBinding);
 
-            //have a separate list of the movable tracker items so it's easy to find them even if they are moved out of the grid
-            foreach (Item item in ITEM_NAME_TO_ITEM.Values)
+            // Bind Opacity
+            var opacityBinding = new System.Windows.Data.Binding("Opacity")
             {
-                DraggableItems.Add(item);
-                var matchingButton = FindMatchingBackgroundImage(item);
-                if (matchingButton != null)
-                {
-                    ITEM_TO_BACKGROUND_IMAGE[item] = matchingButton;
-                    BACKGROUND_IMAGE_TO_ITEM[matchingButton] = item;
-                }
-            }
+                Source = CurrentDragViewModel,
+                Mode = System.Windows.Data.BindingMode.OneWay
+            };
+            dragImage.SetBinding(Image.OpacityProperty, opacityBinding);
 
+            // Set up binding for the image source using the converter
+            var sourceBinding = new System.Windows.Data.Binding("ImageResourceKey")
+            {
+                Source = CurrentDragViewModel,
+                Converter = (System.Windows.Data.IValueConverter?)Resources["ResourceKeyConverter"],
+                Mode = System.Windows.Data.BindingMode.OneWay
+            };
+            dragImage.SetBinding(Image.SourceProperty, sourceBinding);
 
-            HintPanels = [
-                IslesPanel,
-                FactoryPanel,
-                CavesPanel,
-                JapesPanel,
-                GalleonPanel,
-                CastlePanel,
-                AztecPanel,
-                ForestPanel,
-                HelmPanel,
-                PathsPanel,
-                KongsPanel,
-                WotHPanel,
-                FoolishPanel,
-                PotionCountsPanel,
-                UnhintedPanel
-            ];
-            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong, UpdateUIAmountToNextHint, UpdateProgHintImage);
-            SaveTimer = new Timer(60000);
-            SaveTimer.Elapsed += OnTimerSave;
-            SaveTimer.Start();
-            FormatCollectibles();
+            dragPreviewCanvas.Children.Add(dragImage);
+
+            // Bind Canvas position using attached properties
+            var leftBinding = new System.Windows.Data.Binding("DragX")
+            {
+                Source = CurrentDragViewModel,
+                Mode = System.Windows.Data.BindingMode.OneWay
+            };
+            dragImage.SetBinding(Canvas.LeftProperty, leftBinding);
+
+            var topBinding = new System.Windows.Data.Binding("DragY")
+            {
+                Source = CurrentDragViewModel,
+                Mode = System.Windows.Data.BindingMode.OneWay
+            };
+            dragImage.SetBinding(Canvas.TopProperty, topBinding);
         }
+    }
 
-        public void SetRegionLighting(RegionName regionName, bool lightUp)
+    /// <summary>
+    /// Public method for UiItem to call when drag position or state changes.
+    /// </summary>
+    public void UpdateDragPreview()
+    {
+        UpdateDragPreviewCanvas();
+    }
+
+    #endregion
+
+    #region Event Handling
+
+    private void OnSettingChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(UserSettings.HintDisplay))
         {
-            string resource = (lightUp) ? "RegionBGLitUp" : "RegionBG";
-            if (!Regions.ContainsKey(regionName))
-            {
-                return;
-            }
-
-            var region = Regions[regionName];
-            region.MainUIGrid.SetResourceReference(Panel.BackgroundProperty, resource);
-            region.RegionGrid.SetResourceReference(Panel.BackgroundProperty, resource);
+            UpdateUiViaHintDisplay();
         }
-
-        public void ResetCollectibles()
-        {
-            foreach (var entry in Collectibles)
-            {
-                entry.Value.SetAmount(0);
-            }
-        }
-
-        private void OnTimerSave(object? sender, ElapsedEventArgs e)
-        {
-            //probably don't need this
-            //DataSaver.Save();
-        }
-
-        public void UpdateCollectible(ItemType collectibleType, int newTotal)
-        {
-            if (Collectibles.ContainsKey(collectibleType))
-            {
-                Collectibles[collectibleType].SetAmount(newTotal);
-                if (BroadcastView != null)
-                {
-                    BroadcastView.UpdateCollectible(collectibleType, newTotal);
-                }
-            }
-        }
-
-        public bool ProcessNewAutotrackedItem(ItemName itemToProcess, RegionName regionName, bool hint = false, bool canAutosave = true)
-        {
-            if (regionName == RegionName.UNKNOWN)
-            {
-                return false;
-            }
-
-            if (!ITEM_NAME_TO_ITEM.ContainsKey(itemToProcess))
-            {
-                return false;
-            }
-
-            var item = ITEM_NAME_TO_ITEM[itemToProcess];
-            bool darken = hint && item.Parent == ItemGrid;
-            if (item.Parent != ItemGrid)
-            {
-                var parent = (RegionGrid)item.Parent;
-                parent.Handle_RegionGrid(item, false);
-            }
-            if (!hint)
-            {
-                item.ChangeOpacity(1.0);
-            }
-
-            Regions[regionName].RegionGrid.Add_Item(item, false, !darken);
-            //should mean that there was no matching vial, item couldn't be placed as a result
-            if (item.Parent == ItemGrid)
-            {
-                return false;
-            }
-
-            if (BroadcastView != null && !hint)
-            {
-                BroadcastView.TurnItemOn(itemToProcess);
-            }
-
-            DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility.ToItemVisibility(), true, item.Image.Opacity));
-            DataSaver.Save("autosave.json", canAutosave);
-            return true;
-        }
-
-        private void InitOptions()
-        {
-            TopMostOption.IsChecked = Properties.Settings.Default.TopMost;
-            TopMostToggle(null, null);
-
-            Top = Properties.Settings.Default.WindowY;
-            Left = Properties.Settings.Default.WindowX;
-
-            ResetWidthHeight();
-        }
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.WindowY = RestoreBounds.Top;
-            Properties.Settings.Default.WindowX = RestoreBounds.Left;
-        }
-
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-        }
-
-        private void ResetWidthHeight()
-        {
-            double newWidth = 580;
-            if (Settings.Default.HintDisplay != "Off")
-            {
-                newWidth = (Settings.Default.CompactMode) ? 1392.0 : 1800.0;
-            }
-            Width = newWidth;
-            Height = 820;
-            if (Settings.Default.HintDisplay == "Multipath Hints")
-            {
-                MultipathGrid.Visibility = Visibility.Visible;
-                DirectItemHintGrid.Visibility = Visibility.Hidden;
-            }
-            if (Settings.Default.HintDisplay == "Direct Item Hints")
-            {
-                DirectItemHintGrid.Visibility = Visibility.Visible;
-                MultipathGrid.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void CompactModeMultipathChanges(bool on)
-        {
-            var multipath2Width = on ? 0 : 1;
-            MultipathColumn2.Width = new GridLength(multipath2Width, GridUnitType.Star);
-            var multipathColumn1Row0Height = on ? 1.6 : 0;
-            MultipathColumn1Row0.Height = new GridLength(multipathColumn1Row0Height, GridUnitType.Star);
-            var potionsRowHeight = on ? 2.54 : 0;
-            OptionalPotionsRow.Height = new GridLength(potionsRowHeight, GridUnitType.Star);
-
-            if (on)
-            {
-                MultipathMainColumn2.Children.Remove(FoolishPanel);
-                MultipathMainColumn2.Children.Remove(PotionCountsPanel);
-                MultipathColumn1.Children.Add(FoolishPanel);
-                Grid.SetRow(FoolishPanel, 0);
-                UnhintedColumn.Children.Add(PotionCountsPanel);
-                Grid.SetRow(PotionCountsPanel, 0);
-            }
-            else
-            {
-                UnhintedColumn.Children.Remove(PotionCountsPanel);
-                MultipathColumn1.Children.Remove(FoolishPanel);
-                MultipathMainColumn2.Children.Add(FoolishPanel);
-                Grid.SetRow(FoolishPanel, 0);
-                MultipathMainColumn2.Children.Add(PotionCountsPanel);
-                Grid.SetRow(PotionCountsPanel, 1);
-            }
-        }
-
-        private void CompactModeDirectItemChanges(bool on)
-        {
-            //god i hate this
-            var lastRowHeights = on ? 1 : 0;
-            DirectHintsCol0LastRow.Height = new GridLength(lastRowHeights, GridUnitType.Star);
-            DirectHintsCol1LastRow.Height = new GridLength(lastRowHeights, GridUnitType.Star);
-            var thirdColumnWidth = on ? 0 : 1;
-            DirectHintsThirdMain.Width = new GridLength(thirdColumnWidth, GridUnitType.Star);
-            DirectHintsCol0.Children.Clear();
-            DirectHintsCol1.Children.Clear();
-            DirectHintsCol2.Children.Clear();
-            if (on)
-            {
-                UIUtils.AddToGridRow(DirectHintsCol0, IslesPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol0, AztecPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol0, GalleonPanel, 2);
-                UIUtils.AddToGridRow(DirectHintsCol0, CavesPanel, 3);
-                UIUtils.AddToGridRow(DirectHintsCol1, JapesPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol1, FactoryPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol1, ForestPanel, 2);
-                UIUtils.AddToGridRow(DirectHintsCol1, CastlePanel, 3);
-                UIUtils.AddToGridRow(UnhintedColumn, HelmPanel, 0);
-            }
-            else
-            {
-                UnhintedColumn.Children.Remove(HelmPanel);
-                UIUtils.AddToGridRow(DirectHintsCol0, IslesPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol0, FactoryPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol0, CavesPanel, 2);
-                UIUtils.AddToGridRow(DirectHintsCol1, JapesPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol1, GalleonPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol1, CastlePanel, 2);
-                UIUtils.AddToGridRow(DirectHintsCol2, AztecPanel, 0);
-                UIUtils.AddToGridRow(DirectHintsCol2, ForestPanel, 1);
-                UIUtils.AddToGridRow(DirectHintsCol2, HelmPanel, 2);
-            }
-        }
-
-        private void AdjustBasedOnCompactMode()
-        {
-            var isActuallyOn = (MultipathColumns.Width.Value == 2 && MultipathColumns.Width.IsStar);
-            var on = Settings.Default.CompactMode;
-            if (on == isActuallyOn)
-            {
-                return;
-            }
-
-            var totalColumns = on ? 2 : 3;
-            MultipathColumns.Width = new GridLength(totalColumns, GridUnitType.Star);
-            double newRatio = on ? 1.43 : 2.15;
-            if (Settings.Default.HintDisplay != "Off")
-            {
-                HintsColumn.Width = new GridLength(newRatio, GridUnitType.Star);
-            }
-            var newWidth = on ? (Width * (1392.0 / 1800.0)) : (Width * (1800.0 / 1392.0));
-            Width = newWidth;
-            CompactModeMultipathChanges(on);
-            CompactModeDirectItemChanges(on);
-        }
-
-        private void ResetSize(object sender, RoutedEventArgs e)
+        else if (e.PropertyName == nameof(UserSettings.CompactMode))
         {
             ResetWidthHeight();
         }
-
-        public void SetSong(string songGame, string songName)
+        else if (e.PropertyName == nameof(UserSettings.BroadcastViewActive))
         {
-            if (songName == "")
+            if (UserSettings.BroadcastViewActive)
             {
-                songGame = "";
-                songName = "Waiting for a 4.0 ROM...";
-            }
-            SongGame.Text = songGame;
-            SongName.Text = songName;
-            if (BroadcastView != null)
-            {
-                BroadcastView.UpdateSongInfo(songGame, songName);
-            }
-        }
-
-        public bool TopMostSetting
-        {
-            get { return Properties.Settings.Default.TopMost; }
-            set { Properties.Settings.Default.TopMost = value; }
-        }
-
-        public bool AutotrackingSetting
-        {
-            get { return Properties.Settings.Default.Autotracking; }
-            set { Properties.Settings.Default.Autotracking = value; }
-        }
-
-        private void rootGrid_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Keyboard.ClearFocus();
-        }
-
-        public void InitRegionsFromEmptySpoiler()
-        {
-            foreach (var entry in Regions)
-            {
-                entry.Value.SetAsEmptySpoiler();
-            }
-        }
-
-        public void ParseSpoiler(string fileName)
-        {
-            SpoilerSettings = SpoilerParser.ParseSpoiler(fileName);
-            foreach (var entry in SpoilerParser.StartingItems)
-            {
-                if (BroadcastView != null)
-                {
-                    BroadcastView.TurnItemOn(entry.Key);
-                }
-            }
-            if (!SpoilerSettings.Empty())
-            {
-                Autotracker.SetStartingItems(SpoilerParser.StartingItems);
+                ShowBroadcastWindow();
             }
             else
             {
-                InitRegionsFromEmptySpoiler();
-            }
-            foreach (var entry in Regions)
-            {
-                entry.Value.SetSpoilerAsLoaded();
-            }
-
-            if (BroadcastView != null)
-            {
-                BroadcastView.ProcessSpoilerSettings(SpoilerSettings);
-            }
-
-            foreach (var entry in ITEM_TO_BACKGROUND_IMAGE)
-            {
-                entry.Key.InitHoverPoints();
+                // Defer close to dispatcher to avoid InvalidOperationException
+                // when called during BroadcastView's Closing event
+                Dispatcher.BeginInvoke(() => BroadcastView?.Close());
             }
         }
+    }
 
-        private void DropFile(object sender, DragEventArgs e)
+    private async Task OnTimerSave(object? sender, ElapsedEventArgs e)
+    {
+        try
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            await DataSaverService.SaveAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Auto-save failed: {ex.Message}");
+        }
+    }
+
+    private void Window_LocationChanged(object sender, EventArgs e)
+    {
+        _locationChangeDebounceTimer.Stop();
+        _locationChangeDebounceTimer.Interval = _windowLocationChangeDebounceInterval;
+        _locationChangeDebounceTimer.Start();
+    }
+
+    private void SaveLocationData(object? s, EventArgs e)
+    {
+        _locationChangeDebounceTimer.Stop();
+        AppState.WindowY = RestoreBounds.Top;
+        AppState.WindowX = RestoreBounds.Left;
+    }
+
+    private void SaveSizeData(object? s, EventArgs e)
+    {
+        _sizeChangeDebounceTimer.Stop();
+        AppState.DesiredHeight = Height;
+        AppState.DesiredWidth = Width;
+    }
+
+    private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        _sizeChangeDebounceTimer.Stop();
+        _sizeChangeDebounceTimer.Interval = _windowSizeChangeDebounceInterval;
+        _sizeChangeDebounceTimer.Start();
+    }
+    private void OnResetSize(object sender, RoutedEventArgs e)
+    {
+        ResetWidthHeight();
+    }
+
+    private void OnMouseDown(object sender, RoutedEventArgs e)
+    {
+        Keyboard.ClearFocus();
+    }
+
+    private async void OnOpenSpoiler(object sender, RoutedEventArgs e)
+    {
+        OpenFileDialog openFileDialog = new()
+        {
+            Filter = "JSON files (*.json)|*.json"
+        };
+
+        string lastFolderPath = AppState.LastFolderPath;
+
+        if (!string.IsNullOrEmpty(lastFolderPath))
+        {
+            openFileDialog.InitialDirectory = lastFolderPath;
+        }
+
+        if (openFileDialog.ShowDialog() != true)
+        {
+            return;
+        }
+        try
+        {
+            string selectedFilePath = openFileDialog.FileName;
+            string folderPath = Path.GetDirectoryName(selectedFilePath) ?? "";
+
+            AppState.LastFolderPath = folderPath;
+            await OpenSpoilerFromPath(selectedFilePath);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to open spoiler: {ex.Message}");
+        }
+    }
+
+    private async void OnDropExternalFile(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (Path.GetExtension(files[0]).ToUpper().Equals(".JSON"))
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (Path.GetExtension(files[0]).ToUpper().Equals(".JSON"))
+                try
                 {
-                    Reset();
-                    ParseSpoiler(files[0]);
-                    DataSaver.setSpoilerPath(files[0]);
+                    await OpenSpoilerFromPath(files[0]);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to open spoiler: {ex.Message}");
                 }
             }
         }
+    }
 
-        private void OpenSpoiler(object sender, RoutedEventArgs e)
+    private void OnResetTracker(object sender, RoutedEventArgs e)
+    {
+        Reset();
+    }
+
+    private async void OnSave(object sender, RoutedEventArgs e)
+    {
+        var saveDialog = new SaveFileDialog
         {
-            OpenFileDialog openFileDialog = new();
-            openFileDialog.Filter = "JSON files (*.json)|*.json";
-
-            string lastFolderPath = Properties.Settings.Default.LastFolderPath;
-
-            if (!string.IsNullOrEmpty(lastFolderPath))
-            {
-                openFileDialog.InitialDirectory = lastFolderPath;
-            }
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string selectedFilePath = openFileDialog.FileName;
-                string folderPath = Path.GetDirectoryName(selectedFilePath) ?? "";
-
-                Properties.Settings.Default.LastFolderPath = folderPath;
-                Properties.Settings.Default.Save();
-                Reset();
-                ParseSpoiler(selectedFilePath);
-                DataSaver.setSpoilerPath(selectedFilePath);
-            }
+            RestoreDirectory = false,
+            InitialDirectory = AppContext.BaseDirectory,
+            Title = "Save Data",
+            Filter = "JSON Files (*.json)|*.json"
+        };
+        if (saveDialog.ShowDialog() != true)
+        {
+            return;
         }
-
-        public void OnCollectibleTextChanged()
+        try
         {
+            var filePath = saveDialog.FileName;
+            await DataSaverService.SaveAsync(filePath);
         }
-
-        public void UpdateProgHintImage(ItemType itemType)
+        catch (Exception ex)
         {
-            Dictionary<ItemType, string> itemTypeToResourceString = new()
-            {
-                {ItemType.GOLDEN_BANANA, "golden_banana" },
-                {ItemType.TOTAL_BLUEPRINTS, "total_bps" },
-                {ItemType.KEY, "basic_key" },
-                {ItemType.BANANA_MEDAL, "medal" },
-                {ItemType.BATTLE_CROWN, "crown" },
-                {ItemType.FAIRY,"fairy" },
-                {ItemType.RAINBOW_COIN, "rainbow_coin" },
-                {ItemType.PEARL, "pearl" },
-                {ItemType.COLORED_BANANA, "colored_bananas" }
-            };
-            ItemsToNextHintImage.Source = (BitmapImage)FindResource(itemTypeToResourceString[itemType]);
+            System.Diagnostics.Debug.WriteLine($"Failed to save data: {ex.Message}");
         }
-
-        public void UpdateUIAmountToNextHint(int newAmount)
+    }
+    private async void OnLoad(object sender, RoutedEventArgs e)
+    {
+        OpenFileDialog openFileDialog = new OpenFileDialog
         {
-            ItemsToNextHint.Text = newAmount.ToString();
+            RestoreDirectory = false,
+            InitialDirectory = AppContext.BaseDirectory,
+            Title = "Load Data",
+            Filter = "JSON Files (*.json)|*.json"
+        };
+
+        if (openFileDialog.ShowDialog() != true)
+        {
+            return;
         }
-
-        public void Reset()
+        try
         {
-            if (BroadcastView != null)
-            {
-                BroadcastView.Reset();
-            }
-
-            TotalGBs = 0;
-            SpoilerLoaded = false;
-            ITEM_NAME_TO_REGION.Clear();
-            PointValues.SpecificValues.Clear();
-            PointValues.GroupedValues.Clear();
-            SpoilerSettings = new SpoilerSettings();
-            foreach (var entry in Regions)
-            {
-                var region = entry.Value;
-                region.Reset();
-                region.SetLevelOrderNumber(0);
-                if (entry.Key == RegionName.HIDEOUT_HELM && !Settings.Default.HelmInLevelOrder)
-                {
-                    region.SetLevelOrderNumber(8);
-                }
-            }
-            foreach (var item in DraggableItems.Cast<Item>())
-            {
-                item.CanLeftClick = true;
-                item.SetStarVisibility(Visibility.Hidden);
-                item.ChangeOpacity(1.0);
-                item.InitHoverPoints();
-            }
-            foreach (var hintPanel in HintPanels)
-            {
-                hintPanel.Reset();
-            }
-            BLockerHints.Reset();
-            HelmDoorHints.Reset();
-
-            foreach (var key in Collectibles.Keys.ToList())
-            {
-                Collectibles[key].SetAmount(0);
-            }
-
-            foreach (var progressiveImage in BossKongs)
-            {
-                progressiveImage.Reset();
-            }
-
-            foreach (var progressiveImage in HelmKongs)
-            {
-                progressiveImage.Reset();
-            }
-
-            UpdateUIAmountToNextHint(0);
-            HintHelper.GenerateThresholds();
-            SetSong("", "");
-            Autotracker.Reset();
-            DataSaver.Reset();
-        }
-        private void OnReset(object sender, RoutedEventArgs e)
-        {
+            var filePath = openFileDialog.FileName;
             Reset();
+            await DataSaverService.LoadAsync(filePath);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to load data: {ex.Message}");
+        }
+    }
+
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        var viewModel = (MainWindowViewModel)DataContext;
+
+        HandleAutoUpdate();
+
+        // Only restore saved dimensions if they make sense for current mode
+        // This prevents flicker when CompactMode changes between sessions
+        if (AppState.DesiredHeight == 0 || AppState.DesiredWidth == 0)
+        {
+            return;
         }
 
-        private void OnSave(object sender, RoutedEventArgs e)
-        {
-            var saveDialog = new SaveFileDialog
-            {
-                RestoreDirectory = false,
-                InitialDirectory = AppContext.BaseDirectory,
-                Title = "Save Data",
-                Filter = "JSON Files (*.json)|*.json"
-            };
-            if (saveDialog.ShowDialog() == true)
-            {
-                var filePath = saveDialog.FileName;
-                DataSaver.Save(filePath);
-            }
-        }
+        double expectedWidth = viewModel.CurrentWindowWidth;
 
+        // Only restore saved width if it matches the expected width for current mode
+        // If mode changed since last save, use the correct width for current mode
+        if (Math.Abs(AppState.DesiredWidth - expectedWidth) < 1)
+        {
+            Width = AppState.DesiredWidth;
+            Height = AppState.DesiredHeight;
+        }
+        // else: Keep current width from InitOptions, don't restore
+    }
 
-        private void OnLoad(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                RestoreDirectory = false,
-                InitialDirectory = AppContext.BaseDirectory,
-                Title = "Load Data",
-                Filter = "JSON Files (*.json)|*.json"
-            };
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        _saveTimer.Stop();
+        _saveTimer.Dispose();
 
-            if (openFileDialog.ShowDialog() == true)
-            {
-                var filePath = openFileDialog.FileName;
-                Reset();
-                DataSaver.ReadSavedDataFromFile(filePath);
-            }
-        }
-        public void LoadLevelOrder(List<int> order)
+        try
         {
-            for (int i = 0; i < order.Count; ++i)
-            {
-                Regions[Region.LOBBY_ORDER[i]].SetLevelOrderNumber(order[i]);
-            }
-        }
-        public List<int> GetLevelOrder()
-        {
-            var list = Region.LOBBY_ORDER.Select(r => Regions[r].LevelOrderNumber!.GetNumber()).ToList();
-            return list;
-        }
-        private List<int> GetProgressiveIndices(List<ProgressiveItem> items)
-        {
-            return items.Select(i => i.GetIndex()).ToList();
-        }
+            AppState.DesiredWidth = Width;
+            AppState.DesiredHeight = Height;
+            Autotracker.Shutdown();
+            BroadcastView?.Close();
 
-        public List<int> GetHelmKongs()
-        {
-            return GetProgressiveIndices(HelmKongs);
+            // Fire and forget the async save - it will complete in the background
+            _ = DataSaverService.SaveAsync();
         }
-        public List<int> GetBossKongs()
+        catch (Exception ex)
         {
-            return GetProgressiveIndices(BossKongs);
+            System.Diagnostics.Debug.WriteLine($"Failed to save on exit: {ex.Message}");
         }
-        private void LoadProgressiveIndices(List<int> indices, List<ProgressiveItem> modify)
-        {
-            for (int i = 0; i < modify.Count; ++i)
-            {
-                modify[i].SetIndex(indices[i]);
-            }
-        }
-        public void LoadHelmKongs(List<int> indices)
-        {
-            LoadProgressiveIndices(indices, HelmKongs);
-        }
+    }
 
-        public void LoadBossKongs(List<int> indices)
-        {
-            LoadProgressiveIndices(indices, BossKongs);
-        }
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        UserSettings.PropertyChanged -= OnSettingChanged;
+        _locationChangeDebounceTimer.Tick -= SaveLocationData;
+        _sizeChangeDebounceTimer.Tick -= SaveSizeData;
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Updates the UI based on the current HintDisplay setting.
+    /// </summary>
+    /// <remarks>This method will be refactored eventually to not have MainWindow doing everything.</remarks>
+    private void UpdateUiViaHintDisplay()
+    {
+        ResetWidthHeight();
+        UpdateHintDisplayToggles();
+    }
+
+    private void UpdateHintDisplayToggles()
+    {
+        hintDisplayOff.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.Off);
+        hintDisplayMP.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.MultipathHints);
+        hintDisplayDirect.IsChecked = (UserSettings.HintDisplay == HintDisplayMode.DirectItemHints);
+    }
+
+    private void UpdateBroadcastNumberDisplayToggles()
+    {
+        broadcastNumberDisplayPoints.IsChecked = (UserSettings.BroadcastNumberLabel == BroadcastNumberLabel.Points);
+        broadcastNumberDisplayWOTHCount.IsChecked = (UserSettings.BroadcastNumberLabel == BroadcastNumberLabel.WothCount);
+    }
+
+    private void InitData()
+    {
+        UpdateHintDisplayToggles();
+        UpdateBroadcastNumberDisplayToggles();
+    }
+
+    private void InitOptions()
+    {
+        TopMostOption.IsChecked = UserSettings.TopMost;
+
+        Top = AppState.WindowY;
+        Left = AppState.WindowX;
+
+        ResetWidthHeight();
+    }
+
+    private void ResetWidthHeight()
+    {
+        double newWidth = 580;
+        if (UserSettings.HintDisplay != HintDisplayMode.Off)
+        {
+            newWidth = UserSettings.CompactMode ? 1392.0 : 1800.0;
+        }
+        Width = newWidth;
+        Height = 820;
+    }
+
+    private async Task OpenSpoilerFromPath(string filePath)
+    {
+        await DataSaverService.InitWithSpoilerAsync(filePath);
+    }
+
+    private void Reset()
+    {
+        SpoilerLoaded = false;
+        SpoilerSettings = new SpoilerSettings();
+
+        HintHelper.GenerateThresholds(AppState.ProgressiveHintCap);
+        Autotracker.Reset();
+        DataSaverService.Reset();
+    }
+
+    private static void HandleAutoUpdate()
+    {
+        try
         {
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
-            AutoUpdater.InstalledVersion = new Version("2.2.3");
+            AutoUpdater.InstalledVersion = new Version("3.0.0");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
-            if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0)
-            {
-                return;
-            }
-
-            Width = Settings.Default.DesiredWidth;
-            Height = Settings.Default.DesiredHeight;
         }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
+        catch (Exception ex)
         {
-            Settings.Default.DesiredWidth = Width;
-            Settings.Default.DesiredHeight = Height;
-            Settings.Default.Save();
-            DataSaver.Save();
-            Autotracker.Shutdown();
-            if (BroadcastView != null)
-            {
-                BroadcastView.Close();
-            }
+            System.Diagnostics.Debug.WriteLine($"AutoUpdater failed to start: {ex.Message}");
         }
+    }
 
-        public void SetShopkeepers(bool on)
+    private void ShowBroadcastWindow()
+    {
+        if (BroadcastView == null)
         {
-            var currentlyOn = ShopkeeperColumn.Width.Value > 0;
-            if (currentlyOn == on)
-            {
-                return;
-            }
-
-            var separatorWidth = on ? 1.0 : 1.25;
-            var shopkeeperColumnWidth = on ? 1.0 : 0;
-            ItemsSeparator.Width = new GridLength(separatorWidth, GridUnitType.Star);
-            ShopkeeperColumn.Width = new GridLength(shopkeeperColumnWidth, GridUnitType.Star);
+            BroadcastView = new(
+                UserSettings,
+                ParsedSpoilerDataService,
+                ItemTrackingService,
+                LevelOrderService,
+                SavedProgressProvider,
+                EndGameProgressionService,
+                ThemeService,
+                CollectiblesService,
+                SongService,
+                DataSaverService
+            );
+            // Wire up the Closed event so we can clean up when the window closes
+            BroadcastView.Closed += ClosedBroadcastWindow;
         }
 
-        private void FormatCollectibles()
-        {
-            int startColumn = 18;
-            for (int i = CollectiblesGrid.Children.Count - 1; i >= 0; --i)
-            {
-                var element = CollectiblesGrid.Children[i];
-                if (element is CollectibleItem collectible && collectible.Visibility == Visibility.Visible)
-                {
-                    Grid.SetColumn(collectible, startColumn);
-                    startColumn -= 2;
-                }
-            }
-        }
+        BroadcastView.Show();
+        BroadcastView.Activate();
+    }
 
-        private void BroadcastClosed(object? sender, EventArgs e)
-        {
-            BroadcastOption.IsChecked = false;
-            BroadcastView = null;
-        }
+    private void ClosedBroadcastWindow(object? sender, EventArgs e)
+    {
+        BroadcastView = null;
+        UserSettings.BroadcastViewActive = false;
     }
 }

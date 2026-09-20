@@ -1,52 +1,88 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using TrackOMatic.Properties;
 
-namespace TrackOMatic
+using Microsoft.Extensions.DependencyInjection;
+
+using TrackOMatic.AutoTracking.Windows;
+using TrackOMatic.Services;
+using TrackOMatic.Services.TrackerState;
+using TrackOMatic.Ui;
+using TrackOMatic.ViewModels;
+
+namespace TrackOMatic;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    private readonly IServiceProvider _serviceProvider;
+    private WpfResourceDictionaryProvider? _resourceDictionaryProvider;
+
+    public App()
     {
+        var services = new ServiceCollection();
+        services.AddTrackOMaticServices();
+        services.AddWindowsAutotracking();
 
-        App()
-        {
-            Dispatcher.UnhandledException += OnDispatcherUnhandledException;
-        }
+        // Register WPF UI services
+        services.AddSingleton<IItemSelectorService, ItemSelectorServiceWpf>();
+        services.AddSingleton<IHintItemSelectionService, HintItemSelectionServiceWpf>();
+        services.AddSingleton<IDragDropCoordinator, DragDropCoordinator>();
+        services.AddSingleton<IDragPreviewService, DragPreviewServiceWpf>();
 
-        private void App_Exit(object sender, ExitEventArgs e)
-        {
-        }
+        _serviceProvider = services.BuildServiceProvider();
+        ServiceLocator.Initialize(_serviceProvider);
+        Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+    }
 
-        void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-        }
+    private void App_Exit(object sender, ExitEventArgs e)
+    {
+    }
 
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
-            UpdatePadBarrelImages();
-        }
+    void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+    }
 
-        public void UpdatePadBarrelImages()
-        {
-            var dicts = Resources.MergedDictionaries;
-            dicts.Clear();
-            dicts.Add(new ResourceDictionary
-            {
-                Source = new Uri("Dictionary1.xaml", UriKind.Relative)
-            });
-            var path = Settings.Default.ColoredBarrelPadMoves ? "ColoredBarrelPadImages.xaml" : "BaseBarrelPadImages.xaml";
-            dicts.Add(new ResourceDictionary
-            {
-                Source = new Uri(path, UriKind.Relative)
-            });
-        }
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
+
+        var settingsService = _serviceProvider.GetRequiredService<IUserSettingsService>();
+        var appStateService = _serviceProvider.GetRequiredService<IApplicationStateService>();
+        var spoilerService = _serviceProvider.GetRequiredService<ISpoilerService>();
+        var parsedSpoilerDataService = _serviceProvider.GetRequiredService<IParsedSpoilerDataService>();
+        var autotrackingService = _serviceProvider.GetRequiredService<IAutotrackerService>();
+        var themeService = _serviceProvider.GetRequiredService<IThemeService>();
+        var levelOrderService = _serviceProvider.GetRequiredService<ILevelOrderService>();
+        var savedProgressProvider = _serviceProvider.GetRequiredService<ISavedProgressProvider>();
+        var dataSaverService = _serviceProvider.GetRequiredService<IDataSaverService>();
+        var itemTrackingService = _serviceProvider.GetRequiredService<IItemTrackingService>();
+        var endGameProgressionService = _serviceProvider.GetRequiredService<IEndGameProgressionService>();
+        var collectiblesService = _serviceProvider.GetRequiredService<ICollectiblesService>();
+        var songService = _serviceProvider.GetRequiredService<ISongService>();
+        var itemSelectorService = _serviceProvider.GetRequiredService<IItemSelectorService>();
+
+        _resourceDictionaryProvider = new WpfResourceDictionaryProvider(themeService);
+        _resourceDictionaryProvider.UpdateResourceDictionaries();
+
+        themeService.BarrelPadThemeChanged += (s, e) => _resourceDictionaryProvider.UpdateResourceDictionaries();
+
+        MainWindow mainWindow = new
+        (
+            settingsService,
+            appStateService,
+            parsedSpoilerDataService,
+            autotrackingService,
+            themeService,
+            savedProgressProvider,
+            dataSaverService,
+            itemTrackingService,
+            levelOrderService,
+            endGameProgressionService,
+            collectiblesService,
+            songService,
+            itemSelectorService
+        );
+        mainWindow.Show();
     }
 }

@@ -1,33 +1,55 @@
-<Window x:Class="TrackOMatic.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:properties="clr-namespace:TrackOMatic.Properties"
-        xmlns:local="clr-namespace:TrackOMatic"
-        xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
-        mc:Ignorable="d"
-        ResizeMode="CanResize"
-        Closing="Window_Closing"
-        Loaded="MainWindow_Loaded"
-        LocationChanged="Window_LocationChanged"
-        MouseDown="rootGrid_LostFocus" 
-        SizeChanged="Window_SizeChanged"
-        AllowDrop="True" Drop="DropFile"
-        Title="Track-O-Matic" Height="820" Width="1800" Background="{StaticResource RegionBG}"
-        MinHeight="300" MinWidth="300">
-
-
+<Window
+    x:Class="TrackOMatic.MainWindow"
+    x:Name="MainWindowRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:TrackOMatic"
+    xmlns:hints="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:regions="clr-namespace:TrackOMatic.Regions"
+    xmlns:enums="clr-namespace:TrackOMatic.Logic.Enums;assembly=TrackOMatic.Logic"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels;assembly=TrackOMatic.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
+    ResizeMode="CanResize"
+    Closing="Window_Closing"
+    Loaded="MainWindow_Loaded"
+    Unloaded="OnUnloaded"
+    LocationChanged="Window_LocationChanged"
+    MouseDown="OnMouseDown"
+    SizeChanged="Window_SizeChanged"
+    AllowDrop="True"
+    Drop="OnDropExternalFile"
+    Title="Track-O-Matic"
+    Height="820"
+    Width="{Binding CurrentWindowWidth}"
+    Background="{StaticResource RegionBG}"
+    MinHeight="300"
+    MinWidth="300"
+>
     <Window.Resources>
-        <Style TargetType="Image">
-            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-            <Setter Property="CaretBrush" Value="White"/>
-        </Style>
+        <ResourceDictionary>
+            <Style TargetType="Image">
+                <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="CaretBrush" Value="White"/>
+            </Style>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
+            <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+            <DataTemplate x:Key="UiItemTemplate" DataType="{x:Type viewmodels:UiItemViewModel}">
+                <local:UiItem />
+            </DataTemplate>
+            <ItemsPanelTemplate x:Key="SlotGridPanelTemplate">
+                <UniformGrid Rows="1" Columns="5" />
+            </ItemsPanelTemplate>
+        </ResourceDictionary>
     </Window.Resources>
-
     <DockPanel>
         <Menu DockPanel.Dock="Top" Background="White">
             <Menu.ItemsPanel>
@@ -36,1015 +58,242 @@
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
             <MenuItem Header="File" Focusable="False">
-                <MenuItem Header="Open Spoiler Log" StaysOpenOnClick="True"  Click="OpenSpoiler"/>
-                <MenuItem Header="Reset Size" StaysOpenOnClick="True"  Click="ResetSize"/>
-                <MenuItem Header="Reset Tracker" StaysOpenOnClick="True"  Click="OnReset"/>
+                <MenuItem Header="Open Spoiler Log" StaysOpenOnClick="True"  Click="OnOpenSpoiler"/>
+                <MenuItem Header="Reset Size" StaysOpenOnClick="True"  Click="OnResetSize"/>
+                <MenuItem Header="Reset Tracker" StaysOpenOnClick="True"  Click="OnResetTracker"/>
                 <MenuItem Header="Save Data" StaysOpenOnClick="True"  Click="OnSave"/>
                 <MenuItem Header="Load Data" StaysOpenOnClick="True"  Click="OnLoad"/>
             </MenuItem>
             <MenuItem Header="Toggles" Focusable="False">
-                <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TopMost}" Click="TopMostToggle"/>
-                <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=Autotracking}" Click="AutotrackToggle"/>
-                <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Click="SongDisplayToggle"/>
-                <MenuItem Name="HelmInLevelOrder" Header='Helm in Level Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmInLevelOrder}" Click="HelmInLevelOrder_Click"/>
-                <MenuItem Name="ColorBarrelPadMoves" Header="Colored Barrel &amp; Pad Moves" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ColoredBarrelPadMoves}" Click="ColoredBarrelPadMoves_Click"/>
+                <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsTopMostEnabled, Mode=OneWay}" Command="{Binding ToggleTopMostCommand}" />
+                <MenuItem Name="AutotrackOption" Header="Autotracking" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsAutotrackingEnabled, Mode=OneWay}" Command="{Binding ToggleAutotrackingCommand}" />
+                <MenuItem Name="SongDisplayOption" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsSongDisplayEnabled, Mode=OneWay}" Command="{Binding ToggleSongDisplayCommand}" />
+                <MenuItem Name="HelmInLevelOrder" Header="Helm in Level Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsHelmInLevelOrderEnabled, Mode=OneWay}" Command="{Binding ToggleHelmInLevelOrderCommand}" />
+                <MenuItem Name="ColorBarrelPadMoves" Header="Colored Barrel &amp; Pad Moves" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsColoredBarrelPadMovesEnabled, Mode=OneWay}" Command="{Binding ToggleColoredBarrelPadMovesCommand}" />
                 <MenuItem Name="CollectiblesDisplayOption" Header="Collectibles">
-                    <MenuItem Name="TotalBPs" Header='Total Blueprints' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=TotalBPs}" Click="TotalBPs_Click"/>
-                    <MenuItem Name="CompanyCoins" Header='Company Coins' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CompanyCoins}" Click="CompanyCoins_Click"/>
+                    <MenuItem Name="TotalBPs" Header="Total Blueprints" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsTotalBlueprintCollectibleEnabled, Mode=OneWay}" Command="{Binding ToggleTotalBlueprintCollectibleCommand}" />
+                    <MenuItem Name="CompanyCoins" Header="Company Coins" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsCompanyCoinCollectibleEnabled, Mode=OneWay}" Command="{Binding ToggleCompanyCoinCollectibleCommand}" />
                 </MenuItem>
                 <MenuItem Name="SpoilerHintsOption" Header="Spoiler Hints">
-                    <MenuItem Name="KRoolOrder" Header='K. Rool Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=KRoolOrder}" Click="HelmOrder_Click"/>
-                    <MenuItem Name="HelmOrder" Header='Helm Order' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmOrder}" Click="KRoolOrder_Click"/>
+                    <MenuItem Name="KRoolOrder" Header="K. Rool Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsShowingHelmSpoilerInfoEnabled, Mode=OneWay}" Command="{Binding ToggleHelmSpoilerOrderCommand}" />
+                    <MenuItem Name="HelmOrder" Header="Helm Order" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsShowingBossSpoilerInfoEnabled, Mode=OneWay}" Command="{Binding ToggleBossSpoilerOrderCommand}" />
                 </MenuItem>
                 <MenuItem Name="ProgHintOption" Header="Progressive Hints">
-                    <MenuItem Name="ProgHintShowAmount" Header='Show Amount for Next Hint Pack' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ShowAmountForHints}"/>
-                    <!--MenuItem Name="SetProgItemType" Header='Set Item Type' StaysOpenOnClick="True" Click="SetProgHintType"/-->
+                    <MenuItem Name="ProgHintShowAmount" Header="Show Amount for Next Hint Pack" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsProgressiveHintCounterEnabled, Mode=OneWay}" Command="{Binding ToggleProgressiveHintCounterCommand}" />
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Hint Display" Focusable="False">
-                <RadioButton Name="hintDisplayOff" Checked="HintDisplayToggle">Off</RadioButton>
-                <RadioButton Name="hintDisplayMP" Checked="HintDisplayToggle">Multipath Hints</RadioButton>
-                <RadioButton Name="hintDisplayDirect" Checked="HintDisplayToggle">Direct Item Hints</RadioButton>
-                <MenuItem Name="HelmDoors" Header="Helm Doors" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HelmDoors}" Click="HelmDoors_Click"/>
-                <MenuItem Name="CompactOption" Header="Compact Mode" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CompactMode}" Click="CompactModeToggle"/>
-                <MenuItem Name="SortNewHintsOption" Header="Sort New Path Hints By Length" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=AutoSortPathHints}" Click="AutoSortToggle"/>
-                <MenuItem Name="EnemiesInAutofillOption" Header="Include Enemies in Hint Searches" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EnemiesInAutofill}" Click="EnemyAutofillToggle"/>
+                <RadioButton GroupName="HintDisplay" Name="hintDisplayOff" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.Off}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.Off}">Off</RadioButton>
+                <RadioButton GroupName="HintDisplay" Name="hintDisplayMP" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.MultipathHints}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.MultipathHints}">Multipath Hints</RadioButton>
+                <RadioButton GroupName="HintDisplay" Name="hintDisplayDirect" IsChecked="{Binding HintDisplayMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:HintDisplayMode.DirectItemHints}}" Command="{Binding SetHintDisplayCommand}" CommandParameter="{x:Static enums:HintDisplayMode.DirectItemHints}">Direct Item Hints</RadioButton>
+                <MenuItem Name="HelmDoors" Header="Helm Doors" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsHelmDoorPanelEnabled, Mode=OneWay}" Command="{Binding ToggleHelmDoorPanelCommand}" />
+                <MenuItem Name="CompactOption" Header="Compact Mode" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsCompactModeEnabled, Mode=OneWay}" Command="{Binding ToggleCompactModeCommand}" />
+                <MenuItem Name="SortNewHintsOption" Header="Sort New Path Hints By Length" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsSortablePathHintsEnabled, Mode=OneWay}" Command="{Binding ToggleSortablePathHintsCommand}" />
+                <MenuItem Name="EnemiesInAutofillOption" Header="Include Enemies in Hint Searches" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsEnemySearchEnabled, Mode=OneWay}" Command="{Binding ToggleEnemySearchCommand}" />
             </MenuItem>
             <MenuItem Header="Broadcast View" Focusable="False">
-                <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
+                <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True" IsChecked="{Binding IsBroadcastViewEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastViewCommand}" />
                 <MenuItem Name="BroadcastCustomize" Header="Main Options">
-                    <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastHelmKRool}" Click="BroadcastHelmKRoolToggle"/>
-                    <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastShopkeepers}" Click="BroadcastShopkeepersToggle"/>
-                    <MenuItem Name="BroadcastSongDisplay" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastSongDisplay}" Click="BroadcastSongDisplayToggle"/>
+                    <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBroadcastHelmKRoolEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastHelmKRoolCommand}" />
+                    <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBroadcastShopkeepersEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastShopkeepersCommand}" />
+                    <MenuItem Name="BroadcastSongDisplay" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsBroadcastSongDisplayEnabled, Mode=OneWay}" Command="{Binding ToggleBroadcastSongDisplayCommand}" />
                 </MenuItem>
                 <MenuItem Name="BroadcastNumberDisplayOption" Header="Number Display">
-                    <RadioButton Name="broadcastNumberDisplayPoints" Checked="BroadcastNumberDisplayToggle">Points</RadioButton>
-                    <RadioButton Name="broadcastNumberDisplayWOTHCount" Checked="BroadcastNumberDisplayToggle">WOTH Count</RadioButton>
+                    <RadioButton GroupName="BroadcastNumberDisplay" Name="broadcastNumberDisplayPoints" IsChecked="{Binding BroadcastNumberLabel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:BroadcastNumberLabel.Points}}" Command="{Binding SetBroadcastNumberLabelCommand}" CommandParameter="{x:Static enums:BroadcastNumberLabel.Points}">Points</RadioButton>
+                    <RadioButton GroupName="BroadcastNumberDisplay" Name="broadcastNumberDisplayWOTHCount" IsChecked="{Binding BroadcastNumberLabel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:BroadcastNumberLabel.WothCount}}" Command="{Binding SetBroadcastNumberLabelCommand}" CommandParameter="{x:Static enums:BroadcastNumberLabel.WothCount}">WOTH Count</RadioButton>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Version 2.2.3" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 3.0.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
+        <!-- Wrapper grid for content and drag overlay canvas -->
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition x:Name="HintsColumn" Width="1.43*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height=".007*"/>
-                    <RowDefinition Height=".1*"/>
-                    <RowDefinition Height="14"/>
-                    <RowDefinition Height=".4*"/>
-                    <RowDefinition Height="14"/>
-                    <RowDefinition Height=".1*"/>
-                    <RowDefinition>
-                        <RowDefinition.Style>
-                            <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value=".01*" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="True">
-                                        <Setter Property="Height" Value=".01*"  />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="False">
-                                        <Setter Property="Height" Value="0"  />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RowDefinition.Style>
-                    </RowDefinition>
-                    <RowDefinition>
-                        <RowDefinition.Style>
-                            <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value=".12*" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="True">
-                                        <Setter Property="Height" Value=".12*"  />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="False">
-                                        <Setter Property="Height" Value="0"  />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RowDefinition.Style>
-                    </RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="1">
-                    <Rectangle Fill="{StaticResource BaseBG}" />
-                </Grid>
-                <Grid Grid.Row="3">
-                    <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
-                </Grid>
-                <Grid Grid.Row="5">
-                    <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
-                </Grid>
-                <Grid Grid.Row="0"  Background="{StaticResource BaseBG}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition Height="0*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Name="UnhintableMovesRegion" Grid.Row="5"  Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Name="UnhintableMovesImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}" Margin="0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-                                </Grid>
-                                <local:RegionGrid  x:Name="UnhintableMovesRegionGrid" Margin="3" Grid.Column="1" Tag="{x:Static enums:RegionName.UNHINTABLE_MOVES}"/>
-                            </Grid>
-                            <Grid Name="StartRegion" Grid.Row="0" Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Name="StartImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="StartPicture" Source="Images/dk64/start.png" Grid.RowSpan="6" Grid.ColumnSpan="5" Margin="10"/>
-
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="StartTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="StartPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3"  x:Name="StartRegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.START}"/>
-                            </Grid>
-                            <Grid Name="Level1" Grid.Row="1"  Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-
-                                <Grid Name="Level1ImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="Level1Picture" Source="Images/dk64/jungle_japes.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
-
-                                    <local:LevelOrderNumber x:Name="Level1Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level1TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level1Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid Margin="3"  x:Name="Level1RegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.JUNGLE_JAPES}"/>
-                            </Grid>
-                            <Grid Name="Level2" Grid.Row="2" Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Name="Level2ImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="Level2Picture" Source="Images/dk64/angry_aztec.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
-
-                                    <local:LevelOrderNumber x:Name="Level2Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level2TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level2Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid Margin="3"  x:Name="Level2RegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.ANGRY_AZTEC}"/>
-                            </Grid>
-                            <Grid Name="Level3" Grid.Row="3"  Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-
-                                <Grid Name="Level3ImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="Level3Picture" Source="Images/dk64/frantic_factory.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
-
-                                    <local:LevelOrderNumber x:Name="Level3Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level3TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level3Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid Margin="3"  x:Name="Level3RegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.FRANTIC_FACTORY}"/>
-                            </Grid>
-                            <Grid Name="Level4" Grid.Row="4"  Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-
-                                <Grid Name="Level4ImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="Level4Picture" Source="Images/dk64/gloomy_galleon.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
-
-                                    <local:LevelOrderNumber x:Name="Level4Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level4TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level4Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3" x:Name="Level4RegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.GLOOMY_GALLEON}"/>
-                            </Grid>
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid Name="DKIslesRegion" Grid.Row="0" Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Name="DKIslesImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="DKIslesPicture" Source="Images/dk64/dk_isles.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="0,15,0,0"/>
-
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="DKIslesTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="DKIslesPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid  Background="{StaticResource RegionBG}" Margin="3"  x:Name="DKIslesRegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.DK_ISLES}"/>
-                            </Grid>
-                            <Grid Name="Level5" Grid.Row="1" Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Name="Level5ImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="Level5Picture" Source="Images/dk64/fungi_forest.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
-
-                                    <local:LevelOrderNumber x:Name="Level5Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level5TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level5Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid Margin="3" x:Name="Level5RegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.FUNGI_FOREST}"/>
-                            </Grid>
-
-                            <Grid Name="Level6" Grid.Row="2" Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Name="Level6ImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="Level6Picture" Source="Images/dk64/crystal_caves.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
-
-                                    <local:LevelOrderNumber x:Name="Level6Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level6TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level6Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid Margin="3"  x:Name="Level6RegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.CRYSTAL_CAVES}"/>
-                            </Grid>
-
-                            <Grid Name="Level7" Grid.Row="3" Margin="1" Background="{StaticResource RegionBG}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Name="Level7ImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="Level7Picture" Source="Images/dk64/creepy_castle.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
-
-                                    <local:LevelOrderNumber x:Name="Level7Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level7TopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="Level7Points" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid  Margin="3" x:Name="Level7RegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.CREEPY_CASTLE}"/>
-                            </Grid>
-                            <Grid Name="HideoutHelm" Grid.Row="4"  Margin="1" Background="{StaticResource RegionBG}">
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3.3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Name="HelmImagePointsGrid" Grid.Column="0" Background="{StaticResource RegionImageBG}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height=".1*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height=".25*"/>
-                                        <RowDefinition Height=".75*"/>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height=".1*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                        <ColumnDefinition Width=".3*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image x:Name="HideoutHelmPicture" Source="Images/dk64/hideout_helm.png" Grid.RowSpan="6" Grid.ColumnSpan="2" Margin="{StaticResource RegionPictureMargin}"/>
-
-                                    <local:LevelOrderNumber x:Name="Level8Order" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
-                                    <Viewbox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="HideoutHelmTopLabel" FontSize="{StaticResource BigFontSize}" Foreground="{StaticResource GBColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" FontFamily="{DynamicResource DK64Font}" Text="13" Visibility="Visible" Grid.RowSpan="1" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="HideoutHelmPoints" FontSize="{StaticResource BigFontSize}" Foreground="White" FontFamily="{DynamicResource DK64Font}" Text="323" VerticalAlignment="Center"/>
-                                    </Viewbox>
-                                </Grid>
-                                <local:RegionGrid  Margin="3" x:Name="HideoutHelmRegionGrid" Grid.Column="1" Tag="{x:Static enums:RegionName.HIDEOUT_HELM}"/>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
-
-                <!--GB/other stuff display-->
-                <Grid Grid.Row="2" Name="CollectiblesGrid" Background="{StaticResource RegionBG}" Margin="0,5,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".7*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width=".1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1.2*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width=".5*"/>
-                            <ColumnDefinition Width=".75*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.Style>
-                            <Style TargetType="{x:Type Grid}">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=ShowAmountForHints}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                        <Image Source="images/dk64/wrinkly.png" Panel.ZIndex="2" x:Name="image" Stretch="Uniform"  Grid.RowSpan="2" Margin="-2,3,3,3" Grid.ColumnSpan="2"
-                            RenderOptions.ClearTypeHint="Enabled">
-                            <Image.Effect>
-                                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
-                            </Image.Effect>
-                        </Image>
-
-                        <Grid  Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Name="ProgHintNumberColumn" Width="2*"/>
-                                <ColumnDefinition Name="ProgHintRightColumn" Width="0.25*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="0" Grid.ColumnSpan="1" Background="{StaticResource VeryDark}" Margin="0,0,0,0"/>
-                            <Image Name="ItemsToNextHintImage" Source="Images/dk64/gb.png" Margin="0,1,1,1"/>
-                            
-                            <Viewbox Grid.Column="1" HorizontalAlignment="Left" Margin="0">
-                                <Border Background="{StaticResource VeryDark}" Padding="0,0,0,1">
-                                    <TextBlock Margin="0,-2,3,-1" x:Name="ItemsToNextHint" Text="0" VerticalAlignment="Center" FontSize="20"  Foreground="#FFFFFF" FontFamily="{DynamicResource DK64Font}" Visibility="Visible"/>
-                                </Border>
-                            </Viewbox>
-                        </Grid>
-                    </Grid>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BlueprintsTotal" ImageSource="Images/bw/total_bps.png" Text="0" Grid.Column="4">
-                        <local:CollectibleItem.Style>
-                            <Style TargetType="{x:Type local:CollectibleItem}">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=TotalBPs}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </local:CollectibleItem.Style>
-                    </local:CollectibleItem>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="CompanyCoinsTotal" ImageSource="Images/bw/company_coin.png" Text="0" Grid.Column="6">
-                        <local:CollectibleItem.Style>
-                            <Style TargetType="{x:Type local:CollectibleItem}">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=CompanyCoins}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </local:CollectibleItem.Style>
-                    </local:CollectibleItem>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Pearls" ImageSource="Images/bw/pearl.png" Text="0" Grid.Column="8"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BattleCrowns" ImageSource="Images/bw/crown.png" Text="0" Grid.Column="10"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="BananaMedals" ImageSource="Images/bw/bananamedal.png" Text="0" Grid.Column="12"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="RainbowCoins" ImageSource="Images/bw/rainbowcoin.png" Text="0" Grid.Column="14"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="Fairies" ImageSource="Images/bw/fairy.png" Text="0" Grid.Column="16"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="GBs" ImageSource="Images/bw/GB.png" Text="0" Grid.Column="18"/>
-                </Grid>
-                <!-- Items -->
-                <Grid Name="ItemGrid" Grid.Row="4" Visibility="Visible"  Margin="0" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Name="ItemsSeparator" Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Name="ShopkeeperColumn" Width="1*" />
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Kong 1 -->
-                    <local:Item x:Name="dk" ItemImage="{DynamicResource donkey_bw}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.DONKEY}"/>
-                    <local:Item x:Name="dk_gun"  ItemImage="{DynamicResource coconut_gun_bw}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.COCONUT_GUN}"/>
-                    <local:Item x:Name="dk_inst"  ItemImage="{DynamicResource bongo_blast_bw}" Grid.Row="0" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.BONGO_BLAST}"/>
-                    <local:Item x:Name="dk_move"   ItemImage="{DynamicResource gorilla_grab_bw}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.GORILLA_GRAB}"/>
-                    <local:Item x:Name="dk_barrel"  ItemImage="{DynamicResource strong_kong_bw}" Grid.Row="0" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.STRONG_KONG}"/>
-                    <local:Item x:Name="dk_pad"  ItemImage="{DynamicResource baboon_blast_bw}" Grid.Row="0" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.BABOON_BLAST}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource donkey}"  Grid.Row="0" Grid.Column="0" Panel.ZIndex="-1" Visibility="Collapsed" Tag="{x:Static enums:ItemName.DONKEY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource coconut_gun}" Grid.Row="0" Grid.Column="1" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static enums:ItemName.COCONUT_GUN}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource bongo_blast}"  Grid.Row="0" Grid.Column="2" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static enums:ItemName.BONGO_BLAST}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource gorilla_grab}" Grid.Row="0" Grid.Column="3" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static enums:ItemName.GORILLA_GRAB}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource strong_kong}"  Grid.Row="0" Grid.Column="4" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static enums:ItemName.STRONG_KONG}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource baboon_blast}"  Grid.Row="0" Grid.Column="5" Panel.ZIndex="-1" Visibility="Hidden" Tag="{x:Static enums:ItemName.BABOON_BLAST}"/>
-
-
-                    <!-- Kong 2 -->
-                    <local:Item x:Name="diddy"  ItemImage="{DynamicResource diddy_bw}"   Grid.Row="1" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.DIDDY}"/>
-                    <local:Item x:Name="diddy_gun"  ItemImage="{DynamicResource peanut_popguns_bw}" Grid.Row="1" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.PEANUT_POPGUNS}"/>
-                    <local:Item x:Name="diddy_inst"  ItemImage="{DynamicResource guitar_gazump_bw}" Grid.Row="1" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.GUITAR_GAZUMP}"/>
-                    <local:Item x:Name="diddy_move"   ItemImage="{DynamicResource chimpy_charge_bw}" Grid.Row="1" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.CHIMPY_CHARGE}"/>
-                    <local:Item x:Name="diddy_barrel"  ItemImage="{DynamicResource rocketbarrel_boost_bw}" Grid.Row="1" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.ROCKETBARREL_BOOST}"/>
-                    <local:Item x:Name="diddy_pad"  ItemImage="{DynamicResource simian_spring_bw}" Grid.Row="1" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.SIMIAN_SPRING}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource diddy}"    Grid.Row="1" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.DIDDY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource peanut_popguns}"    Grid.Row="1" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.PEANUT_POPGUNS}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource guitar_gazump}"    Grid.Row="1" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.GUITAR_GAZUMP}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource chimpy_charge}"    Grid.Row="1" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.CHIMPY_CHARGE}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource rocketbarrel_boost}"    Grid.Row="1" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.ROCKETBARREL_BOOST}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource simian_spring}"    Grid.Row="1" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.SIMIAN_SPRING}"/>
-
-                    <!-- Kong 3 -->
-                    <local:Item x:Name="lanky"  ItemImage="{DynamicResource lanky_bw}"   Grid.Row="2" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.LANKY}"/>
-                    <local:Item x:Name="lanky_gun"  ItemImage="{DynamicResource grape_shooter_bw}" Grid.Row="2" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.GRAPE_SHOOTER}"/>
-                    <local:Item x:Name="lanky_inst"  ItemImage="{DynamicResource trombone_tremor_bw}" Grid.Row="2" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.TROMBONE_TREMOR}"/>
-                    <local:Item x:Name="lanky_move"   ItemImage="{DynamicResource orangstand_bw}" Grid.Row="2" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.ORANGSTAND}"/>
-                    <local:Item x:Name="lanky_barrel"  ItemImage="{DynamicResource orangstand_sprint_bw}" Grid.Row="2" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.ORANGSTAND_SPRINT}"/>
-                    <local:Item x:Name="lanky_pad"  ItemImage="{DynamicResource baboon_balloon_bw}" Grid.Row="2" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.BABOON_BALLOON}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource lanky}"    Grid.Row="2" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.LANKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource grape_shooter}"    Grid.Row="2" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.GRAPE_SHOOTER}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource trombone_tremor}"    Grid.Row="2" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.TROMBONE_TREMOR}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource orangstand}"    Grid.Row="2" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.ORANGSTAND}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource orangstand_sprint}"    Grid.Row="2" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.ORANGSTAND_SPRINT}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource baboon_balloon}"    Grid.Row="2" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.BABOON_BALLOON}"/>
-
-                    <!-- Kong 4 -->
-                    <local:Item x:Name="tiny"  ItemImage="{DynamicResource tiny_bw}"   Grid.Row="3" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.TINY}"/>
-                    <local:Item x:Name="tiny_gun"  ItemImage="{DynamicResource feather_bow_bw}" Grid.Row="3" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.FEATHER_BOW}"/>
-                    <local:Item x:Name="tiny_inst"  ItemImage="{DynamicResource saxophone_slam_bw}" Grid.Row="3" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.SAXOPHONE_SLAM}"/>
-                    <local:Item x:Name="tiny_move"   ItemImage="{DynamicResource ponytail_twirl_bw}" Grid.Row="3" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.PONYTAIL_TWIRL}"/>
-                    <local:Item x:Name="tiny_barrel"  ItemImage="{DynamicResource mini_monkey_bw}" Grid.Row="3" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.MINI_MONKEY}"/>
-                    <local:Item x:Name="tiny_pad"  ItemImage="{DynamicResource monkeyport_bw}" Grid.Row="3" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.MONKEYPORT}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource tiny}"    Grid.Row="3" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.TINY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource feather_bow}"    Grid.Row="3" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.FEATHER_BOW}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource saxophone_slam}"    Grid.Row="3" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.SAXOPHONE_SLAM}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource ponytail_twirl}"    Grid.Row="3" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.PONYTAIL_TWIRL}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource mini_monkey}"    Grid.Row="3" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.MINI_MONKEY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource monkeyport}"    Grid.Row="3" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.MONKEYPORT}"/>
-
-                    <!-- Kong 5 -->
-                    <local:Item x:Name="chunky"  ItemImage="{DynamicResource chunky_bw}"   Grid.Row="4" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.CHUNKY}"/>
-                    <local:Item x:Name="chunky_gun"  ItemImage="{DynamicResource pineapple_launcher_bw}" Grid.Row="4" Grid.Column="1" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.PINEAPPLE_LAUNCHER}"/>
-                    <local:Item x:Name="chunky_inst"  ItemImage="{DynamicResource triangle_trample_bw}" Grid.Row="4" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.TRIANGLE_TRAMPLE}"/>
-                    <local:Item x:Name="chunky_move"   ItemImage="{DynamicResource primate_punch_bw}" Grid.Row="4" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.PRIMATE_PUNCH}"/>
-                    <local:Item x:Name="chunky_barrel"  ItemImage="{DynamicResource hunky_chunky_bw}" Grid.Row="4" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.HUNKY_CHUNKY}"/>
-                    <local:Item x:Name="chunky_pad"  ItemImage="{DynamicResource gorilla_gone_bw}" Grid.Row="4" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.GORILLA_GONE}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource chunky}"    Grid.Row="4" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.CHUNKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource pineapple_launcher}"    Grid.Row="4" Grid.Column="1" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.PINEAPPLE_LAUNCHER}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource triangle_trample}"    Grid.Row="4" Grid.Column="2" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.TRIANGLE_TRAMPLE}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource primate_punch}"    Grid.Row="4" Grid.Column="3" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.PRIMATE_PUNCH}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource hunky_chunky}"    Grid.Row="4" Grid.Column="4" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.HUNKY_CHUNKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource gorilla_gone}"    Grid.Row="4" Grid.Column="5" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.GORILLA_GONE}"/>
-
-                    <!--Blueprints-->
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="DonkeyBPs" ImageSource="Images/bw/dk_bp.png" Text="0" Grid.Row="0" Grid.Column="6"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="DiddyBPs" ImageSource="Images/bw/diddy_bp.png" Text="0" Grid.Row="1" Grid.Column="6"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="LankyBPs" ImageSource="Images/bw/lanky_bp.png" Text="0" Grid.Row="2" Grid.Column="6"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="TinyBPs" ImageSource="Images/bw/tiny_bp.png" Text="0" Grid.Row="3" Grid.Column="6"/>
-                    <local:CollectibleItem BGColor="{StaticResource VeryDark}" x:Name="ChunkyBPs" ImageSource="Images/bw/chunky_bp.png" Text="0" Grid.Row="4" Grid.Column="6"/>
-
-                    <!-- Keys-->
-                    <local:Item x:Name="key_1"  ItemImage="{DynamicResource key_1_bw}" Grid.Row="0" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.KEY_1}"/>
-                    <local:Item x:Name="key_2"  ItemImage="{DynamicResource key_2_bw}" Grid.Row="0" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.KEY_2}"/>
-                    <local:Item x:Name="key_3"  ItemImage="{DynamicResource key_3_bw}" Grid.Row="0" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.KEY_3}"/>
-                    <local:Item x:Name="key_4"  ItemImage="{DynamicResource key_4_bw}" Grid.Row="0" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.KEY_4}"/>
-                    <local:Item x:Name="key_5"  ItemImage="{DynamicResource key_5_bw}" Grid.Row="1" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.KEY_5}"/>
-                    <local:Item x:Name="key_6"  ItemImage="{DynamicResource key_6_bw}" Grid.Row="1" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.KEY_6}"/>
-                    <local:Item x:Name="key_7"  ItemImage="{DynamicResource key_7_bw}" Grid.Row="1" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.KEY_7}"/>
-                    <local:Item x:Name="key_8"  ItemImage="{DynamicResource key_8_bw}" Grid.Row="1" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.KEY_8}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_1}"     Grid.Row="0" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.KEY_1}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_2}"     Grid.Row="0" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.KEY_2}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_3}"     Grid.Row="0" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.KEY_3}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_4}"     Grid.Row="0" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.KEY_4}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_5}"     Grid.Row="1" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.KEY_5}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_6}"     Grid.Row="1" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.KEY_6}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_7}"     Grid.Row="1" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.KEY_7}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource key_8}"     Grid.Row="1" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.KEY_8}"/>
-
-                    <!--Slams/Bean-->
-                    <local:Item x:Name="progressive_slam_1"  ItemImage="{DynamicResource progressive_slam_1_bw}" Grid.Row="2" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.PROGRESSIVE_SLAM_1}"/>
-                    <local:Item x:Name="progressive_slam_2"  ItemImage="{DynamicResource progressive_slam_2_bw}"  Grid.Row="2" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.PROGRESSIVE_SLAM_2}"/>
-                    <local:Item x:Name="progressive_slam_3"  ItemImage="{DynamicResource progressive_slam_3_bw}" Grid.Row="2" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.PROGRESSIVE_SLAM_3}"/>
-                    <local:Item x:Name="bean"  ItemImage="{DynamicResource bean_bw}" Grid.Row="2" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.BEAN}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_1}"     Grid.Row="2" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.PROGRESSIVE_SLAM_1}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_2}"     Grid.Row="2" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.PROGRESSIVE_SLAM_2}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource progressive_slam_3}"     Grid.Row="2" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.PROGRESSIVE_SLAM_3}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource bean}"     Grid.Row="2" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.BEAN}"/>
-
-                    <!--Training Moves-->
-                    <local:Item x:Name="diving"  ItemImage="{DynamicResource diving_bw}" Grid.Row="4" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.DIVING}"/>
-                    <local:Item x:Name="orange_throwing"  ItemImage="{DynamicResource orange_throwing_bw}" Grid.Row="4" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.ORANGE_THROWING}"/>
-                    <local:Item x:Name="barrel_throwing"  ItemImage="{DynamicResource barrel_throwing_bw}" Grid.Row="4" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.BARREL_THROWING}"/>
-                    <local:Item x:Name="vine_swinging"  ItemImage="{DynamicResource vine_swinging_bw}" Grid.Row="4" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.VINE_SWINGING}"/>
-                    <local:Item x:Name="climbing"  ItemImage="{DynamicResource climbing_bw}" Grid.Row="4" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.CLIMBING}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource diving}"     Grid.Row="4" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.DIVING}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource orange_throwing}"     Grid.Row="4" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.ORANGE_THROWING}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource barrel_throwing}"     Grid.Row="4" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.BARREL_THROWING}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource vine_swinging}"     Grid.Row="4" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.VINE_SWINGING}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource climbing}"     Grid.Row="4" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.CLIMBING}"/>
-                    
-                    <!--Sniper/Homing/Camera/Shockwave-->
-                    <local:Item x:Name="sniper_scope"  ItemImage="{DynamicResource sniper_scope_bw}" Grid.Row="3" Grid.Column="8" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.SNIPER_SCOPE}"/>
-                    <local:Item x:Name="homing_ammo"  ItemImage="{DynamicResource homing_ammo_bw}" Grid.Row="3" Grid.Column="9" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.HOMING_AMMO}"/>
-                    <local:Item x:Name="fairy_camera"  ItemImage="{DynamicResource fairy_camera_bw}" Grid.Row="3" Grid.Column="10" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.FAIRY_CAMERA}"/>
-                    <local:Item x:Name="shockwave"  ItemImage="{DynamicResource shockwave_bw}" Grid.Row="3" Grid.Column="11" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.SHOCKWAVE}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource sniper_scope}"     Grid.Row="3" Grid.Column="8" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.SNIPER_SCOPE}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource homing_ammo}"     Grid.Row="3" Grid.Column="9" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.HOMING_AMMO}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource fairy_camera}"     Grid.Row="3" Grid.Column="10" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.FAIRY_CAMERA}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource shockwave}"     Grid.Row="3" Grid.Column="11" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.SHOCKWAVE}"/>
-                    
-                    <!--Shopkeepers-->
-                    <local:Item x:Name="cranky"  ItemImage="{DynamicResource cranky_bw}" Grid.Row="0" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.CRANKY}"/>
-                    <local:Item x:Name="candy"  ItemImage="{DynamicResource candy_bw}" Grid.Row="1" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.CANDY}"/>
-                    <local:Item x:Name="funky"  ItemImage="{DynamicResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.FUNKY}"/>
-                    <local:Item x:Name="snide"  ItemImage="{DynamicResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static enums:ItemName.SNIDE}"/>
-
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource cranky}"     Grid.Row="0" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.CRANKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource candy}"     Grid.Row="1" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.CANDY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource funky}"     Grid.Row="2" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.FUNKY}"/>
-                    <local:ItemBackground BackgroundItemImage="{DynamicResource snide}"     Grid.Row="3" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static enums:ItemName.SNIDE}"/>
-                </Grid>
-                <!--K.Rool/Helm order-->
-                <Grid Grid.Row="6" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Margin="8,1,0,6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width=".3*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Image x:Name="HelmLabel" Source="Images/dk64/lanky_bp.png" Grid.Column="0" Margin="-1"/>
-                        <local:ProgressiveItem  x:Name="HelmKong1"  Opacity="1" Grid.Column="2" Margin="1" />
-                        <local:ProgressiveItem x:Name="HelmKong2" Opacity="1"  Grid.Column="3" Margin="1" />
-                        <local:ProgressiveItem  x:Name="HelmKong3"  Opacity="1" Grid.Column="4" Margin="1" />
-                        <local:ProgressiveItem x:Name="HelmKong4" Opacity="1"  Grid.Column="5" Margin="1" />
-                        <local:ProgressiveItem  x:Name="HelmKong5"  Opacity="1" Grid.Column="6" Margin="1" />
-                    </Grid>
-                    <Grid Grid.Column="1" Margin="8,1,0,6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width=".3*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Image x:Name="KRoolLabel" Source="Images/dk64/krool.png" Grid.Column="0" Margin="-1"/>
-                        <local:ProgressiveItem  x:Name="BossKong1"  Opacity="1" Grid.Column="2" Margin="1" />
-                        <local:ProgressiveItem x:Name="BossKong2" Opacity="1"  Grid.Column="3" Margin="1" />
-                        <local:ProgressiveItem  x:Name="BossKong3"  Opacity="1" Grid.Column="4" Margin="1" />
-                        <local:ProgressiveItem x:Name="BossKong4" Opacity="1"  Grid.Column="5" Margin="1" />
-                        <local:ProgressiveItem  x:Name="BossKong5"  Opacity="1" Grid.Column="6" Margin="1" />
-                    </Grid>
-                </Grid>
-                <Grid Background="Transparent" Grid.Row="8" Margin="3,-2,-1,3" >
-                    <Grid.Style>
-                        <Style TargetType="{x:Type Grid}">
-                            <Setter Property="Visibility" Value="Visible" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=SongDisplay}" Value="false">
-                                    <Setter Property="Visibility" Value="Hidden" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Grid.Style>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height=".2*"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height=".2*"/>
-                    </Grid.RowDefinitions>
-
-                    <Border Grid.Row="0" Grid.RowSpan="3" CornerRadius="4" BorderThickness="1" BorderBrush="{StaticResource BaseBG}" Background="{StaticResource RegionImageBG}">
-                    </Border>
-                    <Grid Background="Transparent" Grid.Row="1"  >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width=".10*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height=".12*"/>
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height=".12*"/>
-                            </Grid.RowDefinitions>
-                            <Image x:Name="Headphones" Grid.Row="1" Source="Images/dk64/headphones.png" Grid.Column="0" Margin="0" Panel.ZIndex="2" Opacity="1" HorizontalAlignment="Center"/>
-                        </Grid>
-                        <Grid Grid.Column="1" Margin="0,0,0,0" >
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Viewbox HorizontalAlignment="Left"  VerticalAlignment="Center">
-                                <TextBlock x:Name="SongGame" Text="Waiting for DK64R ROM to be loaded..." FontWeight="Light"  Foreground="White" FontFamily="Helvetica" VerticalAlignment="Center" FontSize="16" />
-                            </Viewbox>
-                            <Viewbox HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center">
-                                <TextBlock x:Name="SongName" Text="" Foreground="White" FontFamily="Helvetica" FontWeight="Medium"  VerticalAlignment="Center" FontSize="16" />
-                            </Viewbox>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <Grid Grid.Column="1" Margin="2">
+            <!-- Primary content grid -->
+            <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Name="MultipathColumns" Width="2*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition x:Name="HintsColumn" Width="{Binding HintColumnWidth, Converter={StaticResource CountToRelativeWidthConverter}}" />
                 </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Name="DirectItemHintGrid">
-                <Grid.Style>
-                    <Style TargetType="{x:Type Grid}">
-                        <Setter Property="Visibility" Value="Visible" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="Off">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="Off">
-                                <Setter Property="Visibility" Value="Hidden" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Style>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Name="DirectHintsThirdMain" Width="0*"/>
-                </Grid.ColumnDefinitions>
-                <Grid Name="DirectHintsCol0" Grid.Column="0">
+                <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Name="DirectHintsCol0LastRow" Height="1*"/>
-                    </Grid.RowDefinitions>
-                        <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="IslesPanel" Margin="3" Heading="ISLES" LineColor="#fff67a" RegionName="DK_ISLES" />
-                        <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="AztecPanel" Margin="3" Heading="AZTEC" LineColor="#ffb01f" RegionName="ANGRY_AZTEC" />
-                        <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="GalleonPanel" Margin="3" Heading="GALLEON" LineColor="#216fff" RegionName="GLOOMY_GALLEON" />
-                        <local:HintPanel Grid.Row="3" HintType="DIRECT_ITEM_HINT" x:Name="CavesPanel" Margin="3" Heading="CAVES" LineColor="#42ddf5" RegionName="CRYSTAL_CAVES" />
-                    </Grid>
-                <Grid Name="DirectHintsCol1" Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Name="DirectHintsCol1LastRow" Height="1*"/>
-                    </Grid.RowDefinitions>
-                        <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="JapesPanel" Margin="3" Heading="JAPES" LineColor="#59ff64" RegionName="JUNGLE_JAPES" />
-                        <local:HintPanel Grid.Row="1" HintType="DIRECT_ITEM_HINT" x:Name="FactoryPanel" Margin="3" Heading="FACTORY" LineColor="#eeeeee" RegionName="FRANTIC_FACTORY" />
-                        <local:HintPanel Grid.Row="2" HintType="DIRECT_ITEM_HINT" x:Name="ForestPanel" Margin="3" Heading="FOREST" LineColor="#006b3e" RegionName="FUNGI_FOREST" />
-                        <local:HintPanel Grid.Row="3" HintType="DIRECT_ITEM_HINT" x:Name="CastlePanel" Margin="3" Heading="CASTLE" LineColor="#99a3ad" RegionName="CREEPY_CASTLE" />
-                    </Grid>
-                <Grid Name="DirectHintsCol2" Grid.Column="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    
-                        
-                    </Grid>
-            </Grid>
-            <Grid Grid.Column="0" Name="MultipathGrid">
-                <Grid.Style>
-                    <Style TargetType="{x:Type Grid}">
-                        <Setter Property="Visibility" Value="Visible" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="True">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="false">
-                                <Setter Property="Visibility" Value="Hidden" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Style>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Name="MultipathColumn2" Width="0*"/>
-                    </Grid.ColumnDefinitions>
-                <local:HintPanel HintType="PATH" x:Name="PathsPanel" Margin="3" Grid.Column="0" Heading="PATHS" LineColor="#dba512"  />
-                    <Grid Name="MultipathColumn1" Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Name="MultipathColumn1Row0" Height="1.6*"/>
-                            <RowDefinition Height="1.25*"/>
-                            <RowDefinition Height="3*"/>
-                        </Grid.RowDefinitions>
-                        <local:HintPanel Grid.Row="0" HintType="FOOLISH_REGION" x:Name="FoolishPanel" Margin="3" Heading="FOOLISH REGIONS" LineColor="#e02f2f"  />
-                        <local:HintPanel Grid.Row="1" HintType="KONGS" x:Name="KongsPanel" Margin="3" Heading="KONGS" LineColor="#ff59e1"  />
-                        <local:HintPanel Grid.Row="2" HintType="WAY_OF_THE_HOARD" x:Name="WotHPanel" Margin="3" Heading="WAY OF THE HOARD" LineColor="#2652ff"  />
-                    </Grid>
-                    <Grid Name="MultipathMainColumn2"  Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="5*"/>
-                            <RowDefinition Height="3*"/>
-                        </Grid.RowDefinitions>
-                        
-                        
-                    </Grid>
-                </Grid>
-            <Grid Name="UnhintedColumn" Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Name="OptionalPotionsRow" Height="2.54*"/>
-                        <RowDefinition Height="5*"/>
-                        <RowDefinition Height="2.6*"/>
+                        <RowDefinition Height=".007*"/>
+                        <RowDefinition Height=".1*"/>
+                        <RowDefinition Height="14"/>
+                        <RowDefinition Height=".4*"/>
+                        <RowDefinition Height="14"/>
+                        <RowDefinition Height=".1*"/>
                         <RowDefinition>
                             <RowDefinition.Style>
                                 <Style TargetType="{x:Type RowDefinition}">
-                                    <Setter Property="Height" Value="0*" />
+                                    <Setter Property="Height" Value=".01*" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HelmDoors}" Value="True">
-                                            <Setter Property="Height" Value="1*" />
+                                        <DataTrigger Binding="{Binding IsSongDisplayEnabled}" Value="False">
+                                            <Setter Property="Height" Value="0"  />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RowDefinition.Style>
+                        </RowDefinition>
+                        <RowDefinition>
+                            <RowDefinition.Style>
+                                <Style TargetType="{x:Type RowDefinition}">
+                                    <Setter Property="Height" Value=".12*" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSongDisplayEnabled}" Value="False">
+                                            <Setter Property="Height" Value="0"  />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </RowDefinition.Style>
                         </RowDefinition>
                     </Grid.RowDefinitions>
-                    <local:HintPanel Grid.Row="0" HintType="DIRECT_ITEM_HINT" x:Name="HelmPanel" Margin="3" Heading="HELM" LineColor="#b580ff" RegionName="HIDEOUT_HELM">
-                        <local:HintPanel.Style>
-                            <Style TargetType="{x:Type local:HintPanel}">
-                                <Setter Property="Visibility" Value="Visible" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=HintDisplay}" Value="false">
-                                        <Setter Property="Visibility" Value="Hidden" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </local:HintPanel.Style>
-                    </local:HintPanel>
-                    <local:HintPanel Grid.Row="0" HintType="REGION_POTION_COUNT" x:Name="PotionCountsPanel" Margin="3" Heading="POTION COUNTS" LineColor="#D0D0D0"  />
-                    <local:HintPanel Grid.Row="1" HintType="UNHINTED" x:Name="UnhintedPanel" Margin="3" Heading="UNHINTED MOVES" LineColor="#36f77d"  />
-                <local:BLockerPanel x:Name="BLockerHints" Grid.Row="2" Margin="3" Heading="B. LOCKERS" LineColor="#F0F000"/>
-                    <local:HelmDoorPanel x:Name="HelmDoorHints" Grid.Row="3" Margin="3" Heading="HELM DOORS" LineColor="#7d3cbd">
-                    </local:HelmDoorPanel>
+                    <Grid Grid.Row="1">
+                        <Rectangle Fill="{StaticResource BaseBG}" />
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
+                    </Grid>
+                    <Grid Grid.Row="5">
+                        <Rectangle Fill="{StaticResource RegionImageBG}" Margin="10,6,10,6"  />
+                    </Grid>
+                    <!-- Region Grid -->
+                    <regions:RegionGrid Grid.Row="0" />
+
+                    <!--GB/other stuff display-->
+                    <local:CollectiblesGridRow Grid.Row="2" DataContext="{Binding CollectiblesGridRowViewModel}" />
+                    <!-- Items -->
+                    <Grid Grid.Row="4" Visibility="Visible" Margin="0" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="6*" Name="KongMoves" />
+                            <ColumnDefinition Width="1*" Name="KongBlueprints" />
+                            <ColumnDefinition Width="1*" Name="ItemsSeparator" />
+                            <ColumnDefinition Width="5*" Name="SharedMoves" />
+                        </Grid.ColumnDefinitions>
+
+                        <ItemsControl Grid.Column="0" ItemsSource="{Binding KongItems}" ItemTemplate="{StaticResource UiItemTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="5" Columns="6" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <!--Blueprints-->
+                        <ItemsControl Grid.Column="1" ItemsSource="{Binding KongBlueprints}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="5" Columns="1" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type viewmodels:UiKongBlueprintViewModel}">
+                                    <local:KongBlueprint />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <!-- All Shared Moves -->
+                        <Grid Grid.Column="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Keys -->
+                            <ItemsControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="4" ItemsSource="{Binding Keys}" ItemTemplate="{StaticResource UiItemTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="2" Columns="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+
+                            <!-- Shopkeepers: defaults to vertical stackpanel which works -->
+                            <ItemsControl Grid.Row="0" Grid.Column="4" Grid.RowSpan="4" ItemsSource="{Binding Shopkeepers}" ItemTemplate="{StaticResource UiItemTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="4" Columns="1" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+
+                            <!-- Training Moves -->
+                            <ItemsControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" ItemsSource="{Binding TrainingMoves}" ItemTemplate="{StaticResource UiItemTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="1" Columns="5" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+
+                            <!-- Slams, Bean, Sniper, Homing, Camera, Shockwave -->
+                            <ItemsControl Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="4" ItemsSource="{Binding MiscMoves}" ItemTemplate="{StaticResource UiItemTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="2" Columns="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </Grid>
+                    </Grid>
+                    <!--K.Rool/Helm order-->
+                    <Grid Grid.Row="6" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Margin="8,1,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width=".3*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="HelmLabel" Source="Images/dk64/lanky_bp.png" Grid.Column="0" Margin="-1"/>
+                            <ItemsControl Grid.Column="2" ItemsSource="{Binding HelmSlots}" ItemsPanel="{StaticResource SlotGridPanelTemplate}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type viewmodels:UiHelmSlotViewModel}">
+                                        <local:HelmSlot Opacity="1" Margin="1" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                        <Grid Grid.Column="1" Margin="8,1,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width=".3*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="KRoolLabel" Source="Images/dk64/krool.png" Grid.Column="0" Margin="-1"/>
+                            <ItemsControl Grid.Column="2" ItemsSource="{Binding BossSlots}" ItemsPanel="{StaticResource SlotGridPanelTemplate}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type viewmodels:UiBossSlotViewModel}">
+                                        <local:BossSlot Opacity="1" Margin="1" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </Grid>
+                    <!-- Song Display -->
+                    <Grid Grid.Row="8" Background="Transparent" Margin="3,-2,-1,3"  Visibility="{Binding IsSongDisplayEnabled, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
+                        <local:Song />
+                    </Grid>
+                </Grid>
+                <hints:Main Grid.Column="1" Margin="2" />
             </Grid>
-            </Grid>
+            <!-- Canvas overlay for dragging items (above content, below menu) -->
+            <Canvas x:Name="DragPreviewCanvas" Panel.ZIndex="10000" IsHitTestVisible="False" Background="Transparent" />
         </Grid>
     </DockPanel>
 </Window>

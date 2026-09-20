@@ -1,0 +1,115 @@
+<UserControl
+    x:Class="TrackOMatic.CollectiblesGridRow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels;assembly=TrackOMatic.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:CollectiblesGridRowViewModel}"
+    d:DesignHeight="100"
+    d:DesignWidth="400"
+>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+            <converters:CountToRelativeWidthConverter x:Key="CountToRelativeWidthConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource RegionBG}" Margin="0,5,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".1*" />
+            <ColumnDefinition Width="1.7*" />
+            <ColumnDefinition Width=".1*" />
+            <ColumnDefinition Width="8.7*" />
+            <ColumnDefinition Width=".1*" />
+        </Grid.ColumnDefinitions>
+        <Grid
+            Grid.Column="1"
+            Margin="0"
+            Visibility="{Binding IsWrinklyVisible, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+        >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1.2*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".5*"/>
+                <ColumnDefinition Width=".75*"/>
+            </Grid.ColumnDefinitions>
+            <Image
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="-2,3,3,3"
+                Stretch="Uniform"
+                Panel.ZIndex="2"
+                RenderOptions.ClearTypeHint="Enabled"
+                Source="{Binding WrinklyResourceKey, Converter={StaticResource ResourceKeyConverter}}"
+             >
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+                </Image.Effect>
+            </Image>
+
+            <Grid
+                Grid.Row="1"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Margin="0"
+            >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="0.25*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Grid.ColumnSpan="1" Margin="0" Background="{StaticResource VeryDark}" />
+                <Image Margin="0,1,1,1" Source="{Binding HintResourceKey, Converter={StaticResource ResourceKeyConverter}}" />
+                <Viewbox Grid.Column="1" Margin="0" HorizontalAlignment="Left">
+                    <Border Padding="0,0,0,1" Background="{StaticResource VeryDark}">
+                        <TextBlock
+                            Margin="0,-2,3,1"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            FontFamily="{DynamicResource DK64Font}"
+                            FontSize="20"
+                            Text="{Binding AmountToNextHint, StringFormat={}{0}}"
+                        />
+                    </Border>
+                </Viewbox>
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding HiddenCollectibleCount, Converter={StaticResource CountToRelativeWidthConverter}}" />
+                <ColumnDefinition Width="{Binding VisibleCount, Converter={StaticResource CountToRelativeWidthConverter}}" />
+            </Grid.ColumnDefinitions>
+            <ItemsControl Grid.Column="1" ItemsSource="{Binding Collectibles}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="1" Columns="{Binding VisibleCount}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplateSelector>
+                    <local:CollectibleTemplateSelector>
+                        <local:CollectibleTemplateSelector.BlueprintTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:UiTotalBlueprintViewModel}">
+                                <local:TotalBlueprint />
+                            </DataTemplate>
+                        </local:CollectibleTemplateSelector.BlueprintTemplate>
+                        <local:CollectibleTemplateSelector.CollectibleTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:UiCountableViewModel}">
+                                <local:Countable />
+                            </DataTemplate>
+                        </local:CollectibleTemplateSelector.CollectibleTemplate>
+                    </local:CollectibleTemplateSelector>
+                </ItemsControl.ItemTemplateSelector>
+            </ItemsControl>
+        </Grid>
+    </Grid>
+</UserControl>

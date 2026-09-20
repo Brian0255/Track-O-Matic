@@ -1,0 +1,58 @@
+using System.Windows;
+using System.Windows.Input;
+
+using TrackOMatic.Logic.Enums;
+using TrackOMatic.Logic.Models.Hints;
+using TrackOMatic.ViewModels.Hints;
+
+namespace TrackOMatic.HintsUI;
+/// <summary>
+/// Interaction logic for HintMultiSelectionDialog.xaml
+/// </summary>
+public partial class HintMultiSelectionDialog : Window
+{
+    private readonly MultiGridItemSelectorViewModel _viewModel;
+    private readonly Dictionary<ItemName, HintDialogItemViewModel> _itemViewModelsByName;
+
+    public HintMultiSelectionDialog(IReadOnlyList<HintGridCell> items, IList<ItemName> itemsFoundAlready, string title)
+    {
+        if (items is null || items.Count == 0)
+        {
+            throw new ArgumentException("Items collection cannot be null or empty.");
+        }
+
+        // create the view models from the items passed in.
+        var dialogItems = new List<HintDialogItemViewModel>();
+        _itemViewModelsByName = [];
+
+        foreach (var cell in items)
+        {
+            var isSelected = itemsFoundAlready?.Contains(cell.ItemName) ?? false;
+            var viewModel = new HintDialogItemViewModel(cell, isSelected);
+            dialogItems.Add(viewModel);
+            _itemViewModelsByName[cell.ItemName] = viewModel;
+        }
+
+        _viewModel = new MultiGridItemSelectorViewModel(dialogItems);
+        _viewModel.CloseRequested += (s, e) => Close();
+
+        InitializeComponent();
+
+        DataContext = _viewModel;
+        Title = title;
+    }
+
+    public IList<HintGridCell> GetSelectedItems()
+    {
+        return _viewModel?.GetSelectedCells() ?? [];
+    }
+
+    private void OnDoneClicked(object sender, MouseButtonEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed && _viewModel.ConfirmSelectionCommand.CanExecute(null))
+        {
+            _viewModel.ConfirmSelectionCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
+}

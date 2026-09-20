@@ -1,0 +1,39 @@
+<ContentControl
+    x:Class="TrackOMatic.HintsUI.PathHintItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrackOMatic.HintsUI"
+    xmlns:viewmodels="clr-namespace:TrackOMatic.ViewModels.Hints;assembly=TrackOMatic.ViewModels"
+    xmlns:converters="clr-namespace:TrackOMatic.Converters"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:PathHintItemViewModel}"
+    Background="Transparent"
+    MouseDown="ContentControl_MouseDown"
+>
+    <ContentControl.Resources>
+        <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter" FalseVisibility="Collapsed" />
+            <converters:ResourceKeyConverter x:Key="ResourceKeyConverter" />
+        </ResourceDictionary>
+    </ContentControl.Resources>
+    <Grid>
+        <Border
+            BorderThickness="0" 
+            UseLayoutRounding="True"
+            RenderOptions.BitmapScalingMode="NearestNeighbor"
+            SnapsToDevicePixels="True"
+            RenderOptions.ClearTypeHint="Enabled"
+        >
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="14" Opacity="0.5" />
+            </Border.Effect>
+            <Image Source="{Binding ImageResourceKey, Converter={StaticResource ResourceKeyConverter}}"/>
+        </Border>
+        <Image
+            Source="{Binding CheckmarkKey, Converter={StaticResource ResourceKeyConverter}}"
+            Visibility="{Binding IsFound, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+        />
+    </Grid>
+</ContentControl>
