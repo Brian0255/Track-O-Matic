@@ -492,7 +492,7 @@ namespace TrackOMatic
 
             string lastFolderPath = Properties.Settings.Default.LastFolderPath;
 
-            if (!string.IsNullOrEmpty(lastFolderPath))
+            if (!string.IsNullOrEmpty(lastFolderPath) && Directory.Exists(lastFolderPath))
             {
                 openFileDialog.InitialDirectory = lastFolderPath;
             }
