@@ -44,6 +44,9 @@ namespace TrackOMatic
 
             {ItemName.SHOCKWAVE, false },
             {ItemName.FAIRY_CAMERA, false },
+
+            {ItemName.DAY, false },
+            {ItemName.NIGHT, false }
         };
 
         private Dictionary<ItemName, bool> StarredSharedMoves = new()
@@ -57,6 +60,9 @@ namespace TrackOMatic
 
             {ItemName.SHOCKWAVE, false },
             {ItemName.FAIRY_CAMERA, false },
+
+            {ItemName.DAY, false },
+            {ItemName.NIGHT, false }
         };
 
         private Dictionary<RegionName, int> LevelNumbers = new()
@@ -93,6 +99,14 @@ namespace TrackOMatic
                 new BitmapImage( new Uri("images/dk64/progressive_slam.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/slam2.png", UriKind.Relative)),
                 new BitmapImage( new Uri("images/dk64/slam3.png", UriKind.Relative)),
+        };
+
+        private List<BitmapImage> dayNightImages = new()
+        {
+            new BitmapImage( new Uri("images/bw/daynight_both.png", UriKind.Relative)),
+            new BitmapImage( new Uri("images/dk64/daynight_day.png", UriKind.Relative)),
+            new BitmapImage( new Uri("images/dk64/daynight_night.png", UriKind.Relative)),
+            new BitmapImage( new Uri("images/dk64/daynight_both.png", UriKind.Relative)),
         };
 
         private List<Image> LevelNames;
@@ -398,6 +412,7 @@ namespace TrackOMatic
                 {homingscope, new(){ItemName.HOMING_AMMO, ItemName.SNIPER_SCOPE} },
                 {camerashockwave, new(){ItemName.FAIRY_CAMERA, ItemName.SHOCKWAVE} },
                 {slam, new(){ItemName.PROGRESSIVE_SLAM_1, ItemName.PROGRESSIVE_SLAM_2, ItemName.PROGRESSIVE_SLAM_3, } },
+                {daynight, new(){ItemName.DAY, ItemName.NIGHT} }
             };
             foreach(var entry in groupings)
             {
@@ -449,8 +464,10 @@ namespace TrackOMatic
             slam.BackgroundItemImage = slamImages[slamCount];
             var homingScopeGroup = new List<ItemName> { ItemName.HOMING_AMMO, ItemName.SNIPER_SCOPE };
             var camShockwaveGroup = new List<ItemName> { ItemName.FAIRY_CAMERA, ItemName.SHOCKWAVE };
+            var dayNightGroup = new List<ItemName> { ItemName.DAY, ItemName.NIGHT };
             CheckGroupedItem(homingScopeGroup, homingScopeImages, homingscope);
             CheckGroupedItem(camShockwaveGroup, camShockwaveImages, camerashockwave);
+            CheckGroupedItem(dayNightGroup, dayNightImages, daynight);
         }
 
         private ItemBackground GetMatchingItem(ItemName item)
@@ -466,6 +483,7 @@ namespace TrackOMatic
             }
             if (item == ItemName.SNIPER_SCOPE || item == ItemName.HOMING_AMMO) return homingscope;
             if (item == ItemName.FAIRY_CAMERA || item == ItemName.SHOCKWAVE) return camerashockwave;
+            if (item == ItemName.DAY || item == ItemName.NIGHT) return daynight;
             if (ItemMap.ContainsKey(item)) return ItemMap[item];
             return null;
         }
@@ -499,7 +517,6 @@ namespace TrackOMatic
                 match.SetResourceReference(ItemBackground.BackgroundItemImageProperty, ((ItemName)match.Tag).ToString().ToLower() + "_bw");
             }
         }
-
         public void ActivateTooltip(ItemName item, string hoverText)
         {
             var match = GetMatchingItem(item);
@@ -518,6 +535,16 @@ namespace TrackOMatic
         private void Window_Closed(object sender, EventArgs e)
         {
            
+        }
+
+        public void OnRandomizerVersionChanged(int newVersion)
+        {
+            var v6_items = new List<ItemName>() { ItemName.DAY, ItemName.CANNONS };
+            foreach(var item in v6_items)
+            {
+                var match = GetMatchingItem(item);
+                match.Visibility = (newVersion >= 6) ? Visibility.Visible : Visibility.Hidden;
+            }
         }
     }
 }
