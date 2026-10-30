@@ -353,6 +353,10 @@
         CANDY,
         FUNKY,
         SNIDE,
+        CANNONS,
+        DAY,
+        NIGHT,
+        DAY_NIGHT,
 
         DONKEY_ISLES_MEDAL,
         DIDDY_ISLES_MEDAL,

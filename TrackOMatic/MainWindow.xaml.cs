@@ -86,9 +86,9 @@ namespace TrackOMatic
 
         public Dictionary<ItemName, PathOrFoundItem> ITEM_TO_DIRECT_HINT { get; } = new();
         public Dictionary<ItemName, Item> ITEM_NAME_TO_ITEM { get; } = new();
-
         private Timer SaveTimer;
         private bool autotrackerResetting = false;
+        public int RandomizerVersion { get; private set; } = 5;
         public MainWindow()
         {
             InitializeComponent();
@@ -215,7 +215,7 @@ namespace TrackOMatic
             UnhintedPanel
 
             };
-            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong, UpdateUIAmountToNextHint, UpdateProgHintImage);
+            Autotracker = new Autotracker(ProcessNewAutotrackedItem, UpdateCollectible, SetRegionLighting, SetShopkeepers, SetSong, UpdateUIAmountToNextHint, UpdateProgHintImage, OnRandomizerVersionChanged);
             Autotracker.ResetCompleted = AutotrackerResetCompleted;
             SaveTimer = new Timer(60000);
             SaveTimer.Elapsed += OnTimerSave;
@@ -280,6 +280,13 @@ namespace TrackOMatic
             DataSaver.AddSavedItem(new SavedItem(itemToProcess, regionName, item.Star.Visibility, true, item.Image.Opacity));
             DataSaver.Save("autosave.json",canAutosave);
             return true;
+        }
+
+        public void OnRandomizerVersionChanged(int newVersion)
+        {
+            AdjustLayoutV6(newVersion >= 6);
+            BroadcastView?.OnRandomizerVersionChanged(newVersion);
+            RandomizerVersion = newVersion;
         }
 
         private void InitOptions()
@@ -492,7 +499,7 @@ namespace TrackOMatic
 
             string lastFolderPath = Properties.Settings.Default.LastFolderPath;
 
-            if (!string.IsNullOrEmpty(lastFolderPath))
+            if (!string.IsNullOrEmpty(lastFolderPath) && Directory.Exists(lastFolderPath))
             {
                 openFileDialog.InitialDirectory = lastFolderPath;
             }
@@ -666,7 +673,7 @@ namespace TrackOMatic
             AutoUpdater.UpdateFormSize = new System.Drawing.Size(1300, 600);
             AutoUpdater.Icon = Properties.Resources.app.ToBitmap();
 
-            AutoUpdater.InstalledVersion = new Version("2.2.4");
+            AutoUpdater.InstalledVersion = new Version("2.3.0");
 
             AutoUpdater.Start("https://raw.githubusercontent.com/Brian0255/Track-O-Matic/master/TrackOMatic/AutoUpdateInfo.xml");
             if (Settings.Default.DesiredHeight == 0 || Settings.Default.DesiredWidth == 0) return;
@@ -685,6 +692,51 @@ namespace TrackOMatic
             {
                 BroadcastView.Close();
             }
+        }
+
+        private void PlaceItem(ItemName itemName, int row, int column, Visibility visibility)
+        {
+            if (!ITEM_NAME_TO_ITEM.ContainsKey(itemName)) return;
+            var item = ITEM_NAME_TO_ITEM[itemName];
+            Grid.SetRow(item, row);
+            Grid.SetColumn(item, column);
+            item.Visibility = visibility;
+            if (!ITEM_TO_BACKGROUND_IMAGE.ContainsKey(item)) return;
+            var backgroundItem = ITEM_TO_BACKGROUND_IMAGE[item];
+            Grid.SetRow(backgroundItem, row);
+            Grid.SetColumn(backgroundItem, column);
+            backgroundItem.Visibility = visibility;
+        }
+
+        private void AdjustLayoutV6(bool useNewer)
+        {
+            Dictionary<ItemName, (int row, int column, Visibility visibility)> v5_mapping = new()
+            {
+                {ItemName.FUNKY, (2,12, Visibility.Visible) },
+                {ItemName.SNIDE, (3,12, Visibility.Visible) },
+                {ItemName.DAY, (0,0,Visibility.Hidden) },
+                {ItemName.NIGHT, (0,0,Visibility.Hidden) },
+                {ItemName.CANNONS, (0,0,Visibility.Hidden) },
+            };
+
+            Dictionary<ItemName, (int row, int column, Visibility visibility)> v6_mapping = new()
+            {
+                {ItemName.FUNKY, (0,13, Visibility.Visible) },
+                {ItemName.SNIDE, (1,13, Visibility.Visible) },
+                {ItemName.DAY, (2,12,Visibility.Visible) },
+                {ItemName.NIGHT, (2,13,Visibility.Visible) },
+                {ItemName.CANNONS, (3,12,Visibility.Visible) },
+            };
+
+            var mapping = useNewer ? v6_mapping : v5_mapping;
+            foreach (var entry in mapping)
+            {
+                var itemName = entry.Key;
+                var placementInfo = entry.Value;
+                PlaceItem(itemName, placementInfo.row, placementInfo.column, placementInfo.visibility);
+            }
+            var v6ColumnWidth = useNewer ? 1.0 : 0;
+            v6_Column.Width = new GridLength(v6ColumnWidth, GridUnitType.Star);
         }
 
         public void SetShopkeepers(bool on)

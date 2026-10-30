@@ -179,7 +179,8 @@
                     <local:ItemBackground Margin="1" Interactible="False" x:Name="candy" BackgroundItemImage="{DynamicResource candy_bw}" Grid.Column="2" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANDY}"/>
                     <local:ItemBackground Margin="1" Interactible="False" x:Name="snide" BackgroundItemImage="{DynamicResource snide_bw}" Grid.Column="3" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
                     <local:ItemBackground Margin="1" Interactible="False" x:Name="climbing" BackgroundItemImage="{DynamicResource climbing_bw}" Grid.Column="4" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CLIMBING}"/>
-
+                    <local:ItemBackground Margin="1" Interactible="False" x:Name="cannons" BackgroundItemImage="{DynamicResource cannons_bw}" Grid.Column="5" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANNONS}" Visibility="Hidden"/>
+                    <local:ItemBackground Margin="1" Interactible="False" x:Name="daynight" BackgroundItemImage="{DynamicResource daynight_bw}" Grid.Column="6" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DAY_NIGHT}" Visibility="Hidden"/>
                 </Grid>
             </Grid>
             <Grid Grid.Column="1" Margin="-6,3,3,3" Height="284" VerticalAlignment="Top">

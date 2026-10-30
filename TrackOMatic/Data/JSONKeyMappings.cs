@@ -232,7 +232,10 @@ namespace TrackOMatic
             {"Snide", ItemName.SNIDE },
             {"Climbing", ItemName.CLIMBING },
             {"Shockwave", ItemName.SHOCKWAVE },
-            {"Fairy Camera", ItemName.FAIRY_CAMERA }
+            {"Fairy Camera", ItemName.FAIRY_CAMERA },
+            {"Cannons", ItemName.CANNONS },
+            {"Day", ItemName.DAY },
+            {"Night", ItemName.NIGHT }
         };
 
     }

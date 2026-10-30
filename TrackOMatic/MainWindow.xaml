@@ -74,7 +74,7 @@
                 <MenuItem Name="BroadcastOption" StaysOpenOnClick="True" Header="Active" IsCheckable="True"  IsChecked="False" Click="BroadcastToggle"/>
                 <MenuItem Name="BroadcastCustomize" Header="Main Options">
                     <MenuItem Name="BroadcastHelmKRool" Header='Helm &amp; K. Rool' IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastHelmKRool}" Click="BroadcastHelmKRoolToggle"/>
-                    <MenuItem Name="BroadcastShopkeepers" Header="Shopkeepers" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastShopkeepers}" Click="BroadcastShopkeepersToggle"/>
+                    <MenuItem Name="BroadcastShopkeepers" Header="Bottom Row (Shopkeepers, Climbing, Cannons, Day/Night)" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastShopkeepers}" Click="BroadcastShopkeepersToggle"/>
                     <MenuItem Name="BroadcastSongDisplay" Header="Song Display" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=BroadcastSongDisplay}" Click="BroadcastSongDisplayToggle"/>
                 </MenuItem>
                 <MenuItem Name="BroadcastNumberDisplayOption" Header="Number Display">
@@ -82,7 +82,7 @@
                     <RadioButton Name="broadcastNumberDisplayWOTHCount" Checked="BroadcastNumberDisplayToggle">WOTH Count</RadioButton>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Version 2.2.4" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Header="Version 2.3.0" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -718,6 +718,7 @@
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Name="ShopkeeperColumn" Width="1*" />
+                        <ColumnDefinition Name="v6_Column" Width="0*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Kong 1 -->
@@ -863,10 +864,18 @@
                     <local:Item x:Name="funky"  ItemImage="{DynamicResource funky_bw}" Grid.Row="2" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.FUNKY}"/>
                     <local:Item x:Name="snide"  ItemImage="{DynamicResource snide_bw}" Grid.Row="3" Grid.Column="12" Panel.ZIndex="0" Tag="{x:Static local:ItemName.SNIDE}"/>
 
+                    <local:Item x:Name="cannons"  ItemImage="{DynamicResource cannons_bw}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.CANNONS}" Visibility="Hidden"/>
+                    <local:Item x:Name="day"  ItemImage="{DynamicResource day_bw}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.DAY}" Visibility="Hidden"/>
+                    <local:Item x:Name="night"  ItemImage="{DynamicResource night_bw}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" Tag="{x:Static local:ItemName.NIGHT}" Visibility="Hidden"/>
+
                     <local:ItemBackground BackgroundItemImage="{DynamicResource cranky}"     Grid.Row="0" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CRANKY}"/>
                     <local:ItemBackground BackgroundItemImage="{DynamicResource candy}"     Grid.Row="1" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CANDY}"/>
                     <local:ItemBackground BackgroundItemImage="{DynamicResource funky}"     Grid.Row="2" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.FUNKY}"/>
                     <local:ItemBackground BackgroundItemImage="{DynamicResource snide}"     Grid.Row="3" Grid.Column="12" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.SNIDE}"/>
+
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource cannons}"     Grid.Row="0" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.CANNONS}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource day}"     Grid.Row="0" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.DAY}"/>
+                    <local:ItemBackground BackgroundItemImage="{DynamicResource night}"     Grid.Row="0" Grid.Column="0" Visibility="Hidden" Panel.ZIndex="-1" Tag="{x:Static local:ItemName.NIGHT}"/>
                 </Grid>
                 <!--K.Rool/Helm order-->
                 <Grid Grid.Row="6" >

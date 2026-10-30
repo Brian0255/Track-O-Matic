@@ -329,6 +329,10 @@ namespace TrackOMatic
             new OffsetInfoEntry(ItemName.FUNKY, 0x7ECF20,8,8),
             new OffsetInfoEntry(ItemName.CRANKY, 0x7ECF20,8,4),
 
+            new OffsetInfoEntry(ItemName.CANNONS, 0x7ECF05,8,1),
+            new OffsetInfoEntry(ItemName.DAY, 0x7ECEFB,8,4),
+            new OffsetInfoEntry(ItemName.NIGHT, 0x7ECEFB,8,8),
+
             new OffsetInfoEntry(ItemName.DONKEY_ISLES_MEDAL, 0x7ECF20,8,64),
             new OffsetInfoEntry(ItemName.DIDDY_ISLES_MEDAL, 0x7ECF20,8,128),
             new OffsetInfoEntry(ItemName.LANKY_ISLES_MEDAL, 0x7ECF21,8,1),
@@ -511,6 +515,10 @@ namespace TrackOMatic
             new OffsetInfoEntry(ItemName.CANDY, 0x7ECF20,8,16),
             new OffsetInfoEntry(ItemName.FUNKY, 0x7ECF20,8,8),
             new OffsetInfoEntry(ItemName.CRANKY, 0x7ECF20,8,4),
+
+            new OffsetInfoEntry(ItemName.CANNONS, 0x7ECF05,8,1),
+            new OffsetInfoEntry(ItemName.DAY, 0x7ECEFB,8,4),
+            new OffsetInfoEntry(ItemName.NIGHT, 0x7ECEFB,8,8)
         };
         public static bool useNewOffsets = false;
         public static IList<OffsetInfoEntry> OFFSETS => useNewOffsets ? OFFSETS_NEW : OFFSETS_OLD;
