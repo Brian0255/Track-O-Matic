@@ -135,6 +135,7 @@ namespace TrackOMatic
                 return;
             }
             BroadcastView = new BroadcastView();
+            BroadcastView.OnRandomizerVersionChanged(RandomizerVersion);
             BroadcastView.UpdateSongInfo(SongGame.Text, SongName.Text);
             BroadcastView.Closed += BroadcastClosed;
             BroadcastView.Show();
