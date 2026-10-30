@@ -18,6 +18,7 @@ namespace TrackOMatic
     public delegate void UpdateCollectible(ItemType collectibleType, int newTotal);
     public delegate void SetRegionLighting(RegionName region, bool lightUp);
     public delegate void SetShopkeepers(bool on);
+    public delegate void OnRandomizerVersionChanged(int version);
     public delegate void SetSong(string songGame, string songName);
     public delegate void UpdateUIAmountToNextHint(int amountToNextHint);
     public delegate void UpdateProgHintImage(ItemType itemType);
@@ -27,6 +28,7 @@ namespace TrackOMatic
         public UpdateCollectible UpdateCollectible { get; set; }
         public SetRegionLighting SetRegionLighting { get; set; }
         public SetShopkeepers SetShopkeepers { get; set; }
+        public OnRandomizerVersionChanged OnRandomizerVersionChanged { get; set; }
         public SetSong SetSong{ get; set; }
         public UpdateUIAmountToNextHint UpdateUIAmountToNextHint { get; set; }
         public UpdateProgHintImage UpdateProgHintImage { get; set; }
@@ -54,7 +56,7 @@ namespace TrackOMatic
         private uint addressBase;
         private ItemType progHintItem;
         private IntPtr processHandle;
-        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint, UpdateProgHintImage updateProgHintImage)
+        public Autotracker(ProcessNewItem processItemCallback, UpdateCollectible updateCollectibleCallback, SetRegionLighting setRegionLightingCallback, SetShopkeepers setShopkeepersCallback, SetSong setSong, UpdateUIAmountToNextHint updateUIAmountToNextHint, UpdateProgHintImage updateProgHintImage, OnRandomizerVersionChanged onRandomizerVersionChanged)
         {
             CurrentRegion = RegionName.UNKNOWN;
             previousRegion = RegionName.UNKNOWN;
@@ -77,6 +79,7 @@ namespace TrackOMatic
             timer.Start();
             previousMap = -1;
             addressBase = 0x00000000;
+            OnRandomizerVersionChanged = onRandomizerVersionChanged;
         }
         private ConcurrentDictionary<ItemType, int> CollectibleItemAmounts { get; } =
             new ConcurrentDictionary<ItemType, int>(
@@ -292,8 +295,20 @@ namespace TrackOMatic
 
         private void UpdateVersion()
         {
-            RandomizerVersion = ReadMemory(0x7FFFF4, 8);
-            RandomizerSubVersion = ReadMemory(0x7FFFF5, 8);
+            var newVersion = ReadMemory(0x7FFFF4, 8);
+            var newSubVersion = ReadMemory(0x7FFFF5, 8);
+            if (RandomizerVersion != newVersion) 
+            {
+                RandomizerVersion = newVersion;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    OnRandomizerVersionChanged(RandomizerVersion);
+                });
+            }
+            if (RandomizerSubVersion != newSubVersion)
+            {
+                RandomizerSubVersion = newSubVersion;
+            }
         }
 
         private void CheckVersion()
