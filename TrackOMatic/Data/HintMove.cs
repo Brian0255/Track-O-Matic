@@ -44,6 +44,9 @@ namespace TrackOMatic
         public static readonly HintNameEntry FUNKY = new("Funky");
         public static readonly HintNameEntry CANDY = new("Candy");
         public static readonly HintNameEntry SNIDE = new("Snide");
+        public static readonly HintNameEntry CANNONS = new("Cannons");
+        public static readonly HintNameEntry DAY = new("Day");
+        public static readonly HintNameEntry NIGHT = new("Night");
 
         public static readonly IReadOnlyList<HintNameEntry> All = typeof(HintMove)
         .GetFields(BindingFlags.Public | BindingFlags.Static)
