@@ -124,6 +124,9 @@
     <BitmapImage x:Key="candy" UriSource="Images\dk64\candy.png" x:Shared="false"/>
     <BitmapImage x:Key="funky" UriSource="Images\dk64\funky.png" x:Shared="false"/>
     <BitmapImage x:Key="snide" UriSource="Images\dk64\snide.png" x:Shared="false"/>
+    <BitmapImage x:Key="cannons" UriSource="Images\dk64\cannons.png" x:Shared="false"/>
+    <BitmapImage x:Key="day" UriSource="Images\dk64\day.png" x:Shared="false"/>
+    <BitmapImage x:Key="night" UriSource="Images\dk64\night.png" x:Shared="false"/>
 
     <BitmapImage x:Key="army" UriSource="Images\dk64\army.png" x:Shared="false"/>
     <BitmapImage x:Key="army2" UriSource="Images\dk64\army2.png" x:Shared="false"/>
@@ -225,6 +228,10 @@
     <BitmapImage x:Key="funky_bw" UriSource="Images\bw\funky.png" x:Shared="false"/>
     <BitmapImage x:Key="snide_bw" UriSource="Images\bw\snide.png" x:Shared="false"/>
 
+    <BitmapImage x:Key="cannons_bw" UriSource="Images\bw\cannons.png" x:Shared="false"/>
+    <BitmapImage x:Key="day_bw" UriSource="Images\bw\day.png" x:Shared="false"/>
+    <BitmapImage x:Key="night_bw" UriSource="Images\bw\night.png" x:Shared="false"/>
+
     <BitmapImage x:Key="army_bw" UriSource="Images\bw\army.png" x:Shared="false"/>
     <BitmapImage x:Key="army2_bw" UriSource="Images\bw\army2.png" x:Shared="false"/>
     <BitmapImage x:Key="doga_bw" UriSource="Images\bw\doga.png" x:Shared="false"/>
@@ -235,6 +242,7 @@
 
     <BitmapImage x:Key="homing_scope_bw" UriSource="Images\bw\homingscope.png" x:Shared="false"/>
     <BitmapImage x:Key="camera_shockwave_bw" UriSource="Images\bw\filmwave.png" x:Shared="false"/>
+    <BitmapImage x:Key="daynight_bw" UriSource="Images\bw\daynight_both.png" x:Shared="false"/>
 
     <BitmapImage x:Key="hint_bw" UriSource="Images\bw\hint.png" x:Shared="false"/>
 
