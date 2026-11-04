@@ -82,7 +82,7 @@ namespace TrackOMatic
 
             if (addressDLL == 0) return null;
 
-            for (uint potOff = 0x29C15D8; potOff < 0x2FC15D8; potOff += 16)
+            for (uint potOff = 0x2800000; potOff < 0x3000000; potOff += 8)
             {
                 ulong romAddrStart = addressDLL + potOff;
                 ulong readAddress = Memory.ReadInt64(handle, romAddrStart);
